@@ -17,6 +17,7 @@ Start here: `README.md`, then `AGENTS.md`.
 | Teaching content | Stable concept records and type contract | `src/content/` |
 | Exact mathematics | Bounded BigInt algorithms and tests | `src/math/` |
 | Agent interface | Feature-detected WebMCP tools over study commands | `src/webmcp/` |
+| Public assets | Original logo and favicon | `public/` |
 | Build validation | Strict LaTeX/content and public-surface checks | `scripts/` |
 | Site binding | ChatGPT Sites project identity and static directory | `.openai/hosting.json` |
 

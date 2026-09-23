@@ -1,4 +1,4 @@
-# ADR 0001: Static atlas with exact client mathematics
+# ADR 0003: Static atlas with exact client mathematics
 
 Status: accepted for the first implementation slice, 2026-09-23.
 
