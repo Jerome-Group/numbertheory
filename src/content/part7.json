@@ -1,0 +1,167 @@
+[
+  {
+    "id": "Q01",
+    "title": "Quadratic residues and the Legendre symbol",
+    "cluster": "Quadratic arithmetic",
+    "question": "Which nonzero residues occur as squares, and why are there half as many?",
+    "prerequisites": [
+      "C02"
+    ],
+    "summary": "Squaring pairs each nonzero input with its negative. The Legendre symbol records whether a residue is zero, a nonzero square, or a nonsquare.",
+    "definition": [
+      "Fix an odd prime \\(p\\). A nonzero class \\([a]_p\\) is a quadratic residue when \\(x^2\\equiv a\\pmod p\\) for some integer \\(x\\); otherwise it is a quadratic nonresidue.",
+      "Define \\(\\chi_p(a)=0\\) when \\(p\\mid a\\), \\(\\chi_p(a)=1\\) when \\(a\\) is a nonzero square modulo \\(p\\), and \\(\\chi_p(a)=-1\\) otherwise. Its value depends only on \\([a]_p\\)."
+    ],
+    "theorem": "For every odd prime \\(p\\), there are exactly \\((p-1)/2\\) nonzero quadratic residues and \\((p-1)/2\\) quadratic nonresidues. Each nonzero quadratic residue has exactly two square roots, \\(x\\) and \\(-x\\), and each nonresidue has none.",
+    "proof": [
+      "If \\(x^2\\equiv y^2\\pmod p\\), then \\(p\\mid(x-y)(x+y)\\). Euclid’s lemma for prime \\(p\\) gives \\(x\\equiv y\\pmod p\\) or \\(x\\equiv-y\\pmod p\\). Thus every nonzero square has at most the two indicated roots; both exist by definition.",
+      "For a nonzero \\(x\\), the two classes \\([x]_p\\) and \\([-x]_p\\) are distinct. If they were equal, \\(p\\mid2x\\), which is impossible because \\(p\\) is odd and \\(p\\nmid x\\). The \\(p-1\\) nonzero classes therefore split into \\((p-1)/2\\) disjoint opposite pairs. Each pair gives one square, and the preceding factorization shows different pairs cannot give the same square. Hence exactly \\((p-1)/2\\) nonzero classes are squares; the other \\((p-1)/2\\) are nonresidues.",
+      "The class \\([0]_p\\) has the sole square root \\([0]_p\\), since \\(p\\mid x^2\\) implies \\(p\\mid x\\). It is kept separate from the two equal-sized sets, and its symbol value is \\(0\\)."
+    ],
+    "example": {
+      "prompt": "Build the nonzero square table modulo \\(13\\), pairing each root with its negative.",
+      "steps": [
+        "For representatives \\(x=1,2,3,4,5,6\\), the squares modulo \\(13\\) are respectively \\(1,4,9,3,12,10\\).",
+        "The partner roots are \\(12,11,10,9,8,7\\), respectively. Each partner has the same square because \\((-x)^2=x^2\\).",
+        "Thus the nonzero square set is \\(\\{1,3,4,9,10,12\\}\\); the nonresidue set is \\(\\{2,5,6,7,8,11\\}\\)."
+      ],
+      "conclusion": "There are six nonzero squares and six nonresidues modulo \\(13\\), with two roots per nonzero square."
+    },
+    "practice": {
+      "prompt": "For each residue \\(a\\pmod{11}\\), state how many solutions \\(x\\pmod{11}\\) satisfy \\(x^2\\equiv a\\pmod{11}\\).",
+      "hints": [
+        "Square the representatives \\(1,2,3,4,5\\); their negatives have the same squares.",
+        "Treat \\(a=0\\) separately."
+      ],
+      "answer": "The nonzero squares modulo \\(11\\) are \\(1,3,4,5,9\\), each with exactly two roots. The nonresidues \\(2,6,7,8,10\\) have no roots. The class \\(0\\) has exactly one root, \\(0\\). This accounts for all eleven values of \\(a\\)."
+    },
+    "caution": "Zero is not a unit or a nonzero square. Its symbol is \\(0\\), and it has one root rather than two.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "On the unit group \\(\\mathbb F_p^\times\\), squaring has kernel \\(\\{1,-1\\}\\); the elementary opposite-pair argument proves the same count without group language.",
+    "lab": "quadratic"
+  },
+  {
+    "id": "Q02",
+    "title": "Euler’s criterion and multiplicativity",
+    "cluster": "Quadratic arithmetic",
+    "question": "How can one exponent distinguish squares from nonsquares?",
+    "prerequisites": [
+      "Q01",
+      "C06",
+      "F01"
+    ],
+    "summary": "Half of Fermat’s exponent yields one of three residues. Over an odd prime field, those residues exactly match the Legendre symbol.",
+    "definition": [
+      "For an odd prime \\(p\\), write \\(m=(p-1)/2\\). The symbol \\(\\chi_p(a)\\) takes its integer value in \\(\\{-1,0,1\\}\\), even though congruences are computed modulo \\(p\\).",
+      "A nonzero polynomial of degree \\(m\\) over \\(\\mathbb F_p\\) has at most \\(m\\) roots; this field root bound was proved in the polynomial lesson."
+    ],
+    "theorem": "For every odd prime \\(p\\) and integer \\(a\\), \\(a^{(p-1)/2}\\equiv\\chi_p(a)\\pmod p\\). For all integers \\(a,b\\), the integer-valued symbol is multiplicative: \\(\\chi_p(ab)=\\chi_p(a)\\chi_p(b)\\).",
+    "proof": [
+      "If \\(p\\mid a\\), both sides of the congruence are \\(0\\). If \\(a\\) is a nonzero square, write \\(a\\equiv x^2\\pmod p\\) with \\(p\\nmid x\\). Fermat’s theorem gives \\(a^m\\equiv x^{p-1}\\equiv1\\pmod p\\). Thus all \\(m\\) nonzero squares are roots of the degree-\\(m\\) polynomial \\(X^m-1\\). The field root bound says there are no other roots, because this polynomial is nonzero and already has \\(m\\) distinct roots.",
+      "If \\(a\\) is a nonresidue, \\(a^m\\not\\equiv1\\pmod p\\). Fermat gives \\(a^{2m}\\equiv1\\pmod p\\), so \\((a^m-1)(a^m+1)\\equiv0\\pmod p\\). The field has no zero divisors; because the first factor is nonzero, \\(a^m\\equiv-1\\pmod p\\). This proves the criterion in all three cases.",
+      "Apply the criterion to \\(ab\\): \\(\\chi_p(ab)\\equiv(ab)^m\\equiv a^m b^m\\equiv\\chi_p(a)\\chi_p(b)\\pmod p\\). Both the left side and the integer product on the right belong to \\(\\{-1,0,1\\}\\). These three integers represent distinct classes because \\(p\\) is odd, so their congruence is equality as integers."
+    ],
+    "example": {
+      "prompt": "Use the criterion to decide whether \\(2\\) is a square modulo \\(7\\) and modulo \\(13\\).",
+      "steps": [
+        "Modulo \\(7\\), the exponent is \\(3\\), and \\(2^3=8\\equiv1\\pmod7\\). Therefore \\(\\chi_7(2)=1\\); indeed \\(3^2=9\\equiv2\\pmod7\\).",
+        "Modulo \\(13\\), the exponent is \\(6\\), and \\(2^6=64\\equiv12\\equiv-1\\pmod{13}\\). Therefore \\(\\chi_{13}(2)=-1\\), matching the square table."
+      ],
+      "conclusion": "The same integer \\(2\\) is a square modulo \\(7\\) and a nonsquare modulo \\(13\\)."
+    },
+    "practice": {
+      "prompt": "Suppose \\(a,b\\) are quadratic nonresidues modulo an odd prime \\(p\\). Prove that \\(ab\\) is a nonzero quadratic residue.",
+      "hints": [
+        "Use \\(\\chi_p(a)=\\chi_p(b)=-1\\).",
+        "Check why neither factor can be zero modulo \\(p\\)."
+      ],
+      "answer": "Nonresidues are nonzero modulo \\(p\\), so \\(p\\nmid ab\\). Multiplicativity gives \\(\\chi_p(ab)=\\chi_p(a)\\chi_p(b)=(-1)(-1)=1\\). By definition, \\(ab\\) is therefore a nonzero square class."
+    },
+    "caution": "The symbol value \\(-1\\) is an integer label; its congruent representative modulo \\(p\\) is \\(p-1\\). Do not redefine the symbol to take value \\(p-1\\).",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Restricted to \\(\\mathbb F_p^\times\\), \\(\\chi_p\\) is a multiplicative character; extending it by \\(\\chi_p(0)=0\\) preserves the product rule."
+  },
+  {
+    "id": "Q03",
+    "title": "Gauss’s lemma and signed residues",
+    "cluster": "Quadratic arithmetic",
+    "question": "How does folding residues into a half interval detect a square?",
+    "prerequisites": [
+      "Q02"
+    ],
+    "summary": "The sign introduced by folding multiples into a half interval records the Legendre symbol.",
+    "definition": [
+      "Let \\(p\\) be an odd prime, \\(p\\nmid a\\), and \\(m=(p-1)/2\\). For each \\(k=1,\\ldots,m\\), let \\(r_k\\in\\{1,\\ldots,p-1\\}\\) be the least positive residue of \\(ak\\pmod p\\).",
+      "Let \\(N\\) be the number of these \\(r_k\\) in \\(\\{m+1,\\ldots,p-1\\}\\), equivalently those exceeding \\(p/2\\). Replace such a residue by its signed representative \\(r_k-p\\); keep the others positive."
+    ],
+    "theorem": "Under these hypotheses, Gauss’s lemma gives \\(\\chi_p(a)=(-1)^N\\). The absolute values of the signed representatives form a permutation of \\(1,\\ldots,m\\).",
+    "proof": [
+      "Each signed representative is congruent to \\(ak\\pmod p\\) and has nonzero absolute value at most \\(m\\). If two such absolute values were equal, then \\(ai\\equiv aj\\pmod p\\) or \\(ai\\equiv-aj\\pmod p\\). Since \\(p\\nmid a\\), cancellation gives \\(i\\equiv j\\) or \\(i\\equiv-j\\pmod p\\). With \\(1\\le i,j\\le m\\), the first implies \\(i=j\\), while the second is impossible because \\(2\\le i+j\\le p-1\\). Hence the absolute values are distinct and permute \\(1,\\ldots,m\\).",
+      "Take the product of the \\(m\\) signed representatives. Their congruence to \\(ak\\) gives \\(a^m m!\\pmod p\\). Their signs and permuted absolute values give \\((-1)^N m!\\). Since \\(p\\nmid m!\\), cancel \\(m!\\) modulo \\(p\\) to get \\(a^m\\equiv(-1)^N\\pmod p\\). Euler’s criterion says \\(a^m\\equiv\\chi_p(a)\\pmod p\\). Both possible values \\(\\pm1\\) are distinct modulo odd \\(p\\), so \\(\\chi_p(a)=(-1)^N\\) as integers."
+    ],
+    "example": {
+      "prompt": "Apply Gauss’s lemma to \\(a=3\\) modulo \\(p=7\\), showing every signed residue.",
+      "steps": [
+        "Here \\(m=3\\). The least positive residues of \\(3,6,9\\) modulo \\(7\\) are \\(3,6,2\\).",
+        "Only \\(6\\) exceeds \\(7/2\\), so \\(N=1\\). The signed representatives are \\(3,-1,2\\), with absolute values \\(3,1,2\\), a permutation of \\(1,2,3\\).",
+        "Gauss’s lemma gives \\(\\chi_7(3)=(-1)^1=-1\\). Euler’s criterion checks it: \\(3^3=27\\equiv-1\\pmod7\\)."
+      ],
+      "conclusion": "\\(3\\) is a nonresidue modulo \\(7\\), and the single negative fold records that fact."
+    },
+    "practice": {
+      "prompt": "Replace \\(a\\) by \\(-a\\) in Gauss’s lemma. Derive the value of \\(\\chi_p(-1)\\) for every odd prime \\(p\\).",
+      "hints": [
+        "Each least positive residue \\(r_k\\) changes to \\(p-r_k\\).",
+        "The upper-half count changes from \\(N\\) to \\(m-N\\)."
+      ],
+      "answer": "No least positive residue equals \\(p/2\\) because \\(p\\) is odd. Replacing \\(a\\) by \\(-a\\) swaps each lower-half residue with an upper-half one, so \\(N(-a)=m-N(a)\\). Gauss’s lemma gives \\(\\chi_p(-a)=(-1)^{m-N(a)}=(-1)^m\\chi_p(a)\\). Taking \\(a=1\\), for which \\(\\chi_p(1)=1\\), yields \\(\\chi_p(-1)=(-1)^{(p-1)/2}\\)."
+    },
+    "caution": "The cutoff is the exact half interval; the argument requires \\(p\\nmid a\\). A nonunit would create a zero residue and break the permutation.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The sign comes from individual negations after folding; no permutation-sign computation is needed."
+  },
+  {
+    "id": "Q04",
+    "title": "Quadratic reciprocity through a lattice count",
+    "cluster": "Quadratic arithmetic",
+    "question": "Why is swapping two odd primes almost symmetric?",
+    "prerequisites": [
+      "Q03",
+      "B01"
+    ],
+    "summary": "Gauss’s sign becomes a floor-sum parity. Two complementary counts of an integer rectangle then give the reciprocity sign.",
+    "definition": [
+      "Let \\(p,q\\) be distinct odd primes. Write \\(m_p=(p-1)/2\\) and \\(m_q=(q-1)/2\\). For a prime modulus \\(p\\), \\(\\chi_p(a)\\) is the Legendre symbol from the preceding lessons.",
+      "For an odd integer \\(a\\) with \\(p\\nmid a\\), define \\(S_p(a)=\\sum_{k=1}^{m_p}\\lfloor ak/p\\rfloor\\). Only the parity of this integer will matter. In the reciprocity argument the input \\(a=q\\) is positive and odd."
+    ],
+    "theorem": "For distinct odd primes \\(p,q\\), quadratic reciprocity states \\(\\chi_p(q)\\chi_q(p)=(-1)^{m_p m_q}=(-1)^{(p-1)(q-1)/4}\\). Equivalently, \\(\\chi_p(q)=\\chi_q(p)\\) unless both primes are \\(3\\pmod4\\), in which case the signs are opposite.",
+    "proof": [
+      "First prove the floor-parity bridge from Gauss’s lemma. Fix odd \\(a\\) with \\(p\\nmid a\\), and for \\(1\\le k\\le m_p\\) write the exact division \\(ak=pQ_k+r_k\\), where \\(Q_k=\\lfloor ak/p\\rfloor\\) and \\(1\\le r_k<p\\). Let \\(\\delta_k=1\\) when \\(r_k>p/2\\), and \\(0\\) otherwise; let \\(b_k=r_k\\) when \\(\\delta_k=0\\), and \\(b_k=p-r_k\\) when \\(\\delta_k=1\\). Gauss’s lemma proves that the \\(b_k\\) permute \\(1,\\ldots,m_p\\), and that \\(\\chi_p(a)=(-1)^{\\sum_k\\delta_k}\\).",
+      "Because \\(p\\) is odd, reduction modulo \\(2\\) gives \\(r_k\\equiv b_k+\\delta_k\\pmod2\\): in the upper half, \\(r_k=p-b_k\\equiv1+b_k\\pmod2\\). Therefore \\(ak=pQ_k+r_k\\) gives \\(ak\\equiv Q_k+b_k+\\delta_k\\pmod2\\). Sum over \\(k\\). Since \\(\\sum b_k=\\sum k\\), we get \\((a-1)\\sum_{k=1}^{m_p}k\\equiv S_p(a)+\\sum_k\\delta_k\\pmod2\\). The left side is even because \\(a\\) is odd. Hence \\(S_p(a)\\equiv\\sum_k\\delta_k\\pmod2\\), proving \\(\\chi_p(a)=(-1)^{S_p(a)}\\). This parity bridge requires odd \\(a\\); both inputs used below meet it.",
+      "Now consider the \\(m_pm_q\\) lattice points \\((x,y)\\) with \\(1\\le x\\le m_p\\) and \\(1\\le y\\le m_q\\). Since \\(qx/p<q/2\\), its floor is at most \\(m_q\\). Also \\(qx/p\\) is never an integer: if \\(p\\mid qx\\), distinct primality and Euclid’s lemma force \\(p\\mid x\\), impossible for \\(1\\le x<p\\). Thus \\(\\lfloor qx/p\\rfloor\\) counts exactly the allowed \\(y\\) with \\(py<qx\\). Summing over \\(x\\) shows that \\(S_p(q)\\) counts all points strictly below the line \\(py=qx\\).",
+      "By the same argument, \\(S_q(p)=\\sum_{y=1}^{m_q}\\lfloor py/q\\rfloor\\) counts the allowed \\(x\\) with \\(qx<py\\). No lattice point lies on the line: equality \\(qx=py\\) would again give \\(p\\mid x\\), impossible. Therefore the two strict regions partition the rectangle, and \\(S_p(q)+S_q(p)=m_pm_q=(p-1)(q-1)/4\\).",
+      "Apply the proved floor-parity bridge with \\((p,a)=(p,q)\\) and \\((q,a)=(q,p)\\): \\(\\chi_p(q)\\chi_q(p)=(-1)^{S_p(q)+S_q(p)}=(-1)^{m_pm_q}\\). Since \\(m_p\\) is odd exactly when \\(p\\equiv3\\pmod4\\), the verbal form of the theorem follows."
+    ],
+    "example": {
+      "prompt": "Count both sides of the reciprocity rectangle for \\(p=7\\) and \\(q=11\\).",
+      "steps": [
+        "Here \\(m_p=3\\) and \\(m_q=5\\), so the rectangle has \\(15\\) points. For \\(x=1\\), the point \\(y=1\\) satisfies \\(7y<11x\\), while \\(y=2,3,4,5\\) lie on the other side.",
+        "For \\(x=2\\), the points \\(y=1,2,3\\) satisfy \\(7y<11x\\), and \\(y=4,5\\) lie on the other side. For \\(x=3\\), the points \\(y=1,2,3,4\\) satisfy \\(7y<11x\\), and \\(y=5\\) lies on the other side. No point is on the line.",
+        "Thus \\(S_7(11)=1+3+4=8\\) and \\(S_{11}(7)=4+2+1=7\\). Their sum is \\(15=3\\cdot5\\). The parity bridge gives \\(\\chi_7(11)=1\\) and \\(\\chi_{11}(7)=-1\\)."
+      ],
+      "conclusion": "The sign product is \\(-1=(-1)^{15}\\), matching reciprocity because both primes are \\(3\\pmod4\\)."
+    },
+    "practice": {
+      "prompt": "Use reciprocity to find \\(\\chi_{11}(3)\\). Check the result by exhibiting a square modulo \\(11\\), and explain the sign.",
+      "hints": [
+        "The primes \\(3\\) and \\(11\\) are both \\(3\\pmod4\\).",
+        "Reduce \\(11\\) modulo \\(3\\), then look for a square root of \\(3\\) modulo \\(11\\)."
+      ],
+      "answer": "Since \\(11\\equiv2\\pmod3\\), \\(\\chi_3(11)=\\chi_3(2)=-1\\). Both primes are \\(3\\pmod4\\), so reciprocity gives \\(\\chi_{11}(3)=-\\chi_3(11)=1\\). Directly, \\(5^2=25\\equiv3\\pmod{11}\\), confirming that \\(3\\) is a square. The minus sign comes from \\(((3-1)/2)((11-1)/2)=1\\cdot5\\), which is odd."
+    },
+    "caution": "The diagonal is empty because the primes are distinct and coprime. A lattice picture without the no-boundary-point argument leaves a gap.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Reciprocity compares square behavior in two different finite fields. The rectangle is a finite counting proof, not an embedding of one field into the other.",
+    "lab": "lattice"
+  }
+]

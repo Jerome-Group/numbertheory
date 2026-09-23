@@ -1,0 +1,380 @@
+[
+  {
+    "id": "C06",
+    "title": "Fermat and Euler: why powers return",
+    "cluster": "Modular arithmetic",
+    "question": "Why does a power of an invertible residue return to 1, and why does that exponent not tell us the first return?",
+    "prerequisites": [
+      "C02"
+    ],
+    "summary": "Multiplying every invertible residue by the same unit rearranges the unit residues. Comparing their products proves Euler’s theorem and Fermat’s theorem. The exponent supplied by either theorem is a guaranteed return time, not necessarily the least one.",
+    "definition": [
+      "For an integer \\(n\\ge 2\\), the units modulo \\(n\\) are the residue classes represented by integers \\(a\\) with \\(\\gcd(a,n)=1\\). Their number is Euler’s totient \\(\\varphi(n)\\).",
+      "A congruence \\(x\\equiv y\\pmod n\\) means \\(n\\mid(x-y)\\). Multiplication by a unit is cancellable modulo \\(n\\): if \\(u\\) has an inverse modulo \\(n\\) and \\(ux\\equiv uy\\pmod n\\), multiply by that inverse to obtain \\(x\\equiv y\\pmod n\\).",
+      "The order of a unit \\(a\\pmod n\\) is the least positive integer \\(r\\) such that \\(a^r\\equiv1\\pmod n\\). It can be smaller than \\(\\varphi(n)\\)."
+    ],
+    "theorem": "For every prime \\(p\\) and integer \\(a\\), \\(a^p\\equiv a\\pmod p\\). If \\(p\\nmid a\\), then \\(a^{p-1}\\equiv1\\pmod p\\). More generally, for every \\(n\\ge2\\) and \\(\\gcd(a,n)=1\\), \\(a^{\\varphi(n)}\\equiv1\\pmod n\\).",
+    "proof": [
+      "First prove the unit statement. List the distinct unit classes modulo \\(n\\) as \\(u_1,\\ldots,u_r\\), where \\(r=\\varphi(n)\\). Because \\(\\gcd(a,n)=1\\), multiplication by \\(a\\) sends units to units. It is a bijection: its inverse is multiplication by an inverse of \\(a\\). Thus the classes \\(au_1,\\ldots,au_r\\) are the same list in a different order.",
+      "Multiply the classes in the two lists. Their products are congruent, so \\(a^r u_1\\cdots u_r\\equiv u_1\\cdots u_r\\pmod n\\). Every \\(u_i\\) is a unit, hence their product is a unit. Cancel it to get \\(a^r\\equiv1\\pmod n\\), which is Euler’s theorem.",
+      "When \\(n=p\\) is prime, its nonzero classes are exactly its units, so \\(\\varphi(p)=p-1\\). This gives \\(a^{p-1}\\equiv1\\pmod p\\) when \\(p\\nmid a\\). If \\(p\\mid a\\), both \\(a^p\\) and \\(a\\) are divisible by \\(p\\); combining the two cases gives \\(a^p\\equiv a\\pmod p\\) for every integer \\(a\\).",
+      "There is also a group interpretation. In the finite unit group, the powers of \\(a\\) form a subgroup of size equal to its order. Its distinct cosets partition the group into equal-sized sets, so the order divides \\(\\varphi(n)\\). Therefore \\(a^{\\varphi(n)}\\equiv1\\pmod n\\). This interpretation uses only the elementary coset-counting argument; the product proof above already establishes the result."
+    ],
+    "example": {
+      "prompt": "Find the first positive exponent that returns \\(2\\) to \\(1\\) modulo \\(7\\), then compare it with Euler’s guaranteed exponent.",
+      "steps": [
+        "The successive powers are \\(2^1\\equiv2\\), \\(2^2\\equiv4\\), and \\(2^3\\equiv8\\equiv1\\pmod7\\). Neither earlier positive power is \\(1\\), so the order is \\(3\\).",
+        "There are six units modulo \\(7\\), so \\(\\varphi(7)=6\\). Euler’s theorem gives \\(2^6\\equiv1\\pmod7\\); indeed \\(2^6=(2^3)^2\\equiv1\\)."
+      ],
+      "conclusion": "The order is \\(3\\), while Euler supplies the valid return exponent \\(6\\). The theorem does not claim its exponent is least."
+    },
+    "practice": {
+      "prompt": "A student applies Euler’s theorem to \\(a=2\\) and \\(n=8\\), concluding that \\(2^{\\varphi(8)}\\equiv1\\pmod8\\). Identify the missing hypothesis and calculate the actual residue.",
+      "hints": [
+        "Check whether \\(2\\) is a unit modulo \\(8\\).",
+        "Compute \\(\\varphi(8)\\), then reduce the power exactly."
+      ],
+      "answer": "The required condition is \\(\\gcd(a,n)=1\\), but \\(\\gcd(2,8)=2\\). Since \\(\\varphi(8)=4\\), we have \\(2^{\\varphi(8)}=2^4=16\\equiv0\\pmod8\\), not \\(1\\). Euler’s theorem says nothing about this nonunit."
+    },
+    "caution": "Do not use Euler’s congruence for a nonunit. A return exponent such as \\(\\varphi(n)\\) is guaranteed, but it need not be the least positive return time.",
+    "bridge": "The permutation proof is a concrete group action: multiplication by a unit rearranges the finite set of units. The proof does not require the set of units to be cyclic.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 03. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "C07",
+    "title": "The totient and its product formula",
+    "cluster": "Arithmetic functions",
+    "question": "How does excluding prime multiples count exactly the residues that can be inverted?",
+    "prerequisites": [
+      "C04",
+      "D05"
+    ],
+    "summary": "The totient counts integers in a complete residue system that are coprime to the modulus. Prime-power counting gives its local formula; the Chinese remainder bijection gives multiplicativity for coprime moduli. Together they produce the product formula.",
+    "definition": [
+      "For \\(n\\ge2\\), define \\(\\varphi(n)=\\#\\{a:1\\le a\\le n,\\ \\gcd(a,n)=1\\}\\), and set \\(\\varphi(1)=1\\). Counting \\(a=n\\) contributes nothing when \\(n>1\\), so this counts the unit classes modulo \\(n\\).",
+      "An arithmetic function is multiplicative if \\(f(1)=1\\) and \\(f(mn)=f(m)f(n)\\) whenever \\(\\gcd(m,n)=1\\). The coprimality condition is part of the definition."
+    ],
+    "theorem": "If \\(p\\) is prime and \\(k\\ge1\\), then \\(\\varphi(p^k)=p^k-p^{k-1}\\). If \\(\\gcd(m,n)=1\\), then \\(\\varphi(mn)=\\varphi(m)\\varphi(n)\\). Consequently, for \\(n=\\prod_{i=1}^r p_i^{e_i}\\ge2\\), with distinct primes \\(p_i\\), \\(\\varphi(n)=\\prod_{i=1}^r p_i^{e_i-1}(p_i-1)=n\\prod_{p\\mid n}(1-1/p)\\).",
+    "proof": [
+      "Among the integers from \\(1\\) through \\(p^k\\), the ones not coprime to \\(p^k\\) are precisely the multiples of \\(p\\). There are \\(p^{k-1}\\) such multiples, namely \\(p,2p,\\ldots,p^k\\). Thus \\(\\varphi(p^k)=p^k-p^{k-1}\\).",
+      "Now suppose \\(\\gcd(m,n)=1\\). The map sending a residue class modulo \\(mn\\) to its pair of residue classes modulo \\(m\\) and modulo \\(n\\) is injective: if two integers have the same pair, their difference is divisible by both coprime integers, hence by \\(mn\\). Both the source and target have \\(mn\\) elements, so the map is bijective. This is the coprime Chinese remainder correspondence.",
+      "A class modulo \\(mn\\) is a unit exactly when its two component classes are units modulo \\(m\\) and \\(n\\). The bijection therefore pairs the \\(\\varphi(mn)\\) units with all pairs chosen from sets of sizes \\(\\varphi(m)\\) and \\(\\varphi(n)\\). Hence \\(\\varphi(mn)=\\varphi(m)\\varphi(n)\\).",
+      "Factor \\(n\\) into its pairwise coprime prime powers and apply multiplicativity repeatedly, together with the prime-power count. This gives \\(\\varphi(n)=\\prod_i(p_i^{e_i}-p_i^{e_i-1})\\). Factoring out \\(p_i^{e_i}\\) from each term yields \\(n\\prod_i(1-1/p_i)\\). For \\(n=1\\), the empty product is \\(1\\), consistent with the stated convention."
+    ],
+    "example": {
+      "prompt": "Count the units modulo \\(12\\) directly, then check the product formula.",
+      "steps": [
+        "The integers from \\(1\\) through \\(12\\) coprime to \\(12\\) are \\(1,5,7,11\\), so the direct count is \\(4\\).",
+        "The prime factorization is \\(12=2^2\\cdot3\\). The product formula gives \\(12(1-1/2)(1-1/3)=12\\cdot(1/2)\\cdot(2/3)=4\\).",
+        "The same count factors as \\(\\varphi(2^2)\\varphi(3)=(4-2)(3-1)=2\\cdot2=4\\), since \\(4\\) and \\(3\\) are coprime."
+      ],
+      "conclusion": "Both counting and the prime-power product give \\(\\varphi(12)=4\\), matching the four invertible residue classes."
+    },
+    "practice": {
+      "prompt": "Compute \\(\\varphi(60)\\) from its prime-power factors. Explain why you may multiply the three local counts.",
+      "hints": [
+        "Write \\(60\\) as a product of pairwise coprime prime powers.",
+        "Use the CRT bijection to justify multiplicativity."
+      ],
+      "answer": "Since \\(60=2^2\\cdot3\\cdot5\\), the prime-power counts are \\(\\varphi(4)=2\\), \\(\\varphi(3)=2\\), and \\(\\varphi(5)=4\\). These moduli are pairwise coprime, so the CRT correspondence gives \\(\\varphi(60)=2\\cdot2\\cdot4=16\\). Equivalently, \\(60(1-1/2)(1-1/3)(1-1/5)=16\\)."
+    },
+    "caution": "The identity \\(\\varphi(mn)=\\varphi(m)\\varphi(n)\\) requires \\(\\gcd(m,n)=1\\). For the noncoprime pair \\(m=n=2\\), it fails: \\(\\varphi(4)=2\\ne1=\\varphi(2)^2\\).",
+    "bridge": "The CRT correspondence is a bijection of finite rings, and it restricts to a bijection of their unit sets. Thus a counting function becomes multiplicative because coprime residue data separates into independent coordinates.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 03, 04. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "C08",
+    "title": "Wilson’s theorem and inverse pairing",
+    "cluster": "Modular arithmetic",
+    "question": "What remains in a factorial after every residue is paired with its multiplicative inverse?",
+    "prerequisites": [
+      "C02",
+      "D05"
+    ],
+    "summary": "In a prime modulus, inversion pairs every nonzero residue except the self-inverse classes. Those two classes multiply to \\(-1\\), giving Wilson’s congruence. Conversely, any composite modulus has a proper prime divisor that contradicts the same factorial congruence.",
+    "definition": [
+      "A nonzero class modulo a prime \\(p\\) has a multiplicative inverse. A class is self-inverse when it equals its own inverse, equivalently when \\(x^2\\equiv1\\pmod p\\).",
+      "For an integer \\(n>1\\), the factorial \\((n-1)!\\) is the product \\(1\\cdot2\\cdots(n-1)\\). Wilson’s congruence is the assertion \\((n-1)!\\equiv-1\\pmod n\\)."
+    ],
+    "theorem": "For every integer \\(n>1\\), \\(n\\) is prime if and only if \\((n-1)!\\equiv-1\\pmod n\\).",
+    "proof": [
+      "Let \\(p\\) be an odd prime. Pair each nonzero residue \\(x\\pmod p\\) with its inverse. Each pair of distinct residues contributes \\(1\\) to the product. A self-inverse residue satisfies \\(x^2\\equiv1\\pmod p\\), so \\(p\\mid(x-1)(x+1)\\). Since \\(p\\) is prime, it divides one factor; therefore \\(x\\equiv1\\) or \\(x\\equiv-1\\pmod p\\). Both are self-inverse.",
+      "After all other residues are paired, the product of the nonzero classes is the product of the two fixed classes, \\(1\\cdot(-1)=-1\\). In the standard representatives this product is \\((p-1)!\\), so \\((p-1)!\\equiv-1\\pmod p\\). For \\(p=2\\), \\(1!=1\\equiv-1\\pmod2\\), so the forward direction includes the even prime.",
+      "For the converse, suppose \\(n>1\\) is composite. It has a prime divisor \\(p<n\\). The factor \\(p\\) occurs among \\(1,2,\\ldots,n-1\\), so \\(p\\mid(n-1)!\\). If Wilson’s congruence held, then \\(n\\mid((n-1)!+1)\\), hence \\(p\\mid((n-1)!+1)\\) because \\(p\\mid n\\). Together with \\(p\\mid(n-1)!\\), this would imply \\(p\\mid1\\), impossible. Thus no composite \\(n>1\\) satisfies the congruence."
+    ],
+    "example": {
+      "prompt": "Use inverse pairs to find \\(10!\\pmod{11}\\).",
+      "steps": [
+        "The inverses modulo \\(11\\) pair as \\((2,6)\\), \\((3,4)\\), \\((5,9)\\), and \\((7,8)\\); each pair has product congruent to \\(1\\).",
+        "The only unpaired nonzero residues are \\(1\\) and \\(10\\), which are \\(1\\) and \\(-1\\pmod{11}\\).",
+        "Therefore the product of all nonzero residues, which is \\(10!\\), is congruent to \\(1\\cdot(-1)=-1\\pmod{11}\\)."
+      ],
+      "conclusion": "The pairing gives \\(10!\\equiv-1\\equiv10\\pmod{11}\\) without multiplying all ten factors."
+    },
+    "practice": {
+      "prompt": "List the self-inverse units modulo \\(8\\), then explain why the prime-modulus pairing proof cannot simply be copied.",
+      "hints": [
+        "The units modulo \\(8\\) are \\(1,3,5,7\\). Square each one modulo \\(8\\).",
+        "Compare the number of fixed points of inversion with the two fixed points in the prime proof."
+      ],
+      "answer": "Every unit modulo \\(8\\) is self-inverse: \\(1^2\\equiv3^2\\equiv5^2\\equiv7^2\\equiv1\\pmod8\\). Thus inversion has four fixed points, not just \\(1\\) and \\(-1\\). Their product is \\(1\\cdot3\\cdot5\\cdot7=105\\equiv1\\pmod8\\), illustrating why the prime pairing argument does not establish Wilson’s congruence for composite moduli."
+    },
+    "caution": "The step from \\(x^2\\equiv1\\pmod p\\) to \\(x\\equiv\\pm1\\pmod p\\) uses primality. Composite moduli can have more than two square roots of \\(1\\).",
+    "bridge": "Inversion is an involution on the finite unit set: applying it twice returns the original element. Pairing the non-fixed elements leaves only the fixed points to determine the total product.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 02. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "C09",
+    "title": "Fast powers and the mathematics of toy RSA",
+    "cluster": "Applications",
+    "question": "How can a very large power be reduced efficiently, and why does the elementary RSA calculation still work for messages divisible by a prime factor?",
+    "prerequisites": [
+      "C06",
+      "C04",
+      "C07"
+    ],
+    "summary": "Repeated squaring computes powers using a logarithmic number of exact modular multiplications. For toy RSA, the inverse-exponent argument proves decryption modulo each prime, including when a message is zero modulo that prime; CRT then joins the two conclusions.",
+    "definition": [
+      "To compute \\(a^e\\pmod n\\) by repeated squaring, take an integer exponent \\(e\\ge0\\) and a modulus \\(n\\ge1\\), write \\(e\\) in binary, and process its bits from left to right. At each bit, square the current residue and multiply by \\(a\\) if the bit is \\(1\\).",
+      "For distinct primes \\(p,q\\), set \\(N=pq\\). By the totient product formula, \\(\\varphi(N)=(p-1)(q-1)\\). Choose positive integers \\(e,d\\) with \\(ed\\equiv1\\pmod{\\varphi(N)}\\). Toy RSA encrypts \\(m\\) as \\(c\\equiv m^e\\pmod N\\), then decrypts with \\(c^d\\pmod N\\)."
+    ],
+    "theorem": "For \\(a\\in\\mathbb Z\\), \\(e\\ge0\\), and \\(n\\ge1\\), repeated squaring returns the unique residue \\(r\\) with \\(0\\le r<n\\) and \\(r\\equiv a^e\\pmod n\\). For distinct primes \\(p,q\\), \\(N=pq\\), and positive \\(e,d\\) satisfying \\(ed\\equiv1\\pmod{(p-1)(q-1)}\\), every integer message \\(m\\) satisfies \\((m^e)^d\\equiv m\\pmod N\\).",
+    "proof": [
+      "For repeated squaring, after reading a prefix of the binary digits, let \\(s\\) be the integer represented by that prefix and let \\(r\\) be the current residue. Maintain the invariant \\(r\\equiv a^s\\pmod n\\). Initially the prefix is empty, so \\(s=0\\) and \\(r=1\\), and the invariant holds.",
+      "If the next bit is \\(b\\in\\{0,1\\}\\), the new prefix represents \\(2s+b\\). The algorithm replaces \\(r\\) by \\(r^2a^b\\pmod n\\), which is congruent to \\((a^s)^2a^b=a^{2s+b}\\pmod n\\). Thus the invariant is preserved. After the final bit, \\(s=e\\), proving that the returned residue is \\(a^e\\pmod n\\).",
+      "For decryption, write \\(ed=1+t(p-1)(q-1)\\) for an integer \\(t\\ge0\\); the exponent relation follows from the choice of \\(d\\), and \\(ed\\ge1\\). Consider the result modulo \\(p\\). If \\(p\\mid m\\), then both \\(m^{ed}\\) and \\(m\\) are congruent to \\(0\\pmod p\\). If \\(p\\nmid m\\), Fermat’s theorem gives \\(m^{p-1}\\equiv1\\pmod p\\); since \\(p-1\\mid(ed-1)\\), write \\(ed=1+j(p-1)\\) and obtain \\(m^{ed}=m(m^{p-1})^j\\equiv m\\pmod p\\).",
+      "The same two-case argument modulo \\(q\\) proves \\(m^{ed}\\equiv m\\pmod q\\). The primes \\(p,q\\) are distinct, hence coprime. A number divisible by both is divisible by \\(pq=N\\), so the two congruences combine to \\(m^{ed}\\equiv m\\pmod N\\). Since \\((m^e)^d=m^{ed}\\), this is the claimed decryption identity."
+    ],
+    "example": {
+      "prompt": "Compute \\(3^{13}\\pmod{55}\\) by repeated squaring, then run a small RSA round trip on the message \\(m=10\\).",
+      "steps": [
+        "The binary expansion is \\(13=(1101)_2\\). The needed squares are \\(3^2\\equiv9\\), \\(3^4\\equiv81\\equiv26\\), and \\(3^8\\equiv26^2=676\\equiv16\\pmod{55}\\).",
+        "Since \\(13=8+4+1\\), combine the selected powers: \\(3^{13}\\equiv16\\cdot26\\cdot3=1248\\equiv38\\pmod{55}\\).",
+        "For the RSA round trip, take \\(p=5\\), \\(q=11\\), so \\(N=55\\) and \\(\\varphi(N)=40\\). Choose \\(e=3\\), \\(d=27\\), because \\(3\\cdot27=81\\equiv1\\pmod{40}\\).",
+        "The message \\(m=10\\) is divisible by \\(5\\). Encryption gives \\(c\\equiv10^3=1000\\equiv10\\pmod{55}\\). For decryption, modulo \\(5\\), both \\(10^{27}\\) and \\(10\\) are \\(0\\). Modulo \\(11\\), \\(10\\equiv-1\\), so \\(10^{27}\\equiv(-1)^{27}=-1\\equiv10\\pmod{11}\\). The two congruences imply \\(10^{27}\\equiv10\\pmod{55}\\)."
+      ],
+      "conclusion": "Repeated squaring returns the exact residue \\(38\\). The RSA example decrypts a nonunit message correctly because the proof treats each prime factor separately before using CRT."
+    },
+    "practice": {
+      "prompt": "Explain the gap in this proposed RSA proof: “Euler gives \\(m^{\\varphi(N)}\\equiv1\\pmod N\\), so decryption works for every message.” Repair the argument for a message divisible by \\(p\\).",
+      "hints": [
+        "Euler’s theorem requires \\(\\gcd(m,N)=1\\).",
+        "Reduce the exponent identity modulo \\(p\\), split into \\(p\\mid m\\) and \\(p\\nmid m\\), and then repeat modulo \\(q\\)."
+      ],
+      "answer": "The quoted proof is valid only when \\(m\\) is a unit modulo \\(N\\). For an arbitrary message, use \\(ed=1+t(p-1)(q-1)\\). If \\(p\\mid m\\), then \\(m^{ed}\\equiv m\\equiv0\\pmod p\\); if \\(p\\nmid m\\), Fermat gives \\(m^{p-1}\\equiv1\\pmod p\\), and \\(p-1\\mid(ed-1)\\) gives \\(m^{ed}\\equiv m\\pmod p\\). Apply the same argument modulo \\(q\\), then combine by CRT. This proves decryption for all messages without applying Euler to a nonunit."
+    },
+    "caution": "This is an educational demonstration of exact exponent arithmetic, not a secure encryption system. Small primes, deterministic textbook RSA, and the absence of padding make it unsuitable for protecting real data.",
+    "bridge": "Repeated squaring is an algorithmic form of the exponent law, while the RSA proof is a local-to-global argument: prove the claim in each prime field, then glue the residues with CRT.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 03. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "C10",
+    "title": "Pseudoprimes and the limits of a test",
+    "cluster": "Applications",
+    "question": "Why can a composite number pass a Fermat test that every prime must pass?",
+    "prerequisites": [
+      "C06",
+      "D05"
+    ],
+    "summary": "Fermat’s congruence is necessary for primality under its coprimality hypothesis, but it is not sufficient. The squarefree composite \\(561\\) passes the Fermat congruence for every coprime base, showing why a test result is evidence rather than a proof.",
+    "definition": [
+      "For an odd integer \\(n>2\\) and a base \\(a\\) with \\(1<a<n\\) and \\(\\gcd(a,n)=1\\), the Fermat test passes when \\(a^{n-1}\\equiv1\\pmod n\\). A composite number that passes for a particular such base is a Fermat pseudoprime to that base.",
+      "A Carmichael number is a composite integer \\(n\\) for which \\(a^{n-1}\\equiv1\\pmod n\\) for every integer \\(a\\) coprime to \\(n\\). This is a property of the stated coprime bases, not of nonunits.",
+      "A factorization such as \\(561=3\\cdot11\\cdot17\\) is a direct certificate that \\(561\\) is composite. A finite test that has passed does not provide that kind of proof of primality."
+    ],
+    "theorem": "Every prime \\(p\\) passes the Fermat test for each base coprime to \\(p\\). However, \\(561=3\\cdot11\\cdot17\\) is composite and satisfies \\(a^{560}\\equiv1\\pmod{561}\\) for every \\(a\\) with \\(\\gcd(a,561)=1\\).",
+    "proof": [
+      "If \\(p\\) is prime and \\(\\gcd(a,p)=1\\), Fermat’s theorem gives \\(a^{p-1}\\equiv1\\pmod p\\), so every eligible base passes.",
+      "For the counterexample, the factors \\(3,11,17\\) are distinct primes, and \\(560\\) is divisible by each of \\(3-1=2\\), \\(11-1=10\\), and \\(17-1=16\\). If \\(\\gcd(a,561)=1\\), then \\(a\\) is coprime to each of these primes. Fermat’s theorem therefore gives \\(a^{560}\\equiv1\\pmod3\\), \\(a^{560}\\equiv1\\pmod{11}\\), and \\(a^{560}\\equiv1\\pmod{17}\\).",
+      "The three primes are pairwise coprime. If an integer is congruent to \\(1\\) modulo each of them, its difference from \\(1\\) is divisible by their product \\(561\\). Hence \\(a^{560}\\equiv1\\pmod{561}\\) for every coprime base, even though the displayed factorization proves that \\(561\\) is composite."
+    ],
+    "example": {
+      "prompt": "Check why base \\(2\\) passes the Fermat test for \\(561\\), and identify the independent evidence that \\(561\\) is not prime.",
+      "steps": [
+        "The base is eligible because \\(\\gcd(2,561)=1\\). The exponent is \\(561-1=560\\).",
+        "The prime factors are \\(3,11,17\\), whose predecessor exponents are \\(2,10,16\\). Each divides \\(560\\), so Fermat’s theorem gives \\(2^{560}\\equiv1\\) modulo each of \\(3,11,17\\).",
+        "Because these factors are pairwise coprime, CRT gives \\(2^{560}\\equiv1\\pmod{561}\\). But \\(561=3\\cdot11\\cdot17\\) is a nontrivial factorization."
+      ],
+      "conclusion": "The test passes, yet the factorization proves compositeness. Passing one base—even every coprime base for this example—is not a primality proof."
+    },
+    "practice": {
+      "prompt": "The composite \\(341=11\\cdot31\\) passes the base-\\(2\\) Fermat test. Show that the coprime base \\(3\\) fails the test by reducing modulo \\(31\\).",
+      "hints": [
+        "The test exponent is \\(340\\), and Fermat’s exponent modulo \\(31\\) is \\(30\\).",
+        "Compute \\(3^5\\pmod{31}\\), then use the remainder of \\(340\\) upon division by \\(30\\)."
+      ],
+      "answer": "We have \\(3^5=243\\equiv26\\equiv-5\\pmod{31}\\), so \\(3^{10}\\equiv25\\pmod{31}\\). Since \\(340\\equiv10\\pmod{30}\\), Fermat’s theorem gives \\(3^{340}\\equiv3^{10}\\equiv25\\pmod{31}\\), which is not \\(1\\). The base is eligible because \\(\\gcd(3,341)=1\\), so it fails the composite-number test at base \\(3\\)."
+    },
+    "caution": "A passing Fermat test is only a one-sided check: a prime always passes for eligible bases, but a composite may pass some or even all of them. A bounded search or probable-prime label must not be reported as a proof of primality.",
+    "bridge": "For \\(561\\), the CRT decomposition explains the false positive: a single exponent works in all three prime components, and CRT transfers those three congruences to the composite modulus.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 03. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "A01",
+    "title": "Multiplicative versus completely multiplicative",
+    "cluster": "Arithmetic functions",
+    "question": "When do values on prime powers determine an arithmetic function everywhere?",
+    "prerequisites": [
+      "D05"
+    ],
+    "summary": "Multiplicativity is a rule for coprime inputs; complete multiplicativity removes that restriction. Unique factorization then shows that a multiplicative function is determined by its values on prime powers, but those values need not be powers of its value at the prime.",
+    "definition": [
+      "An arithmetic function is a function \\(f:\\mathbb Z_{>0}\\to\\mathbb C\\). It is multiplicative when \\(f(1)=1\\) and \\(f(mn)=f(m)f(n)\\) whenever \\(\\gcd(m,n)=1\\).",
+      "It is completely multiplicative when \\(f(1)=1\\) and \\(f(mn)=f(m)f(n)\\) for all positive integers \\(m,n\\), whether or not they are coprime.",
+      "The distinction is the input condition: multiplicativity permits splitting into coprime factors; complete multiplicativity also permits repeated prime factors to be split."
+    ],
+    "theorem": "If \\(f\\) is multiplicative and \\(n=\\prod_{i=1}^r p_i^{e_i}\\) is the prime factorization of \\(n>1\\), then \\(f(n)=\\prod_{i=1}^r f(p_i^{e_i})\\). Also \\(f(1)=1\\). Thus the prime-power values determine \\(f\\) on every positive integer.",
+    "proof": [
+      "The prime powers \\(p_1^{e_1},\\ldots,p_r^{e_r}\\) are pairwise coprime because the primes \\(p_i\\) are distinct. For \\(r=1\\), the formula is simply the value \\(f(p_1^{e_1})\\).",
+      "For \\(r>1\\), the product \\(p_1^{e_1}\\cdots p_{r-1}^{e_{r-1}}\\) is coprime to \\(p_r^{e_r}\\). Multiplicativity gives \\(f(n)=f(p_1^{e_1}\\cdots p_{r-1}^{e_{r-1}})f(p_r^{e_r})\\).",
+      "Apply the same argument to the first \\(r-1\\) prime powers and continue until each factor is a single prime power. This yields \\(f(n)=\\prod_i f(p_i^{e_i})\\). The case \\(n=1\\) is fixed by the defining condition \\(f(1)=1\\). The proof uses unique factorization to identify the prime powers and multiplicativity only across coprime factors."
+    ],
+    "example": {
+      "prompt": "Compare the totient \\(\\varphi\\) and the constant-one function at coprime and repeated inputs.",
+      "steps": [
+        "For the coprime inputs \\(2\\) and \\(3\\), \\(\\varphi(6)=2=\\varphi(2)\\varphi(3)\\). This is consistent with multiplicativity.",
+        "For the repeated input \\(2\\cdot2=4\\), \\(\\varphi(4)=2\\), while \\(\\varphi(2)\\varphi(2)=1\\). Thus \\(\\varphi\\) is not completely multiplicative.",
+        "The function \\(\\mathbf 1(n)=1\\) for every positive integer is completely multiplicative, since \\(\\mathbf 1(mn)=1=\\mathbf 1(m)\\mathbf 1(n)\\) for all \\(m,n\\)."
+      ],
+      "conclusion": "A multiplicative function may have \\(f(p^2)\\ne f(p)^2\\). Complete multiplicativity is a stronger rule, not a consequence of multiplicativity."
+    },
+    "practice": {
+      "prompt": "Give a multiplicative function that is not completely multiplicative, and verify both claims with explicit inputs.",
+      "hints": [
+        "Use the totient and compare a prime with its square.",
+        "For the multiplicative claim, choose a coprime pair."
+      ],
+      "answer": "Take \\(f=\\varphi\\). It is multiplicative by the CRT unit-counting argument. For the coprime pair \\(2,3\\), \\(\\varphi(6)=2=\\varphi(2)\\varphi(3)\\). But \\(\\varphi(4)=2\\ne1=\\varphi(2)^2\\), so it is not completely multiplicative."
+    },
+    "caution": "Do not use \\(f(mn)=f(m)f(n)\\) for a merely multiplicative function unless \\(\\gcd(m,n)=1\\) has been checked.",
+    "bridge": "Prime-power values are local data. Unique factorization lists the independent prime-power components, and multiplicativity combines only components with disjoint prime factors.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 04. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "A02",
+    "title": "Divisor count and divisor sums",
+    "cluster": "Arithmetic functions",
+    "question": "Why do the number and sum of divisors factor into independent choices?",
+    "prerequisites": [
+      "A01",
+      "D06"
+    ],
+    "summary": "Every divisor chooses an exponent independently at each prime. Counting those choices gives the divisor-count formula; summing their powers gives a product of finite geometric sums. The same prime-support argument proves multiplicativity for coprime inputs.",
+    "definition": [
+      "For \\(n\\ge1\\), let \\(\\tau(n)\\) be the number of positive divisors of \\(n\\), and let \\(\\sigma_k(n)=\\sum_{d\\mid n}d^k\\) for a nonnegative integer \\(k\\). Write \\(\\sigma(n)=\\sigma_1(n)\\).",
+      "Use the convention \\(\\sigma_0(n)=\\tau(n)\\). For \\(n=1\\), the only positive divisor is \\(1\\), so \\(\\tau(1)=\\sigma_k(1)=1\\)."
+    ],
+    "theorem": "If \\(n=\\prod_{i=1}^r p_i^{e_i}\\ge1\\), then \\(\\tau(n)=\\prod_{i=1}^r(e_i+1)\\) and \\(\\sigma_k(n)=\\prod_{i=1}^r\\left(1+p_i^k+p_i^{2k}+\\cdots+p_i^{e_i k}\\right)\\). The empty product for \\(n=1\\) is \\(1\\). Both \\(\\tau\\) and each \\(\\sigma_k\\) are multiplicative.",
+    "proof": [
+      "By unique factorization, a positive divisor \\(d\\mid n\\) has a unique form \\(d=\\prod_i p_i^{j_i}\\), where each exponent independently satisfies \\(0\\le j_i\\le e_i\\). Conversely, every such choice gives a divisor. This is a bijection between divisors and the Cartesian product of the exponent sets.",
+      "There are \\(e_i+1\\) choices for \\(j_i\\), so the number of divisors is the product \\(\\prod_i(e_i+1)\\). For the sum, use \\(d^k=\\prod_i p_i^{k j_i}\\) and distribute the finite sum over all exponent choices: \\(\\sum_{d\\mid n}d^k=\\prod_i\\sum_{j_i=0}^{e_i}p_i^{k j_i}\\). This is a finite distributive expansion, so no convergence or division by a geometric-series denominator is involved.",
+      "If \\(\\gcd(m,n)=1\\), their prime factorizations have disjoint prime sets. A divisor of \\(mn\\) is uniquely a product \\(d_1d_2\\) with \\(d_1\\mid m\\) and \\(d_2\\mid n\\). Therefore the divisors of \\(mn\\) correspond bijectively to pairs of divisors of \\(m\\) and \\(n\\), proving \\(\\tau(mn)=\\tau(m)\\tau(n)\\).",
+      "Under the same bijection, \\((d_1d_2)^k=d_1^kd_2^k\\). Summing over all pairs factors into \\(\\left(\\sum_{d_1\\mid m}d_1^k\\right)\\left(\\sum_{d_2\\mid n}d_2^k\\right)\\). Hence \\(\\sigma_k(mn)=\\sigma_k(m)\\sigma_k(n)\\). The case of an input equal to \\(1\\) follows from the stated conventions."
+    ],
+    "example": {
+      "prompt": "Use the exponent grid for \\(72\\) to calculate its divisor count and divisor sum.",
+      "steps": [
+        "Factor \\(72=2^3\\cdot3^2\\). Its divisors are exactly \\(2^i3^j\\), with \\(0\\le i\\le3\\) and \\(0\\le j\\le2\\).",
+        "The grid has \\((3+1)(2+1)=12\\) entries. Written in increasing order, the divisors are \\(1,2,3,4,6,8,9,12,18,24,36,72\\), so \\(\\tau(72)=12\\).",
+        "The product formula gives \\(\\sigma(72)=(1+2+4+8)(1+3+9)=15\\cdot13=195\\)."
+      ],
+      "conclusion": "Independent exponent choices give \\(\\tau(72)=12\\) and \\(\\sigma(72)=195\\), matching the divisor list and its sum."
+    },
+    "practice": {
+      "prompt": "Find \\(\\tau(100)\\) and \\(\\sigma(100)\\) from the prime-power formulas. Explain why the factors separate.",
+      "hints": [
+        "Write \\(100=2^2\\cdot5^2\\).",
+        "Count the exponent choices, then multiply the two finite sums."
+      ],
+      "answer": "The factorization \\(100=2^2\\cdot5^2\\) gives \\(\\tau(100)=(2+1)(2+1)=9\\). Also \\(\\sigma(100)=(1+2+4)(1+5+25)=7\\cdot31=217\\). Each divisor has a unique pair of exponents for the two distinct primes, so the choices and the finite sum factor."
+    },
+    "caution": "The product formulas use finite nonnegative exponents, and multiplicativity combines coprime inputs. For noncoprime inputs, multiplying divisor sums counts shared prime powers incorrectly.",
+    "bridge": "The divisor set is a product of finite exponent-choice sets. This concrete product structure is the reason divisor-count and divisor-sum functions multiply on coprime inputs.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 04. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "A03",
+    "title": "Dirichlet convolution as a finite operation",
+    "cluster": "Arithmetic functions",
+    "question": "How can two arithmetic functions combine by pairing each divisor with its complementary factor?",
+    "prerequisites": [
+      "A01",
+      "A02"
+    ],
+    "summary": "Dirichlet convolution adds products of function values across all factorizations of an integer. Its identity is concentrated at \\(1\\); finite divisor reindexing proves the algebra laws and multiplicativity without any analytic convergence.",
+    "definition": [
+      "For arithmetic functions \\(f,g:\\mathbb Z_{>0}\\to\\mathbb C\\), define their Dirichlet convolution by \\((f\\ast g)(n)=\\sum_{d\\mid n}f(d)g(n/d)\\). This is a finite sum over positive divisors.",
+      "Define \\(\\varepsilon(1)=1\\) and \\(\\varepsilon(n)=0\\) for \\(n>1\\). Let \\(\\mathbf 1(n)=1\\) for every positive integer. The function \\(\\varepsilon\\) is the convolution identity; \\(\\mathbf 1\\) is a different function."
+    ],
+    "theorem": "Dirichlet convolution is commutative and associative, has identity \\(\\varepsilon\\), and preserves multiplicativity: if \\(f\\) and \\(g\\) are multiplicative, then \\(f\\ast g\\) is multiplicative.",
+    "proof": [
+      "For commutativity, replace the divisor \\(d\\) in \\((f\\ast g)(n)\\) by its complementary divisor \\(n/d\\). This is a bijection on the divisors of \\(n\\), and it changes each summand \\(f(d)g(n/d)\\) into \\(g(n/d)f(d)\\). Thus \\(f\\ast g=g\\ast f\\).",
+      "For associativity, expand \\(((f\\ast g)\\ast h)(n)\\). Its terms are indexed by pairs \\(d\\mid n\\) and \\(a\\mid d\\), and have the form \\(f(a)g(d/a)h(n/d)\\). Set \\(b=d/a\\) and \\(c=n/d\\); this is a bijection with ordered triples of positive integers \\((a,b,c)\\) satisfying \\(abc=n\\). The sum is therefore \\(\\sum_{abc=n}f(a)g(b)h(c)\\), which is also the expansion of \\((f\\ast(g\\ast h))(n)\\). All sums are finite, so rearranging them is valid.",
+      "For the identity, \\((f\\ast\\varepsilon)(n)=\\sum_{d\\mid n}f(d)\\varepsilon(n/d)\\). The only nonzero term occurs when \\(n/d=1\\), namely \\(d=n\\), so the result is \\(f(n)\\). Commutativity gives \\(\\varepsilon\\ast f=f\\) as well.",
+      "Now assume \\(\\gcd(m,n)=1\\) and \\(f,g\\) are multiplicative. Every divisor of \\(mn\\) is uniquely \\(d_1d_2\\) with \\(d_1\\mid m\\) and \\(d_2\\mid n\\), because the prime factors of \\(m\\) and \\(n\\) are disjoint. Its complementary factor is \\((m/d_1)(n/d_2)\\). Multiplicativity splits each summand, giving \\((f\\ast g)(mn)=\\sum_{d_1\\mid m}\\sum_{d_2\\mid n} f(d_1)g(m/d_1)f(d_2)g(n/d_2)\\). Factoring the finite double sum yields \\((f\\ast g)(m)(f\\ast g)(n)\\). Finally, \\((f\\ast g)(1)=f(1)g(1)=1\\), so \\(f\\ast g\\) is multiplicative."
+    ],
+    "example": {
+      "prompt": "Compute \\((\\mathbf 1\\ast\\mathbf 1)(12)\\), and compare it with the pointwise product.",
+      "steps": [
+        "The positive divisors of \\(12\\) are \\(1,2,3,4,6,12\\). Each convolution term is \\(\\mathbf 1(d)\\mathbf 1(12/d)=1\\).",
+        "There are six divisors, so \\((\\mathbf 1\\ast\\mathbf 1)(12)=6=\\tau(12)\\).",
+        "The pointwise product has value \\(\\mathbf 1(12)\\mathbf 1(12)=1\\), which is not \\(6\\)."
+      ],
+      "conclusion": "Convolution sums over complementary divisor pairs; pointwise multiplication evaluates both functions at the same input."
+    },
+    "practice": {
+      "prompt": "For \\(\\mathbf 1(n)=1\\), expand \\(((\\mathbf 1\\ast\\mathbf 1)\\ast\\mathbf 1)(4)\\) as a sum over ordered triples and evaluate it.",
+      "hints": [
+        "Associativity identifies the terms with triples \\((a,b,c)\\) satisfying \\(abc=4\\).",
+        "Use the factorizations with one factor \\(4\\) or with two factors \\(2\\)."
+      ],
+      "answer": "The value is \\(\\sum_{abc=4}\\mathbf 1(a)\\mathbf 1(b)\\mathbf 1(c)\\). The ordered triples are \\((4,1,1),(1,4,1),(1,1,4),(2,2,1),(2,1,2),(1,2,2)\\). There are six, and every summand equals \\(1\\), so the convolution value is \\(6\\)."
+    },
+    "caution": "The symbol \\(\\ast\\) means a divisor sum here; it is not pointwise multiplication. Also keep \\(\\varepsilon\\) distinct from the constant-one function \\(\\mathbf 1\\).",
+    "bridge": "Arithmetic functions form a commutative algebra under pointwise addition and Dirichlet convolution. In this elementary setting every operation is defined by a finite sum; no infinite series or analytic convergence is involved.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 04. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "divisor"
+  },
+  {
+    "id": "A04",
+    "title": "Möbius inversion: undoing divisor sums",
+    "cluster": "Arithmetic functions",
+    "question": "If a value stores the sum of all earlier divisor values, can the original values be recovered?",
+    "prerequisites": [
+      "A03"
+    ],
+    "summary": "The Möbius function alternates over squarefree prime factors and vanishes on numbers with a repeated prime factor. Its divisor sum is the convolution identity, making it the exact inverse of the constant-one function under Dirichlet convolution and undoing a divisor sum.",
+    "definition": [
+      "Define the Möbius function by \\(\\mu(1)=1\\). If a prime square divides \\(n\\), set \\(\\mu(n)=0\\). Otherwise, if \\(n\\) is a product of \\(r\\) distinct primes, set \\(\\mu(n)=(-1)^r\\).",
+      "For an arithmetic function \\(f\\), its divisor-sum transform is \\(F(n)=\\sum_{d\\mid n}f(d)\\). In convolution notation this is \\(F=\\mathbf 1\\ast f\\), where \\(\\mathbf 1(n)=1\\)."
+    ],
+    "theorem": "For every \\(n\\ge1\\), \\(\\sum_{d\\mid n}\\mu(d)=\\varepsilon(n)\\). Consequently, if \\(F(n)=\\sum_{d\\mid n}f(d)\\), then \\(f(n)=\\sum_{d\\mid n}\\mu(d)F(n/d)\\); equivalently, \\(F=\\mathbf 1\\ast f\\) if and only if \\(f=\\mu\\ast F\\).",
+    "proof": [
+      "For \\(n=1\\), the divisor sum is \\(\\mu(1)=1=\\varepsilon(1)\\). Now let \\(n>1\\), and let its distinct prime divisors be \\(p_1,\\ldots,p_r\\), where \\(r\\ge1\\). A divisor contributes a nonzero value of \\(\\mu\\) exactly when it is squarefree, and each such divisor is the product of a unique subset of these primes.",
+      "A subset with \\(j\\) primes contributes \\((-1)^j\\). Summing over all subsets gives \\(\\sum_{d\\mid n}\\mu(d)=\\sum_{S\\subseteq\\{1,\\ldots,r\\}}(-1)^{|S|}=(1-1)^r=0\\). This proves the divisor-sum identity for every \\(n\\).",
+      "Suppose \\(F(n)=\\sum_{e\\mid n}f(e)\\). Then \\(\\sum_{d\\mid n}\\mu(d)F(n/d)=\\sum_{d\\mid n}\\mu(d)\\sum_{e\\mid n/d}f(e)\\). Reindex this finite sum by writing \\(n=deq\\), or equivalently grouping terms by \\(e\\mid n\\). The result is \\(\\sum_{e\\mid n}f(e)\\sum_{d\\mid n/e}\\mu(d)\\). The inner sum is \\(1\\) when \\(n/e=1\\) and \\(0\\) otherwise, by the identity just proved. Only \\(e=n\\) remains, giving \\(f(n)\\).",
+      "Conversely, if \\(f=\\mu\\ast F\\), convolve both sides with \\(\\mathbf 1\\). Associativity and commutativity give \\(\\mathbf 1\\ast f=(\\mathbf 1\\ast\\mu)\\ast F=\\varepsilon\\ast F=F\\), because the divisor-sum identity states \\(\\mathbf 1\\ast\\mu=\\varepsilon\\). Thus the two formulas are equivalent."
+    ],
+    "example": {
+      "prompt": "Recover \\(\\varphi(12)\\) from its divisor-sum identity \\(\\sum_{d\\mid n}\\varphi(d)=n\\).",
+      "steps": [
+        "First justify the identity. Partition the integers \\(a\\) with \\(1\\le a\\le n\\) according to \\(g=\\gcd(a,n)\\). For each part set \\(d=n/g\\) and \\(b=a/g\\). Then \\(1\\le b\\le d\\) and \\(\\gcd(b,d)=1\\), so this part has \\(\\varphi(d)\\) elements. Every \\(a\\) determines exactly one such pair, hence \\(n=\\sum_{d\\mid n}\\varphi(d)\\).",
+        "At \\(n=12\\), the identity is \\(\\sum_{d\\mid12}\\varphi(d)=12\\). Invert it using \\(\\varphi(12)=\\sum_{d\\mid12}\\mu(12/d)d\\).",
+        "For \\(d=1,2,3,4,6,12\\), the terms are \\(\\mu(12)\\cdot1=0\\), \\(\\mu(6)\\cdot2=2\\), \\(\\mu(4)\\cdot3=0\\), \\(\\mu(3)\\cdot4=-4\\), \\(\\mu(2)\\cdot6=-6\\), and \\(\\mu(1)\\cdot12=12\\). Their sum is \\(0+2+0-4-6+12=4\\)."
+      ],
+      "conclusion": "Möbius inversion recovers \\(\\varphi(12)=4\\). The divisor partition establishes the identity being inverted, and the signed divisor terms show each contribution."
+    },
+    "practice": {
+      "prompt": "Suppose \\(F(n)=\\sum_{d\\mid n}f(d)\\), and \\(F(1)=2\\), \\(F(2)=5\\), \\(F(3)=7\\), \\(F(6)=20\\). Recover \\(f(6)\\).",
+      "hints": [
+        "List the divisors of \\(6\\) in the inversion formula.",
+        "Use \\(\\mu(6)=1\\), \\(\\mu(3)=\\mu(2)=-1\\), and \\(\\mu(1)=1\\)."
+      ],
+      "answer": "The formula gives \\(f(6)=\\mu(6)F(1)+\\mu(3)F(2)+\\mu(2)F(3)+\\mu(1)F(6)\\). Thus \\(f(6)=2-5-7+20=10\\). Directly, the compatible values are \\(f(1)=2\\), \\(f(2)=3\\), \\(f(3)=5\\), and \\(f(6)=10\\), whose divisor sum is \\(20\\)."
+    },
+    "caution": "The value \\(\\mu(n)\\) is \\(0\\) when any prime square divides \\(n\\); it is not completely multiplicative. Möbius inversion undoes the divisor-sum transform, not pointwise multiplication.",
+    "bridge": "The identity \\(\\mathbf 1\\ast\\mu=\\varepsilon\\) says that \\(\\mu\\) is the convolution inverse of \\(\\mathbf 1\\). It is a finite algebraic cancellation law, with no infinite sums.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 04. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "divisor"
+  }
+]

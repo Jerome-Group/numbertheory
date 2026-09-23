@@ -1,0 +1,212 @@
+[
+  {
+    "id": "Q05",
+    "title": "Supplementary laws and efficient symbol calculation",
+    "cluster": "Quadratic arithmetic",
+    "question": "How do the exceptional factors \\(-1\\) and \\(2\\) fit the reciprocity calculation?",
+    "prerequisites": [
+      "Q03",
+      "Q04"
+    ],
+    "summary": "Two supplementary laws handle signs and powers of two; reciprocity then handles swaps between odd primes.",
+    "definition": [
+      "For an odd prime \\(p\\), \\(\\chi_p(a)\\in\\{-1,0,1\\}\\) is the Legendre symbol. If \\(p\\nmid a\\), it is \\(1\\) for a square and \\(-1\\) for a nonsquare.",
+      "To evaluate a symbol, first reduce the numerator modulo \\(p\\), factor out \\(-1\\) and powers of \\(2\\), use multiplicativity, and apply quadratic reciprocity only when swapping two distinct odd primes."
+    ],
+    "theorem": "For every odd prime \\(p\\), \\(\\chi_p(-1)=(-1)^{(p-1)/2}\\) and \\(\\chi_p(2)=(-1)^{(p^2-1)/8}\\). Thus \\(\\chi_p(-1)=1\\) exactly when \\(p\\equiv1\\pmod4\\), and \\(\\chi_p(2)=1\\) exactly when \\(p\\equiv1\\) or \\(7\\pmod8\\).",
+    "proof": [
+      "Euler’s criterion gives \\(\\chi_p(-1)\\equiv(-1)^{(p-1)/2}\\pmod p\\). Both integers are \\(\\pm1\\), distinct modulo odd \\(p\\), so they are equal. The exponent is even for \\(p\\equiv1\\pmod4\\) and odd for \\(p\\equiv3\\pmod4\\).",
+      "For \\(2\\), put \\(m=(p-1)/2\\). The least positive residues of \\(2,4,\\ldots,2m\\) are exactly those integers, all below \\(p\\). Gauss’s lemma counts those exceeding \\(p/2\\), namely the indices \\(j>p/4\\). Therefore \\(N=m-\\lfloor p/4\\rfloor\\) and \\(\\chi_p(2)=(-1)^N\\).",
+      "Write the odd prime as \\(p=8u+r\\), with \\(r\\in\\{1,3,5,7\\}\\). The four values of \\(N\\) are respectively \\(2u,2u+1,2u+1,2u+2\\), so its parity is respectively even, odd, odd, even. Direct expansion of \\((p^2-1)/8\\) in these four cases gives respectively \\(8u^2+2u\\), \\(8u^2+6u+1\\), \\(8u^2+10u+3\\), and \\(8u^2+14u+6\\), with exactly the same parities. This proves the second formula and its four residue classes."
+    ],
+    "example": {
+      "prompt": "Evaluate \\(\\chi_{13}(-18)\\) with a signed factor ledger.",
+      "steps": [
+        "Factor \\(-18=(-1)\\cdot2\\cdot3^2\\). Since \\(13\\equiv1\\pmod4\\), the sign factor contributes \\(\\chi_{13}(-1)=1\\).",
+        "Because \\(13\\equiv5\\pmod8\\), the factor \\(2\\) contributes \\(\\chi_{13}(2)=-1\\). Since \\(13\\nmid3\\), the square factor contributes \\(\\chi_{13}(3^2)=1\\).",
+        "Multiplicativity gives \\(\\chi_{13}(-18)=1\\cdot(-1)\\cdot1=-1\\). As a check, \\(-18\\equiv8\\pmod{13}\\), and \\(8\\) is absent from the nonzero square table."
+      ],
+      "conclusion": "\\(-18\\) is a nonresidue modulo \\(13\\); the ledger separates the sign, two-factor, and square contributions."
+    },
+    "practice": {
+      "prompt": "Compute \\(\\chi_{11}(-2)\\). Explain why dropping the negative sign gives the wrong answer.",
+      "hints": [
+        "Use the residue classes of \\(11\\) modulo \\(4\\) and \\(8\\).",
+        "Check whether \\(-2\\equiv9\\pmod{11}\\) is a square."
+      ],
+      "answer": "Since \\(11\\equiv3\\pmod4\\), \\(\\chi_{11}(-1)=-1\\). Since \\(11\\equiv3\\pmod8\\), \\(\\chi_{11}(2)=-1\\). Their product is \\(\\chi_{11}(-2)=1\\), confirmed by \\(-2\\equiv9\\equiv3^2\\pmod{11}\\). Dropping the sign would give the false value \\(-1\\)."
+    },
+    "caution": "The prime \\(2\\) is handled by its supplementary law. Quadratic reciprocity swaps only distinct odd primes.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Parity classes organize the calculation, but each sign comes from Gauss’s lemma, Euler’s criterion, or reciprocity."
+  },
+  {
+    "id": "Q06",
+    "title": "Jacobi symbols: efficient but not decisive",
+    "cluster": "Quadratic arithmetic",
+    "question": "Why can a Jacobi symbol equal \\(1\\) even when no square root exists?",
+    "prerequisites": [
+      "Q05",
+      "D05"
+    ],
+    "summary": "A Jacobi symbol multiplies local Legendre signs. Their product is fast to compute, but can hide a local nonsquare obstruction.",
+    "definition": [
+      "For an odd positive integer \\(n=\\prod_i p_i^{e_i}\\), define the Jacobi symbol \\(J(a,n)=\\left(\\frac an\\right)=\\prod_i\\chi_{p_i}(a)^{e_i}\\). Set \\(J(a,1)=1\\) for every integer \\(a\\). If \\(\\gcd(a,n)>1\\), at least one local factor is \\(0\\), so \\(J(a,n)=0\\).",
+      "For odd positive \\(n\\), this integer-valued symbol lies in \\(\\{-1,0,1\\}\\). When \\(n\\) is prime it is the Legendre symbol; when \\(n\\) is composite, its value alone does not decide whether \\(a\\) is a square modulo \\(n\\)."
+    ],
+    "theorem": "For odd positive \\(m,n\\) and integers \\(a,b\\), \\(J(ab,n)=J(a,n)J(b,n)\\) and \\(J(a,mn)=J(a,m)J(a,n)\\). If \\(m,n\\) are coprime, then \\(J(m,n)J(n,m)=(-1)^{((m-1)/2)((n-1)/2)}\\). Also \\(J(-1,n)=(-1)^{(n-1)/2}\\) and \\(J(2,n)=(-1)^{(n^2-1)/8}\\).",
+    "proof": [
+      "The two multiplicativity statements follow directly from the prime-factor definition and multiplicativity of each \\(\\chi_p\\); the convention at \\(n=1\\) is the empty product. If \\(\\gcd(a,n)>1\\), both sides of numerator multiplicativity still agree because the relevant local zero factor occurs in the product.",
+      "For the supplementary laws, apply the prime-level formulas to every prime factor, counted with multiplicity. On odd positive integers, the maps \\(t\\mapsto(-1)^{(t-1)/2}\\) and \\(t\\mapsto(-1)^{(t^2-1)/8}\\) are multiplicative. Indeed, for odd \\(u,v\\), the difference \\((uv-1)/2-(u-1)/2-(v-1)/2=(u-1)(v-1)/2\\) is even. Likewise, the difference \\(((uv)^2-1)/8-(u^2-1)/8-(v^2-1)/8=(u^2-1)(v^2-1)/8\\) is even because each of \\(u^2-1,v^2-1\\) is divisible by \\(8\\). Thus multiplying prime-level signs yields the displayed signs for \\(n\\).",
+      "For reciprocity, suppose \\(\\gcd(m,n)=1\\) and factor \\(m=\\prod_i p_i^{e_i}\\), \\(n=\\prod_j q_j^{f_j}\\). No \\(p_i\\) equals a \\(q_j\\). Prime-level reciprocity gives \\(\\chi_{q_j}(p_i)\\chi_{p_i}(q_j)=(-1)^{((p_i-1)/2)((q_j-1)/2)}\\). Multiply these relations with multiplicities \\(e_if_j\\). Their left side is \\(J(m,n)J(n,m)\\). The parity of \\(\\sum_i e_i(p_i-1)/2\\) is \\((m-1)/2\\), and similarly for \\(n\\), by the first multiplicative-sign identity just proved. The total exponent therefore has the parity stated in the theorem.",
+      "An efficient evaluation now follows from these laws: first compute \\(\\gcd(a,n)\\) and return \\(0\\) if it exceeds \\(1\\); otherwise reduce \\(a\\) modulo \\(n\\), remove factors of \\(2\\) using the supplementary sign, swap the remaining odd coprime numerator and denominator using reciprocity, and repeat until the denominator is \\(1\\). Euclidean remainders strictly decrease at each swap, so the procedure terminates. This evaluates the product of local signs without factoring \\(n\\), while CRT still requires every local root condition for a square modulo \\(n\\)."
+    ],
+    "example": {
+      "prompt": "Compute \\(J(2,15)\\) and decide separately whether \\(2\\) has a square root modulo \\(15\\).",
+      "steps": [
+        "The local factors are \\(\\chi_3(2)=-1\\) and \\(\\chi_5(2)=-1\\), so \\(J(2,15)=(-1)(-1)=1\\). The same sign follows from \\(15\\equiv7\\pmod8\\) and the supplementary law.",
+        "A square root modulo \\(15\\) would reduce to a square root of \\(2\\) modulo \\(3\\). The only squares modulo \\(3\\) are \\(0\\) and \\(1\\), so this is impossible."
+      ],
+      "conclusion": "The Jacobi symbol is \\(1\\), yet \\(2\\) is a nonresidue modulo \\(15\\); two local negative signs cancel."
+    },
+    "practice": {
+      "prompt": "Find another coprime numerator with Jacobi symbol \\(1\\) modulo \\(35\\) but no square root modulo \\(35\\). Verify a failing prime component.",
+      "hints": [
+        "Try \\(a=3\\), with local moduli \\(5\\) and \\(7\\).",
+        "List nonzero squares modulo \\(5\\) and \\(7\\)."
+      ],
+      "answer": "For \\(a=3\\), \\(\\chi_5(3)=-1\\) because nonzero squares modulo \\(5\\) are \\(1,4\\), and \\(\\chi_7(3)=-1\\) because nonzero squares modulo \\(7\\) are \\(1,2,4\\). Thus \\(J(3,35)=1\\), but a square root modulo \\(35\\) would give a square root of \\(3\\) modulo \\(5\\), which does not exist. Also \\(\\gcd(3,35)=1\\), so the example is not caused by a zero factor."
+    },
+    "caution": "For a coprime square, Jacobi value \\(1\\) is necessary. At composite moduli it is not sufficient: an even number of local negative signs can produce \\(1\\).",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "CRT shows why local root conditions are independent even when their Legendre signs multiply to one global Jacobi sign."
+  },
+  {
+    "id": "Q07",
+    "title": "Square-root formulas and composite moduli",
+    "cluster": "Quadratic arithmetic",
+    "question": "When can a square root be obtained by a single modular power?",
+    "prerequisites": [
+      "Q02",
+      "F02",
+      "F04"
+    ],
+    "summary": "For primes congruent to three modulo four, Euler’s criterion turns a nonzero square into an explicit root. Composite moduli require local roots and CRT.",
+    "definition": [
+      "Let \\(p\\) be prime with \\(p\\equiv3\\pmod4\\). Then \\((p+1)/4\\) is a positive integer, so \\(a^{(p+1)/4}\\) is an integer power.",
+      "A root of \\(a\\pmod n\\) is a class \\([x]_n\\) satisfying \\(x^2\\equiv a\\pmod n\\). A nonzero square modulo a prime has exactly two roots; zero has only the root zero."
+    ],
+    "theorem": "If \\(p\\equiv3\\pmod4\\) is prime and \\(a\\) is a nonzero quadratic residue modulo \\(p\\), then \\(r\\equiv a^{(p+1)/4}\\pmod p\\) is a root of \\(a\\). Its negative \\(-r\\) is the only other root modulo \\(p\\). If \\(p\\mid a\\), the sole root is \\(0\\).",
+    "proof": [
+      "Write \\(p=4k+3\\). Then \\((p+1)/4=k+1\\) and \\((p-1)/2=2k+1\\). Since \\(a\\) is a nonzero square, Euler’s criterion gives \\(a^{(p-1)/2}\\equiv1\\pmod p\\). Squaring the proposed value yields \\(r^2\\equiv a^{(p+1)/2}=a\\,a^{(p-1)/2}\\equiv a\\pmod p\\).",
+      "The root \\(r\\) is nonzero because \\(p\\nmid a\\), so \\(r\\) and \\(-r\\) are distinct modulo odd \\(p\\). If \\(x^2\\equiv a\\equiv r^2\\pmod p\\), then \\(p\\mid(x-r)(x+r)\\). Euclid’s lemma gives \\(x\\equiv r\\) or \\(x\\equiv-r\\pmod p\\), proving completeness. If \\(p\\mid a\\), then \\(p\\mid x^2\\) implies \\(p\\mid x\\), giving exactly the zero root.",
+      "The prime formula cannot be applied directly to a composite modulus. Factor it into coprime prime powers, solve each local square congruence (using lifting when appropriate), and combine every compatible local choice by CRT. The root count is the product of the local counts, as proved for polynomial congruences."
+    ],
+    "example": {
+      "prompt": "Use the power formula to find all roots of \\(5\\) modulo \\(11\\).",
+      "steps": [
+        "Because \\(11\\equiv3\\pmod4\\), the exponent is \\((11+1)/4=3\\). The value \\(5\\) is a square since \\(4^2=16\\equiv5\\pmod{11}\\).",
+        "Compute \\(r=5^3=125\\equiv4\\pmod{11}\\). Its negative is \\(-4\\equiv7\\pmod{11}\\).",
+        "Check \\(4^2=16\\equiv5\\) and \\(7^2=49\\equiv5\\pmod{11}\\). The field factorization proof excludes further roots."
+      ],
+      "conclusion": "The complete root set is \\(\\{4,7\\}\\pmod{11}\\)."
+    },
+    "practice": {
+      "prompt": "Solve \\(x^2\\equiv1\\pmod{45}\\) by local roots and CRT, rather than applying the prime power formula to \\(45\\).",
+      "hints": [
+        "Factor \\(45=9\\cdot5\\); the factors are coprime.",
+        "The roots are \\(\\pm1\\) modulo each local factor. Combine four pairs."
+      ],
+      "answer": "Modulo \\(9\\), the roots of \\(x^2\\equiv1\\) are \\(1,8\\); modulo \\(5\\), they are \\(1,4\\). CRT gives one class modulo \\(45\\) for each of the four pairs: \\(1,19,26,44\\). Their squares are congruent to \\(1\\pmod{45}\\); for instance \\(19^2=361\\equiv1\\) and \\(26^2=676\\equiv1\\). There are no others because the local root lists are complete and CRT is bijective."
+    },
+    "caution": "The exponent formula requires both \\(p\\equiv3\\pmod4\\) and a nonzero square modulo the prime \\(p\\). For a nonsquare its proposed value is not a root.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "A field-level formula supplies local roots; lifting and CRT address prime powers and composite moduli."
+  },
+  {
+    "id": "S01",
+    "title": "Primes as sums of two squares",
+    "cluster": "Sums of squares",
+    "question": "Why do primes congruent to \\(1\\pmod4\\) behave differently from primes congruent to \\(3\\pmod4\\)?",
+    "prerequisites": [
+      "C08",
+      "C06",
+      "D05"
+    ],
+    "summary": "A prime congruent to one modulo four has a square root of negative one. A minimal-multiple descent turns that modular fact into an integer sum of two squares.",
+    "definition": [
+      "A representation of a positive integer \\(n\\) as two squares is an equality \\(n=x^2+y^2\\) with integers \\(x,y\\). The signs and order of \\(x,y\\) do not affect existence.",
+      "For a prime \\(p\\equiv1\\pmod4\\), Wilson’s theorem supplies a root of \\(-1\\pmod p\\): if \\(h=(p-1)/2\\), pair \\(j\\) with \\(p-j\\) to get \\((p-1)!\\equiv(-1)^h(h!)^2\\equiv(h!)^2\\pmod p\\), while Wilson gives \\((p-1)!\\equiv-1\\pmod p\\)."
+    ],
+    "theorem": "For every odd prime \\(p\\), integers \\(x,y\\) satisfy \\(p=x^2+y^2\\) if and only if \\(p\\equiv1\\pmod4\\). The remaining prime \\(2\\) equals \\(1^2+1^2\\).",
+    "proof": [
+      "Necessity: every integer square is \\(0\\) or \\(1\\pmod4\\). If \\(p=x^2+y^2\\) is odd, one of \\(x,y\\) is odd and the other even; two even squares sum to an even number, as do two odd squares. Hence \\(p\\equiv1+0=1\\pmod4\\).",
+      "For sufficiency let \\(p\\equiv1\\pmod4\\), so \\(p\\ge5\\), and let \\(h=(p-1)/2\\), which is even. The Wilson pairing in the definition gives \\((h!)^2\\equiv-1\\pmod p\\). Choose \\(t\\in\\{1,\\ldots,p-1\\}\\) representing \\(h!\\pmod p\\). Then \\(p\\mid t^2+1\\), so \\(t^2+1=mp\\) for a positive integer \\(m\\). Since \\(t\\le p-1\\), \\(t^2+1\\le(p-1)^2+1<p^2\\); thus \\(1\\le m<p\\). At least one sum of two squares is therefore a positive multiple \\(mp\\) with \\(m<p\\).",
+      "Choose such a representation \\(x^2+y^2=mp\\) with \\(m\\) minimal among the positive multipliers below \\(p\\). Suppose \\(m>1\\). Choose integers \\(r,s\\) congruent to \\(x,y\\pmod m\\), respectively, with \\(|r|,|s|\\le m/2\\). Since \\(r^2+s^2\\equiv x^2+y^2=mp\\equiv0\\pmod m\\), write \\(r^2+s^2=mm_1\\) for an integer \\(m_1\\ge0\\). Also \\(r^2+s^2\\le m^2/2\\), so \\(m_1\\le m/2<m\\).",
+      "The value \\(m_1\\) cannot be zero. If \\(r=s=0\\), then \\(m\\mid x\\) and \\(m\\mid y\\), so \\(m^2\\mid x^2+y^2=mp\\), whence \\(m\\mid p\\). This contradicts \\(1<m<p\\) and primality of \\(p\\). Thus \\(0<m_1<m\\).",
+      "Now use the exact identity \\((x^2+y^2)(r^2+s^2)=(xr+ys)^2+(xs-yr)^2\\). Since \\(r\\equiv x\\) and \\(s\\equiv y\\pmod m\\), we have \\(xr+ys\\equiv x^2+y^2\\equiv0\\pmod m\\) and \\(xs-yr\\equiv xy-yx=0\\pmod m\\). Divide both coordinates by \\(m\\) to obtain integers \\(X=(xr+ys)/m\\), \\(Y=(xs-yr)/m\\), satisfying \\(X^2+Y^2=(mp)(mm_1)/m^2=pm_1\\). This contradicts minimality because \\(0<m_1<m\\). Hence \\(m=1\\) and \\(p=x^2+y^2\\). Finally, \\(2=1^2+1^2\\) is checked separately."
+    ],
+    "example": {
+      "prompt": "Compare \\(13\\) and \\(11\\) as candidates for sums of two integer squares.",
+      "steps": [
+        "For \\(13\\), the equality \\(13=2^2+3^2\\) gives a representation. Its congruence class \\(13\\equiv1\\pmod4\\) is the permitted odd-prime class.",
+        "For \\(11\\), the class is \\(11\\equiv3\\pmod4\\). Since a sum of two squares that is odd must be \\(1\\pmod4\\), no representation can exist.",
+        "A root of \\(-1\\pmod{13}\\), such as \\(5\\) because \\(5^2=25\\equiv-1\\pmod{13}\\), is an intermediate modular certificate; it is not itself the pair \\((2,3)\\)."
+      ],
+      "conclusion": "\\(13\\) is a sum of two squares, while \\(11\\) is excluded by the parity obstruction."
+    },
+    "practice": {
+      "prompt": "Let \\(p\\equiv3\\pmod4\\) be prime. Prove that if \\(p\\mid x^2+y^2\\), then \\(p\\mid x\\) and \\(p\\mid y\\).",
+      "hints": [
+        "Assume \\(p\\nmid y\\) and multiply by the inverse of \\(y^2\\pmod p\\).",
+        "Use Fermat’s theorem to rule out a square root of \\(-1\\) when \\((p-1)/2\\) is odd."
+      ],
+      "answer": "If \\(p\\nmid y\\), then \\(y\\) has an inverse modulo \\(p\\), so \\((xy^{-1})^2\\equiv-1\\pmod p\\). Write \\(z=xy^{-1}\\), which is nonzero. Because \\((p-1)/2\\) is odd, \\(z^{p-1}=(z^2)^{(p-1)/2}\\equiv-1\\pmod p\\), contradicting Fermat’s theorem \\(z^{p-1}\\equiv1\\pmod p\\). Hence \\(p\\mid y\\). The original divisibility then gives \\(p\\mid x^2\\), and primality gives \\(p\\mid x\\)."
+    },
+    "caution": "A root of \\(-1\\pmod p\\) establishes a divisible sum \\(t^2+1=mp\\), not immediately \\(m=1\\). The centered-remainder descent proves the multiplier can be reduced.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 02. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The identity multiplying two sums of squares is a norm pattern, but the proof needs only integer congruences, minimality, and that exact identity."
+  },
+  {
+    "id": "S02",
+    "title": "Character sums as finite counting",
+    "cluster": "Sums of squares",
+    "question": "How can a sum of signs encode the number of solutions of an equation?",
+    "prerequisites": [
+      "Q02"
+    ],
+    "summary": "The values zero, one, and minus one of the quadratic character count square roots exactly. A change of variables turns a correlation sum into a count of inverse pairs.",
+    "definition": [
+      "Fix an odd prime \\(p\\). Extend the Legendre symbol by \\(\\chi_p(0)=0\\). For any \\(z\\in\\mathbb F_p\\), the number of \\(y\\in\\mathbb F_p\\) with \\(y^2=z\\) is \\(1+\\chi_p(z)\\): it is one for zero, two for a nonzero square, and zero for a nonsquare.",
+      "All sums below run over the \\(p\\) residue classes of \\(\\mathbb F_p\\). The arguments \\(a,b,m\\) are residue classes; arithmetic in the proof is modulo \\(p\\)."
+    ],
+    "theorem": "For every odd prime \\(p\\), \\(\\sum_{m\\in\\mathbb F_p}\\chi_p(m)=0\\). For any \\(a,b\\in\\mathbb F_p\\), \\(\\sum_{m\\in\\mathbb F_p}\\chi_p((m-a)(m-b))=p-1\\) when \\(a=b\\), and equals \\(-1\\) when \\(a\\ne b\\).",
+    "proof": [
+      "Exactly \\((p-1)/2\\) nonzero classes are squares and the same number are nonsquares; their \\(+1\\) and \\(-1\\) contributions cancel, while \\(\\chi_p(0)=0\\). Hence \\(\\sum_m\\chi_p(m)=0\\). The root-count formula in the definition follows from the complete root classification over the prime field.",
+      "If \\(a=b\\), then \\((m-a)(m-b)=(m-a)^2\\). Its symbol is \\(0\\) for the one class \\(m=a\\), and \\(1\\) for the other \\(p-1\\) classes. This gives the diagonal value \\(p-1\\).",
+      "Now assume \\(a\\ne b\\), so \\(b-a\\) is a unit. Substitute \\(u=(m-a)/(b-a)\\); as \\(m\\) ranges over the field, so does \\(u\\). Then \\((m-a)(m-b)=(b-a)^2u(u-1)\\). Multiplicativity and the fact that a nonzero square has symbol \\(1\\) reduce the correlation to \\(J=\\sum_{u\\in\\mathbb F_p}\\chi_p(u(u-1))\\).",
+      "Count the pairs \\((u,v)\\in\\mathbb F_p^2\\) satisfying \\(v^2=u(u-1)\\). For each \\(u\\), there are \\(1+\\chi_p(u(u-1))\\) choices of \\(v\\), so the total is \\(p+J\\). Set \\(w=2u-1\\) and \\(z=2v\\), an invertible change because \\(p\\) is odd. The equation becomes \\(w^2-z^2=1\\), or \\((w-z)(w+z)=1\\).",
+      "Choose any nonzero \\(t=w-z\\); then \\(w+z=t^{-1}\\), and the unique solution is \\(w=(t+t^{-1})/2\\), \\(z=(t^{-1}-t)/2\\). Conversely every pair on the hyperbola gives such a nonzero \\(t\\). There are exactly \\(p-1\\) possible values of \\(t\\), so \\(p+J=p-1\\) and \\(J=-1\\). This proves the off-diagonal value without treating a zero term as a sign."
+    ],
+    "example": {
+      "prompt": "For \\(p=5\\), calculate every contribution when \\(a=0\\) and \\(b=1\\).",
+      "steps": [
+        "The nonzero squares modulo \\(5\\) are \\(1,4\\); hence the symbol values at \\(0,1,2,3,4\\) are \\(0,1,-1,-1,1\\).",
+        "For \\(m=0,1,2,3,4\\), the values of \\(m(m-1)\\pmod5\\) are \\(0,0,2,1,2\\), respectively.",
+        "The five contributions are therefore \\(0,0,-1,1,-1\\), summing to \\(-1\\). The two zero terms come from \\(m=a\\) and \\(m=b\\)."
+      ],
+      "conclusion": "The direct table gives \\(\\sum_m\\chi_5(m(m-1))=-1\\), as the off-diagonal theorem predicts."
+    },
+    "practice": {
+      "prompt": "Compute \\(\\sum_{m\\in\\mathbb F_7}\\chi_7((m-2)(m-5))\\) directly, then explain why the same value holds for any distinct pair \\(a,b\\in\\mathbb F_7\\).",
+      "hints": [
+        "The nonzero squares modulo \\(7\\) are \\(1,2,4\\).",
+        "Use the affine substitution \\(u=(m-a)/(b-a)\\) for the general claim."
+      ],
+      "answer": "For \\(m=0,1,2,3,4,5,6\\), the product residues are \\(3,4,0,5,5,0,4\\), with symbol values \\(-1,1,0,-1,-1,0,1\\). Their sum is \\(-1\\). For any distinct \\(a,b\\), multiplication by the square \\((b-a)^2\\) does not change the symbol, and the affine change \\(u=(m-a)/(b-a)\\) permutes the field. Thus every off-diagonal sum equals the same \\(\\sum_u\\chi_7(u(u-1))=-1\\)."
+    },
+    "caution": "A zero argument contributes \\(0\\), not either sign. The diagonal and off-diagonal cases have different counts.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "This is a concrete quadratic character sum; the proof uses finite-field arithmetic and a bijection, not complex-character theory."
+  }
+]

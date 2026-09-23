@@ -20,3 +20,10 @@
 /course-materials/
 /private-notes/
 /student-data/
+
+# Generated site output and installed dependencies
+/node_modules/
+/dist/
+/.sites-runtime/
+/.sites-checkout/
+*.tar.gz

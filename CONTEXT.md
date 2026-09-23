@@ -26,3 +26,19 @@ The configuration every repository in the Organisation inherits — branch prote
 security defaults, and the per-repository settings. It is applied from the management hub, not
 from here.
 _Avoid_: template, policy, default
+
+**Concept ID**:
+A stable subject identifier such as `D04`, independent of course handout and semester.
+_Avoid_: lecture number, route position
+
+**Lesson**:
+A continuous teaching record with definition, claim, proof, worked example, practice, boundary and source note.
+_Avoid_: card, slide
+
+**Lab**:
+A bounded, exact experiment that helps inspect a mathematical claim, with a textual trace alongside the interaction.
+_Avoid_: proof, calculator-only view
+
+**Sites version**:
+A saved build tied to an exact source commit; deployment and custom-domain publication are separate operations.
+_Avoid_: GitHub merge
