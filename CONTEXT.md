@@ -1,6 +1,6 @@
-# <repository> — context
+# Number Theory — context
 
-*(One line: the domain this repository operates in.)*
+An interactive learning website for number theory.
 
 ## Language
 
@@ -11,9 +11,9 @@ could reasonably mean different things by the same word.
 Each entry is the term, what it means **here**, and the near-synonyms to avoid so the wrong one
 does not creep back in.
 
-**\<Term\>**:
-What it means in this repository.
-_Avoid_: the words that mean something adjacent and would blur it
+**Learning site**:
+The public website built from this repository's owned educational source.
+_Avoid_: course files, which may be linked under their own access controls but are not published here
 
 Two terms are Organisation-wide and mean the same thing in every repository:
 

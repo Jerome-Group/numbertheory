@@ -1,21 +1,20 @@
-# AGENTS.md — <repository>
+# AGENTS.md — numbertheory
 
 > Canonical instruction file for AI agents (Claude Code and others) working in this repo.
 > `CLAUDE.md` is a symlink to this file, so the two can never drift.
 
 ## What this repo is
 
-*(One paragraph: what this repository is for, and what it is not for. Replace this and the
-heading above before the first pull request.)*
+The public Number Theory learning website. Keep owned educational source, examples, and assets
+here. Keep credentials, private notes, student data, authenticated browser state, and unlicensed
+third-party material outside its tree and history.
 
-- **Visibility:** *(private | public)*
+- **Visibility:** public
 - **Organisation:** [Jerome-Group](https://github.com/Jerome-Group)
 
 ## Getting it running
 
-*(The commands an agent could not have guessed — install, run, test, lint — and any constraint
-on where they may be run. Fill this in with the first real code; until then it is honestly
-empty.)*
+No application has been added yet. Record install, run, and test commands when source arrives.
 
 ## Conventions
 
