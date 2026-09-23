@@ -1,6 +1,7 @@
-# <repository>
+# Number Theory
 
-*(One or two sentences: what this is and who it is for.)*
+An open-source home for an interactive number theory learning website. It will help students
+explore concepts through explanations, examples, and visual tools.
 
 A [Jerome-Group](https://github.com/Jerome-Group) repository. It was born from a template, so
 it already carries the Organisation's conventions — see [`MAP.md`](MAP.md) to find your way
@@ -8,8 +9,8 @@ around and [`AGENTS.md`](AGENTS.md) for how work is done here.
 
 ## Status
 
-🌱 Newly generated. Replace this section, the title, and the description above.
+🌱 Repository foundation. The website application has not been added yet.
 
 ## Getting started
 
-*(How to run it, build it, or test it.)*
+There is no application to run yet. Future source and its setup instructions will be added here.

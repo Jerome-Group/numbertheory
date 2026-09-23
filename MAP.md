@@ -1,6 +1,6 @@
 # Map
 
-*(One line: what this repository is.)*
+The public Number Theory learning website; application source has not been added yet.
 
 Start here: `README.md`, then `AGENTS.md`.
 

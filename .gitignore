@@ -10,3 +10,13 @@
 .env
 .env.*
 *.local
+
+# Private course and learning material
+*.[pP][dD][fF]
+*.ppt
+*.pptx
+*.doc
+*.docx
+/course-materials/
+/private-notes/
+/student-data/
