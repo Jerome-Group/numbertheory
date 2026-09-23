@@ -1,0 +1,253 @@
+[
+  {
+    "id": "R04",
+    "title": "Best approximations and the convergent criterion",
+    "cluster": "Continued fractions",
+    "question": "What precise sense of “best” do convergents satisfy?",
+    "prerequisites": [
+      "R03"
+    ],
+    "summary": "Convergents minimize the scaled error among numerators with a specified denominator bound. A separate strict error threshold guarantees that a reduced rational is a convergent; neither statement means every convergent is best under every metric.",
+    "definition": [
+      "Let \\(\\xi\\) be irrational with convergents \\(p_n/q_n\\), where \\(q_n>0\\). For a rational candidate \\(a/b\\) with \\(b>0\\), its first-kind error is \\(\\lvert\\xi-a/b\\rvert\\), while its second-kind error is \\(\\lvert b\\xi-a\\rvert\\). They differ by the factor \\(b\\), so a best result must name the error and denominator range.",
+      "The convergents obey \\(p_nq_{n-1}-p_{n-1}q_n=(-1)^{n-1}\\), hence adjacent column vectors form an integer basis. Write \\(e_n=q_n\\xi-p_n\\) for their signed second-kind errors."
+    ],
+    "theorem": "For every \\(n\\ge0\\) and integers \\(a,b\\) with \\(0<b<q_{n+1}\\), \\(\\lvert b\\xi-a\\rvert\\ge\\lvert q_n\\xi-p_n\\rvert\\), with equality only for \\((a,b)=(p_n,q_n)\\). Also, if \\(a/b\\) is reduced with \\(b>0\\) and \\(\\lvert\\xi-a/b\\rvert<1/(2b^2)\\), then \\(a/b\\) is a convergent of \\(\\xi\\). The latter is a sufficient criterion with a strict inequality, not an equivalence.",
+    "proof": [
+      "The complete-quotient formula from the preceding lesson gives \\(\\xi=(p_{n+1}t+p_n)/(q_{n+1}t+q_n)\\), where \\(t=[a_{n+2};a_{n+3},\\ldots]>1\\). Using the determinant identity, \\(e_n\\) and \\(e_{n+1}\\) have opposite signs and \\(\\lvert e_n\\rvert=t\\lvert e_{n+1}\\rvert>\\lvert e_{n+1}\\rvert\\).",
+      "The adjacent vectors \\((p_n,q_n)\\) and \\((p_{n+1},q_{n+1})\\) are an integer basis, so write \\((a,b)=A(p_n,q_n)+B(p_{n+1},q_{n+1})\\) with integers \\(A,B\\). Then \\(b\\xi-a=Ae_n+Be_{n+1}\\). If \\(B=0\\), positivity of \\(b=Aq_n<q_{n+1}\\) forces \\(A\\ge1\\), and the error is \\(A\\lvert e_n\\rvert\\). If \\(A=0\\), then \\(b=Bq_{n+1}\\) cannot lie strictly between \\(0\\) and \\(q_{n+1}\\). If both coefficients are nonzero, they cannot have the same sign: two positive coefficients give \\(b\\ge q_{n+1}+q_n\\), and two negative ones give \\(b<0\\). Thus they have opposite signs. Since the convergent errors also have opposite signs, \\(Ae_n\\) and \\(Be_{n+1}\\) then have the same sign, and \\(\\lvert b\\xi-a\\rvert=\\lvert A\\rvert\\lvert e_n\\rvert+\\lvert B\\rvert\\lvert e_{n+1}\\rvert>\\lvert e_n\\rvert\\). Equality in all cases occurs only at \\(A=1,B=0\\). This proves the second-kind statement, including its denominator restriction.",
+      "For the strict criterion, first let \\(b>1\\). The canonical finite continued fraction of the reduced rational \\(a/b\\) has a penultimate convergent \\(u/v\\) with \\(0<v<b\\) and \\(\\lvert av-bu\\rvert=1\\). The alternative finite expansion ending in \\(1\\) gives a second penultimate convergent on the other side of \\(a/b\\), also with denominator strictly between \\(0\\) and \\(b\\), and determinant of opposite sign. Choose the one, say \\(u/v\\), on the same side of \\(a/b\\) as \\(\\xi\\). Its distance is \\(\\lvert a/b-u/v\\rvert=1/(bv)>1/b^2\\); the assumed error is less than \\(1/(2b^2)\\), so \\(\\xi\\) lies strictly between these two fractions.",
+      "Because \\(a/b\\) and \\(u/v\\) are adjacent convergents in that finite expansion, the fractional-linear formula for appending a tail gives a unique \\(t>0\\) with \\(\\xi=(at+u)/(bt+v)\\). The determinant of the pair has absolute value \\(1\\), so \\(\\lvert\\xi-a/b\\rvert=1/[b(bt+v)]\\). The error hypothesis implies \\(bt+v>2b\\). Since \\(v<b\\), this forces \\(t>1\\). Every irrational tail greater than \\(1\\) has a simple continued fraction with positive later entries; appending that tail makes \\(a/b\\) a convergent. If \\(b=1\\), the condition says \\(\\xi\\) is within \\(1/2\\) of the integer \\(a\\). If \\(\\xi>a\\), then \\(a=\\lfloor\\xi\\rfloor\\) is the first convergent. If \\(\\xi<a\\), then \\(\\lfloor\\xi\\rfloor=a-1\\) and \\(1/(\\xi-a+1)\\in(1,2)\\), so the next partial quotient is \\(1\\) and \\(a/1\\) is the next convergent. This covers every denominator and proves the criterion."
+    ],
+    "example": {
+      "prompt": "With denominator budget \\(b\\le5\\), compare \\(7/5\\) and \\(4/3\\) as approximations to \\(\\sqrt2\\).",
+      "steps": [
+        "Both are below \\(\\sqrt2\\): \\(49/25<2\\) and \\(16/9<2\\). Their first-kind errors are \\(\\sqrt2-7/5\\) and \\(\\sqrt2-4/3\\). The difference, larger error minus smaller, is \\( (\\sqrt2-4/3)-(\\sqrt2-7/5)=1/15>0\\), so \\(7/5\\) is closer than \\(4/3\\).",
+        "For \\(7/5\\), \\(\\lvert\\sqrt2-7/5\\rvert=(5\\sqrt2-7)/5<1/50\\): after multiplying by positive quantities this is equivalent to \\(50\\sqrt2<71\\), whose square is \\(5000<5041\\). The criterion therefore confirms that \\(7/5\\) is a convergent.",
+        "The convergents begin \\(1/1,3/2,7/5,17/12\\), so the next denominator after \\(5\\) is \\(12\\). The second-kind theorem says \\(7/5\\) beats every distinct pair \\((a,b)\\) with \\(0<b<12\\) in \\(\\lvert b\\sqrt2-a\\rvert\\), even though that is a different comparison from first-kind error."
+      ],
+      "conclusion": "The denominator budget and error measure change the meaning of “best”; strict error and second-kind guarantees have different hypotheses."
+    },
+    "practice": {
+      "prompt": "For \\(\\xi=\\sqrt2\\), state the exact denominator bound under which \\(7/5\\) is best for \\(\\lvert b\\xi-a\\rvert\\), and identify one distinct candidate covered by it.",
+      "hints": [
+        "Use the next convergent \\(17/12\\).",
+        "Do not replace the strict denominator condition by \\(b\\le12\\)."
+      ],
+      "answer": "The convergent \\(7/5\\) has next denominator \\(12\\). The second-kind result applies to every integer pair with \\(0<b<12\\), and gives \\(\\lvert b\\sqrt2-a\\rvert\\ge\\lvert5\\sqrt2-7\\rvert\\), with equality only for \\((a,b)=(7,5)\\). For example \\((a,b)=(4,3)\\) is in range and has strictly larger second-kind error. The theorem makes no claim at \\(b=12\\)."
+    },
+    "caution": "“Best approximation” is incomplete unless it names first-kind or second-kind error and the denominator bound. The Legendre criterion is sufficient only with reduced numerator and denominator and the strict threshold.",
+    "bridge": "The integer-basis proof uses the same determinant-one structure to compare rational approximants; quadratic surds add a finite-state mechanism that forces their continued fractions to repeat.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "R05",
+    "title": "Quadratic irrationals and periodicity",
+    "cluster": "Continued fractions",
+    "question": "Why do square roots generate repeating continued-fraction states?",
+    "prerequisites": [
+      "R03"
+    ],
+    "summary": "Exact integer recurrences give finitely many states for square roots, while conjugation reduces every real quadratic irrational to a finite set of reduced states. This proves eventual periodicity and the pure-periodic criterion without relying on decimal patterns.",
+    "definition": [
+      "For a real irrational \\(\\xi\\), set \\(\\xi_0=\\xi\\), \\(a_n=\\lfloor\\xi_n\\rfloor\\), and \\(\\xi_{n+1}=1/(\\xi_n-a_n)\\). Then \\(\\xi_n>1\\) for \\(n\\ge1\\). The conjugate \\(\\xi'\\) of a quadratic irrational is the other root of its irreducible quadratic polynomial; conjugation commutes with the rational recurrence when the same integer digits are used.",
+      "For a positive nonsquare integer \\(D\\), write \\(a_0=\\lfloor\\sqrt D\\rfloor\\) and define \\(m_0=0,d_0=1\\). The exact square-root state recurrence is \\(m_{n+1}=d_na_n-m_n\\), \\(d_{n+1}=(D-m_{n+1}^2)/d_n\\), and \\(a_{n+1}=\\lfloor(a_0+m_{n+1})/d_{n+1}\\rfloor\\)."
+    ],
+    "theorem": "Every real quadratic irrational has an eventually periodic simple continued fraction, and every irrational with an eventually periodic simple continued fraction is quadratic. Among quadratic irrationals, \\(\\xi\\) is purely periodic if and only if \\(\\xi>1\\) and its conjugate satisfies \\(-1<\\xi'<0\\). In particular, the exact recurrence above gives eventual periodicity for \\(\\sqrt D\\) for every positive nonsquare integer \\(D\\), whether or not \\(D\\) is squarefree.",
+    "proof": [
+      "For the square-root recurrence, induction gives \\(\\xi_n=(\\sqrt D+m_n)/d_n\\). The invariant \\(d_n\\mid D-m_n^2\\) holds initially; because \\(m_{n+1}\\equiv-m_n\\pmod{d_n}\\), it implies \\(d_n\\mid D-m_{n+1}^2\\), so \\(d_{n+1}\\) is an integer. Every digit \\(a_n\\) is at least \\(1\\). The floor inequalities give \\(d_na_n\\le\\sqrt D+m_n<d_n(a_n+1)\\). The first implies \\(m_{n+1}<\\sqrt D\\), since \\(\\sqrt D\\) is irrational; and \\(a_n,d_n\\ge1\\) with \\(m_n<\\sqrt D\\) imply \\(m_{n+1}=d_na_n-m_n\\ge d_n-m_n>1-\\sqrt D> -\\sqrt D\\). Thus \\(D-m_{n+1}^2>0\\) and \\(d_{n+1}>0\\). The state \\((m_n,d_n)\\) has only finitely many possibilities: \\(m_n\\) is an integer with \\(\\lvert m_n\\rvert<\\sqrt D\\), and \\(d_n\\) is a positive divisor of \\(D-m_n^2\\). The next digit and state are determined by the current state, so a repeated state starts a periodic tail.",
+      "For a general real quadratic irrational, its quadratic formula writes \\(\\xi_0=(P_0+\\sqrt{\\Delta})/Q_0\\) with integers \\(P_0,Q_0\\ne0\\), positive nonsquare integer \\(\\Delta\\), and \\(Q_0\\mid\\Delta-P_0^2\\). Indeed, for \\(AX^2+BX+C=0\\) use its discriminant \\(\\Delta=B^2-4AC\\); the two roots have this form with \\(P_0=-B,Q_0=2A\\) or \\(P_0=B,Q_0=-2A\\), and divisibility follows from \\(\\Delta-B^2=-4AC\\). At each continued-fraction step set \\(P_{n+1}=a_nQ_n-P_n\\) and \\(Q_{n+1}=(\\Delta-P_{n+1}^2)/Q_n\\). Since \\(P_{n+1}\\equiv-P_n\\pmod{Q_n}\\), the divisibility invariant is preserved; rationalizing \\(1/(\\xi_n-a_n)\\) shows \\(\\xi_{n+1}=(P_{n+1}+\\sqrt{\\Delta})/Q_{n+1}\\). The denominators may initially be signed, but are nonzero because \\(\\Delta\\) is nonsquare.",
+      "After the initial digit, start at \\(n\\ge1\\), where \\(\\xi_n>1\\) and \\(a_n\\ge1\\). The conjugate orbit eventually enters \\((-1,0)\\). If \\(\\xi_n'<0\\) but is at most \\(-1\\), then \\(\\xi_{n+1}'=1/(\\xi_n'-a_n)\\in(-1/2,0)\\). If \\(\\xi_n'>0\\) and its floor differs from \\(a_n\\), then \\(\\xi_{n+1}'\\) is negative when the conjugate floor is smaller; when it is larger, \\(\\xi_{n+1}'\\in(0,1)\\), so the following step is negative. If the floors agree, \\(\\xi_{n+1}'>1\\) and iteration continues; if they agree forever, the two complete quotients have identical infinite simple continued fractions, contradicting that they are distinct conjugates. A negative value below \\(-1\\) enters \\((-1,0)\\) one step later. Once \\(\\xi_n'\\in(-1,0)\\), it remains there because \\(a_n\\ge1\\) and \\(\\xi_{n+1}'=1/(\\xi_n'-a_n)\\in(-1,0)\\).",
+      "Call such a complete quotient reduced. In the integer representation \\(\\xi_n=(P_n+\\sqrt{\\Delta})/Q_n\\), its conjugate is \\((P_n-\\sqrt{\\Delta})/Q_n\\). Reduction implies \\(Q_n>0\\), \\(0<P_n<\\sqrt{\\Delta}\\), and \\(Q_n<P_n+\\sqrt{\\Delta}<2\\sqrt{\\Delta}\\): the first sign follows from \\(\\xi_n>\\xi_n'\\), and \\(P_n>0\\) follows from \\(\\xi_n+\\xi_n'>0\\). There are finitely many integer pairs \\((P_n,Q_n)\\). The recurrence is deterministic, so a state repeats and the tail is periodic. This proves quadratic irrational implies eventual periodicity.",
+      "Conversely, if the digits repeat after a finite prefix, the periodic tail is fixed by the fractional-linear map of one period. The period matrix is a product of \\(M(a)=\\begin{pmatrix}a&1\\\\1&0\\end{pmatrix}\\), so its fixed-point equation is a nonzero quadratic equation with integer coefficients. The tail, and then the original number by the finite prefix transformation, is quadratic. It is irrational by hypothesis, so its degree is exactly two.",
+      "If a quadratic irrational is purely periodic, let \\(M(a_0)\\cdots M(a_{L-1})=\\begin{pmatrix}A&B\\\\C&D_0\\end{pmatrix}\\) be one period matrix. Its entries satisfy \\(B,C>0\\), \\(A\\ge B\\), \\(C\\ge D_0\\), and \\(A+C>B+D_0\\); these follow from the initial matrix and the multiplication recurrence. Its fixed-point polynomial is \\(Cx^2+(D_0-A)x-B\\). The product of its roots is \\(-B/C<0\\), so the other root is negative. At \\(x=-1\\) the polynomial is \\(A+C-B-D_0>0\\); since the positive root \\(\\xi\\) exceeds \\(1\\), this forces the other root to exceed \\(-1\\). Thus \\(\\xi\\) is reduced.",
+      "Finally suppose \\(\\xi>1\\) and \\(-1<\\xi'<0\\). Its complete-quotient step preserves reduction: \\(\\xi_{n+1}'=1/(\\xi_n'-a_n)\\in(-1,0)\\). The finite-state argument therefore applies from the first state. This step is also one-to-one on reduced quadratic irrationals: if \\(\\beta=1/(\\alpha-a)\\), then \\(\\alpha=a+1/\\beta\\); the condition \\(-1<\\alpha'<0\\) determines the unique integer \\(a\\ge1\\) for which \\(\\beta'\\in(-1/a,-1/(a+1))\\). A finite orbit of a one-to-one map is a cycle from its first state, so the continued fraction is purely periodic."
+    ],
+    "example": {
+      "prompt": "Compare the continued fractions of \\(\\sqrt2\\) and \\(1+\\sqrt2\\) using their conjugates.",
+      "steps": [
+        "For \\(D=2\\), the square-root states begin \\((m_1,d_1)=(1,1)\\), giving \\(a_1=2\\) and returning to the same state. Thus \\(\\sqrt2=[1;\\overline{2}]\\): it is eventually periodic, with a nonrepeating initial digit.",
+        "Its conjugate is \\(-\\sqrt2<-1\\), so \\(\\sqrt2\\) does not meet the pure-periodic criterion. By contrast, \\(1+\\sqrt2>1\\) has conjugate \\(1-\\sqrt2\\in(-1,0)\\), and it is purely periodic: \\(1+\\sqrt2=[\\overline{2}]\\)."
+      ],
+      "conclusion": "A repeated tail does not imply pure periodicity; the conjugate interval distinguishes the two cases."
+    },
+    "practice": {
+      "prompt": "For any positive nonsquare integer \\(D\\), explain why adding \\(a_0=\\lfloor\\sqrt D\\rfloor\\) to \\(\\sqrt D\\) places the conjugate in the pure-periodic interval.",
+      "hints": [
+        "Use \\(a_0<\\sqrt D<a_0+1\\).",
+        "Check the number itself is greater than \\(1\\)."
+      ],
+      "answer": "Since \\(D\\ge2\\), \\(a_0\\ge1\\) and \\(a_0+\\sqrt D>1\\). Its conjugate is \\(a_0-\\sqrt D\\), and \\(a_0<\\sqrt D<a_0+1\\) gives \\(-1<a_0-\\sqrt D<0\\). The pure-periodic criterion therefore applies to \\(a_0+\\sqrt D\\)."
+    },
+    "caution": "Do not infer a period from repeated decimal digits. The recurrence uses exact integer states and applies to nonsquare D whether or not D is squarefree; pure periodicity requires the stated conjugate interval.",
+    "bridge": "Periodic square-root states give exact norm identities for convergents; the parity of their period will locate the fundamental Pell solution.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "continued-fraction"
+  },
+  {
+    "id": "R06",
+    "title": "Pell: finding and proving a fundamental solution",
+    "cluster": "Pell equations",
+    "question": "Why does the continued fraction eventually produce \\(x^2-Dy^2=1\\)?",
+    "prerequisites": [
+      "R05",
+      "R04"
+    ],
+    "summary": "The square-root state recurrence gives a convergent norm identity. A reduced-error criterion forces every positive Pell solution to be a convergent, and the period parity identifies the first one with norm one.",
+    "definition": [
+      "Let \\(D\\) be a positive nonsquare integer. A positive Pell solution is a pair of integers \\(x,y>0\\) satisfying \\(x^2-Dy^2=1\\). The trivial solution \\((1,0)\\) is kept separate. The fundamental solution is the positive solution with least \\(y\\), equivalently least \\(x\\).",
+      "Write \\(\\sqrt D=[a_0;\\overline{a_1,\\ldots,a_L}]\\) with least period length \\(L\\ge1\\), and let \\(p_k/q_k\\) be its convergents indexed from \\(k=0\\), so \\(p_0/q_0=a_0/1\\). For the exact square-root states use \\(m_n,d_n\\) as in R05."
+    ],
+    "theorem": "For every positive nonsquare integer \\(D\\), Pell’s equation has a positive solution. With the indexing above, if \\(L\\) is even, the fundamental solution is \\((x_1,y_1)=(p_{L-1},q_{L-1})\\); if \\(L\\) is odd, it is \\((x_1,y_1)=(p_{2L-1},q_{2L-1})\\). In both cases \\(p_k^2-Dq_k^2=1\\) at the stated index.",
+    "proof": [
+      "The complete-quotient identity is \\(\\sqrt D=(p_k\\alpha_{k+1}+p_{k-1})/(q_k\\alpha_{k+1}+q_{k-1})\\), where \\(\\alpha_{k+1}=(\\sqrt D+m_{k+1})/d_{k+1}\\). Using the adjacent determinant \\(p_kq_{k-1}-p_{k-1}q_k=(-1)^{k-1}\\) gives \\(p_k-q_k\\sqrt D=(-1)^{k-1}/(q_k\\alpha_{k+1}+q_{k-1})\\). Comparing the coefficients of \\(1\\) and \\(\\sqrt D\\) in the complete-quotient identity also gives \\(p_k=q_km_{k+1}+d_{k+1}q_{k-1}\\), hence \\(p_k+q_k\\sqrt D=d_{k+1}(q_k\\alpha_{k+1}+q_{k-1})\\). Multiplying the last two equations proves the exact norm identity \\(p_k^2-Dq_k^2=(-1)^{k+1}d_{k+1}\\), including \\(k=0\\).",
+      "The complete quotient \\(\\alpha_1=1/(\\sqrt D-a_0)\\) has conjugate \\(\\alpha_1'=-1/(\\sqrt D+a_0)\\in(-1,0)\\), and \\(\\alpha_1>1\\). By the pure-periodic criterion, its state cycle starts immediately; its least period is the digit period \\(L\\) of \\(\\sqrt D\\), so \\(\\alpha_{L+1}=\\alpha_1\\). Since \\(\\alpha_L=a_L+1/\\alpha_{L+1}\\), conjugating and substituting \\(\\alpha_1'=-1/(\\sqrt D+a_0)\\) gives \\(\\alpha_L'=a_L-a_0-\\sqrt D\\). But the state formula gives \\(\\alpha_L'=(m_L-\\sqrt D)/d_L\\). Equality in \\(\\mathbb Q(\\sqrt D)\\) forces \\(d_L=1\\) and \\(m_L=a_L-a_0\\).",
+      "Every state \\(\\alpha_n\\) for \\(n\\ge1\\) is reduced. If \\(d_n=1\\), then \\(\\alpha_n' =m_n-\\sqrt D\\in(-1,0)\\), so \\(m_n<\\sqrt D<m_n+1\\) and therefore \\(m_n=a_0\\). Thus the state is \\((a_0,1)\\), the state occurring at \\(n=L\\). Minimality of the period means this state occurs exactly when \\(n\\) is a positive multiple of \\(L\\). Consequently, \\(d_n=1\\) exactly at those indices.",
+      "The norm identity now gives a convergent of norm \\(1\\) when \\(n=k+1\\) is an even multiple of \\(L\\). The first such index is \\(n=L\\) if \\(L\\) is even and \\(n=2L\\) if \\(L\\) is odd. This proves existence at \\(k=L-1\\) or \\(k=2L-1\\), respectively.",
+      "It remains to prove minimality. If \\(x^2-Dy^2=1\\) with \\(x,y>0\\), then \\(\\gcd(x,y)=1\\), since a common divisor squared would divide \\(1\\). The equation gives \\(x^2-y^2=(D-1)y^2+1>0\\), so \\(x/y>1\\). Also \\(x/y>\\sqrt D>1\\), and \\(x/y-\\sqrt D=1/[y^2(x/y+\\sqrt D)]<1/(2y^2)\\). The Legendre criterion from R04 makes \\(x/y\\) a convergent. Because it is reduced, its denominator is the convergent denominator \\(q_k=y\\); the norm identity then forces \\(k+1\\) to be an even multiple of \\(L\\). No earlier convergent can be a positive solution. The denominators increase after the initial possible tie \\(q_0=q_1=1\\), and the candidate indices are at least \\(1\\), so the first candidate also has least \\(y\\) and least \\(x\\)."
+    ],
+    "example": {
+      "prompt": "Find the fundamental solution for \\(D=13\\) and show why a small search window misses it.",
+      "steps": [
+        "The exact states begin \\( (m_1,d_1)=(3,4),(m_2,d_2)=(1,3),(m_3,d_3)=(2,3),(m_4,d_4)=(1,4),(m_5,d_5)=(3,1)\\), with digits \\(1,1,1,1,6\\); the next state repeats \\( (3,4)\\). Thus \\(\\sqrt{13}=[3;\\overline{1,1,1,1,6}]\\) has period length \\(5\\).",
+        "Because \\(5\\) is odd, use convergent index \\(2L-1=9\\). The recurrence gives \\(p_9/q_9=649/180\\), and direct calculation gives \\(649^2-13\\cdot180^2=421201-421200=1\\).",
+        "A plot restricted to \\(x,y\\le100\\) would show no positive solution, but the exact period theorem certifies \\( (649,180)\\) as the first one."
+      ],
+      "conclusion": "The fundamental solution is \\(x_1=649,y_1=180\\); the period parity and exact norm provide its existence and minimality certificate."
+    },
+    "practice": {
+      "prompt": "Find the fundamental solution for \\(D=7\\) from its period and verify the norm.",
+      "hints": [
+        "Use \\(\\sqrt7=[2;\\overline{1,1,1,4}]\\).",
+        "The period has even length, so use index \\(L-1\\)."
+      ],
+      "answer": "The period is \\(L=4\\), so the fundamental convergent is \\(p_3/q_3\\). The convergents are \\(2/1,3/1,5/2,8/3\\). Its norm is \\(8^2-7\\cdot3^2=64-63=1\\), and the period-parity theorem certifies \\( (8,3)\\) as the least positive solution."
+    },
+    "caution": "A bounded search can fail to display the fundamental point. Positive Pell solvability and minimality come from the period theorem, not from a search viewport.",
+    "bridge": "The fundamental norm-one element generates further solutions by multiplication; a separate completeness argument is needed to show that no positive solutions are missed.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "pell"
+  },
+  {
+    "id": "R07",
+    "title": "All Pell solutions and norm-one multiplication",
+    "cluster": "Pell equations",
+    "question": "How can multiplying algebraic expressions generate every positive solution?",
+    "prerequisites": [
+      "R06"
+    ],
+    "summary": "Norm multiplication preserves Pell solutions. Powers of the least positive norm-one element give every positive solution, and inverses and signs account for the remaining integer solutions.",
+    "definition": [
+      "For integers \\(x,y\\), write \\(\\alpha=x+y\\sqrt D\\) and define its conjugate \\(\\bar\\alpha=x-y\\sqrt D\\) and norm \\(N(\\alpha)=\\alpha\\bar\\alpha=x^2-Dy^2\\). Multiplication has integer coordinates: \\( (x+y\\sqrt D)(u+v\\sqrt D)=(xu+Dyv)+(xv+yu)\\sqrt D\\).",
+      "Let \\(D>0\\) be nonsquare and let \\(\\varepsilon=x_1+y_1\\sqrt D>1\\) be the fundamental positive solution of \\(N(\\varepsilon)=1\\), with \\(x_1,y_1>0\\). The trivial solution \\(1+0\\sqrt D\\), negative signs, and reciprocal powers are distinguished from positive solutions."
+    ],
+    "theorem": "The positive integer solutions of \\(x^2-Dy^2=1\\) with \\(x,y>0\\) are exactly the coefficients of \\(\\varepsilon^k\\) for integers \\(k\\ge1\\). All integer solutions are given by \\(\\pm\\varepsilon^k\\) for \\(k\\in\\mathbb Z\\), with \\(\\varepsilon^0=1\\); the sign of the \\(\\sqrt D\\)-coefficient distinguishes positive from reciprocal solutions.",
+    "proof": [
+      "For \\(\\alpha=x+y\\sqrt D\\) and \\(\\beta=u+v\\sqrt D\\), multiplication gives integer coordinates by the displayed formula. Conjugation respects multiplication, so \\(N(\\alpha\\beta)=N(\\alpha)N(\\beta)\\). Thus every positive integer power of \\(\\varepsilon\\) has integer coordinates and norm \\(1\\). Its coordinates remain positive by the recurrence \\(x_{k+1}=x_1x_k+Dy_1y_k\\), \\(y_{k+1}=y_1x_k+x_1y_k\\), starting at \\( (x_1,y_1)\\).",
+      "For completeness, take any positive solution \\(\\alpha=x+y\\sqrt D>1\\). Since \\(\\varepsilon>1\\), there is an integer \\(k\\ge0\\) with \\(\\varepsilon^k\\le\\alpha<\\varepsilon^{k+1}\\). The inverse is \\(\\varepsilon^{-1}=x_1-y_1\\sqrt D\\), which has integer coordinates, so \\(\\beta=\\alpha\\varepsilon^{-k}=u+v\\sqrt D\\) has integer coordinates, norm \\(1\\), and \\(1\\le\\beta<\\varepsilon\\). Its conjugate is \\(1/\\beta\\), hence \\(u=(\\beta+\\beta^{-1})/2\\) and \\(v=(\\beta-\\beta^{-1})/(2\\sqrt D)\\). If \\(\\beta>1\\), these formulas give \\(u,v>0\\). For a norm-one element \\(y_1=(\\varepsilon-\\varepsilon^{-1})/(2\\sqrt D)\\). Since \\(v=(\\beta-\\beta^{-1})/(2\\sqrt D)\\) strictly increases with \\(\\beta>1\\), \\(1<\\beta<\\varepsilon\\) gives \\(0<v<y_1\\), contradicting that \\(y_1\\) is the least positive second coordinate of a solution. Thus \\(\\beta=1\\) and \\(\\alpha=\\varepsilon^k\\). Since \\(\\alpha>1\\), \\(k\\ge1\\).",
+      "For an arbitrary integer solution, \\(\\alpha=x+y\\sqrt D\\) has norm \\(1\\). If \\(\\alpha>0\\), then \\(\\bar\\alpha=1/\\alpha>0\\), so \\(x=(\\alpha+\\alpha^{-1})/2>0\\). If \\(\\alpha>1\\), then \\(y=(\\alpha-\\alpha^{-1})/(2\\sqrt D)>0\\), and the positive classification gives \\(\\alpha=\\varepsilon^k\\) with \\(k\\ge1\\); if \\(0<\\alpha<1\\), its inverse is greater than \\(1\\), so \\(\\alpha=\\varepsilon^{-k}\\). The case \\(\\alpha=1\\) is \\(k=0\\). If \\(\\alpha<0\\), apply the same argument to \\(-\\alpha\\), giving a negative power or sign of one already listed. These exhaust the integer solutions."
+    ],
+    "example": {
+      "prompt": "Generate the first three positive solutions for \\(D=2\\) from its fundamental unit.",
+      "steps": [
+        "The fundamental unit is \\(\\varepsilon=3+2\\sqrt2\\), with norm \\(3^2-2\\cdot2^2=1\\). Multiplication by it gives \\(x_{k+1}=3x_k+4y_k\\) and \\(y_{k+1}=2x_k+3y_k\\).",
+        "Starting from \\( (x_1,y_1)=(3,2)\\), one obtains \\( (x_2,y_2)=(17,12)\\) and \\( (x_3,y_3)=(99,70)\\). Indeed, \\( (3+2\\sqrt2)^2=17+12\\sqrt2\\), and multiplying once more gives \\(99+70\\sqrt2\\).",
+        "The norms are \\(9-8=1\\), \\(289-2\\cdot144=1\\), and \\(9801-2\\cdot4900=1\\)."
+      ],
+      "conclusion": "Norm-one multiplication generates positive solutions; the reduction argument proves these powers are all of them."
+    },
+    "practice": {
+      "prompt": "Use the \\(D=2\\) recurrence to generate the next solution after \\( (17,12)\\), and verify norm preservation algebraically.",
+      "hints": [
+        "Multiply \\(17+12\\sqrt2\\) by \\(3+2\\sqrt2\\).",
+        "Expand \\( (3x+4y)^2-2(2x+3y)^2\\)."
+      ],
+      "answer": "The recurrence gives \\(x_3=3\\cdot17+4\\cdot12=99\\) and \\(y_3=2\\cdot17+3\\cdot12=70\\). In general, \\( (3x+4y)^2-2(2x+3y)^2=x^2-2y^2\\) after expansion, so norm \\(1\\) is preserved. Here \\(99^2-2\\cdot70^2=9801-9800=1\\)."
+    },
+    "caution": "Showing that powers generate infinitely many solutions is not a completeness proof. The reduction to the interval \\( [1,\\varepsilon)\\) rules out every other positive solution.",
+    "bridge": "Norm-one units form a cyclic sequence generated by the fundamental unit. Changing the target norm from \\(1\\) to \\(-1\\) is a separate solvability question.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "R08",
+    "title": "Negative Pell and a careful boundary",
+    "cluster": "Pell equations",
+    "question": "Why does changing \\(1\\) to \\(-1\\) alter solvability?",
+    "prerequisites": [
+      "R06",
+      "R07"
+    ],
+    "summary": "Negative Pell solutions exist exactly when the square-root continued-fraction period has odd length. The same exact convergent norm identity proves the criterion; positive Pell’s universal solvability does not transfer to norm minus one.",
+    "definition": [
+      "For a positive nonsquare integer \\(D\\), the negative Pell equation is \\(x^2-Dy^2=-1\\), with positive solutions requiring \\(x,y>0\\). Let \\(L\\) be the least period length of \\(\\sqrt D=[a_0;\\overline{a_1,\\ldots,a_L}]\\).",
+      "The exact convergent norm identity is \\(p_k^2-Dq_k^2=(-1)^{k+1}d_{k+1}\\), where \\(p_k/q_k\\) is a convergent and \\(d_n\\) is the positive denominator in the square-root state recurrence."
+    ],
+    "theorem": "For every positive nonsquare integer \\(D\\), the equation \\(x^2-Dy^2=-1\\) has a positive integer solution if and only if the period length \\(L\\) of \\(\\sqrt D\\) is odd. If \\(L\\) is odd, \\(p_{L-1}^2-Dq_{L-1}^2=-1\\); if \\(L\\) is even, no integer solution exists.",
+    "proof": [
+      "First, the square-root states \\( (m_n,d_n)\\) for \\(n\\ge1\\) are reduced and cycle with least period \\(L\\). If \\(d_n=1\\), then the conjugate complete quotient is \\(m_n-\\sqrt D\\in(-1,0)\\); hence \\(m_n<\\sqrt D<m_n+1\\) and \\(m_n=a_0\\). This is the unique state \\( (a_0,1)\\), which occurs at \\(n=L\\); minimality of the state period shows \\(d_n=1\\) exactly when \\(n\\) is a positive multiple of \\(L\\).",
+      "Neither coordinate can vanish, since that would require \\(x^2=-1\\) or \\(Dy^2=1\\). Replacing an integer solution by absolute values gives \\(x,y>0\\); the equation also implies \\(x\\ge y\\), because \\(x^2-y^2=(D-1)y^2-1\\ge0\\). Thus \\(\\gcd(x,y)=1\\). Since \\(x/y<\\sqrt D\\), we have \\(\\sqrt D-x/y=1/[y^2(\\sqrt D+x/y)]<1/(2y^2)\\), as \\(\\sqrt D+x/y>1+1=2\\). The Legendre criterion makes \\(x/y\\) a convergent \\(p_k/q_k\\), and reducedness gives \\(x=p_k,y=q_k\\). Its norm identity forces \\(d_{k+1}=1\\) and \\(k+1\\) odd. The state fact then says \\(k+1\\) is an odd multiple of \\(L\\). Such an index exists exactly when \\(L\\) is odd; the first is \\(k+1=L\\), yielding the claimed convergent.",
+      "Conversely, if \\(L\\) is odd, the state fact gives \\(d_L=1\\). At \\(k=L-1\\), the norm identity is \\(p_{L-1}^2-Dq_{L-1}^2=(-1)^L d_L=-1\\). For a positive nonsquare \\(D\\), these convergents have positive coordinates, so this is a positive solution. If \\(L\\) is even, every index with \\(d_{k+1}=1\\) has \\(k+1\\) an even multiple of \\(L\\), making the norm identity positive; the preceding argument rules out any negative-norm solution."
+    ],
+    "example": {
+      "prompt": "Compare negative Pell for \\(D=2\\) and \\(D=3\\).",
+      "steps": [
+        "For \\(D=2\\), \\(\\sqrt2=[1;\\overline2]\\) has odd period length \\(1\\), and \\(1^2-2\\cdot1^2=-1\\).",
+        "For \\(D=3\\), \\(\\sqrt3=[1;\\overline{1,2}]\\) has even period length \\(2\\). Independently, a solution would imply \\(x^2\\equiv-1\\equiv2\\pmod3\\), but the only square residues modulo \\(3\\) are \\(0,1\\)."
+      ],
+      "conclusion": "Positive Pell is solvable in both cases, but negative Pell is solvable for \\(D=2\\) and not for \\(D=3\\)."
+    },
+    "practice": {
+      "prompt": "Show directly that \\(x^2-7y^2=-1\\) has no integer solution by reducing modulo \\(4\\).",
+      "hints": [
+        "Separate even and odd \\(y\\).",
+        "Squares modulo \\(4\\) are only \\(0\\) and \\(1\\)."
+      ],
+      "answer": "If \\(y\\) is even, then \\(7y^2\\equiv0\\pmod4\\), so the equation requires \\(x^2\\equiv-1\\equiv3\\pmod4\\), impossible. If \\(y\\) is odd, then \\(7y^2\\equiv3\\pmod4\\), so it requires \\(x^2\\equiv2\\pmod4\\), also impossible. Thus the congruence has no solution modulo \\(4\\), and neither does the integer equation."
+    },
+    "caution": "The odd-period criterion concerns norm \\(-1\\) only. It does not follow from positive-Pell solvability, and a local modular obstruction can prove nonexistence without computing a period.",
+    "bridge": "The norm identities classify positive and negative Pell behavior. Pythagorean triples use a related integer factorization but require a separate parity and coprimality argument.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "pell"
+  },
+  {
+    "id": "E01",
+    "title": "Pythagorean triples and descent",
+    "cluster": "Elementary extensions",
+    "question": "How do parity and coprimality classify integer right triangles?",
+    "prerequisites": [
+      "D05",
+      "D07"
+    ],
+    "summary": "Every primitive positive Pythagorean triple has one odd leg and one even leg. Factoring the difference of squares reduces it to coprime square factors, giving the classical parametrization and its exact conditions.",
+    "definition": [
+      "A positive Pythagorean triple is \\( (x,y,z)\\in\\mathbb Z_{>0}^3\\) with \\(x^2+y^2=z^2\\). It is primitive when \\(\\gcd(x,y,z)=1\\). We may swap the two legs; signs are handled by taking absolute values, and a common positive scale produces a nonprimitive triple.",
+      "The standard parameters satisfy \\(u>v>0\\), \\(\\gcd(u,v)=1\\), and opposite parity. With the odd leg listed first, they give \\( (x,y,z)=(u^2-v^2,2uv,u^2+v^2)\\)."
+    ],
+    "theorem": "Every primitive positive Pythagorean triple, after possibly swapping its legs, has a unique representation \\( (u^2-v^2,2uv,u^2+v^2)\\) with \\(u>v>0\\), \\(\\gcd(u,v)=1\\), and (u,v) of opposite parity. Conversely, every such parameter pair gives a primitive positive Pythagorean triple. Every positive Pythagorean triple is a positive integer multiple of one primitive triple, up to swapping its legs.",
+    "proof": [
+      "In a primitive triple the legs have no common prime divisor: if a prime divides both legs, the equation makes it divide the hypotenuse as well. The triple cannot have both legs odd, since then their squares sum to \\(2\\pmod4\\); it cannot have both even by primitivity. Thus, after swapping, write \\(x\\) for the odd leg and \\(y\\) for the even leg; then \\(z\\) is odd. Also \\(\\gcd(x,z)=1\\), since a prime dividing both would divide \\(y^2=z^2-x^2\\), hence \\(y\\), contradicting primitivity.",
+      "Factor \\( (z+x)(z-x)=y^2\\). Both factors are even, so set \\(A=(z+x)/2\\), \\(B=(z-x)/2\\), and \\(w=y/2\\). Then \\(AB=w^2\\), with \\(A>B>0\\). If a prime divided both \\(A\\) and \\(B\\), it would divide \\(A+B=z\\) and \\(A-B=x\\), contradicting \\(\\gcd(x,z)=1\\). Hence \\(\\gcd(A,B)=1\\). Unique factorization now forces each of the coprime factors \\(A,B\\) to be a square: \\(A=u^2\\), \\(B=v^2\\). Thus \\(u>v>0\\), \\(\\gcd(u,v)=1\\), and \\(x=u^2-v^2\\), \\(z=u^2+v^2\\), \\(y=2w=2uv\\). Since \\(x\\) is odd, \\(u,v\\) have opposite parity.",
+      "Conversely, for \\(u>v>0\\), the identity \\( (u^2-v^2)^2+(2uv)^2=(u^2+v^2)^2\\) proves the Pythagorean equation, and the parameters make all three entries positive. If an odd prime divided all three entries, it would divide \\(x+z=2u^2\\) and \\(z-x=2v^2\\), hence both \\(u\\) and \\(v\\), impossible. The prime \\(2\\) cannot divide all three because \\(u^2-v^2\\) is odd. So the triple is primitive.",
+      "For any positive triple, let \\(d=\\gcd(x,y,z)\\). If \\(d>1\\), dividing all entries by \\(d\\) gives a strictly smaller positive triple with the same equation and gcd one. This is a simple descent to the primitive core, not a classification claim for general Diophantine equations; the primitive classification then applies. Multiplying back by \\(d\\) proves the scaling statement. The formulas determine \\(u^2=A\\) and \\(v^2=B\\) after the odd/even leg convention, so the positive parameters are unique."
+    ],
+    "example": {
+      "prompt": "Generate \\(5,12,13\\) and diagnose what happens when both parameters are odd.",
+      "steps": [
+        "With \\(u=3,v=2\\), the parameters are coprime and have opposite parity. They give \\(u^2-v^2=5\\), \\(2uv=12\\), and \\(u^2+v^2=13\\); indeed \\(25+144=169\\).",
+        "If \\(u=3,v=1\\), both parameters are odd and the output is \\( (8,6,10)\\). All entries are even, so this is not primitive; the opposite-parity condition failed."
+      ],
+      "conclusion": "The coprime, opposite-parity conditions distinguish the primitive parametrization from scaled triples."
+    },
+    "practice": {
+      "prompt": "The parameters \\(u=5,v=3\\) produce a Pythagorean triple. Compute it, show it is not primitive, and identify the failed parameter condition.",
+      "hints": [
+        "Compute the three expressions exactly.",
+        "Check whether the parameters have opposite parity."
+      ],
+      "answer": "They give \\(u^2-v^2=25-9=16\\), \\(2uv=30\\), and \\(u^2+v^2=34\\). The equation checks: \\(16^2+30^2=256+900=1156=34^2\\). All three entries are even, so the triple is not primitive. Although \\(\\gcd(5,3)=1\\), both parameters are odd; the opposite-parity condition fails."
+    },
+    "caution": "The formulas generate Pythagorean triples, but completeness requires the factorization and coprimality argument. Keep primitive triples distinct from their common multiples and state whether leg swaps or signs are being identified.",
+    "bridge": "The proof converts a right-triangle equation into coprime square factors. It uses unique factorization directly and makes no broader claim about general Diophantine equations.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  }
+]

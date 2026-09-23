@@ -1,0 +1,213 @@
+[
+  {
+    "id": "F03",
+    "title": "Hensel lifting: a unique next digit",
+    "cluster": "Polynomial congruences",
+    "question": "How can a root modulo \\(p^k\\) acquire one more base-\\(p\\) digit?",
+    "prerequisites": [
+      "F01",
+      "C03"
+    ],
+    "summary": "A root modulo a prime power has exactly \\(p\\) possible next digits. Taylor expansion is an exact congruence here: its higher-order terms vanish at the next modulus. When the derivative is nonzero modulo \\(p\\), one linear equation selects exactly one digit.",
+    "definition": [
+      "An integer polynomial has the form \\(f(X)=\\sum_{j=0}^{d}c_jX^j\\), where each \\(c_j\\) is an integer. Its formal derivative is \\(f'(X)=\\sum_{j=1}^{d}j c_jX^{j-1}\\).",
+      "If \\(f(a)\\) is divisible by \\(p^k\\), the residue class of \\(a\\) is a root modulo \\(p^k\\). A lift to the next level is a root class modulo \\(p^{k+1}\\) that reduces to the given class modulo \\(p^k\\). Its candidates are represented uniquely by \\(a+t p^k\\), with \\(t\\) in \\(0,1,\\ldots,p-1\\)."
+    ],
+    "theorem": "Let \\(p\\) be prime, \\(k\\ge1\\), \\(f\\in\\mathbb Z[X]\\), and \\(a\\in\\mathbb Z\\) satisfy \\(p^k\\mid f(a)\\). Put \\(c=f(a)/p^k\\), an integer. For every integer \\(t\\), \\(f(a+t p^k)\\equiv f(a)+t p^k f'(a)\\pmod{p^{k+1}}\\). Thus the candidate lifts are exactly the digits satisfying \\(c+t f'(a)\\equiv0\\pmod p\\). If \\(p\\nmid f'(a)\\), there is exactly one such digit modulo \\(p\\), and hence exactly one lift.",
+    "proof": [
+      "Write \\(h=t p^k\\). For a monomial of degree \\(j\\), the binomial theorem gives \\((a+h)^j=a^j+j a^{j-1}h+\\sum_{i=2}^{j}\\binom ji a^{j-i}h^i\\). Every term in the sum is divisible by \\(p^{2k}\\). Since \\(2k\\ge k+1\\) for \\(k\\ge1\\), these terms are all divisible by \\(p^{k+1}\\), including when \\(k=1\\). Multiplying by the coefficients and summing over the monomials proves the stated expansion modulo \\(p^{k+1}\\).",
+      "Because \\(p^k\\mid f(a)\\), the quotient \\(c=f(a)/p^k\\) is an integer. The expansion shows that \\(f(a+t p^k)\\) is divisible by \\(p^{k+1}\\) exactly when \\(f(a)/p^k+t f'(a)\\equiv0\\pmod p\\), which is the digit equation in the theorem.",
+      "If \\(p\\nmid f'(a)\\), its residue has a multiplicative inverse modulo \\(p\\). The linear congruence therefore has the unique solution \\(t\\equiv-c(f'(a))^{-1}\\pmod p\\). The representatives \\(t=0,1,\\ldots,p-1\\) give distinct candidate classes modulo \\(p^{k+1}\\), so this solution is exactly one lift."
+    ],
+    "example": {
+      "prompt": "Lift the root \\(3\\) of \\(f(X)=X^2-2\\) modulo \\(7\\) to a root modulo \\(49\\).",
+      "steps": [
+        "The old value is \\(f(3)=7\\), so the quotient is exactly \\(f(3)/7=1\\). The derivative is \\(f'(X)=2X\\), hence \\(f'(3)=6\\).",
+        "The digit equation is \\(1+6t\\equiv0\\pmod7\\), whose unique solution is \\(t\\equiv1\\pmod7\\). Thus the lifted representative is \\(3+1\\cdot7=10\\).",
+        "Direct substitution verifies \\(f(10)=10^2-2=98=2\\cdot49\\), so \\(10\\) is a root modulo \\(49\\)."
+      ],
+      "conclusion": "The nonzero derivative modulo \\(7\\) selected one next digit, and exact substitution confirms the lift."
+    },
+    "practice": {
+      "prompt": "Lift the root \\(4\\) of \\(X^2-2\\) modulo \\(7\\) to a root modulo \\(49\\). Show the quotient and verify the result.",
+      "hints": [
+        "Compute \\(f(4)/7\\) before using the digit equation.",
+        "The derivative at \\(4\\) is \\(8\\), which is congruent to \\(1\\) modulo \\(7\\)."
+      ],
+      "answer": "We have \\(f(4)=14\\), so \\(f(4)/7=2\\), and \\(f'(4)=8\\equiv1\\pmod7\\). The digit equation is \\(2+t\\equiv0\\pmod7\\), giving \\(t=5\\). The lift is \\(4+5\\cdot7=39\\). Indeed, \\(f(39)=39^2-2=1519=31\\cdot49\\)."
+    },
+    "caution": "The quotient \\(f(a)/p^k\\) is an integer only after the old-root hypothesis \\(p^k\\mid f(a)\\) has been checked. A real-valued approximation is not a substitute for the exact divisibility calculation.",
+    "bridge": "The derivative gives the coefficient of the new digit in an exact linear congruence. If that coefficient vanishes modulo \\(p\\), the same equation can have either no solutions or all \\(p\\) solutions; that singular case is the next lesson.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 06. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "hensel"
+  },
+  {
+    "id": "F04",
+    "title": "Singular Hensel lifting: none or all",
+    "cluster": "Polynomial congruences",
+    "question": "What happens when the derivative cannot be inverted?",
+    "prerequisites": [
+      "F03"
+    ],
+    "summary": "At a singular root, the next-digit equation has zero coefficient on the digit. At that one step it has either no solution or every possible digit. Each resulting branch must be tested again at its new level; having all lifts once does not promise that all branches continue.",
+    "definition": [
+      "Let \\(f\\in\\mathbb Z[X]\\), let \\(p\\) be prime, and suppose \\(p^k\\mid f(a)\\) for \\(k\\ge1\\). The exact old-level quotient is \\(c=f(a)/p^k\\). The root is singular for this lift step when \\(f'(a)\\equiv0\\pmod p\\).",
+      "The next-level candidates are the distinct classes represented by \\(a+t p^k\\) for \\(t=0,1,\\ldots,p-1\\). The lift test concerns only divisibility by \\(p^{k+1}\\); further lifting requires a new test at that next level."
+    ],
+    "theorem": "Under the preceding hypotheses, if \\(f'(a)\\equiv0\\pmod p\\), then there are no lifts from \\(a\\) modulo \\(p^k\\) when \\(c\\not\\equiv0\\pmod p\\), and there are all \\(p\\) candidate lifts when \\(c\\equiv0\\pmod p\\). This is a one-step statement only.",
+    "proof": [
+      "The exact expansion from the Hensel digit calculation says a candidate \\(a+t p^k\\) is a root modulo \\(p^{k+1}\\) exactly when \\(c+t f'(a)\\equiv0\\pmod p\\). Under the singular hypothesis, \\(t f'(a)\\equiv0\\pmod p\\) for every digit \\(t\\). The condition reduces to \\(c\\equiv0\\pmod p\\), independent of \\(t\\).",
+      "If \\(c\\not\\equiv0\\pmod p\\), the reduced equation is false for every digit, so no lift exists. If \\(c\\equiv0\\pmod p\\), it is true for all \\(p\\) digits. Their representatives give distinct classes modulo \\(p^{k+1}\\). At the new level each class has its own value of \\(f(a+t p^k)/p^{k+1}\\) and derivative, so this argument alone makes no claim about later levels."
+    ],
+    "example": {
+      "prompt": "For \\(f(X)=X^2\\) and \\(p=3\\), trace the roots from modulo \\(3\\) to modulo \\(9\\), then to modulo \\(27\\).",
+      "steps": [
+        "Modulo \\(3\\), the root \\(a=0\\) has quotient \\(f(0)/3=0\\) and derivative \\(f'(0)=0\\). The singular test therefore gives all three lifts: \\(0,3,6\\) modulo \\(9\\).",
+        "Test those roots again at level \\(9\\). For \\(a=0\\), the quotient is \\(f(0)/9=0\\), so the lifts to modulo \\(27\\) are \\(0,9,18\\). For \\(a=3\\), the quotient is \\(f(3)/9=1\\), and for \\(a=6\\), it is \\(f(6)/9=4\\); both are nonzero modulo \\(3\\). Their derivatives \\(6\\) and \\(12\\) are divisible by \\(3\\), so neither branch has a lift to modulo \\(27\\).",
+        "The surviving residues are indeed roots: their squares \\(0^2,9^2,18^2\\) are all divisible by \\(27\\)."
+      ],
+      "conclusion": "All three candidates lift once from modulo \\(3\\) to modulo \\(9\\), but only the zero branch continues to modulo \\(27\\)."
+    },
+    "practice": {
+      "prompt": "For \\(f(X)=X^2-9\\) and \\(p=3\\), build the lift tree from modulo \\(3\\) through modulo \\(27\\), applying the singular test at each branch.",
+      "hints": [
+        "The root modulo \\(3\\) is \\(0\\); its three lifts modulo \\(9\\) are \\(0,3,6\\).",
+        "At level \\(9\\), compute \\(f(a)/9\\) separately for each representative."
+      ],
+      "answer": "Modulo \\(3\\), only \\(0\\) is a root. Its quotient is \\(f(0)/3=-3\\equiv0\\pmod3\\), and its derivative is zero modulo \\(3\\), so all lifts \\(0,3,6\\) are roots modulo \\(9\\). At level \\(9\\), the representative \\(a=0\\) has quotient \\(f(0)/9=-1\\not\\equiv0\\pmod3\\), so it has no lift to modulo \\(27\\). The representative \\(a=3\\) has quotient \\(f(3)/9=0\\), and \\(a=6\\) has quotient \\(f(6)/9=3\\); both quotients vanish modulo \\(3\\), while both derivatives \\(6\\) and \\(12\\) vanish modulo \\(3\\). Each therefore has three lifts. From \\(3\\) they are \\(3,12,21\\), and from \\(6\\) they are \\(6,15,24\\). Directly, each listed residue \\(x\\) satisfies \\(x^2-9\\equiv0\\pmod{27}\\)."
+    },
+    "caution": "The phrase “all \\(p\\) lifts” describes one step only. In the example, the \\(3\\) and \\(6\\) branches both die even though each has an earlier lift; re-evaluate the quotient and derivative at every new representative.",
+    "bridge": "The singular case is still controlled by an exact linear congruence. In the next coefficient argument, finite-field polynomial identities will first give divisibility modulo \\(p\\), and a separate integer identity will be needed to strengthen the modulus.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 06. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "hensel"
+  },
+  {
+    "id": "F05",
+    "title": "Polynomial coefficients and Wolstenholme-type congruences",
+    "cluster": "Polynomial congruences",
+    "question": "How can a product identity force a congruence among coefficients?",
+    "prerequisites": [
+      "F01",
+      "C08",
+      "B02"
+    ],
+    "summary": "The roots of a polynomial over the prime field force its intermediate coefficients to vanish modulo the prime. Evaluating the same integer polynomial at the prime and at zero supplies a second relation, which raises one coefficient congruence to modulo the prime squared and a related refinement to modulo the prime cubed.",
+    "definition": [
+      "Let \\(p\\) be an odd prime and define \\(F(X)=\\prod_{a=1}^{p-1}(X-a)\\) in \\(\\mathbb Z[X]\\). For \\(0\\le j\\le p-1\\), let \\(\\sigma_j\\) be the elementary symmetric sum of degree \\(j\\) in \\(1,2,\\ldots,p-1\\), with \\(\\sigma_0=1\\). Then \\(F(X)=\\sum_{j=0}^{p-1}(-1)^j\\sigma_j X^{p-1-j}\\)."
+    ],
+    "theorem": "For every prime \\(p\\ge5\\), the coefficients satisfy \\(\\sigma_{p-2}\\equiv0\\pmod{p^2}\\) and \\(\\sigma_{p-2}\\equiv p\\sigma_{p-3}\\pmod{p^3}\\).",
+    "proof": [
+      "Reduce \\(F\\) modulo \\(p\\). Each nonzero residue modulo \\(p\\) is a root of \\(X^{p-1}-1\\), by Fermat's theorem. The polynomial \\(F\\) is also monic of degree \\(p-1\\) and has exactly those \\(p-1\\) distinct roots. The difference \\(F(X)-(X^{p-1}-1)\\) has degree at most \\(p-2\\) but vanishes at all \\(p-1\\) nonzero residues; the root bound forces it to be zero. Thus \\(F(X)=X^{p-1}-1\\) in \\(\\mathbb F_p[X]\\). The root bound says: a nonzero polynomial of degree \\(d\\) over a field has at most \\(d\\) roots, proved by factoring out \\(X-r\\) at a root and inducting on the degree. Comparing coefficients gives \\(\\sigma_j\\equiv0\\pmod p\\) for every \\(1\\le j\\le p-2\\).",
+      "Since \\(p\\) is odd, \\(F(p)=\\prod_{a=1}^{p-1}(p-a)=(p-1)!\\) and \\(F(0)=(-1)^{p-1}(p-1)!=(p-1)!\\). Equating the two evaluations and cancelling their identical constant term yields the exact integer identity \\(0=p^{p-1}+\\sum_{j=1}^{p-2}(-1)^j\\sigma_jp^{p-1-j}\\).",
+      "For the first strengthening, every term except the \\(j=p-2\\) term is divisible by \\(p^3\\): the leading term has exponent \\(p-1\\ge4\\); terms with \\(j\\le p-4\\) have exponent at least \\(3\\); and the \\(j=p-3\\) term has a factor \\(p^2\\sigma_{p-3}\\), with \\(p\\mid\\sigma_{p-3}\\) by the coefficient comparison. Because \\(p-2\\) is odd, the remaining term is \\(-p\\sigma_{p-2}\\). Thus \\(p\\sigma_{p-2}\\equiv0\\pmod{p^3}\\), which implies \\(p^2\\mid\\sigma_{p-2}\\).",
+      "For the refinement, reduce the same identity modulo \\(p^4\\). The leading term is divisible by \\(p^4\\); terms with \\(j\\le p-5\\) have exponent at least \\(4\\); and the \\(j=p-4\\) term is divisible by \\(p^4\\) because \\(p\\mid\\sigma_{p-4}\\). These ranges remain valid at \\(p=5\\): the \\(j\\le p-5\\) range is empty and \\(p-4=1\\). The only possibly nonzero terms modulo \\(p^4\\) are the \\(j=p-3\\) term \\(p^2\\sigma_{p-3}\\) and the \\(j=p-2\\) term \\(-p\\sigma_{p-2}\\). Therefore \\(p^2\\sigma_{p-3}-p\\sigma_{p-2}\\equiv0\\pmod{p^4}\\). Dividing this divisibility statement by \\(p\\) gives \\(\\sigma_{p-2}\\equiv p\\sigma_{p-3}\\pmod{p^3}\\)."
+    ],
+    "example": {
+      "prompt": "Expand the product for \\(p=5\\) and check the coefficient identities at their stated moduli.",
+      "steps": [
+        "Direct multiplication gives \\(F(X)=(X-1)(X-2)(X-3)(X-4)=X^4-10X^3+35X^2-50X+24\\). Thus \\(\\sigma_1=10\\), \\(\\sigma_2=35\\), \\(\\sigma_3=50\\), and \\(\\sigma_4=24\\).",
+        "Modulo \\(5\\), the polynomial is \\(X^4-1\\); in particular the intermediate coefficients vanish. The target coefficient satisfies \\(\\sigma_3=50\\equiv0\\pmod{25}\\).",
+        "For the refinement, \\(5\\sigma_2=175\\equiv50=\\sigma_3\\pmod{125}\\)."
+      ],
+      "conclusion": "The expansion verifies both coefficient congruences in the first eligible case, \\(p=5\\); the general proof is needed for other primes."
+    },
+    "practice": {
+      "prompt": "For \\(p=7\\), expand \\(\\prod_{a=1}^{6}(X-a)\\) and verify the two congruences for \\(\\sigma_5\\) and \\(\\sigma_4\\).",
+      "hints": [
+        "Read the coefficients of \\(X\\) and \\(X^2\\) to obtain \\(\\sigma_5\\) and \\(\\sigma_4\\).",
+        "Check divisibility by \\(49\\) and reduce the difference modulo \\(343\\)."
+      ],
+      "answer": "Expansion gives \\(F(X)=X^6-21X^5+175X^4-735X^3+1624X^2-1764X+720\\), so \\(\\sigma_5=1764\\) and \\(\\sigma_4=1624\\). Since \\(1764=49\\cdot36\\), we have \\(\\sigma_5\\equiv0\\pmod{49}\\). Also \\(\\sigma_5-7\\sigma_4=1764-7\\cdot1624=-9604=-28\\cdot343\\), so \\(\\sigma_5\\equiv7\\sigma_4\\pmod{343}\\). This calculation verifies the case \\(p=7\\); it is not a proof for all primes."
+    },
+    "caution": "The finite-field comparison proves only \\(\\sigma_j\\equiv0\\pmod p\\). The stronger claims need the separate exact identity from \\(F(p)=F(0)\\) and the term-by-term divisibility argument. The hypothesis \\(p\\ge5\\) is used in the exponent bounds.",
+    "bridge": "A polynomial root argument can force integer coefficients to vanish modulo a prime, while exact evaluation at different integers can strengthen the modulus. Multiplicative order uses a different finite argument: division with remainder controls which exponents return a unit to one.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 06. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+  },
+  {
+    "id": "U01",
+    "title": "Multiplicative order",
+    "cluster": "Powers and generators",
+    "question": "What is the exact period of a unit’s powers?",
+    "prerequisites": [
+      "C06",
+      "D06"
+    ],
+    "summary": "The powers of a unit eventually return to one, and the least positive return exponent divides every return exponent. This exact period also determines the period of every power of the unit through a greatest-common-divisor calculation.",
+    "definition": [
+      "Use a modulus \\(n\\ge2\\). An integer \\(a\\) is a unit modulo \\(n\\) when \\(\\gcd(a,n)=1\\). Its multiplicative order, written \\(\\operatorname{ord}_n(a)\\), is the least positive integer \\(h\\) such that \\(a^h\\equiv1\\pmod n\\).",
+      "The order is defined only for units. Their powers can be cancelled modulo \\(n\\); this ensures that some positive power returns to the class of \\(1\\) and makes the least return exponent meaningful. The modulus \\(n=1\\) is excluded, so no convention for the one-element ring is needed."
+    ],
+    "theorem": "For \\(n\\ge2\\) and \\(\\gcd(a,n)=1\\), let \\(h=\\operatorname{ord}_n(a)\\). Then for every integer \\(m\\ge0\\), \\(a^m\\equiv1\\pmod n\\) if and only if \\(h\\mid m\\). For every integer \\(k\\ge0\\), \\(\\operatorname{ord}_n(a^k)=h/\\gcd(h,k)\\), with \\(\\gcd(h,0)=h\\).",
+    "proof": [
+      "Because \\(a\\) is a unit, cancellation is valid modulo \\(n\\). Among the finitely many classes \\(1,a,a^2,\\ldots\\), two powers repeat; cancelling the smaller power gives a positive exponent whose power is \\(1\\). Hence the least such positive exponent \\(h\\) exists.",
+      "Suppose \\(a^m\\equiv1\\pmod n\\). Divide \\(m\\) by \\(h\\) to write \\(m=qh+r\\) with \\(0\\le r<h\\). Then \\(a^r\\equiv a^m(a^h)^{-q}\\equiv1\\pmod n\\). Minimality of \\(h\\) forces \\(r=0\\), so \\(h\\mid m\\). Conversely, if \\(h\\mid m\\), write \\(m=qh\\); then \\(a^m=(a^h)^q\\equiv1\\pmod n\\).",
+      "Let \\(d=\\gcd(h,k)\\), \\(h=d h_1\\), and \\(k=d k_1\\), so \\(\\gcd(h_1,k_1)=1\\). For a positive integer \\(r\\), \\( (a^k)^r\\equiv1\\pmod n\\) exactly when \\(a^{kr}\\equiv1\\pmod n\\), which by the first part is equivalent to \\(h\\mid kr\\). Cancelling the common factor \\(d\\) reduces this to \\(h_1\\mid k_1r\\). Bézout’s identity for \\(h_1\\) and \\(k_1\\) implies \\(h_1\\mid r\\). Conversely, every multiple of \\(h_1\\) satisfies that divisibility. Thus the least positive such \\(r\\) is \\(h_1=h/\\gcd(h,k)\\). This also covers \\(k=0\\): then \\(d=h\\), \\(h_1=1\\), and \\(a^0\\) has order one."
+    ],
+    "example": {
+      "prompt": "Find the orders of \\(2\\) and \\(3\\) modulo \\(7\\), then find the order of \\(3^2\\).",
+      "steps": [
+        "The powers of \\(2\\) begin \\(2,4,1\\) modulo \\(7\\). The first return to \\(1\\) occurs at exponent \\(3\\), so \\(\\operatorname{ord}_7(2)=3\\).",
+        "The powers of \\(3\\) modulo \\(7\\) are \\(3,2,6,4,5,1\\) at exponents \\(1,2,3,4,5,6\\), respectively. None of the earlier powers is \\(1\\), so \\(\\operatorname{ord}_7(3)=6\\).",
+        "The power formula gives \\(\\operatorname{ord}_7(3^2)=6/\\gcd(6,2)=3\\). Indeed, \\(3^2\\equiv2\\pmod7\\), whose order was just checked."
+      ],
+      "conclusion": "The order of a unit’s powers can be smaller than the unit’s order; here squaring the order-six unit gives an order-three unit."
+    },
+    "practice": {
+      "prompt": "A unit \\(a\\) has order \\(18\\) modulo \\(n\\). Determine exactly which nonnegative integers \\(m\\) satisfy \\(a^m\\equiv1\\pmod n\\).",
+      "hints": [
+        "Use the return-exponent divisibility theorem, including exponent zero.",
+        "Describe the answer as a set of multiples."
+      ],
+      "answer": "The theorem says \\(a^m\\equiv1\\pmod n\\) exactly when \\(18\\mid m\\). Thus the nonnegative solutions are \\(m=18q\\) for integers \\(q\\ge0\\), including \\(m=0\\)."
+    },
+    "caution": "The order divides every exponent that returns \\(a\\) to \\(1\\), but it need not equal the size of the full unit group. It equals the size of the subgroup generated by \\(a\\).",
+    "bridge": "An element of order \\(p-1\\) modulo a prime \\(p\\) generates every nonzero residue. The next lesson proves that such an element exists and counts all choices, rather than assuming the whole unit group is cyclic.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 07. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "order"
+  },
+  {
+    "id": "U02",
+    "title": "Primitive roots modulo an odd prime",
+    "cluster": "Powers and generators",
+    "question": "Why is there one element whose powers visit every nonzero residue?",
+    "prerequisites": [
+      "U01",
+      "F01",
+      "C07"
+    ],
+    "summary": "Polynomial root counts force an element whose order contains each full prime-power factor of \\(p-1\\). Multiplying these elements produces one of order \\(p-1\\), so the nonzero residues modulo an odd prime form a cyclic group. Its generators are exactly the powers with exponent coprime to \\(p-1\\).",
+    "definition": [
+      "For a prime \\(p\\), the nonzero residue classes form the multiplicative group \\(\\mathbb F_p^\\times\\), which has \\(p-1\\) elements. A primitive root modulo \\(p\\) is a residue class whose multiplicative order is \\(p-1\\).",
+      "For a positive integer \\(m\\), define \\(\\varphi(m)\\) to be the number of integers \\(k\\) with \\(1\\le k\\le m\\) and \\(\\gcd(k,m)=1\\)."
+    ],
+    "theorem": "For every odd prime \\(p\\), there is a primitive root modulo \\(p\\). If \\(m=p-1\\), the number of primitive roots modulo \\(p\\) is exactly \\(\\varphi(m)=\\varphi(p-1)\\).",
+    "proof": [
+      "Put \\(m=p-1\\) and \\(G=\\mathbb F_p^\\times\\). First, every element \\(x\\in G\\) has an order dividing \\(m\\). Its order \\(h\\) exists by the finite-power argument from the preceding lesson. The subgroup \\(\\{1,x,\\ldots,x^{h-1}\\}\\) has \\(h\\) elements. Multiplication by a fixed group element is a bijection, so each coset has \\(h\\) elements; two cosets are either equal or disjoint. Thus the cosets partition \\(G\\) into sets of size \\(h\\), and \\(h\\mid m\\).",
+      "Let \\(q^e\\) be the exact power of a prime \\(q\\) in \\(m\\), so \\(q^e\\mid m\\) but \\(q^{e+1}\\nmid m\\). There must be an element whose order is divisible by \\(q^e\\). Otherwise every order \\(h\\mid m\\) would divide \\(m/q\\). Every \\(x\\in G\\) would then satisfy \\(x^{m/q}=1\\), making all \\(m\\) nonzero residues roots of \\(X^{m/q}-1\\). This is impossible because that is a nonzero polynomial of degree \\(m/q<m\\). The root bound used here follows by induction: if a degree-\\(d\\) polynomial over a field has a root \\(r\\), factor out \\(X-r\\); every other root is a root of the degree-\\(d-1\\) quotient, so there are at most \\(d\\) roots.",
+      "Choose an element \\(x_q\\) with order \\(q^e s\\), where \\(q\\nmid s\\); this form follows because its order divides \\(m\\) and contains the full \\(q^e\\) factor. By the order-of-a-power formula, \\(y_q=x_q^s\\) has order \\(q^e s/\\gcd(q^e s,s)=q^e\\). Do this for each prime divisor \\(q\\) of \\(m\\).",
+      "Set \\(g=\\prod_{q\\mid m}y_q\\). The group is commutative, and each \\(y_q\\) has order \\(q^e\\), so \\(g^m=1\\). To show its order is not smaller, suppose \\(g^r=1\\) for a positive integer \\(r\\). For each fixed \\(q\\), rearrange to get \\(y_q^r=(\\prod_{\\ell\\mid m,\\,\\ell\\ne q}y_\\ell^r)^{-1}\\). This same element is annihilated by \\(q^e\\) on the left and by \\(\\prod_{\\ell\\mid m,\\,\\ell\\ne q}\\ell^{e_\\ell}\\) on the right, where \\(\\ell^{e_\\ell}\\) is the exact prime power in \\(m\\). These two integers are coprime, so the element has order one. Hence \\(y_q^r=1\\), which forces \\(q^e\\mid r\\). This holds for every prime divisor \\(q\\) of \\(m\\), so \\(m\\mid r\\). Since \\(g^m=1\\), its order is exactly \\(m\\).",
+      "The \\(m\\) powers \\(1,g,\\ldots,g^{m-1}\\) are distinct and therefore comprise all of \\(G\\). Every primitive root is a power \\(g^k\\). By the order formula, \\(g^k\\) has order \\(m/\\gcd(m,k)\\), which equals \\(m\\) exactly when \\(\\gcd(m,k)=1\\). Counting these exponents modulo \\(m\\) gives \\(\\varphi(m)\\) primitive roots."
+    ],
+    "example": {
+      "prompt": "List the powers of \\(3\\) modulo \\(7\\) and identify all primitive roots modulo \\(7\\).",
+      "steps": [
+        "The powers at exponents \\(0\\) through \\(6\\) are \\(1,3,2,6,4,5,1\\) modulo \\(7\\). The first return to \\(1\\) after exponent zero is at exponent \\(6\\), so \\(3\\) has order \\(6\\).",
+        "Here \\(m=6\\). The exponents relatively prime to \\(6\\) among \\(0,1,2,3,4,5\\) are \\(1\\) and \\(5\\). The corresponding powers are \\(3^1\\equiv3\\pmod7\\) and \\(3^5\\equiv5\\pmod7\\).",
+        "There are \\(\\varphi(6)=2\\) such exponents. The count agrees with the list: the primitive roots modulo \\(7\\) are \\(3\\) and \\(5\\)."
+      ],
+      "conclusion": "The order calculation finds one generator, and the coprime exponents identify every generator in this cyclic group."
+    },
+    "practice": {
+      "prompt": "In a cyclic group generated by \\(g\\) of order \\(12\\), determine which powers \\(g^k\\), with \\(0\\le k<12\\), are also generators.",
+      "hints": [
+        "Use \\(\\operatorname{ord}(g^k)=12/\\gcd(12,k)\\).",
+        "A power generates the group exactly when its order is \\(12\\)."
+      ],
+      "answer": "The order formula shows that \\(g^k\\) has order \\(12\\) exactly when \\(\\gcd(12,k)=1\\). In the range \\(0\\le k<12\\), this occurs for \\(k=1,5,7,11\\). Thus the generators are \\(g,g^5,g^7,g^{11}\\), four in total, equal to \\(\\varphi(12)=4\\)."
+    },
+    "caution": "The root-count argument proves existence; a list of powers for one small prime does not. The polynomial root bound is applied over \\(\\mathbb F_p\\), a field because \\(p\\) is prime. This proof does not assume cyclicity in order to establish it.",
+    "bridge": "For a prime modulus the unit group is cyclic. Composite and prime-power moduli need separate existence criteria; a primitive root modulo \\(p\\) need not stay primitive modulo \\(p^2\\).",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 06, 07. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "lab": "order"
+  }
+]

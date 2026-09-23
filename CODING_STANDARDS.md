@@ -99,14 +99,12 @@ Two shapes are settled, so no repository re-argues them:
 
 ## 6. Repo-specific standards
 
-*(Each repository fills this in and owns it.)* Language and framework conventions, the seams
-where tests are written, naming or layout rules particular to this codebase, and anything the
-core leaves open. Add them here; they evolve through this repository's normal pull-request flow.
-
-This section is empty because this repository is newly generated. Fill it in with the first
-change that has an opinion worth holding the next one to — the formatter and linter that run in
-CI, where the tests live, and the one or two layout rules a newcomer would otherwise guess
-wrong.
+TypeScript, React, and CSS use Biome. Run `npm run format:check` and `npm run lint`; CI runs both.
+Lesson JSON is authored through the schema and checked by `npm run check:content`, including
+strict KaTeX parsing. Exact arithmetic lives in `src/math/` with adjacent `*.test.ts` files.
+Keep mathematical state transitions in `src/state.ts`; the WebMCP adapter calls the same
+algorithms as the visible labs. Index keys are allowed for immutable traces and examples with
+no row-local state. CSS media overrides may descend in specificity intentionally.
 
 ## 7. Evolution — what is rigid, what moves
 

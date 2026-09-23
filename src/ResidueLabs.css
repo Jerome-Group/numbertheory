@@ -1,0 +1,251 @@
+.nt-lab {
+  background: #f0f5f6;
+  margin: 34px -28px 0;
+  padding: 28px;
+  border: 1px solid #d6e3e5;
+  border-radius: 12px;
+}
+.nt-lab__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.nt-lab__head h2 {
+  margin: 8px 0 10px;
+}
+.nt-lab__badge {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  background: #dcebe6;
+  color: #337966;
+  padding: 8px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.nt-lab p {
+  line-height: 1.6;
+}
+.nt-lab__controls {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 22px 0;
+}
+.nt-lab__controls label {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a6173;
+}
+.nt-lab__controls input,
+.nt-lab__controls select {
+  width: 145px;
+  max-width: 100%;
+  border: 1px solid #b8cbd1;
+  border-radius: 5px;
+  padding: 10px 12px;
+  color: #1c2b40;
+  background: #fff;
+}
+.nt-lab__controls button,
+.nt-lab__reveal {
+  background: #194e5a;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  padding: 11px 17px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.nt-lab__controls button:hover,
+.nt-lab__reveal:hover {
+  background: #236b70;
+}
+.nt-lab__error {
+  color: #a43132;
+  font-weight: 700;
+}
+.nt-lab__layout {
+  display: grid;
+  grid-template-columns: minmax(245px, 0.9fr) minmax(245px, 1.1fr);
+  gap: 20px;
+  align-items: start;
+}
+.nt-lab__visual {
+  min-width: 0;
+  background: #e6f0ee;
+  border-radius: 10px;
+  padding: 8px;
+}
+.nt-lab__clock {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 360px;
+  margin: auto;
+}
+.nt-lab__node circle {
+  fill: #fff;
+  stroke: #8aa7ad;
+  stroke-width: 1.5;
+}
+.nt-lab__node--first circle {
+  fill: #c4e6dc;
+  stroke: #288f79;
+  stroke-width: 2;
+}
+.nt-lab__node--second circle {
+  fill: #f3e0bb;
+  stroke: #bb8639;
+  stroke-width: 2;
+}
+.nt-lab__node--result circle {
+  fill: #1c5361;
+  stroke: #123d4c;
+  stroke-width: 2;
+}
+.nt-lab__node--square circle {
+  fill: #c4e6dc;
+  stroke: #439780;
+}
+.nt-lab__node--target circle {
+  stroke: #b7782d;
+  stroke-width: 3;
+}
+.nt-lab__node--root circle {
+  stroke: #194e5a;
+  stroke-width: 3;
+}
+.nt-lab__node-number {
+  font:
+    700 11px ui-sans-serif,
+    system-ui;
+  fill: #173444;
+}
+.nt-lab__node--result .nt-lab__node-number {
+  fill: #fff;
+}
+.nt-lab__node-mark {
+  font:
+    800 9px ui-sans-serif,
+    system-ui;
+  fill: #25596a;
+}
+.nt-lab__center-title {
+  font:
+    800 10px ui-sans-serif,
+    system-ui;
+  letter-spacing: 0.13em;
+  fill: #719197;
+}
+.nt-lab__center-number {
+  font:
+    500 38px Georgia,
+    serif;
+  fill: #194e5a;
+}
+.nt-lab__legend {
+  text-align: center;
+  font-size: 11px;
+  color: #4f6f76;
+  margin: 0 0 6px;
+}
+.nt-lab__readout {
+  background: #fff;
+  border: 1px solid #d9e5e3;
+  border-radius: 8px;
+  padding: 20px;
+}
+.nt-lab__readout h3 {
+  font:
+    500 22px Georgia,
+    serif;
+  color: #193c4b;
+  margin: 0 0 12px;
+}
+.nt-lab__readout p {
+  font-size: 14px;
+  margin: 0 0 13px;
+}
+.nt-lab__answer {
+  border-left: 3px solid #3ca889;
+  background: #edf7f2;
+  padding: 13px 15px;
+  margin-top: 16px;
+}
+.nt-lab__answer > strong {
+  display: block;
+  font:
+    20px Georgia,
+    serif;
+  margin-bottom: 9px;
+  overflow-x: auto;
+}
+.nt-lab__answer p {
+  margin: 8px 0 0;
+}
+.nt-lab__table-wrap {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+.nt-lab__table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+.nt-lab__table-wrap caption {
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  padding-bottom: 9px;
+  color: #193c4b;
+}
+.nt-lab__table-wrap th,
+.nt-lab__table-wrap td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #d5e2e4;
+  font-size: 13px;
+}
+.nt-lab__table-wrap thead th {
+  font-size: 11px;
+  color: #597082;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.nt-lab__table-wrap tbody th {
+  font-weight: 600;
+}
+.nt-lab__limit {
+  font-size: 12px;
+  color: #5e7280;
+  margin: 18px 0 0;
+}
+@media (max-width: 900px) {
+  .nt-lab {
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 20px;
+  }
+  .nt-lab__layout {
+    grid-template-columns: 1fr;
+  }
+  .nt-lab__badge {
+    display: none;
+  }
+}
+@media (max-width: 420px) {
+  .nt-lab__controls label {
+    width: calc(50% - 6px);
+  }
+  .nt-lab__controls input,
+  .nt-lab__controls select {
+    width: 100%;
+  }
+  .nt-lab__controls button {
+    width: 100%;
+  }
+}

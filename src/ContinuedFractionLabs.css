@@ -1,0 +1,419 @@
+.cf-lab,
+.pell-lab {
+  background: #f0f5f6;
+  margin: 34px -28px 0;
+  padding: 28px;
+  border: 1px solid #d6e3e5;
+  border-radius: 12px;
+}
+.cf-lab__head,
+.pell-lab__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cf-lab__head h2,
+.pell-lab__head h2 {
+  margin: 8px 0 10px;
+}
+.cf-lab__badge,
+.pell-lab__badge {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  background: #dcebe6;
+  color: #337966;
+  padding: 8px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.cf-lab p,
+.pell-lab p {
+  line-height: 1.65;
+}
+.cf-lab__controls,
+.pell-lab__controls {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 22px 0 12px;
+}
+.cf-lab__controls label,
+.pell-lab__controls label {
+  display: grid;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a6173;
+}
+.cf-lab__controls input,
+.cf-lab__controls select,
+.pell-lab__controls input {
+  min-width: 105px;
+  border: 1px solid #b8cbd1;
+  border-radius: 5px;
+  padding: 10px 12px;
+  color: #1c2b40;
+  background: #fff;
+}
+.cf-lab__controls button,
+.pell-lab__controls button {
+  background: #194e5a;
+  color: #fff;
+  border: 0;
+  border-radius: 5px;
+  padding: 11px 17px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.cf-lab__controls button:hover,
+.pell-lab__controls button:hover {
+  background: #236b70;
+}
+.cf-lab__presets,
+.pell-lab__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+.cf-lab__presets legend,
+.pell-lab__presets legend {
+  padding: 0;
+  margin-bottom: 7px;
+  color: #4a6173;
+  font-size: 12px;
+  font-weight: 700;
+}
+.cf-lab__presets button,
+.pell-lab__presets button {
+  background: #fff;
+  color: #285b60;
+  border: 1px solid #b8cbd1;
+  padding: 7px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.cf-lab__presets button:hover,
+.pell-lab__presets button:hover {
+  border-color: #2b937e;
+}
+.cf-lab__error,
+.pell-lab__error {
+  color: #a43132;
+  font-weight: 700;
+}
+.cf-lab__result,
+.pell-lab__result {
+  margin-top: 20px;
+}
+.cf-lab__sr-only,
+.pell-lab__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.cf-lab__result-card {
+  padding: 17px 19px;
+  background: #fff;
+  border: 1px solid #d5e2e4;
+  border-left: 4px solid #378f79;
+  border-radius: 6px;
+}
+.cf-lab__result-card > span,
+.pell-lab__readout > span {
+  display: block;
+  color: #25866f;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.cf-lab__result-card > strong {
+  display: block;
+  margin: 8px 0;
+  color: #193d49;
+  font:
+    500 22px Georgia,
+    serif;
+}
+.cf-lab__result-card details {
+  margin-top: 12px;
+}
+.cf-lab__result-card summary {
+  cursor: pointer;
+  color: #206b5c;
+  font-size: 13px;
+  font-weight: 750;
+}
+.cf-lab__result-card p:last-child,
+.pell-lab__readout p:last-child {
+  margin-bottom: 0;
+}
+.cf-lab__depth {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(150px, 2fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 13px;
+  color: #4a6173;
+  font-size: 12px;
+  font-weight: 700;
+}
+.cf-lab__depth input {
+  width: 100%;
+  accent-color: #27886e;
+}
+.cf-lab__depth output {
+  min-width: 90px;
+  color: #193d49;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.cf-lab__staircase-figure,
+.pell-lab__plot-figure {
+  margin: 15px 0 20px;
+  padding: 17px 14px 12px;
+  border: 1px solid #d5e2e4;
+  border-radius: 8px;
+  background: #fff;
+}
+.cf-lab__staircase,
+.pell-lab__plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.cf-lab__staircase-index {
+  fill: #274458;
+  font-weight: 800;
+}
+.cf-lab__staircase-tile {
+  fill: #c5e2d7;
+  stroke: #347f6b;
+  stroke-width: 1.5;
+}
+.cf-lab__staircase-tile--alternate {
+  fill: #e4c98f;
+  stroke: #a87827;
+}
+.cf-lab__staircase text:not(.cf-lab__staircase-index) {
+  fill: #42596b;
+}
+.cf-lab__staircase-figure figcaption,
+.pell-lab__plot-figure figcaption {
+  margin-top: 8px;
+  color: #617882;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.cf-lab__tables {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.cf-lab__table-wrap,
+.pell-lab__table-wrap {
+  overflow-x: auto;
+  border: 1px solid #d5e2e4;
+  border-radius: 7px;
+  background: #fff;
+}
+.cf-lab__table-wrap table,
+.pell-lab__table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+.cf-lab__table-wrap caption,
+.pell-lab__table-wrap caption {
+  padding: 12px 13px 9px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 750;
+  color: #254759;
+}
+.cf-lab__table-wrap th,
+.cf-lab__table-wrap td,
+.pell-lab__table-wrap th,
+.pell-lab__table-wrap td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e0e9e9;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.cf-lab__table-wrap thead th,
+.pell-lab__table-wrap thead th {
+  background: #edf4f2;
+  color: #3a5a64;
+}
+.cf-lab__table-wrap tbody tr:last-child th,
+.cf-lab__table-wrap tbody tr:last-child td,
+.pell-lab__table-wrap tbody tr:last-child th,
+.pell-lab__table-wrap tbody tr:last-child td {
+  border-bottom: 0;
+}
+.cf-lab__table-wrap tbody th,
+.pell-lab__table-wrap tbody td:first-child {
+  color: #246c5b;
+}
+.cf-lab__invariant,
+.pell-lab__formula {
+  background: #e6f0ee;
+  border-left: 3px solid #3b9786;
+  padding: 14px 17px;
+  margin: 16px 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.cf-lab__prompt,
+.pell-lab__prompt {
+  border: 1px solid #d5e2e4;
+  border-radius: 6px;
+  background: #fff;
+  padding: 13px 16px;
+  margin: 16px 0;
+}
+.cf-lab__prompt summary,
+.pell-lab__prompt summary {
+  cursor: pointer;
+  color: #206b5c;
+  font-size: 13px;
+  font-weight: 750;
+}
+.cf-lab__prompt p,
+.pell-lab__prompt p {
+  margin: 11px 0 0;
+  font-size: 14px;
+}
+.cf-lab__theorem-note {
+  margin: 17px 0;
+  padding: 16px 18px;
+  border: 1px dashed #b6c9c9;
+  border-radius: 6px;
+  background: #fbfcfa;
+  color: #425c65;
+}
+.cf-lab__theorem-note strong {
+  color: #214754;
+}
+.cf-lab__theorem-note p {
+  margin: 7px 0 0;
+  font-size: 14px;
+}
+.cf-lab__limit,
+.pell-lab__limit {
+  margin: 17px 0 0;
+  color: #617882;
+  font-size: 12px;
+}
+.pell-lab__readouts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+  margin: 19px 0;
+}
+.pell-lab__readout {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #d5e2e4;
+  border-radius: 7px;
+  background: #fff;
+}
+.pell-lab__readout--negative {
+  border-color: #d7c395;
+  background: #fffdf7;
+}
+.pell-lab__readout strong {
+  display: block;
+  margin: 9px 0 7px;
+  color: #193d49;
+  font:
+    500 18px Georgia,
+    serif;
+  overflow-wrap: anywhere;
+}
+.pell-lab__readout p {
+  margin: 0;
+  color: #617882;
+  font-size: 12px;
+}
+.pell-lab__plot-figure {
+  margin-top: 19px;
+}
+.pell-lab__axis {
+  stroke: #6c8289;
+  stroke-width: 1.3;
+}
+.pell-lab__growth-guide {
+  stroke: #c4a768;
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
+}
+.pell-lab__axis-label {
+  fill: #526c74;
+  font-size: 12px;
+  font-weight: 700;
+}
+.pell-lab__guide-label {
+  fill: #8f7136;
+  font-size: 10px;
+}
+.pell-lab__point {
+  fill: #287f6d;
+  stroke: #fff;
+  stroke-width: 2;
+}
+.pell-lab__point-label {
+  fill: #234756;
+  font-size: 11px;
+  font-weight: 800;
+}
+@media (max-width: 800px) {
+  .cf-lab,
+  .pell-lab {
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 20px;
+  }
+  .cf-lab__badge,
+  .pell-lab__badge {
+    display: none;
+  }
+  .pell-lab__readouts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 560px) {
+  .cf-lab__depth {
+    grid-template-columns: 1fr auto;
+  }
+  .cf-lab__depth input {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .cf-lab__controls label,
+  .pell-lab__controls label {
+    width: 100%;
+  }
+  .cf-lab__controls input,
+  .cf-lab__controls select,
+  .pell-lab__controls input {
+    width: 100%;
+  }
+}

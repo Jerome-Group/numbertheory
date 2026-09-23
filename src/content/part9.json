@@ -1,0 +1,246 @@
+[
+  {
+    "id": "S03",
+    "title": "Jacobsthal’s identity and a second two-squares route",
+    "cluster": "Sums of squares",
+    "question": "How can a finite character sum produce a representation of a prime as two squares?",
+    "prerequisites": [
+      "S02",
+      "Q05"
+    ],
+    "summary": "A second-moment count forces two even character sums to be the legs of a two-squares representation.",
+    "definition": [
+      "Fix a prime \\(p\\equiv1\\pmod4\\), and write \\(\\chi\\) for the Legendre symbol on \\(\\mathbb F_p\\), extended by \\(\\chi(0)=0\\). For \\(m\\in\\mathbb F_p\\), set \\(S(m)=\\sum_{x\\in\\mathbb F_p}\\chi(x(x^2-m))\\).",
+      "Choose a quadratic nonresidue \\(\\ell\\in\\mathbb F_p^\\times\\). Every nonzero class is either \\(k^2\\) or \\(k^2\\ell\\) for some \\(k\\in\\mathbb F_p^\\times\\)."
+    ],
+    "theorem": "The integers \\(S(1)\\) and \\(S(\\ell)\\) are even and satisfy \\(S(1)^2+S(\\ell)^2=4p\\). Consequently \\(p=(S(1)/2)^2+(S(\\ell)/2)^2\\). More generally, \\(S(k^2m)=\\chi(k)S(m)\\) for \\(k\\ne0\\).",
+    "proof": [
+      "For \\(k\\ne0\\), substitute \\(x=ku\\). Then \\(x(x^2-k^2m)=k^3u(u^2-m)\\), so multiplicativity gives \\(S(k^2m)=\\chi(k^3)S(m)=\\chi(k)S(m)\\). If two choices of \\(k\\) yield the same nonzero square, they differ by a sign; \\(\\chi(-1)=1\\) because \\(p\\equiv1\\pmod4\\), so this formula is consistent.",
+      "Pair the terms indexed by \\(x\\) and \\(-x\\) in \\(S(m)\\). Since \\(\\chi(-1)=1\\), the two terms agree; the term at \\(x=0\\) vanishes. Thus every \\(S(m)\\) is an even integer. Also \\(S(0)=\\sum_x\\chi(x^3)=\\sum_x\\chi(x)=0\\) by the character balance proved in S02.",
+      "Expand the second moment and interchange finite sums: \\(\\sum_m S(m)^2=\\sum_{x,y}\\chi(xy)\\sum_m\\chi((x^2-m)(y^2-m))\\). The correlation identity of S02 makes the inner sum \\(p-1\\) if \\(x^2=y^2\\), and \\(-1\\) otherwise. Equivalently it is \\(-1+p\\mathbf1_{x^2=y^2}\\). The contribution of the constant \\(-1\\) is \\(-(\\sum_x\\chi(x))^2=0\\).",
+      "For \\(x^2=y^2\\) with nonzero contribution, \\(x\\ne0\\) and \\(y=x\\) or \\(y=-x\\). These are distinct because \\(p\\) is odd. For each of the \\(p-1\\) choices of \\(x\\), both products \\(xy=x^2\\) and \\(xy=-x^2\\) have symbol \\(1\\), since \\(\\chi(-1)=1\\). Hence \\(\\sum_m S(m)^2=2p(p-1)\\).",
+      "As \\(m\\) runs through the \\((p-1)/2\\) nonzero squares, the scaling formula gives \\(S(m)^2=S(1)^2\\). On the \\((p-1)/2\\) nonsquares it gives \\(S(m)^2=S(\\ell)^2\\). Since \\(S(0)=0\\), the same moment is \\((p-1)(S(1)^2+S(\\ell)^2)/2\\). Equating the two expressions and dividing by \\((p-1)/2\\) gives \\(S(1)^2+S(\\ell)^2=4p\\). Evenness permits division of both sums by \\(2\\), proving the integer representation."
+    ],
+    "example": {
+      "prompt": "Use \\(p=5\\) and the nonresidue \\(\\ell=2\\) to obtain a two-squares representation.",
+      "steps": [
+        "The character values on \\(0,1,2,3,4\\) are \\(0,1,-1,-1,1\\). For \\(m=1\\), the values of \\(x(x^2-1)\\pmod5\\), in order \\(x=0,1,2,3,4\\), are \\(0,0,1,4,0\\); their character values sum to \\(S(1)=2\\).",
+        "For \\(m=2\\), the corresponding residues are \\(0,4,4,1,1\\), all four nonzero entries are squares, and \\(S(2)=4\\)."
+      ],
+      "conclusion": "Thus \\(5=(2/2)^2+(4/2)^2=1^2+2^2\\), and \\(2^2+4^2=4\\cdot5\\) checks the moment identity."
+    },
+    "practice": {
+      "prompt": "For \\(p=5\\), compute \\(S(4)\\) from the scaling rule and verify it directly.",
+      "hints": [
+        "Write \\(4=2^2\\cdot1\\) and note \\(\\chi(2)=-1\\).",
+        "List \\(x(x^2-4)\\pmod5\\) for \\(x=0,1,2,3,4\\)."
+      ],
+      "answer": "The rule gives \\(S(4)=\\chi(2)S(1)=-2\\). Directly, the argument residues are \\(0,2,0,0,3\\), whose character values are \\(0,-1,0,0,-1\\); these sum to \\(-2\\)."
+    },
+    "caution": "The signs of \\(S(1)\\) and \\(S(\\ell)\\) depend on the chosen nonresidue and coordinate choices; their squared sum is fixed. The pairing step needs \\(p\\equiv1\\pmod4\\).",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 00. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "This identity gives another existence proof for prime sums of two squares; the earlier descent proof remains useful for constructing the representation."
+  },
+  {
+    "id": "S04",
+    "title": "Which integers are sums of two squares?",
+    "cluster": "Sums of squares",
+    "question": "Which prime exponents prevent an integer from being a sum of two squares?",
+    "prerequisites": [
+      "S01",
+      "D05"
+    ],
+    "summary": "The obstruction is exactly an odd exponent at a prime congruent to three modulo four.",
+    "definition": [
+      "A nonnegative integer \\(n\\) is representable if \\(n=x^2+y^2\\) for integers \\(x,y\\). For positive \\(n\\), write its prime factorization as \\(n=2^a\\prod_i p_i^{e_i}\\prod_j q_j^{f_j}\\), where \\(p_i\\equiv1\\pmod4\\) and \\(q_j\\equiv3\\pmod4\\)."
+    ],
+    "theorem": "A positive integer \\(n\\) is a sum of two integer squares if and only if every exponent \\(f_j\\) at a prime \\(q_j\\equiv3\\pmod4\\) is even. The integer \\(0\\) is also representable, as \\(0^2+0^2\\).",
+    "proof": [
+      "Suppose \\(n=x^2+y^2\\), and let \\(q\\equiv3\\pmod4\\) be a prime dividing \\(n\\). If \\(q\\nmid y\\), then \\((xy^{-1})^2\\equiv-1\\pmod q\\), contrary to the nonresidue result from S01. If \\(q\\mid y\\), the congruence \\(x^2\\equiv0\\pmod q\\) forces \\(q\\mid x\\) because \\(q\\) is prime. Thus in every case \\(q\\mid x\\) and \\(q\\mid y\\), and \\(q^2\\mid n\\).",
+      "Divide \\(x\\) and \\(y\\) by \\(q\\). The new integer \\(n/q^2\\) is again representable. Repeat while \\(q\\) divides the remaining integer; each division removes two powers of \\(q\\). If an odd exponent remained, the final represented remainder would still be divisible by \\(q\\) but not by \\(q^2\\), contradicting the first bullet. Thus the original exponent is even.",
+      "Conversely, assume all \\(f_j\\) are even. The prime \\(2=1^2+1^2\\), and each \\(p_i\\equiv1\\pmod4\\) has a two-squares representation by S01. Repeated application of the product identity shows that their powers \\(2^a\\) and \\(p_i^{e_i}\\) are representable too. Each factor \\(q_j^{f_j}=(q_j^{f_j/2})^2+0^2\\), and \\(1=1^2+0^2\\). The identity \\((a^2+b^2)(c^2+d^2)=(ac-bd)^2+(ad+bc)^2\\), obtained by expansion, shows that the product of representable positive integers is representable. Multiplying the listed factors gives a representation of \\(n\\)."
+    ],
+    "example": {
+      "prompt": "Decide whether \\(65\\) and \\(21\\) are sums of two squares.",
+      "steps": [
+        "Because \\(65=5\\cdot13\\), both prime factors are \\(1\\pmod4\\). In fact \\(65=1^2+8^2=4^2+7^2\\).",
+        "Because \\(21=3\\cdot7\\), both prime factors are \\(3\\pmod4\\) and each has odd exponent \\(1\\). The necessity direction excludes every representation."
+      ],
+      "conclusion": "\\(65\\) is representable, while \\(21\\) is not."
+    },
+    "practice": {
+      "prompt": "Decide whether \\(325\\) is representable and exhibit a representation using its factorization.",
+      "hints": [
+        "Factor \\(325=5^2\\cdot13\\).",
+        "Use \\(13=2^2+3^2\\) and treat \\(5^2\\) as a square factor."
+      ],
+      "answer": "Yes. The factorization \\(325=5^2\\cdot13\\) contains no prime congruent to \\(3\\pmod4\\) to an odd exponent. Since \\(13=2^2+3^2\\), multiplication by \\(5^2\\) yields \\(325=(5\\cdot2)^2+(5\\cdot3)^2=10^2+15^2\\)."
+    },
+    "caution": "The criterion concerns exponents in the prime factorization, not whether \\(n\\) itself is congruent to \\(1\\pmod4\\). It applies to positive \\(n\\); zero is handled separately.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The product identity becomes the norm law in the Gaussian integers."
+  },
+  {
+    "id": "S05",
+    "title": "A small window into Gaussian integers",
+    "cluster": "Algebra bridges",
+    "question": "What algebraic structure explains the two-squares product identity?",
+    "prerequisites": [
+      "S04"
+    ],
+    "summary": "The norm on Gaussian integers turns multiplication into multiplication of sums of two squares.",
+    "definition": [
+      "The Gaussian integers are \\(\\mathbb Z[i]=\\{a+bi:a,b\\in\\mathbb Z\\}\\), with \\(i^2=-1\\). The conjugate of \\(z=a+bi\\) is \\(\\overline z=a-bi\\), and its norm is \\(N(z)=z\\overline z=a^2+b^2\\).",
+      "A unit of \\(\\mathbb Z[i]\\) is an element \\(u\\) with a multiplicative inverse in \\(\\mathbb Z[i]\\)."
+    ],
+    "theorem": "For all \\(z,w\\in\\mathbb Z[i]\\), \\(N(zw)=N(z)N(w)\\). The units are exactly \\(1,-1,i,-i\\), equivalently the Gaussian integers of norm \\(1\\).",
+    "proof": [
+      "Let \\(z=a+bi\\) and \\(w=c+di\\) with integer coefficients. Distributivity and \\(i^2=-1\\) give \\(zw=(ac-bd)+(ad+bc)i\\), again in \\(\\mathbb Z[i]\\). Direct expansion gives \\(N(zw)=(ac-bd)^2+(ad+bc)^2=(a^2+b^2)(c^2+d^2)=N(z)N(w)\\).",
+      "If \\(u\\) has inverse \\(v\\in\\mathbb Z[i]\\), then \\(1=N(1)=N(uv)=N(u)N(v)\\). Both factors are nonnegative integers, so each is \\(1\\). Conversely, if \\(N(u)=1\\), then \\(u\\overline u=1\\) and \\(\\overline u\\in\\mathbb Z[i]\\), so \\(u\\) is a unit.",
+      "Finally, \\(a^2+b^2=1\\) for integers \\(a,b\\) has exactly the coefficient pairs \\((1,0),(-1,0),(0,1),(0,-1)\\). They give \\(1,-1,i,-i\\), respectively."
+    ],
+    "example": {
+      "prompt": "Multiply \\(2+i\\) by \\(3+2i\\) and check the norm law.",
+      "steps": [
+        "Distribution gives \\((2+i)(3+2i)=6+4i+3i+2i^2=4+7i\\).",
+        "The factor norms are \\(N(2+i)=2^2+1^2=5\\) and \\(N(3+2i)=3^2+2^2=13\\). The product norm is \\(N(4+7i)=4^2+7^2=65=5\\cdot13\\)."
+      ],
+      "conclusion": "The multiplication has constructed the representation \\(65=4^2+7^2\\)."
+    },
+    "practice": {
+      "prompt": "Find every Gaussian integer of norm \\(1\\), and give the inverse of \\(i\\).",
+      "hints": [
+        "Solve \\(a^2+b^2=1\\) in integers.",
+        "For a norm-one element \\(u\\), use \\(u\\overline u=1\\)."
+      ],
+      "answer": "The solutions are \\(1,-1,i,-i\\), because the only integer squares summing to \\(1\\) are \\(1+0\\) and \\(0+1\\). Since \\(i(-i)=-i^2=1\\), the inverse of \\(i\\) is \\(-i\\)."
+    },
+    "caution": "Norm multiplicativity and the unit list require no claim about unique factorization in Gaussian integers.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "This algebraic viewpoint packages the product identity used in S04."
+  },
+  {
+    "id": "R01",
+    "title": "Finite continued fractions from Euclid",
+    "cluster": "Continued fractions",
+    "question": "How does Euclidean division encode a rational number as nested quotients?",
+    "prerequisites": [
+      "D04"
+    ],
+    "summary": "The quotients in Euclid’s algorithm are exactly the entries of a finite simple continued fraction.",
+    "definition": [
+      "A finite simple continued fraction is \\([a_0;a_1,\\ldots,a_r]=a_0+1/(a_1+1/(\\cdots+1/a_r))\\), with \\(a_0\\in\\mathbb Z\\) and \\(a_j\\in\\mathbb Z_{>0}\\) for \\(j\\ge1\\). For \\(r=0\\), its value is simply \\(a_0\\).",
+      "The expansion is called canonical when either \\(r=0\\) or its final entry satisfies \\(a_r\\ge2\\)."
+    ],
+    "theorem": "Every rational number \\(x\\) has a finite canonical simple continued-fraction expansion. It is uniquely determined by repeatedly taking the floor and reciprocating the positive fractional part. The same quotients arise from Euclid’s algorithm on a numerator and positive denominator.",
+    "proof": [
+      "Write \\(x=A/B\\) with integers \\(A,B\\) and \\(B>0\\). Euclidean division, including for negative \\(A\\), gives unique integers \\(a_0,r_1\\) with \\(A=a_0B+r_1\\) and \\(0\\le r_1<B\\). If \\(r_1=0\\), then \\(x=a_0\\). Otherwise \\(x=a_0+1/(B/r_1)\\), where \\(B/r_1>1\\).",
+      "Apply Euclidean division to \\(B/r_1\\), then to each following reciprocal of a nonzero fractional part. Equivalently, with consecutive positive remainders \\(r_{j-1},r_j\\), write \\(r_{j-1}=a_jr_j+r_{j+1}\\) and \\(0\\le r_{j+1}<r_j\\). The positive remainders strictly decrease, so some remainder is zero. Reversing the substitutions gives \\(x=[a_0;a_1,\\ldots,a_r]\\), with every \\(a_j>0\\) for \\(j\\ge1\\).",
+      "At the final nonintegral division, the preceding positive remainder is strictly larger than the final positive remainder, and their quotient is the integer \\(a_r\\). Hence \\(a_r\\ge2\\), so the expansion is canonical. At each stage \\(a_j\\) is the floor of the current rational value, and the next value is the reciprocal of its fractional part. These operations are forced. Induction through the terminating stages proves uniqueness among canonical expansions.",
+      "Without the final-entry convention there is one immediate ambiguity: if \\(a_r\\ge2\\), then \\([a_0;\\ldots,a_r]=[a_0;\\ldots,a_r-1,1]\\), since \\(a_r-1+1/1=a_r\\)."
+    ],
+    "example": {
+      "prompt": "Run Euclid’s algorithm on \\(43/19\\) and write its continued fraction.",
+      "steps": [
+        "The divisions are \\(43=2\\cdot19+5\\), \\(19=3\\cdot5+4\\), \\(5=1\\cdot4+1\\), and \\(4=4\\cdot1+0\\).",
+        "The successive quotients are \\(2,3,1,4\\), so reversing the nested divisions gives \\(43/19=[2;3,1,4]\\). Because the last entry is \\(4\\ge2\\), this is canonical.",
+        "The same number also has the noncanonical expansion \\([2;3,1,3,1]\\), obtained by replacing the final \\(4\\) with \\(3,1\\)."
+      ],
+      "conclusion": "Euclid’s algorithm supplies \\([2;3,1,4]\\), while the final-entry rule selects its canonical form."
+    },
+    "practice": {
+      "prompt": "Evaluate \\([1;2,2]\\), then give its alternative expansion ending in \\(1\\).",
+      "hints": [
+        "Begin with the innermost value \\(2+1/2=5/2\\).",
+        "Split the final \\(2\\) as \\(1+1/1\\)."
+      ],
+      "answer": "\\([1;2,2]=1+1/(2+1/2)=1+2/5=7/5\\). Splitting the final entry gives \\([1;2,1,1]\\), which has the same value because its inner tail \\(1+1/1\\) equals \\(2\\)."
+    },
+    "caution": "The first entry may be negative; the later entries are positive. A trailing one creates a second finite expansion unless the canonical convention is imposed.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The next lesson turns Euclid’s quotients into integer recurrences.",
+    "lab": "continued-fraction"
+  },
+  {
+    "id": "R02",
+    "title": "Convergents and determinant-one structure",
+    "cluster": "Continued fractions",
+    "question": "Why are successive convergents reduced and tightly linked?",
+    "prerequisites": [
+      "R01"
+    ],
+    "summary": "Two integer recurrences produce the convergents, and their adjacent determinant is always one in absolute value.",
+    "definition": [
+      "Given entries \\(a_0,a_1,\\ldots\\), set \\(p_{-2}=0\\), \\(p_{-1}=1\\), \\(q_{-2}=1\\), and \\(q_{-1}=0\\). For \\(k\\ge0\\), define \\(p_k=a_kp_{k-1}+p_{k-2}\\) and \\(q_k=a_kq_{k-1}+q_{k-2}\\). The fraction \\(p_k/q_k\\) is the \\(k\\)-th convergent.",
+      "For simple continued fractions, \\(a_0\\in\\mathbb Z\\) and \\(a_k\\in\\mathbb Z_{>0}\\) for \\(k\\ge1\\). The denominators \\(q_k\\) are positive for \\(k\\ge0\\)."
+    ],
+    "theorem": "For every \\(k\\ge0\\), \\([a_0;\\ldots,a_k]=p_k/q_k\\) and \\(p_kq_{k-1}-p_{k-1}q_k=(-1)^{k-1}\\). Hence \\(\\gcd(p_k,q_k)=1\\); adjacent column vectors \\((p_k,q_k)\\) and \\((p_{k-1},q_{k-1})\\) form an integer basis of \\(\\mathbb Z^2\\).",
+    "proof": [
+      "For each integer \\(a\\), let \\(M(a)=\\begin{pmatrix}a&1\\\\1&0\\end{pmatrix}\\). The recurrence and initial values give, by induction, \\(M(a_0)M(a_1)\\cdots M(a_k)=\\begin{pmatrix}p_k&p_{k-1}\\\\q_k&q_{k-1}\\end{pmatrix}\\). The base case \\(k=0\\) is immediate, and multiplication on the right by \\(M(a_k)\\) produces the next recurrence.",
+      "The matrix \\(M(a)\\) acts on a real number \\(t>0\\) by the fractional-linear map \\(t\\mapsto a+1/t\\). Therefore its product acts by the nested continued fraction. Applying the product to \\(\\infty\\), interpreted as the limit as \\(t\\to+\\infty\\), gives the first-column ratio \\(p_k/q_k\\). The nested expression at this limit is exactly \\([a_0;\\ldots,a_k]\\). This also covers \\(k=0\\), because \\(q_0=1\\).",
+      "Each matrix \\(M(a_j)\\) has determinant \\(-1\\), so the product has determinant \\((-1)^{k+1}=(-1)^{k-1}\\). Taking the determinant of its displayed form yields \\(p_kq_{k-1}-p_{k-1}q_k=(-1)^{k-1}\\).",
+      "Any common divisor of \\(p_k\\) and \\(q_k\\) divides the determinant, so it is \\(1\\). The two columns have determinant \\(\\pm1\\); their inverse matrix is the integer adjugate times that sign. Thus every vector in \\(\\mathbb Z^2\\) has a unique integer linear combination of the two columns, proving the basis claim."
+    ],
+    "example": {
+      "prompt": "Compute the convergents of \\([2;3,1,4]\\) and inspect adjacent determinants.",
+      "steps": [
+        "The recurrence gives \\((p_0,q_0)=(2,1)\\), \\((p_1,q_1)=(7,3)\\), \\((p_2,q_2)=(9,4)\\), and \\((p_3,q_3)=(43,19)\\).",
+        "The consecutive determinants are \\(7\\cdot1-2\\cdot3=1\\), \\(9\\cdot3-7\\cdot4=-1\\), and \\(43\\cdot4-9\\cdot19=1\\)."
+      ],
+      "conclusion": "The convergents are \\(2/1,7/3,9/4,43/19\\), all reduced and linked by alternating determinant signs."
+    },
+    "practice": {
+      "prompt": "Find the convergents of \\([1;2,2]\\) and verify the final determinant.",
+      "hints": [
+        "Start from \\((p_{-2},p_{-1})=(0,1)\\) and \\((q_{-2},q_{-1})=(1,0)\\).",
+        "Use the entry \\(a_2=2\\) in both recurrences."
+      ],
+      "answer": "The convergents are \\(p_0/q_0=1/1\\), \\(p_1/q_1=3/2\\), and \\(p_2/q_2=7/5\\). Their last adjacent determinant is \\(p_2q_1-p_1q_2=7\\cdot2-3\\cdot5=-1=(-1)^{2-1}\\), so \\(7/5\\) is reduced."
+    },
+    "caution": "The determinant sign depends on the order of the two columns; its absolute value is always \\(1\\). The initial index \\(k=0\\) has determinant \\(-1\\) under this convention.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The determinant identity controls the gap between successive convergents and proves convergence of an infinite expansion."
+  },
+  {
+    "id": "R03",
+    "title": "Infinite continued fractions and error bounds",
+    "cluster": "Continued fractions",
+    "question": "Why do infinite continued fractions converge, and how accurate are their convergents?",
+    "prerequisites": [
+      "R02"
+    ],
+    "summary": "Alternating convergents form nested rational brackets whose lengths tend to zero; the resulting number is irrational and has an explicit error bound.",
+    "definition": [
+      "An infinite simple continued fraction \\(\\alpha=[a_0;a_1,a_2,\\ldots]\\) has \\(a_0\\in\\mathbb Z\\) and every \\(a_j\\in\\mathbb Z_{>0}\\) for \\(j\\ge1\\). Its convergents \\(C_k=p_k/q_k\\) use the recurrences and initial values of R02.",
+      "The complete tail after entry \\(a_k\\) is \\(t_{k+1}=[a_{k+1};a_{k+2},\\ldots]\\), once convergence has been established."
+    ],
+    "theorem": "Every infinite simple continued fraction converges to an irrational real number \\(\\alpha\\). Its even convergents increase, its odd convergents decrease, and \\(C_{2j}<\\alpha<C_{2j+1}\\). For every \\(k\\ge0\\), \\(0<|\\alpha-p_k/q_k|<1/(q_kq_{k+1})\\le1/q_k^2\\).",
+    "proof": [
+      "The recurrence gives \\(q_0=1\\), \\(q_1=a_1\\ge1\\), and \\(q_k=a_kq_{k-1}+q_{k-2}>q_{k-1}\\) for \\(k\\ge2\\). In particular the positive integer sequence is unbounded and \\(q_k\\to\\infty\\). The determinant identity of R02 gives \\(C_k-C_{k-1}=(-1)^{k-1}/(q_kq_{k-1})\\) for \\(k\\ge1\\). Thus the first even convergent lies below the first odd one.",
+      "Using \\(p_{k+2}=a_{k+2}p_{k+1}+p_k\\) and the analogous denominator recurrence gives \\(C_{k+2}-C_k=a_{k+2}(p_{k+1}q_k-p_kq_{k+1})/(q_{k+2}q_k)=(-1)^ka_{k+2}/(q_{k+2}q_k)\\). Hence the even subsequence increases and the odd subsequence decreases. Adjacent determinants show each even convergent is below the neighboring odd convergent. The closed intervals \\([C_{2j},C_{2j+1}]\\) are nested, and their lengths are \\(1/(q_{2j}q_{2j+1})\\to0\\). Completeness of the reals therefore gives a unique common limit \\(\\alpha\\), to which all convergents tend.",
+      "The same argument applies to every shifted infinite tail and gives \\(t_{k+1}\\). Because \\(t_{k+1}=a_{k+1}+1/t_{k+2}\\) with \\(t_{k+2}>1\\), we have \\(a_{k+1}<t_{k+1}<a_{k+1}+1\\). Replacing the last variable in the matrix product of R02 by this tail, then passing to the limit in finite truncations, gives \\(\\alpha=(p_kt_{k+1}+p_{k-1})/(q_kt_{k+1}+q_{k-1})\\). The formula also holds for \\(k=0\\) with the stated initial values.",
+      "Subtract \\(p_k/q_k\\) and use the determinant: \\(\\alpha-p_k/q_k=(-1)^k/[q_k(q_kt_{k+1}+q_{k-1})]\\). Its numerator is nonzero, so the even convergents lie strictly below \\(\\alpha\\), and the odd ones lie strictly above. Since \\(t_{k+1}>a_{k+1}\\), the second denominator factor exceeds \\(a_{k+1}q_k+q_{k-1}=q_{k+1}\\). This proves \\(0<|\\alpha-p_k/q_k|<1/(q_kq_{k+1})\\le1/q_k^2\\), using \\(q_{k+1}\\ge q_k\\).",
+      "Finally suppose \\(\\alpha=A/B\\) with integers \\(A,B\\) and \\(B>0\\). The strict error formula says \\(\\alpha\\ne p_k/q_k\\), so \\(|Aq_k-Bp_k|\\) is a nonzero integer and \\(|\\alpha-p_k/q_k|\\ge1/(Bq_k)\\). Choose \\(k\\) with \\(q_{k+1}>B\\), possible because denominators diverge. The proved upper bound is then strictly less than \\(1/(Bq_k)\\), a contradiction. Thus \\(\\alpha\\) is irrational."
+    ],
+    "example": {
+      "prompt": "Use \\([1;2,2,2,\\ldots]\\) to bracket \\(\\sqrt2\\) and bound a convergent error.",
+      "steps": [
+        "Its convergents begin \\(1/1,3/2,7/5,17/12\\). The repeating tail \\(t=[2;2,2,\\ldots]\\) satisfies \\(t=2+1/t\\) and \\(t>0\\), so \\(t=1+\\sqrt2\\). Thus the full value is \\(1+1/t=\\sqrt2\\).",
+        "The squares check the alternating sides: \\(1^2<2\\), \\((3/2)^2=9/4>2\\), \\((7/5)^2=49/25<2\\), and \\((17/12)^2=289/144>2\\).",
+        "For \\(7/5\\), the next denominator is \\(12\\), so \\(0<\\sqrt2-7/5<1/(5\\cdot12)=1/60\\)."
+      ],
+      "conclusion": "The convergents alternate around \\(\\sqrt2\\), with a denominator-based error certificate."
+    },
+    "practice": {
+      "prompt": "For the same continued fraction, prove \\(17/12>\\sqrt2\\) and give the theorem’s error bound using the next denominator.",
+      "hints": [
+        "Compare \\(17^2\\) with \\(2\\cdot12^2\\).",
+        "Use \\(q_4=2q_3+q_2\\)."
+      ],
+      "answer": "Because \\(17^2=289>288=2\\cdot12^2\\) and both numbers are positive, \\(17/12>\\sqrt2\\). The next denominator is \\(q_4=2\\cdot12+5=29\\), so \\(0<17/12-\\sqrt2<1/(12\\cdot29)=1/348\\)."
+    },
+    "caution": "The error bound assumes an infinite expansion with positive later entries. A finite rational expansion terminates and its last convergent has zero error.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "These bounds explain why Euclid’s quotient sequence yields unusually accurate rational approximations."
+  }
+]

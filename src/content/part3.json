@@ -1,0 +1,165 @@
+[
+  {
+    "id": "A05",
+    "title": "Divisor identities and proof by prime powers",
+    "cluster": "Arithmetic functions",
+    "question": "When is checking prime powers a proof rather than a shortcut?",
+    "prerequisites": [
+      "A04",
+      "C07"
+    ],
+    "summary": "Multiplicativity is the bridge from a local prime-power calculation to an identity for every positive integer.",
+    "definition": [
+      "An arithmetic function \\(F\\) is multiplicative when \\(F(1)=1\\) and \\(F(ab)=F(a)F(b)\\) whenever \\(\\gcd(a,b)=1\\). It is completely multiplicative when the product rule holds for all positive \\(a,b\\).",
+      "Write \\(\\omega(n)\\) for the number of distinct prime factors of \\(n\\), with \\(\\omega(1)=0\\). The Möbius function \\(\\mu\\) is zero on integers divisible by a prime square and equals \\((-1)^{\\omega(n)}\\) on squarefree integers.",
+      "Dirichlet convolution is \\((F*G)(n)=\\sum_{d\\mid n}F(d)G(n/d)\\). Its identity \\(\\varepsilon\\) equals \\(1\\) at \\(n=1\\) and \\(0\\) otherwise."
+    ],
+    "theorem": "For every positive \\(n\\), \\(\\sum_{d\\mid n}\\varphi(d)=n\\) and \\(\\sum_{d\\mid n}\\mu(d)^2=2^{\\omega(n)}\\). If \\(f\\) is completely multiplicative with \\(f(1)=1\\), its Dirichlet-convolution inverse is the function \\(n\\mapsto\\mu(n)f(n)\\).",
+    "proof": [
+      "First justify reduction to prime powers. If \\(F,G\\) are multiplicative and \\(\\gcd(a,b)=1\\), every divisor of \\(ab\\) has a unique form \\(d=d_1d_2\\) with \\(d_1\\mid a\\) and \\(d_2\\mid b\\). Then \\(F(d)=F(d_1)F(d_2)\\), while \\(G(ab/d)=G(a/d_1)G(b/d_2)\\). Summing independently over \\(d_1\\) and \\(d_2\\) gives \\((F*G)(ab)=(F*G)(a)(F*G)(b)\\). Thus convolution preserves multiplicativity. The constant-one function, \\(\\varphi\\), and \\(\\mu^2\\) are multiplicative; so are their stated divisor sums. The functions \\(n\\mapsto n\\) and \\(n\\mapsto2^{\\omega(n)}\\) are multiplicative too.",
+      "For a prime power \\(p^k\\), including \\(k=0\\), \\(\\sum_{j=0}^{k}\\varphi(p^j)=1+\\sum_{j=1}^{k}(p^j-p^{j-1})=p^k\\). Also \\(\\mu(p^0)^2=1\\), \\(\\mu(p)^2=1\\), and \\(\\mu(p^j)^2=0\\) for \\(j\\ge2\\). Thus the second sum is \\(1\\) when \\(k=0\\), and \\(2\\) when \\(k\\ge1\\), matching \\(2^{\\omega(p^k)}\\). Unique prime factorization and multiplicativity now prove both identities for all \\(n\\).",
+      "For the inverse claim, complete multiplicativity gives \\((f*(\\mu f))(n)=\\sum_{d\\mid n}f(d)\\mu(n/d)f(n/d)=f(n)\\sum_{e\\mid n}\\mu(e)=f(n)\\varepsilon(n)=\\varepsilon(n)\\). The last equality uses \\(f(1)=1\\). Convolution is commutative, so this is a two-sided inverse."
+    ],
+    "example": {
+      "prompt": "Check the squarefree-divisor identity at \\(n=18\\), then explain why the check is not its general proof.",
+      "steps": [
+        "The positive divisors are \\(1,2,3,6,9,18\\). The squarefree ones are \\(1,2,3,6\\), each contributing \\(\\mu(d)^2=1\\); the other two contribute \\(0\\).",
+        "Since \\(18=2\\cdot3^2\\), \\(\\omega(18)=2\\) and \\(2^{\\omega(18)}=4\\).",
+        "The general argument additionally establishes that both sides are multiplicative and agrees on every prime power."
+      ],
+      "conclusion": "Both sides equal \\(4\\) at \\(18\\); multiplicativity plus the prime-power calculation proves the theorem."
+    },
+    "practice": {
+      "prompt": "The functions \\(\\tau(n)\\) and \\(2^{\\omega(n)}\\) agree at every prime. Does \\(\\tau(n)=2^{\\omega(n)}\\) hold for all positive \\(n\\)?",
+      "hints": [
+        "Try a prime square \\(p^2\\).",
+        "Count divisors and distinct primes separately."
+      ],
+      "answer": "No. For any prime \\(p\\), both sides equal \\(2\\) at \\(p\\), but \\(\\tau(p^2)=3\\) while \\(2^{\\omega(p^2)}=2\\). Even for multiplicative functions, agreement at primes alone is insufficient; one must check every prime power."
+    },
+    "caution": "A prime-power computation becomes a general proof only after both sides have been shown multiplicative. Agreement merely at primes is weaker still.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 04. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The inverse calculation uses scalar-valued functions. Over a general coefficient ring, convolution inversion requires \\(f(1)\\) to be invertible; here it equals \\(1\\)."
+  },
+  {
+    "id": "A06",
+    "title": "Perfect numbers and the even classification",
+    "cluster": "Arithmetic functions",
+    "question": "Why do certain powers of two and Mersenne primes produce perfect numbers?",
+    "prerequisites": [
+      "A02",
+      "D05"
+    ],
+    "summary": "The sum-of-divisors formula both constructs every even perfect number and forces the same form in the converse.",
+    "definition": [
+      "For a positive integer \\(n\\), let \\(\\sigma(n)=\\sum_{d\\mid n}d\\). The integer \\(n\\) is perfect when its proper positive divisors sum to \\(n\\), equivalently \\(\\sigma(n)=2n\\).",
+      "A Mersenne number has the form \\(2^p-1\\) for a positive integer \\(p\\). Calling it prime requires a separate primality test; the shape alone is insufficient."
+    ],
+    "theorem": "An even positive integer is perfect exactly when it has the form \\(n=2^{p-1}(2^p-1)\\), where \\(p\\) is a positive integer and \\(2^p-1\\) is prime. Such a prime forces \\(p\\) itself to be prime.",
+    "proof": [
+      "Construction: let \\(M=2^p-1\\) be prime. Since \\(M\\) is odd and \\(\\sigma\\) is multiplicative, \\(\\sigma(2^{p-1}M)=(1+2+\\cdots+2^{p-1})(1+M)=(2^p-1)2^p=2(2^{p-1}M)\\). Thus the displayed even integer is perfect.",
+      "Conversely, let \\(n\\) be even and perfect. Write \\(n=2^{k-1}m\\) with \\(k\\ge2\\) and odd \\(m\\). Multiplicativity and perfection give \\((2^k-1)\\sigma(m)=2^k m\\). Since consecutive integers are coprime, \\(2^k-1\\mid m\\); write \\(m=(2^k-1)t\\) with positive \\(t\\). The same equation becomes \\(\\sigma(m)=2^k t=m+t\\).",
+      "Because \\(2^k-1>1\\), we have \\(t<m\\), and both \\(1\\) and \\(t\\) divide \\(m\\). If \\(t>1\\), then \\(1,t,m\\) are three distinct positive divisors, giving \\(\\sigma(m)\\ge1+t+m>m+t\\), a contradiction. Hence \\(t=1\\), so \\(m=2^k-1\\) and \\(\\sigma(m)=m+1\\). An integer greater than \\(1\\) has divisor sum \\(m+1\\) exactly when its only positive divisors are \\(1,m\\); thus \\(m\\) is prime. Set \\(p=k\\).",
+      "Finally, if \\(p=uv\\) with integers \\(u,v>1\\), the factorization \\(2^{uv}-1=(2^u-1)(1+2^u+\\cdots+2^{u(v-1)})\\) has two factors greater than \\(1\\). Therefore primality of \\(2^p-1\\) forces \\(p\\) to be prime."
+    ],
+    "example": {
+      "prompt": "Check that \\(496\\) is perfect without listing every divisor individually.",
+      "steps": [
+        "Observe \\(496=2^4\\cdot31\\) and \\(31=2^5-1\\) is prime: it has no prime divisor at most \\(\\sqrt{31}<6\\): \\(2,3,5\\) do not divide \\(31\\).",
+        "By multiplicativity, \\(\\sigma(496)=(1+2+4+8+16)(1+31)=31\\cdot32=992\\).",
+        "Since \\(992=2\\cdot496\\), its proper positive divisors sum to \\(496\\)."
+      ],
+      "conclusion": "\\(496\\) is an even perfect number of the classified form."
+    },
+    "practice": {
+      "prompt": "Prove that if \\(2^r-1\\) is prime, then \\(r\\) is prime. Does prime \\(r\\) guarantee \\(2^r-1\\) prime?",
+      "hints": [
+        "Factor \\(2^{uv}-1\\) when \\(r=uv\\).",
+        "Test the prime exponent \\(r=11\\)."
+      ],
+      "answer": "If \\(r=uv\\) with \\(u,v>1\\), then \\(2^u-1\\) is a proper divisor greater than \\(1\\) of \\(2^r-1\\), so that Mersenne number is composite. The converse fails: \\(11\\) is prime but \\(2^{11}-1=2047=23\\cdot89\\)."
+    },
+    "caution": "This theorem classifies even perfect numbers. It gives no classification or existence result for odd perfect numbers.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 04. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The proof combines unique factorization with multiplicativity of \\(\\sigma\\); it does not require a conjecture about how often Mersenne primes occur."
+  },
+  {
+    "id": "B01",
+    "title": "Floors, fractional parts and counting",
+    "cluster": "Primes and bounds",
+    "question": "What exactly is counted by a floor?",
+    "prerequisites": [
+      "D02"
+    ],
+    "summary": "Floor separates an integer count from a fractional remainder; its jumps can be read as exact counts of multiples.",
+    "definition": [
+      "For real \\(x\\), \\(\\lfloor x\\rfloor\\) is the greatest integer at most \\(x\\). Its fractional part is \\(\\{x\\}=x-\\lfloor x\\rfloor\\), always in \\([0,1)\\), including when \\(x<0\\).",
+      "For integers \\(1\\le A\\le B\\) and \\(m\\ge1\\), \\(\\lfloor B/m\\rfloor-\\lfloor(A-1)/m\\rfloor\\) counts multiples of \\(m\\) in the closed interval \\([A,B]\\)."
+    ],
+    "theorem": "For all real \\(x,y\\), \\(\\lfloor x+y\\rfloor-\\lfloor x\\rfloor-\\lfloor y\\rfloor\\) is \\(0\\) or \\(1\\), according as \\(\\{x\\}+\\{y\\}<1\\) or \\(\\ge1\\). For any integer \\(N\\ge1\\), the number of positive multiples of \\(m\\ge1\\) at most \\(N\\) is \\(\\lfloor N/m\\rfloor\\).",
+    "proof": [
+      "Write \\(x=\\lfloor x\\rfloor+u\\) and \\(y=\\lfloor y\\rfloor+v\\), with \\(0\\le u,v<1\\). Then \\(\\lfloor x+y\\rfloor=\\lfloor x\\rfloor+\\lfloor y\\rfloor+\\lfloor u+v\\rfloor\\). Since \\(0\\le u+v<2\\), the final floor is exactly \\(0\\) when the sum is below \\(1\\), and \\(1\\) otherwise.",
+      "The positive multiples of \\(m\\) no greater than \\(N\\) are \\(m,2m,\\ldots,km\\), where \\(k\\) is the largest integer satisfying \\(km\\le N\\); equivalently \\(k=\\lfloor N/m\\rfloor\\). Subtracting the count through \\(A-1\\) from the count through \\(B\\) proves the interval formula in the definition."
+    ],
+    "example": {
+      "prompt": "Compare floor with truncation at \\(-7/3\\), then count multiples of \\(4\\) from \\(10\\) through \\(35\\).",
+      "steps": [
+        "Because \\(-3\\le-7/3<-2\\), \\(\\lfloor-7/3\\rfloor=-3\\), whereas truncation toward zero gives \\(-2\\). The fractional part is \\(\\{-7/3\\}=-7/3-(-3)=2/3\\).",
+        "There are \\(\\lfloor35/4\\rfloor=8\\) positive multiples through \\(35\\), and \\(\\lfloor9/4\\rfloor=2\\) through \\(9\\).",
+        "The difference is \\(8-2=6\\), corresponding to \\(12,16,20,24,28,32\\)."
+      ],
+      "conclusion": "Negative inputs still have fractional part in \\([0,1)\\), and the interval contains exactly \\(6\\) multiples of \\(4\\)."
+    },
+    "practice": {
+      "prompt": "Count the integers \\(k\\) with \\(20\\le k\\le95\\) and \\(6\\mid k\\). Then find \\(\\lfloor-5/2\\rfloor\\) and \\(\\{-5/2\\}\\).",
+      "hints": [
+        "Count multiples through \\(95\\), then subtract those through \\(19\\).",
+        "The floor of a negative noninteger lies below it."
+      ],
+      "answer": "The count is \\(\\lfloor95/6\\rfloor-\\lfloor19/6\\rfloor=15-3=12\\). Also \\(\\lfloor-5/2\\rfloor=-3\\), so \\(\\{-5/2\\}=-5/2+3=1/2\\)."
+    },
+    "caution": "Floor is not linear: the carry from two fractional parts can change the sum by \\(1\\). Its graph jumps at integers.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 05. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Coprime multiplication permutes the nonzero residue classes, turning a fractional-part sum into an elementary finite sum."
+  },
+  {
+    "id": "B02",
+    "title": "Prime exponents in factorials and binomials",
+    "cluster": "Primes and bounds",
+    "question": "How often does a prime occur across all factors of a factorial?",
+    "prerequisites": [
+      "B01",
+      "D06"
+    ],
+    "summary": "Count each prime-power contribution separately. The resulting finite floor sum computes factorial and binomial valuations exactly.",
+    "definition": [
+      "For a prime \\(p\\) and positive integer \\(n\\), \\(v_p(n)\\) is the exponent of \\(p\\) in \\(n\\). Define \\(n!=1\\cdot2\\cdots n\\), with \\(0!=1\\).",
+      "For integers \\(0\\le k\\le n\\), \\(\\binom nk=n!/[k!(n-k)!]\\) is an integer. Valuations of its factorial expression may be subtracted because prime exponents add under multiplication."
+    ],
+    "theorem": "For every prime \\(p\\) and integer \\(n\\ge0\\), the exponent of \\(p\\) in \\(n!\\) is \\[v_p(n!)=\\sum_{j\\ge1}\\left\\lfloor\\frac{n}{p^j}\\right\\rfloor.\\] Only finitely many terms are nonzero. For \\(0\\le k\\le n\\), subtract the corresponding factorial valuations to obtain the exponent in \\(\\binom nk\\).",
+    "proof": [
+      "Each factor \\(m\\) in \\(n!\\) contributes \\(v_p(m)\\) copies of \\(p\\). Count the first copy from each multiple of \\(p\\), a total of \\(\\lfloor n/p\\rfloor\\); a second copy from each multiple of \\(p^2\\), a total of \\(\\lfloor n/p^2\\rfloor\\); and so on. Thus \\(\\sum_{m=1}^{n}v_p(m)=\\sum_{j\\ge1}\\lfloor n/p^j\\rfloor\\). When \\(p^j>n\\), the count is zero, proving the sum is finite. The formula also gives \\(0\\) for \\(n=0\\), as \\(v_p(0!)=v_p(1)=0\\).",
+      "The identity \\(n!=\\binom nk k!(n-k)!\\) and additivity of \\(v_p\\) give \\[\\begin{aligned}v_p\\!\\left(\\binom nk\\right)&=v_p(n!)\\\\&\\quad-v_p(k!)\\\\&\\quad-v_p((n-k)!).\\end{aligned}\\] Substitute the proved factorial formula in each term. At every power \\(p^j\\), the difference of the three floors is \\(0\\) or \\(1\\) by the floor-carry identity applied to \\(k/p^j\\) and \\((n-k)/p^j\\). The resulting sum is therefore visibly nonnegative."
+    ],
+    "example": {
+      "prompt": "Find \\(v_2(15!)\\) and \\(v_5(15!)\\), explaining repeated contributions.",
+      "steps": [
+        "For \\(p=2\\), the floor counts are \\(\\lfloor15/2\\rfloor=7\\), \\(\\lfloor15/4\\rfloor=3\\), and \\(\\lfloor15/8\\rfloor=1\\); higher powers exceed \\(15\\). Thus \\(v_2(15!)=7+3+1=11\\).",
+        "The multiples of \\(4\\) contribute a second factor of \\(2\\), and the multiple \\(8\\) contributes a third; counting only the seven even factors would miss four copies.",
+        "For \\(p=5\\), \\(\\lfloor15/5\\rfloor=3\\) and \\(25>15\\), so \\(v_5(15!)=3\\)."
+      ],
+      "conclusion": "The exact exponents are \\(v_2(15!)=11\\) and \\(v_5(15!)=3\\)."
+    },
+    "practice": {
+      "prompt": "Compute \\(v_3\\!\\left(\\binom{12}{6}\\right)\\) by the floor formula and independently by evaluating the binomial coefficient.",
+      "hints": [
+        "Compare \\(v_3(12!)\\) with twice \\(v_3(6!)\\).",
+        "The binomial coefficient is \\(924\\)."
+      ],
+      "answer": "\\(v_3(12!)=\\lfloor12/3\\rfloor+\\lfloor12/9\\rfloor=4+1=5\\), while \\(v_3(6!)=\\lfloor6/3\\rfloor=2\\). Hence \\(v_3\\!\\left(\\binom{12}{6}\\right)=5-2-2=1\\). Independently, \\(\\binom{12}{6}=924=3\\cdot308\\), and \\(3\\nmid308\\), so its valuation is \\(1\\)."
+    },
+    "caution": "Counting only multiples of \\(p\\) misses the additional copies contributed by multiples of \\(p^2,p^3,\\ldots\\).",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 05. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Valuations turn products into sums of prime exponents; the floor formula makes that bookkeeping into exact interval counts."
+  }
+]

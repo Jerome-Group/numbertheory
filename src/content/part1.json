@@ -1,0 +1,370 @@
+[
+  {
+    "id": "D05",
+    "title": "Primes, Euclid’s lemma and unique factorization",
+    "cluster": "Divisibility",
+    "question": "Why does a prime dividing a product have to divide a factor?",
+    "prerequisites": [
+      "D03"
+    ],
+    "summary": "Bézout’s identity gives the prime-divisor rule. That rule makes prime factorizations unique.",
+    "definition": [
+      "A prime is an integer \\(p>1\\) whose only positive divisors are \\(1\\) and \\(p\\). A composite integer exceeds \\(1\\) and is not prime.",
+      "The integer \\(1\\) is a unit, not a prime: inserting any number of factors \\(1\\) would destroy a meaningful uniqueness statement.",
+      "By Bézout’s identity, \\(\\gcd(u,v)\\) is an integer combination of \\(u\\) and \\(v\\)."
+    ],
+    "theorem": "For a prime \\(p\\), if \\(p\\mid ab\\), then \\(p\\mid a\\) or \\(p\\mid b\\). Every integer \\(n>1\\) is a product of primes, unique up to their order.",
+    "proof": [
+      "If \\(p\\nmid a\\), the positive divisors of \\(p\\) show \\(\\gcd(p,a)=1\\). Bézout gives integers \\(u,v\\) with \\(up+va=1\\). Multiply by \\(b\\): \\(upb+vab=b\\). If \\(p\\mid ab\\), both terms on the left are divisible by \\(p\\), so \\(p\\mid b\\). This proves Euclid’s lemma without assuming unique factorization.",
+      "Existence follows by strong induction on \\(n>1\\). If \\(n\\) is prime, stop. Otherwise \\(n=ab\\) with \\(1<a,b<n\\); each factor has a prime factorization by the induction hypothesis. Joining them factors \\(n\\).",
+      "For uniqueness, suppose \\(p_1\\cdots p_k=q_1\\cdots q_\\ell\\), with all factors prime. Euclid’s lemma applied repeatedly says \\(p_1\\) divides some \\(q_j\\). Since \\(q_j\\) is prime, \\(p_1=q_j\\). Cancel this nonzero integer factor and repeat by induction on the number of factors. The lists agree after reordering."
+    ],
+    "example": {
+      "prompt": "Factor \\(756\\) by two different splits and explain why the final prime lists agree.",
+      "steps": [
+        "One split is \\(756=7\\cdot108=7\\cdot4\\cdot27=2^2\\cdot3^3\\cdot7\\).",
+        "Another is \\(756=21\\cdot36=(3\\cdot7)(4\\cdot9)=2^2\\cdot3^3\\cdot7\\).",
+        "The equality of the lists is guaranteed for every split by Euclid’s lemma and cancellation, not by these two computations."
+      ],
+      "conclusion": "The prime factorization is \\(756=2^2\\cdot3^3\\cdot7\\)."
+    },
+    "practice": {
+      "prompt": "Prove that if a prime \\(p\\) divides \\(a^3\\), then \\(p\\mid a\\). Explain why replacing “prime” by “composite” fails.",
+      "hints": [
+        "Apply Euclid’s lemma to \\(a\\cdot a^2\\).",
+        "Try \\(4\\mid 2^3\\)."
+      ],
+      "answer": "From \\(p\\mid a\\cdot a^2\\), Euclid’s lemma gives \\(p\\mid a\\) or \\(p\\mid a^2\\). In the second case apply it again to \\(a\\cdot a\\), obtaining \\(p\\mid a\\). For a composite counterexample, \\(4\\mid 2^3=8\\) but \\(4\\nmid2\\)."
+    },
+    "caution": "Do not use unique factorization to prove Bézout’s identity or Euclid’s lemma: that would make this proof circular.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 01. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "In other rings, “irreducible” and “prime” can differ; their coincidence for integers rests on the argument above."
+  },
+  {
+    "id": "D06",
+    "title": "Valuations, gcd and lcm",
+    "cluster": "Divisibility",
+    "question": "How does factoring turn divisibility into coordinate-wise comparison?",
+    "prerequisites": [
+      "D05"
+    ],
+    "summary": "Prime exponents turn products into sums, divisibility into inequalities, gcd into minima, and lcm into maxima.",
+    "definition": [
+      "For a prime \\(p\\) and nonzero integer \\(n\\), \\(v_p(n)\\) is the exponent of \\(p\\) in the factorization of \\(|n|\\). It is a finite nonnegative integer.",
+      "For positive integers \\(a,b\\), \\(\\gcd(a,b)\\) is their greatest positive common divisor and \\(\\operatorname{lcm}(a,b)\\) their least positive common multiple.",
+      "The optional convention \\(v_p(0)=\\infty\\) is separate; no finite exponent vector for \\(0\\) is used here."
+    ],
+    "theorem": "For positive \\(a,b\\), \\(a\\mid b\\) exactly when \\(v_p(a)\\le v_p(b)\\) for every prime \\(p\\). Also \\(v_p(\\gcd(a,b))=\\min(v_p(a),v_p(b))\\), \\(v_p(\\operatorname{lcm}(a,b))=\\max(v_p(a),v_p(b))\\), and \\(\\gcd(a,b)\\operatorname{lcm}(a,b)=ab\\).",
+    "proof": [
+      "Unique factorization says \\(a=\\prod_p p^{\\alpha_p}\\) and \\(b=\\prod_p p^{\\beta_p}\\), with finitely many nonzero exponents. If \\(b=ac\\), each exponent in \\(b\\) is that in \\(a\\) plus a nonnegative exponent from \\(c\\). Conversely, if \\(\\alpha_p\\le\\beta_p\\) for every \\(p\\), then \\(b/a=\\prod_p p^{\\beta_p-\\alpha_p}\\) is an integer.",
+      "A positive common divisor has each exponent at most both \\(\\alpha_p\\) and \\(\\beta_p\\). The product with exponents \\(\\min(\\alpha_p,\\beta_p)\\) is itself a common divisor and is divisible by every other common divisor; it is the gcd. Dually, the product with exponent \\(\\max(\\alpha_p,\\beta_p)\\) is a common multiple dividing every other positive common multiple; it is the lcm.",
+      "For each prime, \\(\\min(\\alpha_p,\\beta_p)+\\max(\\alpha_p,\\beta_p)=\\alpha_p+\\beta_p\\). Unique factorization therefore gives \\(\\gcd(a,b)\\operatorname{lcm}(a,b)=ab\\)."
+    ],
+    "example": {
+      "prompt": "Find the gcd and lcm of \\(72\\) and \\(150\\).",
+      "steps": [
+        "Write \\(72=2^3\\cdot3^2\\) and \\(150=2\\cdot3\\cdot5^2\\).",
+        "Take minimum exponents for the gcd: \\(2\\cdot3=6\\).",
+        "Take maximum exponents for the lcm: \\(2^3\\cdot3^2\\cdot5^2=1800\\).",
+        "Check \\(6\\cdot1800=72\\cdot150=10800\\)."
+      ],
+      "conclusion": "\\(\\gcd(72,150)=6\\) and \\(\\operatorname{lcm}(72,150)=1800\\)."
+    },
+    "practice": {
+      "prompt": "For positive \\(a,b,c\\), prove \\(\\gcd(a,\\operatorname{lcm}(b,c))=\\operatorname{lcm}(\\gcd(a,b),\\gcd(a,c))\\).",
+      "hints": [
+        "Fix a prime \\(p\\) and write the three exponents as \\(A,B,C\\).",
+        "Compare \\(\\min(A,\\max(B,C))\\) with \\(\\max(\\min(A,B),\\min(A,C))\\)."
+      ],
+      "answer": "For any prime \\(p\\), the exponent on the left is \\(\\min(A,\\max(B,C))\\). If \\(B\\ge C\\), both sides equal \\(\\min(A,B)\\); if \\(C\\ge B\\), both equal \\(\\min(A,C)\\). Thus every prime exponent agrees, and unique factorization proves the identity."
+    },
+    "caution": "The product formula is stated for positive inputs. For signed nonzero inputs its right side becomes \\(|ab|\\); zero needs separate definitions.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 01. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Positive integers ordered by divisibility have gcd as meet and lcm as join; the exponent proof makes that lattice concrete."
+  },
+  {
+    "id": "D07",
+    "title": "Linear Diophantine equations and all solutions",
+    "cluster": "Divisibility",
+    "question": "How do we know a displayed integer solution is part of the entire family?",
+    "prerequisites": [
+      "D04"
+    ],
+    "summary": "A gcd test decides existence; a coprime cancellation argument describes every integer solution.",
+    "definition": [
+      "A linear Diophantine equation asks for integer \\(x,y\\) satisfying \\(ax+by=c\\), where \\(a,b,c\\in\\mathbb Z\\).",
+      "When \\((a,b)\\ne(0,0)\\), let \\(d=\\gcd(|a|,|b|)>0\\)."
+    ],
+    "theorem": "If \\((a,b)\\ne(0,0)\\), the equation \\(ax+by=c\\) has an integer solution exactly when \\(d\\mid c\\). Given one solution \\((x_0,y_0)\\), all solutions are \\(x=x_0+(b/d)t\\), \\(y=y_0-(a/d)t\\), for \\(t\\in\\mathbb Z\\).",
+    "proof": [
+      "Necessity: since \\(d\\mid a\\) and \\(d\\mid b\\), any value \\(ax+by\\) is divisible by \\(d\\). Sufficiency: Bézout provides \\(au+bv=d\\). If \\(c=dk\\), then \\((x_0,y_0)=(ku,kv)\\) solves the equation.",
+      "For any second solution \\((x,y)\\), subtract the equations and divide by \\(d\\): \\((a/d)(x-x_0)=-(b/d)(y-y_0)\\). If both coefficients are nonzero, \\(\\gcd(|a/d|,|b/d|)=1\\); coprime cancellation gives \\(b/d\\mid x-x_0\\). Writing \\(x-x_0=(b/d)t\\) and substituting gives \\(y-y_0=-(a/d)t\\). If \\(b=0\\), the difference equation forces \\(x=x_0\\) while \\(y\\) is arbitrary; the formula gives exactly those pairs because \\(a/d=\\pm1\\). If \\(a=0\\), it forces \\(y=y_0\\) while \\(x\\) is arbitrary; here \\(b/d=\\pm1\\).",
+      "If \\(a=b=0\\), every integer pair solves the equation when \\(c=0\\), and none does when \\(c\\ne0\\). This case is excluded from the displayed parameter formula."
+    ],
+    "example": {
+      "prompt": "Find all integer solutions of \\(18x+30y=6\\), then those with \\(x,y\\ge0\\).",
+      "steps": [
+        "Here \\(d=6\\), and \\(18(-3)+30(2)=6\\), so \\((x_0,y_0)=(-3,2)\\).",
+        "The full family is \\(x=-3+5t\\), \\(y=2-3t\\), with \\(t\\in\\mathbb Z\\).",
+        "Nonnegativity requires \\(t\\ge3/5\\) and \\(t\\le2/3\\). There is no integer in that interval."
+      ],
+      "conclusion": "All integer solutions are \\((-3+5t,2-3t)\\); none has both coordinates nonnegative."
+    },
+    "practice": {
+      "prompt": "Solve \\(14x+21y=77\\) with \\(x,y\\ge0\\).",
+      "hints": [
+        "First divide by \\(7\\).",
+        "Find one solution, then impose two inequalities on the parameter."
+      ],
+      "answer": "Dividing gives \\(2x+3y=11\\). One solution is \\((4,1)\\); all are \\(x=4+3t\\), \\(y=1-2t\\). The inequalities give \\(t\\ge-4/3\\) and \\(t\\le1/2\\), so \\(t=-1\\) or \\(0\\). The nonnegative solutions are \\((1,3)\\) and \\((4,1)\\)."
+    },
+    "caution": "A point that appears to lie on a drawn line is only a candidate. Substitute it into the equation and check integrality.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 02. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The solution set is a translate of the integer kernel of the map \\((x,y)\\mapsto ax+by\\)."
+  },
+  {
+    "id": "D08",
+    "title": "Infinitely many primes and exact sieving",
+    "cluster": "Primes and bounds",
+    "question": "What does Euclid’s construction guarantee about a new number?",
+    "prerequisites": [
+      "D05"
+    ],
+    "summary": "Euclid’s argument produces a prime outside any finite list; trial division gives an exact finite test for a particular candidate.",
+    "definition": [
+      "A prime divisor of an integer \\(N>1\\) is a prime \\(q\\) with \\(q\\mid N\\). Every such \\(N\\) has one by prime factorization.",
+      "Trial division tests whether \\(N>1\\) has a divisor among the primes \\(p\\le\\sqrt N\\). For a bound \\(B\\ge2\\), the sieve of Eratosthenes lists \\(2,\\ldots,B\\) and, for each still-unmarked \\(p\\le\\sqrt B\\), marks its proper multiples from \\(p^2\\) onward. Each unmarked integer is prime: a composite would have a prime divisor at most its square root and would have been marked."
+    ],
+    "theorem": "There are infinitely many primes. For any integer \\(N>1\\), \\(N\\) is composite exactly when it has a prime divisor \\(p\\le\\sqrt N\\).",
+    "proof": [
+      "Suppose the primes form a finite list \\(p_1,\\ldots,p_k\\). Set \\(M=p_1\\cdots p_k+1>1\\). Prime factorization gives a prime \\(q\\mid M\\). If \\(q=p_i\\) for some listed prime, then \\(q\\) divides both \\(M\\) and \\(p_1\\cdots p_k\\), hence divides their difference \\(1\\), impossible. Thus \\(q\\) is a new prime, contradicting completeness of the list. Nothing here says \\(M\\) itself is prime.",
+      "For the trial-division claim, if \\(N=ab\\) with \\(1<a,b<N\\), at least one factor is at most \\(\\sqrt N\\); otherwise \\(ab>N\\). That factor has a prime divisor \\(p\\le\\sqrt N\\), which also divides \\(N\\). Conversely a prime divisor \\(p\\le\\sqrt N<N\\) makes \\(N\\) composite. Testing those primes is therefore exact."
+    ],
+    "example": {
+      "prompt": "Apply Euclid’s construction to \\(2,3,5,7\\). Does the resulting number have to be prime?",
+      "steps": [
+        "The constructed number is \\(2\\cdot3\\cdot5\\cdot7+1=211\\).",
+        "The primes at most \\(\\sqrt{211}<15\\) are \\(2,3,5,7,11,13\\). None divides \\(211\\), so trial division proves that this particular number is prime.",
+        "This instance does not prove every product-plus-one is prime: \\(2\\cdot3\\cdot5\\cdot7\\cdot11\\cdot13+1=30031=59\\cdot509\\)."
+      ],
+      "conclusion": "\\(211\\) happens to be prime; Euclid’s argument requires only a new prime divisor."
+    },
+    "practice": {
+      "prompt": "Given distinct primes \\(p_1,\\ldots,p_k\\), what can be guaranteed about a prime divisor of \\(p_1\\cdots p_k-1\\)? Explain any exception.",
+      "hints": [
+        "Compare the new number modulo each \\(p_i\\).",
+        "Check whether the new number is always greater than \\(1\\)."
+      ],
+      "answer": "If \\(P=p_1\\cdots p_k>2\\), then \\(P-1>1\\) has a prime divisor \\(q\\). Were \\(q=p_i\\), it would divide both \\(P\\) and \\(P-1\\), hence \\(1\\); so \\(q\\) is absent from the list. For the single-prime list \\(\\{2\\}\\), \\(P-1=1\\) has no prime divisor, so the claim needs \\(P>2\\)."
+    },
+    "caution": "Finite prime data does not prove a distribution law. No claim about prime density follows from Euclid’s construction or a sieve snapshot.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 01. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Factorization explains existence of prime divisors; a sieve is an exact search procedure within a chosen finite bound."
+  },
+  {
+    "id": "C01",
+    "title": "Congruence classes and residue rings",
+    "cluster": "Modular arithmetic",
+    "question": "What is being identified when integers are equal modulo \\(n\\)?",
+    "prerequisites": [
+      "D02"
+    ],
+    "summary": "Congruence groups integers by remainder, and addition and multiplication act consistently on those groups.",
+    "definition": [
+      "Fix an integer \\(n\\ge1\\). We write \\(a\\equiv b\\pmod n\\) when \\(n\\mid(a-b)\\). The class \\([a]_n\\) is \\(\\{a+kn:k\\in\\mathbb Z\\}\\).",
+      "The set of classes is \\(\\mathbb Z/n\\mathbb Z\\). Define \\([a]_n+[b]_n=[a+b]_n\\) and \\([a]_n[b]_n=[ab]_n\\). A displayed integer is a representative, not the class itself."
+    ],
+    "theorem": "Congruence modulo \\(n\\ge1\\) is an equivalence relation. Its class operations are well-defined: replacing either representative by a congruent integer leaves the sum and product classes unchanged.",
+    "proof": [
+      "Reflexivity follows from \\(n\\mid(a-a)=0\\). If \\(n\\mid(a-b)\\), then \\(n\\mid(b-a)\\), giving symmetry. If \\(n\\mid(a-b)\\) and \\(n\\mid(b-c)\\), their sum is \\(a-c\\), giving transitivity.",
+      "Suppose \\(a\\equiv a\\prime\\pmod n\\) and \\(b\\equiv b\\prime\\pmod n\\). Write \\(a-a\\prime=nu\\) and \\(b-b\\prime=nv\\). Then \\((a+b)-(a\\prime+b\\prime)=n(u+v)\\), so the sum classes agree.",
+      "For products, \\(ab-a\\prime b\\prime=(a-a\\prime)b+a\\prime(b-b\\prime)=n(ub+a\\prime v)\\). Thus product classes agree. These arguments establish operations on classes rather than on arbitrarily chosen labels."
+    ],
+    "example": {
+      "prompt": "In \\(\\mathbb Z/8\\mathbb Z\\), compare the representatives \\(-1\\) and \\(7\\), and combine each with \\([3]_8\\).",
+      "steps": [
+        "Because \\(-1-7=-8\\), \\([-1]_8=[7]_8\\).",
+        "The sums give \\([-1+3]_8=[2]_8\\) and \\([7+3]_8=[10]_8=[2]_8\\).",
+        "The products give \\([-3]_8=[5]_8\\) and \\([21]_8=[5]_8\\)."
+      ],
+      "conclusion": "Changing representatives changes the displayed integers but not the resulting classes."
+    },
+    "practice": {
+      "prompt": "On classes modulo \\(5\\), attempt the rule \\(F([a]_5)=[\\lfloor a/5\\rfloor]_5\\). Is it well-defined?",
+      "hints": [
+        "Compare two representatives of the same class, such as \\(0\\) and \\(5\\)."
+      ],
+      "answer": "It is not well-defined: \\([0]_5=[5]_5\\), but the proposed outputs are \\([\\lfloor0/5\\rfloor]_5=[0]_5\\) and \\([\\lfloor5/5\\rfloor]_5=[1]_5\\), which differ."
+    },
+    "caution": "Equality of classes \\([a]_n=[b]_n\\) means \\(n\\mid(a-b)\\), not that \\(a=b\\) as integers.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 02. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "These well-defined operations make \\(\\mathbb Z/n\\mathbb Z\\) a concrete quotient ring; no abstract quotient theory is needed to use them.",
+    "lab": "residue"
+  },
+  {
+    "id": "C02",
+    "title": "Units, zero divisors and legal cancellation",
+    "cluster": "Modular arithmetic",
+    "question": "Why does multiplication sometimes merge different residues?",
+    "prerequisites": [
+      "C01",
+      "D03"
+    ],
+    "summary": "Invertibility controls cancellation. A nonunit factor reduces the modulus that survives cancellation.",
+    "definition": [
+      "For \\(n\\ge2\\), a class \\([a]_n\\) is a unit if some \\([u]_n\\) satisfies \\([a]_n[u]_n=[1]_n\\).",
+      "A nonzero class \\([c]_n\\) is a zero divisor if it multiplies some other nonzero class to \\([0]_n\\)."
+    ],
+    "theorem": "For \\(n\\ge2\\), \\([a]_n\\) is a unit exactly when \\(\\gcd(a,n)=1\\). For integers \\(a,b,c\\), writing \\(d=\\gcd(|c|,n)\\), the relation \\(ac\\equiv bc\\pmod n\\) holds exactly when \\(a\\equiv b\\pmod{n/d}\\). Every nonzero nonunit class modulo \\(n\\) is a zero divisor.",
+    "proof": [
+      "If \\(\\gcd(a,n)=1\\), Bézout gives \\(ua+vn=1\\), so \\([u]_n[a]_n=[1]_n\\). Conversely, if \\(au\\equiv1\\pmod n\\), some integers satisfy \\(au-vn=1\\); every common divisor of \\(a,n\\) divides \\(1\\), so the gcd is \\(1\\).",
+      "The first cancellation relation means \\(n\\mid c(a-b)\\). Write \\(c=dc\\prime\\), \\(n=dn\\prime\\), where \\(\\gcd(|c\\prime|,n\\prime)=1\\). Then \\(n\\prime\\mid c\\prime(a-b)\\); Choose integers \\(u,v\\) with \\(uc\\prime+vn\\prime=1\\). Multiplying by \\(a-b\\) shows \\(a-b=uc\\prime(a-b)+vn\\prime(a-b)\\), and both terms on the right are divisible by \\(n\\prime\\). Hence \\(n\\prime\\mid(a-b)\\). Reversing the steps gives the converse. This includes \\(c=0\\): then \\(d=n\\), \\(n/d=1\\), and both sides always hold.",
+      "If \\([c]_n\\ne[0]_n\\) is a nonunit, then \\(1<d=\\gcd(c,n)<n\\). The integer \\(n/d\\) represents a nonzero class modulo \\(n\\), while \\(c(n/d)=(c/d)n\\) represents zero. Hence \\([c]_n\\) is a zero divisor."
+    ],
+    "example": {
+      "prompt": "Explain why \\(4\\cdot1\\equiv4\\cdot4\\pmod{12}\\) does not allow cancellation modulo \\(12\\).",
+      "steps": [
+        "The difference is \\(4(1-4)=-12\\), divisible by \\(12\\).",
+        "Here \\(d=\\gcd(4,12)=4\\), so cancellation gives \\(1\\equiv4\\pmod{12/4}\\), namely modulo \\(3\\).",
+        "Indeed \\(1-4=-3\\) is divisible by \\(3\\), but not by \\(12\\)."
+      ],
+      "conclusion": "The valid conclusion is \\(1\\equiv4\\pmod3\\)."
+    },
+    "practice": {
+      "prompt": "Find a nonzero class that multiplies \\([6]_{15}\\) to zero, and explain why \\([6]_{15}\\) cannot have an inverse.",
+      "hints": [
+        "Compute \\(\\gcd(6,15)\\).",
+        "Use the class of \\(15/\\gcd(6,15)\\)."
+      ],
+      "answer": "\\(\\gcd(6,15)=3\\), so \\([5]_{15}\\ne[0]_{15}\\) and \\([6]_{15}[5]_{15}=[30]_{15}=[0]_{15}\\). An inverse of \\([6]_{15}\\) would turn this equality into \\([5]_{15}=[0]_{15}\\), a contradiction; equivalently its gcd with \\(15\\) is not \\(1\\)."
+    },
+    "caution": "Never cancel a nonunit while keeping the original modulus. The reduced modulus may be \\(1\\), which carries no information.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 02, 03. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Multiplication by a unit permutes residue classes. A nonunit map can merge inputs and has a nontrivial kernel."
+  },
+  {
+    "id": "C03",
+    "title": "Linear congruences and solution counts",
+    "cluster": "Modular arithmetic",
+    "question": "Why can one linear congruence have several answers modulo the original modulus?",
+    "prerequisites": [
+      "C02",
+      "D07"
+    ],
+    "summary": "The gcd of coefficient and modulus decides solvability and counts the residue classes in every nonempty fiber.",
+    "definition": [
+      "Fix integers \\(a,b\\) and a positive modulus \\(n\\). A solution of \\(ax\\equiv b\\pmod n\\) is a residue class \\([x]_n\\).",
+      "Let \\(d=\\gcd(|a|,n)\\). It is positive even when \\(a=0\\)."
+    ],
+    "theorem": "The congruence \\(ax\\equiv b\\pmod n\\) is soluble exactly when \\(d\\mid b\\). When soluble, it has exactly \\(d\\) distinct solutions modulo \\(n\\).",
+    "proof": [
+      "The congruence is equivalent to \\(n\\mid(ax-b)\\), or \\(ax-ny=b\\) for some integer \\(y\\). The linear Diophantine criterion gives existence exactly when \\(\\gcd(|a|,n)=d\\) divides \\(b\\).",
+      "Assume \\(d\\mid b\\), and write \\(a=da\\prime\\), \\(b=db\\prime\\), \\(n=dn\\prime\\). The equation becomes \\(a\\prime x\\equiv b\\prime\\pmod{n\\prime}\\). If \\(n\\prime=1\\), this is the sole class modulo \\(1\\). Otherwise \\(\\gcd(a\\prime,n\\prime)=1\\), so \\(a\\prime\\) has an inverse modulo \\(n\\prime\\), giving one class \\(x\\equiv x_0\\pmod{n\\prime}\\).",
+      "Modulo \\(n=dn\\prime\\), the representatives \\(x_0, x_0+n\\prime,\\ldots,x_0+(d-1)n\\prime\\) are solutions. Two differ by a multiple of \\(n\\) only if their indices differ by a multiple of \\(d\\), so these \\(d\\) classes are distinct; every solution occurs in this list. This includes \\(a=0\\) and \\(n=1\\)."
+    ],
+    "example": {
+      "prompt": "Solve \\(8x\\equiv12\\pmod{20}\\).",
+      "steps": [
+        "Compute \\(d=\\gcd(8,20)=4\\), and \\(4\\mid12\\), so solutions exist.",
+        "Divide by \\(4\\): \\(2x\\equiv3\\pmod5\\). Since the inverse of \\(2\\) modulo \\(5\\) is \\(3\\), \\(x\\equiv9\\equiv4\\pmod5\\).",
+        "The four lifts modulo \\(20\\) are \\(4,9,14,19\\). Substitution gives \\(8x\\equiv12\\pmod{20}\\) for each."
+      ],
+      "conclusion": "The solutions are \\([4]_{20},[9]_{20},[14]_{20},[19]_{20}\\)."
+    },
+    "practice": {
+      "prompt": "Compare \\(9x\\equiv6\\pmod{15}\\) with \\(9x\\equiv7\\pmod{15}\\).",
+      "hints": [
+        "Compute \\(\\gcd(9,15)\\) first.",
+        "For the soluble equation divide by the gcd, then lift."
+      ],
+      "answer": "The gcd is \\(3\\). Since \\(3\\mid6\\), the first reduces to \\(3x\\equiv2\\pmod5\\), giving \\(x\\equiv4\\pmod5\\) and three solutions \\(4,9,14\\pmod{15}\\). Since \\(3\\nmid7\\), the second has no solution."
+    },
+    "caution": "One solution modulo \\(n/d\\) represents \\(d\\) distinct answers modulo \\(n\\); do not report only the reduced class.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 02. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Multiplication by \\([a]_n\\) is a map of the finite additive residue group. Every nonempty fiber is a translate of its kernel, which has \\(d\\) elements.",
+    "lab": "linear"
+  },
+  {
+    "id": "C04",
+    "title": "Chinese remainders: construction and uniqueness",
+    "cluster": "Modular arithmetic",
+    "question": "How can several local remainders encode exactly one global remainder?",
+    "prerequisites": [
+      "C03"
+    ],
+    "summary": "For pairwise coprime moduli, selector coefficients construct the global class and the product is its exact uniqueness modulus.",
+    "definition": [
+      "Positive integers \\(n_1,\\ldots,n_k\\) are pairwise coprime when \\(\\gcd(n_i,n_j)=1\\) for every distinct pair. Let \\(N=\\prod_i n_i\\).",
+      "A selector for coordinate \\(i\\) is an integer \\(e_i\\) that is \\(1\\) modulo \\(n_i\\) and \\(0\\) modulo every other \\(n_j\\)."
+    ],
+    "theorem": "For pairwise coprime positive moduli \\(n_1,\\ldots,n_k\\), any integers \\(r_1,\\ldots,r_k\\) determine exactly one solution class modulo \\(N\\) to \\(x\\equiv r_i\\pmod{n_i}\\) for every \\(i\\).",
+    "proof": [
+      "First ignore any modulus \\(n_i=1\\), whose congruence imposes no condition; if all moduli are \\(1\\), the only class modulo \\(N=1\\) solves the system. For each remaining \\(i\\), let \\(N_i=N/n_i\\). Pairwise coprimality gives \\(\\gcd(N_i,n_i)=1\\), so Bézout supplies \\(u_i\\) with \\(u_iN_i\\equiv1\\pmod{n_i}\\). Set \\(e_i=u_iN_i\\).",
+      "For \\(j\\ne i\\), \\(n_j\\mid N_i\\), hence \\(e_i\\equiv0\\pmod{n_j}\\); by construction \\(e_i\\equiv1\\pmod{n_i}\\). Therefore \\(x=\\sum_i r_ie_i\\) has every required remainder.",
+      "If \\(x\\) and \\(y\\) both solve the system, each \\(n_i\\mid(x-y)\\). For coprime \\(r,s\\) dividing \\(z=x-y\\), write \\(z=ru\\). Bézout cancellation from \\(s\\mid ru\\) gives \\(s\\mid u\\), hence \\(rs\\mid z\\). Apply this step successively; pairwise coprimality makes each next modulus coprime to the product already used. Thus \\(N\\mid(x-y)\\). Thus the solution is unique modulo \\(N\\). Conversely adding a multiple of \\(N\\) preserves each remainder."
+    ],
+    "example": {
+      "prompt": "Solve \\(x\\equiv1\\pmod4\\) and \\(x\\equiv3\\pmod5\\) with selectors.",
+      "steps": [
+        "Here \\(N=20\\). For modulus \\(4\\), \\(N_1=5\\) and \\(5\\equiv1\\pmod4\\), so \\(e_1=5\\).",
+        "For modulus \\(5\\), \\(N_2=4\\) and \\(4\\cdot4\\equiv1\\pmod5\\), so \\(e_2=16\\).",
+        "Construct \\(x=1\\cdot5+3\\cdot16=53\\equiv13\\pmod{20}\\). Check \\(13\\equiv1\\pmod4\\) and \\(13\\equiv3\\pmod5\\)."
+      ],
+      "conclusion": "The unique class is \\(x\\equiv13\\pmod{20}\\)."
+    },
+    "practice": {
+      "prompt": "For moduli \\(3\\) and \\(8\\), construct two selectors and solve \\(x\\equiv2\\pmod3\\), \\(x\\equiv5\\pmod8\\).",
+      "hints": [
+        "Find a multiple of \\(8\\) that is \\(1\\) modulo \\(3\\).",
+        "Find a multiple of \\(3\\) that is \\(1\\) modulo \\(8\\)."
+      ],
+      "answer": "Choose \\(e_1=16\\), since it is \\(1\\pmod3\\) and \\(0\\pmod8\\), and \\(e_2=9\\), since it is \\(0\\pmod3\\) and \\(1\\pmod8\\). Then \\(x=2(16)+5(9)=77\\equiv5\\pmod{24}\\). The class \\([5]_{24}\\) has the required remainders and is unique modulo \\(24\\)."
+    },
+    "caution": "The product-modulus uniqueness claim needs pairwise coprimality. Shared factors require a compatibility test and usually a smaller uniqueness modulus.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 03. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The reduction map from \\(\\mathbb Z/N\\mathbb Z\\) to the product of the residue rings is an isomorphism; the selectors act as coordinate idempotents.",
+    "lab": "crt"
+  },
+  {
+    "id": "C05",
+    "title": "Compatible congruences beyond coprimality",
+    "cluster": "Modular arithmetic",
+    "question": "What survives when the CRT moduli share a factor?",
+    "prerequisites": [
+      "C04",
+      "D06"
+    ],
+    "summary": "Shared factors demand compatible remainders. A compatible pair has one solution class modulo the lcm, and systems can be merged one constraint at a time.",
+    "definition": [
+      "For positive moduli \\(m,n\\), a pair of conditions \\(x\\equiv r\\pmod m\\), \\(x\\equiv s\\pmod n\\) is compatible when \\(\\gcd(m,n)\\mid(s-r)\\).",
+      "A merged condition replaces a compatible pair with one congruence modulo \\(\\operatorname{lcm}(m,n)\\)."
+    ],
+    "theorem": "For \\(m,n>0\\), the two congruences are soluble exactly when \\(g=\\gcd(m,n)\\) divides \\(s-r\\). When soluble, their solutions form exactly one residue class modulo \\(\\operatorname{lcm}(m,n)=mn/g\\).",
+    "proof": [
+      "Any solution satisfies \\(x=r+mt=s+nu\\) for integers \\(t,u\\). Thus \\(mt-nu=s-r\\), so \\(g\\mid(s-r)\\). Conversely, if \\(g\\mid(s-r)\\), Bézout gives integers \\(v,w\\) with \\(mv+nw=g\\). Set \\(t=v(s-r)/g\\) and \\(u=-w(s-r)/g\\). These are integers and satisfy \\(mt-nu=s-r\\); then \\(x=r+mt=s+nu\\) solves both conditions.",
+      "Equivalently, divide \\(mt\\equiv s-r\\pmod n\\) by \\(g\\). The coefficient \\(m/g\\) is invertible modulo \\(n/g\\), so \\(t\\) is unique modulo \\(n/g\\). Hence \\(x=r+mt\\) is unique modulo \\(m(n/g)=\\operatorname{lcm}(m,n)\\).",
+      "For more than two conditions, merge the first pair if compatible, then merge its resulting class with the next condition. At each step the merged congruence describes exactly the previous solution set, so a failed compatibility check means the whole system is inconsistent; otherwise the final modulus is the lcm of all moduli."
+    ],
+    "example": {
+      "prompt": "Merge \\(x\\equiv2\\pmod6\\) and \\(x\\equiv5\\pmod9\\).",
+      "steps": [
+        "Here \\(g=\\gcd(6,9)=3\\), and \\(5-2=3\\), so the conditions are compatible.",
+        "Write \\(x=2+6t\\). Then \\(6t\\equiv3\\pmod9\\), or \\(2t\\equiv1\\pmod3\\), so \\(t\\equiv2\\pmod3\\).",
+        "Take \\(t=2\\), giving \\(x=14\\). Check \\(14\\equiv2\\pmod6\\) and \\(14\\equiv5\\pmod9\\)."
+      ],
+      "conclusion": "The complete solution is \\(x\\equiv14\\pmod{18}\\), where \\(18=\\operatorname{lcm}(6,9)\\)."
+    },
+    "practice": {
+      "prompt": "Classify and solve, if possible: \\(x\\equiv1\\pmod4\\), \\(x\\equiv3\\pmod6\\), \\(x\\equiv1\\pmod2\\). Then replace the last condition by \\(x\\equiv0\\pmod2\\).",
+      "hints": [
+        "Merge the first two conditions and use their lcm.",
+        "Check whether the final condition adds information or contradicts parity."
+      ],
+      "answer": "The first pair is compatible because \\(\\gcd(4,6)=2\\mid(3-1)\\); writing \\(x=1+4t\\) gives \\(4t\\equiv2\\pmod6\\), hence \\(t\\equiv2\\pmod3\\) and \\(x\\equiv9\\pmod{12}\\). Every such integer is odd, so \\(x\\equiv1\\pmod2\\) is redundant and the full solution stays \\(9\\pmod{12}\\). Replacing it by \\(x\\equiv0\\pmod2\\) creates an inconsistent system because every solution to the first pair is odd."
+    },
+    "caution": "Shared factors do not automatically make a system inconsistent. When it is soluble, multiplying the moduli generally overstates the uniqueness modulus.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Compatible pairs form the image of the reduction map into the product of two residue rings; incompatible pairs lie outside that image.",
+    "lab": "crt"
+  }
+]

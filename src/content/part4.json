@@ -1,0 +1,166 @@
+[
+  {
+    "id": "B03",
+    "title": "Bertrand’s postulate: a complete elementary proof",
+    "cluster": "Primes and bounds",
+    "question": "Why must an interval from \\(n\\) to \\(2n\\) contain a prime?",
+    "prerequisites": [
+      "B02",
+      "D08"
+    ],
+    "summary": "A central binomial coefficient cannot be both large enough by counting and small enough under the assumption that its middle prime interval is empty.",
+    "definition": [
+      "For a positive integer \\(N\\), let \\(P(N)=\\prod_{p\\le N}p\\), the product over distinct primes up to \\(N\\), with empty product \\(1\\).",
+      "For \\(n\\ge1\\), the central binomial coefficient is \\(C_n=\\binom{2n}{n}\\). Legendre’s formula gives \\(v_p(C_n)=\\sum_{j\\ge1}(\\lfloor2n/p^j\\rfloor-2\\lfloor n/p^j\\rfloor)\\). Each summand is \\(0\\) or \\(1\\)."
+    ],
+    "theorem": "For every integer \\(n>1\\), there exists a prime \\(p\\) with \\(n<p<2n\\).",
+    "proof": [
+      "First prove the auxiliary bound \\(P(N)\\le4^N\\) for each integer \\(N\\ge1\\) by strong induction. It holds at \\(N=1\\). For \\(N=2m\\), every prime in \\((m,2m]\\) divides \\(\\binom{2m}{m}\\): it divides the numerator \\((m+1)\\cdots(2m)\\) once and neither copy of \\(m!\\). Hence \\(P(2m)\\le P(m)\\binom{2m}{m}\\le4^m4^m=4^{2m}\\). For \\(N=2m+1\\) with \\(m\\ge1\\), every prime in \\((m+1,2m+1]\\) divides \\(\\binom{2m+1}{m}\\). The two equal central coefficients in the expansion of \\((1+1)^{2m+1}\\) imply \\(\\binom{2m+1}{m}\\le4^m\\), so \\(P(2m+1)\\le P(m+1)4^m\\le4^{2m+1}\\). The induction is complete. For real \\(x\\ge1\\), this also gives \\(\\prod_{p\\le x}p=P(\\lfloor x\\rfloor)\\le4^x\\).",
+      "Now fix \\(n\\ge1000\\) and suppose no prime lies strictly between \\(n\\) and \\(2n\\). The binomial sum \\(\\sum_{k=0}^{2n}\\binom{2n}{k}=4^n\\) has \\(2n+1\\) terms, each at most \\(C_n\\); thus \\(C_n\\ge4^n/(2n+1)\\). We obtain an opposing bound by splitting the prime factors of \\(C_n\\). For each \\(p\\le\\sqrt{2n}\\), the valuation formula has at most \\(\\lfloor\\log_p(2n)\\rfloor\\) nonzero summands, each at most \\(1\\); hence \\(p^{v_p(C_n)}\\le2n\\). There are at most \\(\\sqrt{2n}\\) such primes, so their combined contribution is at most \\((2n)^{\\sqrt{2n}}\\).",
+      "For \\(p>\\sqrt{2n}\\), only the first valuation summand can be nonzero, so \\(v_p(C_n)\\le1\\). If \\(2n/3<p\\le n\\), then \\(\\lfloor2n/p\\rfloor=2\\) and \\(\\lfloor n/p\\rfloor=1\\), hence \\(v_p(C_n)=0\\). The assumed interval \\((n,2n)\\) contains no prime, and \\(2n\\) is composite because \\(n>1\\). Thus every remaining contributing prime is at most \\(2n/3\\). Their product is at most \\(P(\\lfloor2n/3\\rfloor)\\le4^{2n/3}\\). Together, \\(C_n\\le(2n)^{\\sqrt{2n}}4^{2n/3}\\).",
+      "These bounds would require \\(4^{n/3}\\le(2n+1)(2n)^{\\sqrt{2n}}\\). This fails for every \\(n\\ge1000\\), with an explicit threshold check. For real \\(t\\ge1000\\), both \\(\\log_2(2t)/\\sqrt t\\) and \\(\\log_2(2t+1)/t\\) decrease: their derivative signs are respectively those of \\(1-\\tfrac12\\ln(2t)<0\\) and \\(2t/(2t+1)-\\ln(2t+1)<0\\). Therefore \\(\\bigl[\\sqrt{2n}\\log_2(2n)+\\log_2(2n+1)\\bigr]/n\\) is at most its value at \\(1000\\). Since \\(\\sqrt{2000}<45\\) and \\(2001<2^{11}\\), that value is less than \\((45\\cdot11+11)/1000=506/1000<2/3=\\log_2(4)/3\\). Taking base-two logarithms gives the strict reverse inequality, a contradiction.",
+      "For the finite range \\(2\\le n\\le999\\), use the verified primes \\(3,5,7,13,23,43,83,163,317,631,1259\\). They are certified by trial division: for each listed \\(p\\), no integer \\(d\\) with \\(2\\le d\\le\\lfloor\\sqrt p\\rfloor\\) divides \\(p\\). Each odd prime \\(p\\) works for every integer \\(n\\) in \\([\\lfloor p/2\\rfloor+1,p-1]\\). The first coverage intervals are \\([2,2],[3,4],[4,6],[7,12]\\); the next are \\([12,22],[22,42],[42,82],[82,162]\\); and the final ones are \\([159,316],[316,630],[630,1258]\\). These intervals cover every integer from \\(2\\) through \\(999\\). In each interval \\(n<p<2n\\). This closes the small cases and the proof."
+    ],
+    "example": {
+      "prompt": "Factor \\(\\binom{10}{5}\\) and locate its contributing primes relative to \\(n=5\\).",
+      "steps": [
+        "\\(\\binom{10}{5}=252=2^2\\cdot3^2\\cdot7\\).",
+        "The primes \\(2,3\\) are at most \\(\\sqrt{10}\\) and can contribute repeated powers.",
+        "The prime \\(5\\) lies in \\((2n/3,n]\\) and contributes exponent \\(0\\); the prime \\(7\\) lies in \\((n,2n)\\) and contributes exponent \\(1\\)."
+      ],
+      "conclusion": "The factor \\(7\\) exhibits the interval prime in this small instance; the theorem proves one exists for every \\(n>1\\)."
+    },
+    "practice": {
+      "prompt": "For \\(n=5\\), compute \\(v_p\\!\\left(\\binom{10}{5}\\right)\\) for \\(p=2,3,5,7\\) from the floor formula and identify the prime in \\((n,2n)\\).",
+      "hints": [
+        "For each prime, add \\(\\lfloor10/p^j\\rfloor-2\\lfloor5/p^j\\rfloor\\) until \\(p^j>10\\).",
+        "Check the product against \\(252\\)."
+      ],
+      "answer": "The valuations are \\(v_2=2\\), \\(v_3=2\\), \\(v_5=0\\), and \\(v_7=1\\), giving \\(2^2\\cdot3^2\\cdot7=252\\). The interval \\((5,10)\\) contains the prime \\(7\\). This calculation illustrates the prime bins but does not replace the general bound."
+    },
+    "caution": "A plotted interval or an unexplained threshold does not prove Bertrand’s postulate. The large-input inequality and finite coverage certificate are both necessary.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 05. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "The proof turns an existence question into exact prime-exponent bounds on a single integer."
+  },
+  {
+    "id": "B04",
+    "title": "Using prime intervals without losing endpoints",
+    "cluster": "Primes and bounds",
+    "question": "How do we apply a theorem on one interval to a different interval?",
+    "prerequisites": [
+      "B03"
+    ],
+    "summary": "Choose an integer parameter, translate both strict inequalities, and check the small inputs before drawing conclusions about prime factors or distinct primes.",
+    "definition": [
+      "Bertrand’s postulate says that every integer \\(m>1\\) has a prime \\(p\\) with \\(m<p<2m\\). Both endpoints are strict, and \\(m\\) must be an integer.",
+      "For a prime \\(p\\), the exponent of \\(p\\) in \\(N!\\) is \\(1\\) exactly when \\(p\\le N<2p\\), equivalently \\(N/2<p\\le N\\)."
+    ],
+    "theorem": "For every integer \\(N\\ge2\\), some prime occurs to exponent exactly \\(1\\) in \\(N!\\). Also, for every integer \\(n>1\\), there are two distinct primes \\(p,q\\) satisfying \\(n<p<2n<q<4n\\).",
+    "proof": [
+      "For the factorial claim with \\(N\\ge4\\), set the integer \\(m=\\lfloor N/2\\rfloor\\ge2\\). Bertrand gives \\(m<p<2m\\). If \\(N=2m\\), then \\(N/2=m<p<N\\). If \\(N=2m+1\\), the integer inequality \\(p>m\\) gives \\(p\\ge m+1>N/2\\), while \\(p<2m=N-1<N\\). Thus in either case \\(N/2<p<N\\), so \\(p\\) divides \\(N!\\) once and \\(p^2>N\\), giving \\(v_p(N!)=1\\). For the exceptional inputs, \\(2!\\) and \\(3!\\) each contain \\(2\\) exactly once.",
+      "For the two-prime claim, apply Bertrand first to the integer \\(n>1\\), obtaining \\(n<p<2n\\). Apply it again to the integer \\(2n>1\\), obtaining \\(2n<q<4n\\). Since \\(p<2n<q\\), the primes are distinct and neither can sit on the shared endpoint."
+    ],
+    "example": {
+      "prompt": "Find a prime that appears exactly once in \\(13!\\) using the integer-parameter method.",
+      "steps": [
+        "Choose \\(m=\\lfloor13/2\\rfloor=6\\), which satisfies the hypothesis \\(m>1\\).",
+        "Bertrand guarantees a prime in \\((6,12)\\); \\(7\\) is one such prime.",
+        "Because \\(13/2<7\\le13<14=2\\cdot7\\), exactly one multiple of \\(7\\) occurs in \\(13!\\)."
+      ],
+      "conclusion": "\\(v_7(13!)=1\\)."
+    },
+    "practice": {
+      "prompt": "A proposed proof uses Bertrand at \\(m=N/2\\) for every \\(N\\ge2\\) and says it finds two different primes by applying it twice at the same \\(m\\). Repair both claims.",
+      "hints": [
+        "Bertrand requires an integer parameter greater than \\(1\\).",
+        "Use disjoint open intervals to certify distinctness."
+      ],
+      "answer": "For the factorial claim take \\(m=\\lfloor N/2\\rfloor\\) only when \\(N\\ge4\\), translate its inequalities as in the proof, and check \\(N=2,3\\) directly. For two different primes, use \\(n>1\\) and \\(2n\\) as parameters, obtaining \\(p\\in(n,2n)\\) and \\(q\\in(2n,4n)\\). The strict gap \\(p<2n<q\\) proves distinctness."
+    },
+    "caution": "A real-valued or too-small parameter does not satisfy Bertrand’s hypothesis. Closed or unexamined endpoints can invalidate a factorial or distinctness argument.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 05. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Existence theorems can be composed by changing parameters, provided each new parameter still meets the original hypotheses."
+  },
+  {
+    "id": "F01",
+    "title": "Polynomials over residues: roots versus functions",
+    "cluster": "Polynomial congruences",
+    "question": "Why can a quadratic have four roots modulo \\(8\\) but not modulo an odd prime?",
+    "prerequisites": [
+      "C06",
+      "C02"
+    ],
+    "summary": "A nonzero polynomial over a field has at most its degree many roots. Over a composite modulus, zero divisors break the step that proves this bound.",
+    "definition": [
+      "A formal polynomial \\(f(X)=a_0+a_1X+\\cdots+a_dX^d\\) over a residue ring records its coefficient classes. Evaluation at a class \\([x]_n\\) gives a function, but different formal polynomials may induce the same function.",
+      "A root modulo \\(n\\) is a residue class \\([r]_n\\) for which \\(f(r)\\equiv0\\pmod n\\). For prime \\(p\\), the ring \\(\\mathbb F_p=\\mathbb Z/p\\mathbb Z\\) is a field: every nonzero class has an inverse."
+    ],
+    "theorem": "If \\(f\\in\\mathbb F_p[X]\\) is nonzero of degree \\(d\\), it has at most \\(d\\) distinct roots in \\(\\mathbb F_p\\). The same bound need not hold over \\(\\mathbb Z/n\\mathbb Z\\) when \\(n\\) is composite.",
+    "proof": [
+      "First prove the factor theorem in any commutative coefficient ring. For every \\(j\\ge1\\), \\(X^j-a^j=(X-a)(X^{j-1}+X^{j-2}a+\\cdots+a^{j-1})\\). Multiplying by coefficients and summing shows \\(f(X)-f(a)\\) is divisible by \\(X-a\\). Thus if \\(f(a)=0\\), write \\(f(X)=(X-a)g(X)\\); over a field and for nonzero \\(f\\), \\(g\\) has degree \\(d-1\\).",
+      "Prove the root bound by induction on \\(d\\). A nonzero constant polynomial has no roots. If a degree-\\(d\\) polynomial has no root, the bound holds. Otherwise choose a root \\(a\\) and factor \\(f(X)=(X-a)g(X)\\). For any different root \\(b\\), \\(0=f(b)=(b-a)g(b)\\). In the field \\(\\mathbb F_p\\), \\(b-a\\ne0\\) has an inverse, so \\(g(b)=0\\). By induction \\(g\\) has at most \\(d-1\\) roots, giving at most \\(d\\) for \\(f\\).",
+      "The cancellation in the preceding step can fail for composite \\(n\\), because nonzero classes can multiply to zero. Formal equality is different again: by Fermat’s little theorem, every \\(a\\in\\mathbb F_p\\) satisfies \\(a^p-a=0\\), so the nonzero formal polynomial \\(X^p-X\\) induces the zero function on \\(\\mathbb F_p\\). Its leading coefficient is \\(1\\), and there is no conflict with the root bound because its degree is \\(p\\) and the field has \\(p\\) elements."
+    ],
+    "example": {
+      "prompt": "Find every root of \\(X^2-1\\) modulo \\(8\\) and compare with the prime-modulus bound.",
+      "steps": [
+        "Every odd integer is \\(2k+1\\), whose square is \\(4k(k+1)+1\\). One of \\(k,k+1\\) is even, so \\(8\\mid4k(k+1)\\); all four odd classes are roots.",
+        "Every even integer has even square, so its square cannot be congruent to \\(1\\pmod8\\).",
+        "The four roots are \\([1]_8,[3]_8,[5]_8,[7]_8\\), although the formal polynomial has degree \\(2\\). The field proof cannot cancel \\(b-a\\) when it is a nonzero zero divisor."
+      ],
+      "conclusion": "Composite modulus \\(8\\) permits four roots of a degree-two polynomial; the field bound applies only under its field hypothesis."
+    },
+    "practice": {
+      "prompt": "Explain why \\(f(X)=X^2-X\\) is nonzero as a formal polynomial over \\(\\mathbb F_2\\), yet gives zero at every element of \\(\\mathbb F_2\\).",
+      "hints": [
+        "Inspect the coefficient of \\(X^2\\).",
+        "Evaluate at the only two residue classes."
+      ],
+      "answer": "The leading coefficient is \\([1]_2\\ne[0]_2\\), so \\(f\\) is a nonzero formal polynomial of degree \\(2\\). But \\(f(0)=0\\) and \\(f(1)=0\\), so its induced function on the two-element field is zero. This does not violate the degree-two root bound."
+    },
+    "caution": "A zero function on every residue does not force all formal polynomial coefficients to vanish. The root bound assumes a field and a nonzero formal polynomial.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 06. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "Over \\(\\mathbb F_p\\), absence of zero divisors makes root cancellation legal; over \\(\\mathbb Z/n\\mathbb Z\\) for composite \\(n\\), it can fail."
+  },
+  {
+    "id": "F02",
+    "title": "Solving polynomial congruences by CRT",
+    "cluster": "Polynomial congruences",
+    "question": "Why do root counts multiply across coprime moduli?",
+    "prerequisites": [
+      "F01",
+      "C04"
+    ],
+    "summary": "Reduction carries each global polynomial root to independent local roots, and CRT reassembles every local choice exactly once.",
+    "definition": [
+      "Let \\(f(X)\\in\\mathbb Z[X]\\). A root modulo \\(m\\) is a class \\([x]_m\\) with \\(f(x)\\equiv0\\pmod m\\).",
+      "When \\(\\gcd(m,n)=1\\), the Chinese remainder theorem gives a bijection \\(\\mathbb Z/(mn)\\mathbb Z\\to\\mathbb Z/m\\mathbb Z\\times\\mathbb Z/n\\mathbb Z\\), sending a class to its two reductions."
+    ],
+    "theorem": "If \\(m,n\\) are coprime positive integers and \\(f\\in\\mathbb Z[X]\\), roots of \\(f\\) modulo \\(mn\\) correspond bijectively to pairs consisting of one root modulo \\(m\\) and one root modulo \\(n\\). Thus the number of roots modulo \\(mn\\) is the product of the two local root counts. The same holds over the pairwise coprime prime-power factors of any positive modulus.",
+    "proof": [
+      "Polynomial evaluation commutes with reduction: if \\(x\\equiv y\\pmod m\\), then \\(x^j\\equiv y^j\\pmod m\\) for every \\(j\\ge0\\), so termwise addition gives \\(f(x)\\equiv f(y)\\pmod m\\). The same holds modulo \\(n\\). Thus the two local root conditions depend only on the global residue class.",
+      "If \\(f(x)\\equiv0\\pmod{mn}\\), then \\(m\\mid f(x)\\) and \\(n\\mid f(x)\\), so both reductions are local roots. Conversely, choose any local roots \\([r]_m,[s]_n\\). CRT gives exactly one class \\([x]_{mn}\\) with \\(x\\equiv r\\pmod m\\) and \\(x\\equiv s\\pmod n\\). Evaluation compatibility gives \\(m\\mid f(x)\\) and \\(n\\mid f(x)\\). Coprimality then gives \\(mn\\mid f(x)\\), so \\([x]_{mn}\\) is a global root. These constructions are inverse, proving the bijection and count.",
+      "Every positive integer has a unique product of powers of distinct primes. Those prime powers are pairwise coprime, so repeated application of the two-factor bijection proves the final statement. The modulus \\(1\\) has one class, which is always a root; its factor contributes a neutral count of \\(1\\)."
+    ],
+    "example": {
+      "prompt": "Find all roots of \\(X^2-1\\) modulo \\(15\\) from roots modulo \\(3\\) and \\(5\\).",
+      "steps": [
+        "Modulo \\(3\\), the roots are \\(1,2\\); modulo \\(5\\), they are \\(1,4\\). Both lists follow from \\((X-1)(X+1)=0\\) over fields.",
+        "CRT assigns one class modulo \\(15\\) to each of the four pairs. The resulting representatives are \\(1,4,11,14\\).",
+        "Check their squares: \\(1,16,121,196\\) are each congruent to \\(1\\pmod{15}\\)."
+      ],
+      "conclusion": "The four roots are \\([1]_{15},[4]_{15},[11]_{15},[14]_{15}\\), matching \\(2\\cdot2=4\\) local choices."
+    },
+    "practice": {
+      "prompt": "Compare the roots of \\(X^2-1\\) modulo \\(15\\) and modulo \\(9\\). Why is it wrong to multiply a root count for modulus \\(3\\) by itself to handle \\(9\\)?",
+      "hints": [
+        "Use \\(15=3\\cdot5\\), where the factors are coprime.",
+        "For \\(9\\), solve directly or factor \\((x-1)(x+1)\\) and note the factors differ by \\(2\\)."
+      ],
+      "answer": "Modulo \\(15\\) there are four roots, \\(1,4,11,14\\). Modulo \\(9\\), if \\(9\\mid(x-1)(x+1)\\), the factors differ by \\(2\\). If \\(x\\equiv1\\pmod3\\), then \\(\\gcd(x+1,9)=1\\), so cancellation gives \\(9\\mid x-1\\). If \\(x\\equiv-1\\pmod3\\), then \\(\\gcd(x-1,9)=1\\), so \\(9\\mid x+1\\). Thus the roots modulo \\(9\\) are exactly \\(1,8\\). Two copies of modulus \\(3\\) are not coprime and are not independent CRT coordinates; multiplying their root counts would falsely give \\(4\\)."
+    },
+    "caution": "Root counts multiply only across coprime factors. Repeated powers of the same prime require their own local analysis.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 06. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "bridge": "CRT is a ring-product correspondence; polynomial evaluation respects that correspondence, so it transports whole solution sets."
+  }
+]
