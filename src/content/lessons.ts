@@ -1,4 +1,5 @@
 import order from './order.json';
+import part0 from './part0.json';
 import part1 from './part1.json';
 import part2 from './part2.json';
 import part3 from './part3.json';
@@ -9,6 +10,8 @@ import part7 from './part7.json';
 import part8 from './part8.json';
 import part9 from './part9.json';
 import part10 from './part10.json';
+import part11 from './part11.json';
+import part12 from './part12.json';
 import type { Lesson } from './types';
 
 const foundations: Lesson[] = [
@@ -153,7 +156,7 @@ const foundations: Lesson[] = [
     question: 'Can the greatest common divisor be built from the inputs?',
     prerequisites: ['D02'],
     summary:
-      'The gcd is the least positive integer combination of two nonzero inputs. This produces a certificate before we discuss a fast algorithm.',
+      'The gcd is the least positive integer combination when the two inputs are not both zero. This produces a certificate before we discuss a fast algorithm.',
     definition: [
       'For integers \\(a,b\\), not both zero, \\(\\gcd(a,b)\\) is the greatest positive common divisor. Its sign is always positive.',
     ],
@@ -240,6 +243,7 @@ const foundations: Lesson[] = [
 
 export const lessons: Lesson[] = [
   ...foundations,
+  ...(part0 as Lesson[]),
   ...(part1 as Lesson[]),
   ...(part2 as Lesson[]),
   ...(part3 as Lesson[]),
@@ -250,4 +254,6 @@ export const lessons: Lesson[] = [
   ...(part8 as Lesson[]),
   ...(part9 as Lesson[]),
   ...(part10 as Lesson[]),
+  ...(part11 as Lesson[]),
+  ...(part12 as Lesson[]),
 ].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));

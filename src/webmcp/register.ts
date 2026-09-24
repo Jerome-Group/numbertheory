@@ -1,10 +1,16 @@
 import { lessons } from '../content/lessons';
+import { chapterCheckpoints } from '../content/checkpoints';
+import { lessonSearchScore } from '../content/search';
+import { claimRegistry } from '../content/registries';
+import { lessonV2 } from '../content/registries';
+import { buildCancellationMap } from '../math/cancellation';
 import {
   buildPellOrbit,
   buildRationalContinuedFraction,
   buildSqrtContinuedFraction,
 } from '../math/continued-fraction';
 import { solveCrt } from '../math/crt';
+import { divideGaussian } from '../math/gaussian';
 import { extendedEuclid } from '../math/euclid';
 import {
   buildDivisorIncidenceStudy,
@@ -14,8 +20,10 @@ import {
 } from '../math/group-labs';
 import { buildHenselTree } from '../math/hensel';
 import { solveLinear } from '../math/linear';
+import { solveLocalSquares } from '../math/local-squares';
 import { buildQuadraticResidueMap, buildResidueClock } from '../math/residue';
 import { studyStore } from '../state';
+import { lessonPath } from '../routes';
 
 type Tool = {
   name: string;
@@ -55,6 +63,12 @@ const idSchema = {
   required: ['lessonId'],
   additionalProperties: false,
 };
+const claimSchema = {
+  type: 'object',
+  properties: { claimId: { type: 'string', enum: [...claimRegistry.keys()] } },
+  required: ['claimId'],
+  additionalProperties: false,
+};
 const integerSchema = {
   type: 'object',
   properties: {
@@ -62,6 +76,35 @@ const integerSchema = {
     b: { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 14 },
   },
   required: ['a', 'b'],
+  additionalProperties: false,
+};
+const cancellationSchema = {
+  type: 'object',
+  properties: {
+    modulus: { type: 'string', pattern: '^[1-9][0-9]*$', maxLength: 2 },
+    factor: { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 14 },
+  },
+  required: ['modulus', 'factor'],
+  additionalProperties: false,
+};
+const gaussianSchema = {
+  type: 'object',
+  properties: Object.fromEntries(
+    ['alphaRe', 'alphaIm', 'betaRe', 'betaIm'].map((key) => [
+      key,
+      { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 4 },
+    ]),
+  ),
+  required: ['alphaRe', 'alphaIm', 'betaRe', 'betaIm'],
+  additionalProperties: false,
+};
+const localSquaresSchema = {
+  type: 'object',
+  properties: {
+    modulus: { type: 'string', pattern: '^[1-9][0-9]*$', maxLength: 3 },
+    target: { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 14 },
+  },
+  required: ['modulus', 'target'],
   additionalProperties: false,
 };
 const crtSchema = {
@@ -205,9 +248,17 @@ export function registerStudyTools(): () => void {
         const lesson = lessons.find((x) => x.id === s.lessonId);
         return {
           view: s.view,
+          revision: studyStore.getRevision(),
           lessonId: s.view === 'lesson' ? s.lessonId : null,
           title: s.view === 'lesson' ? lesson?.title : null,
           lab: s.view === 'lesson' ? (lesson?.lab ?? null) : null,
+          prerequisites:
+            s.view === 'lesson' ? (lesson?.prerequisites ?? []) : [],
+          archetype:
+            s.view === 'lesson'
+              ? (lessonV2.find((item) => item.id === s.lessonId)?.archetype ??
+                null)
+              : null,
           url: location.href,
         };
       },
@@ -242,13 +293,46 @@ export function registerStudyTools(): () => void {
       annotations: { readOnlyHint: true, untrustedContentHint: false },
       execute(input) {
         const o = record(input, ['query']);
-        const q = stringField(o.query, 'query', 80).toLowerCase();
+        const q = stringField(o.query, 'query', 80).trim();
+        if (!q) throw new Error('Enter a search term.');
         return lessons
-          .filter((x) =>
-            `${x.title} ${x.question} ${x.summary}`.toLowerCase().includes(q),
-          )
+          .map((lesson) => ({ lesson, score: lessonSearchScore(q, lesson) }))
+          .filter((item) => item.score > 0)
+          .sort((a, b) => b.score - a.score)
           .slice(0, 12)
-          .map((x) => ({ id: x.id, title: x.title, question: x.question }));
+          .map(({ lesson }) => ({
+            id: lesson.id,
+            title: lesson.title,
+            question: lesson.question,
+            url: new URL(lessonPath(lesson.id), location.origin).href,
+          }));
+      },
+    },
+    {
+      name: 'get_number_theory_checkpoint',
+      title: 'Get chapter checkpoint',
+      description:
+        'Read an original chapter synthesis prompt and its lesson links without revealing the comparison answer.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          chapter: { type: 'string', enum: Object.keys(chapterCheckpoints) },
+        },
+        required: ['chapter'],
+        additionalProperties: false,
+      },
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['chapter']);
+        const chapter = stringField(fields.chapter, 'chapter', 80);
+        const checkpoint = chapterCheckpoints[chapter];
+        if (!checkpoint) throw new Error('Unknown chapter.');
+        return {
+          chapter,
+          prompt: checkpoint.prompt,
+          lessonIds: checkpoint.links,
+          url: new URL('/explore', location.origin).href,
+        };
       },
     },
     {
@@ -262,6 +346,140 @@ export function registerStudyTools(): () => void {
         const id = stringField(o.lessonId, 'lessonId', 8);
         const s = studyStore.openLesson(id);
         return { lessonId: s.lessonId, url: location.href };
+      },
+    },
+    {
+      name: 'get_number_theory_claim',
+      title: 'Get theorem and proof',
+      description:
+        'Read a public claim, its preserved proof, dependencies and source status without changing the page.',
+      inputSchema: claimSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['claimId']);
+        const id = stringField(fields.claimId, 'claimId', 32);
+        const claim = claimRegistry.get(id);
+        if (!claim) throw new Error('Unknown claim ID.');
+        return claim;
+      },
+    },
+    {
+      name: 'compute_cancellation_map',
+      title: 'Compute multiplication fibers',
+      description:
+        'Return the exact bounded multiplication map and its fibers without changing the page.',
+      inputSchema: cancellationSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'factor']);
+        return buildCancellationMap(
+          stringField(fields.modulus, 'modulus', 2),
+          stringField(fields.factor, 'factor', 14),
+        );
+      },
+    },
+    {
+      name: 'set_cancellation_map',
+      title: 'Set multiplication fibers',
+      description:
+        'Set the visible exact C02 multiplication map and open its lesson.',
+      inputSchema: cancellationSchema,
+      annotations: { readOnlyHint: false, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'factor']);
+        const state = studyStore.setCancellationMap(
+          stringField(fields.modulus, 'modulus', 2),
+          stringField(fields.factor, 'factor', 14),
+        );
+        return {
+          lessonId: state.lessonId,
+          map: state.fiberMap,
+          url: location.href,
+        };
+      },
+    },
+    {
+      name: 'compute_local_square_roots',
+      title: 'Compute local square roots',
+      description:
+        'Decide a bounded square congruence at every prime power and reconstruct all roots by CRT without changing the page.',
+      inputSchema: localSquaresSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'target']);
+        return solveLocalSquares(
+          stringField(fields.modulus, 'modulus', 3),
+          stringField(fields.target, 'target', 14),
+        );
+      },
+    },
+    {
+      name: 'set_local_square_roots',
+      title: 'Set local square roots',
+      description:
+        'Set the visible X05 prime-power square-root lab and open its lesson.',
+      inputSchema: localSquaresSchema,
+      annotations: { readOnlyHint: false, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'target']);
+        const state = studyStore.setLocalSquares(
+          stringField(fields.modulus, 'modulus', 3),
+          stringField(fields.target, 'target', 14),
+        );
+        return {
+          lessonId: state.lessonId,
+          result: state.squareResult,
+          url: location.href,
+        };
+      },
+    },
+    {
+      name: 'compute_gaussian_division',
+      title: 'Compute Gaussian division',
+      description:
+        'Return an exact Gaussian quotient, remainder, and strict norm certificate without changing the page.',
+      inputSchema: gaussianSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, [
+          'alphaRe',
+          'alphaIm',
+          'betaRe',
+          'betaIm',
+        ]);
+        return divideGaussian(
+          stringField(fields.alphaRe, 'alphaRe', 4),
+          stringField(fields.alphaIm, 'alphaIm', 4),
+          stringField(fields.betaRe, 'betaRe', 4),
+          stringField(fields.betaIm, 'betaIm', 4),
+        );
+      },
+    },
+    {
+      name: 'set_gaussian_division',
+      title: 'Set Gaussian division',
+      description:
+        'Set the visible exact Gaussian division lab and open its lesson.',
+      inputSchema: gaussianSchema,
+      annotations: { readOnlyHint: false, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, [
+          'alphaRe',
+          'alphaIm',
+          'betaRe',
+          'betaIm',
+        ]);
+        const state = studyStore.setGaussianDivision(
+          stringField(fields.alphaRe, 'alphaRe', 4),
+          stringField(fields.alphaIm, 'alphaIm', 4),
+          stringField(fields.betaRe, 'betaRe', 4),
+          stringField(fields.betaIm, 'betaIm', 4),
+        );
+        return {
+          lessonId: state.lessonId,
+          division: state.gaussian,
+          url: location.href,
+        };
       },
     },
     {
@@ -747,9 +965,46 @@ export function registerStudyTools(): () => void {
     },
   ];
   for (const tool of tools) {
+    const schema = tool.inputSchema as {
+      type: string;
+      properties: Record<string, unknown>;
+      required?: string[];
+      additionalProperties: boolean;
+    };
+    const registered = tool.annotations.readOnlyHint
+      ? tool
+      : {
+          ...tool,
+          description: `${tool.description} Pass the current context revision to reject stale changes; omission preserves the original tool contract.`,
+          inputSchema: {
+            ...schema,
+            properties: {
+              ...schema.properties,
+              expectedRevision: { type: 'integer', minimum: 0 },
+            },
+          },
+          execute(input: unknown) {
+            const fields = record(input, [
+              ...Object.keys(schema.properties),
+              'expectedRevision',
+            ]);
+            const expected = fields.expectedRevision;
+            if (expected !== undefined) {
+              if (!Number.isSafeInteger(expected) || Number(expected) < 0)
+                throw new Error('Invalid expectedRevision.');
+              if (expected !== studyStore.getRevision())
+                throw new Error('Page state changed. Read context and retry.');
+            }
+            const { expectedRevision: _expectedRevision, ...original } = fields;
+            const result = tool.execute(original);
+            return typeof result === 'object' && result !== null
+              ? { ...result, revision: studyStore.getRevision() }
+              : result;
+          },
+        };
     try {
       void Promise.resolve(
-        context.registerTool(tool, { signal: controller.signal }),
+        context.registerTool(registered, { signal: controller.signal }),
       ).catch(() => {});
     } catch {
       /* Reading and labs remain usable without browser tool support. */

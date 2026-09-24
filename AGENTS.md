@@ -14,7 +14,7 @@ third-party material outside its tree and history.
 
 ## Getting it running
 
-No application has been added yet. Record install, run, and test commands when source arrives.
+The application is React/Vite/TypeScript. Run `npm ci`, then `npm run dev` for local development. Run `npm run check:content`, `npm run check`, `npm run format:check`, `npm run lint`, `npm test`, `npm run build`, and `npm run check:public` before a pull request. The static build is published through the configured Sites project.
 
 ## Conventions
 

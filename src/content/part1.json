@@ -240,7 +240,8 @@
     },
     "caution": "Never cancel a nonunit while keeping the original modulus. The reduced modulus may be \\(1\\), which carries no information.",
     "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 02, 03. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
-    "bridge": "Multiplication by a unit permutes residue classes. A nonunit map can merge inputs and has a nontrivial kernel."
+    "bridge": "Multiplication by a unit permutes residue classes. A nonunit map can merge inputs and has a nontrivial kernel.",
+    "lab": "cancellation"
   },
   {
     "id": "C03",

@@ -9,8 +9,8 @@
     "check": "tsc --noEmit",
     "format:check": "biome format .",
     "lint": "biome lint .",
-    "test": "node --test src/math/*.test.ts && node scripts/check-bertrand-certificate.mjs",
-    "check:content": "node scripts/check-content.mjs",
+    "test": "node --test src/math/*.test.ts src/content/*.test.ts && node scripts/check-bertrand-certificate.mjs",
+    "check:content": "node scripts/check-content.mjs && node scripts/check-math-surface.mjs",
     "check:public": "node scripts/check-public-surface.mjs"
   },
   "dependencies": {

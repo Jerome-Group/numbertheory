@@ -1,21 +1,69 @@
-import { useSyncExternalStore } from 'react';
-import { EuclidLab, CrtLab, LinearLab } from './BasicLabs';
-import {
-  ContinuedFractionStaircaseLab,
-  PellHyperbolaOrbitLab,
-} from './ContinuedFractionLabs';
+import { lazy, Suspense, useSyncExternalStore } from 'react';
+import { CancellationLab } from './CancellationLab';
+import { LessonCore } from './LessonCore';
 import { lessons } from './content/lessons';
+import { lessonV2 } from './content/registries';
 import type { Lesson } from './content/types';
-import { HenselRootTreeLab } from './HenselLab';
-import {
-  DivisorIncidenceLab,
-  PrimitiveRootCycleLab,
-  ReciprocityLatticeLab,
-} from './GroupLabs';
 import { MathText } from './MathText';
-import { QuadraticResidueMapLab, ResidueClockLab } from './ResidueLabs';
-import { Practice, NextLesson } from './StudyPanels';
 import { studyStore } from './state';
+
+const EuclidLab = lazy(() =>
+  import('./BasicLabs').then((module) => ({ default: module.EuclidLab })),
+);
+const GaussianLab = lazy(() =>
+  import('./GaussianLab').then((module) => ({ default: module.GaussianLab })),
+);
+const SquareRootLab = lazy(() =>
+  import('./SquareRootLab').then((module) => ({
+    default: module.SquareRootLab,
+  })),
+);
+const CrtLab = lazy(() =>
+  import('./BasicLabs').then((module) => ({ default: module.CrtLab })),
+);
+const LinearLab = lazy(() =>
+  import('./BasicLabs').then((module) => ({ default: module.LinearLab })),
+);
+const ContinuedFractionStaircaseLab = lazy(() =>
+  import('./ContinuedFractionLabs').then((module) => ({
+    default: module.ContinuedFractionStaircaseLab,
+  })),
+);
+const PellHyperbolaOrbitLab = lazy(() =>
+  import('./ContinuedFractionLabs').then((module) => ({
+    default: module.PellHyperbolaOrbitLab,
+  })),
+);
+const HenselRootTreeLab = lazy(() =>
+  import('./HenselLab').then((module) => ({
+    default: module.HenselRootTreeLab,
+  })),
+);
+const DivisorIncidenceLab = lazy(() =>
+  import('./GroupLabs').then((module) => ({
+    default: module.DivisorIncidenceLab,
+  })),
+);
+const PrimitiveRootCycleLab = lazy(() =>
+  import('./GroupLabs').then((module) => ({
+    default: module.PrimitiveRootCycleLab,
+  })),
+);
+const ReciprocityLatticeLab = lazy(() =>
+  import('./GroupLabs').then((module) => ({
+    default: module.ReciprocityLatticeLab,
+  })),
+);
+const QuadraticResidueMapLab = lazy(() =>
+  import('./ResidueLabs').then((module) => ({
+    default: module.QuadraticResidueMapLab,
+  })),
+);
+const ResidueClockLab = lazy(() =>
+  import('./ResidueLabs').then((module) => ({
+    default: module.ResidueClockLab,
+  })),
+);
 
 export function LessonPage({
   lesson,
@@ -29,23 +77,38 @@ export function LessonPage({
     studyStore.getSnapshot,
   );
   const select = onSelect;
+  const model = lessonV2.find((item) => item.id === lesson.id);
+  if (!model) throw new Error(`Missing lesson model ${lesson.id}`);
   return (
     <div className="reading-shell">
       <div className="breadcrumb">
         ATLAS <span>/</span> {lesson.cluster.toUpperCase()} <span>/</span>{' '}
         {lesson.id}
       </div>
-      <div className={`lesson-head ${lesson.lab ? 'with-instrument' : ''}`}>
+      <div
+        className={`lesson-head ${lesson.lab === 'euclid' || lesson.lab === 'crt' ? 'with-instrument' : ''}`}
+      >
         <div>
           <p className="eyebrow">
             {lesson.id} · {lesson.cluster}
           </p>
-          <h1>{lesson.title}</h1>
+          {model && (
+            <p className="lesson-archetype">
+              {model.archetype.replace('-', ' ')}
+            </p>
+          )}
+          <h1 id="lesson-heading" tabIndex={-1}>
+            {lesson.title}
+          </h1>
           <p className="question">
             <MathText text={lesson.question} />
           </p>
           <p className="summary">
             <MathText text={lesson.summary} />
+          </p>
+          <p className="learning-objective">
+            <strong>By the end: </strong>
+            <MathText text={model.objectives[0]} />
           </p>
         </div>
         {lesson.lab === 'euclid' && state.result && (
@@ -101,157 +164,121 @@ export function LessonPage({
           </div>
         )}
       </div>
+      {lesson.id === 'C02' && <CancellationLab />}
+      {lesson.id === 'N04' && (
+        <Suspense fallback={<p>Loading exact lab…</p>}>
+          <GaussianLab />
+        </Suspense>
+      )}
+      {lesson.id === 'X05' && (
+        <Suspense fallback={<p>Loading exact lab…</p>}>
+          <SquareRootLab />
+        </Suspense>
+      )}
       <div className="reading-grid">
         <article className="lesson-body">
-          <section id="definition" className="content-section">
-            <h2>Start with the definition</h2>
-            {lesson.definition.map((text, i) => (
-              <p key={i}>
-                <MathText text={text} />
-              </p>
-            ))}
-          </section>
-          <section id="theorem" className="content-section">
-            <h2>The claim</h2>
-            <div className="theorem">
-              <div className="callout-label">THEOREM</div>
-              <p>
-                <MathText text={lesson.theorem} />
-              </p>
-            </div>
-          </section>
-          <section id="proof" className="content-section">
-            <h2>Why it is true</h2>
-            {lesson.proof.map((text, i) => (
-              <p key={i}>
-                <MathText text={text} />
-              </p>
-            ))}
-          </section>
-          <section id="example" className="content-section">
-            <h2>Worked example</h2>
-            <p className="section-lead">
-              <MathText text={lesson.example.prompt} />
-            </p>
-            <ol className="worked-steps">
-              {lesson.example.steps.map((text, i) => (
-                <li key={i}>
-                  <span className="step-text">
-                    <MathText text={text} />
-                  </span>
-                </li>
-              ))}
-            </ol>
-            <p className="result-line">
-              <MathText text={lesson.example.conclusion} />
-            </p>
-          </section>
-          {lesson.lab === 'euclid' && <EuclidLab />}
-          {lesson.lab === 'crt' && <CrtLab />}
-          {lesson.lab === 'linear' && <LinearLab />}
-          {lesson.lab === 'residue' && <ResidueClockLab />}
-          {lesson.lab === 'quadratic' && <QuadraticResidueMapLab />}
-          {lesson.lab === 'hensel' && <HenselRootTreeLab />}
-          {lesson.lab === 'divisor' && (
-            <DivisorIncidenceLab
-              lessonId={lesson.id as 'A03' | 'A04'}
-              initialInputs={{
-                n: state.divisorN,
-                leftFunction: state.divisorF,
-                rightFunction: state.divisorG,
-              }}
-              onRun={(inputs) =>
-                studyStore.setDivisorInputs(
-                  inputs.n,
-                  inputs.leftFunction,
-                  inputs.rightFunction,
-                )
-              }
-            />
-          )}
-          {lesson.lab === 'order' && (
-            <PrimitiveRootCycleLab
-              lessonId={lesson.id as 'U01' | 'U02'}
-              initialInputs={{
-                prime: state.orderP,
-                candidate: state.orderG,
-              }}
-              onRun={(inputs) =>
-                studyStore.setOrderInputs(inputs.prime, inputs.candidate)
-              }
-            />
-          )}
-          {lesson.lab === 'lattice' && (
-            <ReciprocityLatticeLab
-              initialInputs={{ p: state.latticeP, q: state.latticeQ }}
-              onRun={(inputs) =>
-                studyStore.setLatticeInputs(inputs.p, inputs.q)
-              }
-            />
-          )}
-          {lesson.lab === 'continued-fraction' && (
-            <ContinuedFractionStaircaseLab
-              key={`${lesson.id}-${state.cfn}-${state.cfd}-${state.cfD}-${state.cfterms}`}
-              id="lab"
-              initialInput={
-                lesson.id === 'R05'
-                  ? { kind: 'sqrt', radicand: state.cfD }
-                  : {
-                      kind: 'rational',
-                      numerator: state.cfn,
-                      denominator: state.cfd,
-                    }
-              }
-              initialVisibleTerms={Number(state.cfterms)}
-              onRun={(_result, input, visibleTerms) =>
-                studyStore.setContinuedFractionInputs(
-                  input.kind,
-                  input.kind === 'rational' ? input.numerator : state.cfn,
-                  input.kind === 'rational' ? input.denominator : state.cfd,
-                  input.kind === 'sqrt' ? input.radicand : state.cfD,
-                  String(visibleTerms),
-                )
-              }
-            />
-          )}
-          {lesson.lab === 'pell' && (
-            <PellHyperbolaOrbitLab
-              key={`${lesson.id}-${state.pellD}-${state.pellCount}`}
-              id="lab"
-              initialRadicand={state.pellD}
-              initialCount={state.pellCount}
-              onRun={(orbit) =>
-                studyStore.setPellInputs(
-                  orbit.radicand,
-                  String(orbit.solutions.length),
-                )
-              }
-            />
-          )}
-          <Practice key={lesson.id} lesson={lesson} />
-          <section id="boundary" className="content-section">
-            <h2>Watch the boundary</h2>
-            <p>
-              <MathText text={lesson.caution} />
-            </p>
-          </section>
-          {lesson.bridge && (
-            <section id="bridge" className="content-section bridge">
-              <span className="callout-label">ALGEBRA LENS</span>
-              <p>
-                <MathText text={lesson.bridge} />
-              </p>
-            </section>
-          )}
-          <footer className="lesson-footer">
-            <h2>Sources and status</h2>
-            <p>{lesson.sourceNote}</p>
-            <p>
-              Proof and examples are authored for this site. The source locator
-              is not a claim that private course material is published here.
-            </p>
-          </footer>
-          <NextLesson id={lesson.id} onSelect={select} />
+          <LessonCore
+            lesson={lesson}
+            model={model}
+            onSelect={select}
+            lab={
+              lesson.id === 'C02' ||
+              lesson.id === 'N04' ||
+              lesson.id === 'X05' ? null : (
+                <Suspense fallback={<p>Loading exact lab…</p>}>
+                  {lesson.lab === 'euclid' && <EuclidLab />}
+                  {lesson.lab === 'crt' && <CrtLab />}
+                  {lesson.lab === 'linear' && <LinearLab />}
+                  {lesson.lab === 'residue' && <ResidueClockLab />}
+                  {lesson.lab === 'quadratic' && <QuadraticResidueMapLab />}
+                  {lesson.lab === 'hensel' && <HenselRootTreeLab />}
+                  {lesson.lab === 'divisor' && (
+                    <DivisorIncidenceLab
+                      lessonId={lesson.id as 'A03' | 'A04'}
+                      initialInputs={{
+                        n: state.divisorN,
+                        leftFunction: state.divisorF,
+                        rightFunction: state.divisorG,
+                      }}
+                      onRun={(inputs) =>
+                        studyStore.setDivisorInputs(
+                          inputs.n,
+                          inputs.leftFunction,
+                          inputs.rightFunction,
+                        )
+                      }
+                    />
+                  )}
+                  {lesson.lab === 'order' && (
+                    <PrimitiveRootCycleLab
+                      lessonId={lesson.id as 'U01' | 'U02'}
+                      initialInputs={{
+                        prime: state.orderP,
+                        candidate: state.orderG,
+                      }}
+                      onRun={(inputs) =>
+                        studyStore.setOrderInputs(
+                          inputs.prime,
+                          inputs.candidate,
+                        )
+                      }
+                    />
+                  )}
+                  {lesson.lab === 'lattice' && (
+                    <ReciprocityLatticeLab
+                      initialInputs={{ p: state.latticeP, q: state.latticeQ }}
+                      onRun={(inputs) =>
+                        studyStore.setLatticeInputs(inputs.p, inputs.q)
+                      }
+                    />
+                  )}
+                  {lesson.lab === 'continued-fraction' && (
+                    <ContinuedFractionStaircaseLab
+                      key={`${lesson.id}-${state.cfn}-${state.cfd}-${state.cfD}-${state.cfterms}`}
+                      id="lab"
+                      initialInput={
+                        lesson.id === 'R05'
+                          ? { kind: 'sqrt', radicand: state.cfD }
+                          : {
+                              kind: 'rational',
+                              numerator: state.cfn,
+                              denominator: state.cfd,
+                            }
+                      }
+                      initialVisibleTerms={Number(state.cfterms)}
+                      onRun={(_result, input, visibleTerms) =>
+                        studyStore.setContinuedFractionInputs(
+                          input.kind,
+                          input.kind === 'rational'
+                            ? input.numerator
+                            : state.cfn,
+                          input.kind === 'rational'
+                            ? input.denominator
+                            : state.cfd,
+                          input.kind === 'sqrt' ? input.radicand : state.cfD,
+                          String(visibleTerms),
+                        )
+                      }
+                    />
+                  )}
+                  {lesson.lab === 'pell' && (
+                    <PellHyperbolaOrbitLab
+                      key={`${lesson.id}-${state.pellD}-${state.pellCount}`}
+                      id="lab"
+                      initialRadicand={state.pellD}
+                      initialCount={state.pellCount}
+                      onRun={(orbit) =>
+                        studyStore.setPellInputs(
+                          orbit.radicand,
+                          String(orbit.solutions.length),
+                        )
+                      }
+                    />
+                  )}
+                </Suspense>
+              )
+            }
+          />
         </article>
         <aside className="context-rail" aria-label="On this lesson">
           <div className="rail-inner">

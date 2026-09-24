@@ -1,8 +1,37 @@
-import { useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { lessons } from './content/lessons';
+import { lessonMatches } from './content/search';
 import { studyStore } from './state';
+import { lessonPath } from './routes';
 
-const clusters = [...new Set(lessons.map((x) => x.cluster))];
+const clusters = [...new Set(lessons.map((lesson) => lesson.cluster))];
+const preferenceKey = 'numbertheory.navigation.v1';
+function savedChapters(): string[] {
+  try {
+    const value: unknown = JSON.parse(
+      localStorage.getItem(preferenceKey) ?? '[]',
+    );
+    return Array.isArray(value)
+      ? value.filter(
+          (item): item is string =>
+            typeof item === 'string' && clusters.includes(item),
+        )
+      : [];
+  } catch {
+    return [];
+  }
+}
+function Highlight({ text, query }: { text: string; query: string }) {
+  const index = text.toLocaleLowerCase().indexOf(query);
+  if (!query || index < 0) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, index)}
+      <mark>{text.slice(index, index + query.length)}</mark>
+      {text.slice(index + query.length)}
+    </>
+  );
+}
 export function Sidebar({
   drawer,
   onClose,
@@ -16,21 +45,34 @@ export function Sidebar({
     studyStore.subscribe,
     studyStore.getSnapshot,
   );
-  const lesson = lessons.find((x) => x.id === state.lessonId) ?? lessons[0];
+  const active =
+    state.view === 'lesson'
+      ? lessons.find((lesson) => lesson.id === state.lessonId)
+      : undefined;
   const [query, setQuery] = useState('');
+  const [expanded, setExpanded] = useState<string[]>(savedChapters);
+  useEffect(() => {
+    try {
+      localStorage.setItem(preferenceKey, JSON.stringify(expanded));
+    } catch {
+      // Navigation remains available when storage is blocked.
+    }
+  }, [expanded]);
+  const normalized = query.trim().toLocaleLowerCase();
   const found = useMemo(
-    () =>
-      lessons.filter((x) =>
-        `${x.title} ${x.question} ${x.summary}`
-          .toLowerCase()
-          .includes(query.toLowerCase()),
-      ),
-    [query],
+    () => lessons.filter((lesson) => lessonMatches(normalized, lesson)),
+    [normalized],
   );
-  const select = onSelect;
-  const setDrawer = (_: boolean) => onClose();
+  function toggle(cluster: string) {
+    setExpanded((current) =>
+      current.includes(cluster)
+        ? current.filter((item) => item !== cluster)
+        : [...current, cluster],
+    );
+  }
   return (
     <aside
+      id="lesson-sidebar"
       className={`sidebar ${drawer ? 'open' : ''}`}
       aria-label="Lesson navigation"
     >
@@ -65,7 +107,7 @@ export function Sidebar({
       <button
         type="button"
         className="drawer-close"
-        onClick={() => setDrawer(false)}
+        onClick={onClose}
         aria-label="Close lessons"
       >
         ×
@@ -77,46 +119,80 @@ export function Sidebar({
         id="lesson-search"
         className="search"
         type="search"
-        placeholder="Theorem, method, question…"
+        placeholder="ID, theorem, question…"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(event) => setQuery(event.target.value)}
       />
-      <nav className="lesson-nav">
-        {query ? (
-          <>
-            <div className="nav-heading">Results · {found.length}</div>
-            {found.map((x) => (
-              <button
-                type="button"
-                key={x.id}
-                className={`nav-link ${state.view === 'lesson' && x.id === lesson.id ? 'active' : ''}`}
-                onClick={() => select(x.id)}
-              >
-                <span>{x.id}</span>
-                {x.title}
-              </button>
-            ))}
-          </>
-        ) : (
-          clusters.map((cluster) => (
-            <section key={cluster}>
-              <div className="nav-heading">{cluster}</div>
-              {lessons
-                .filter((x) => x.cluster === cluster)
-                .map((x) => (
-                  <button
-                    type="button"
-                    key={x.id}
-                    className={`nav-link ${state.view === 'lesson' && x.id === lesson.id ? 'active' : ''}`}
-                    onClick={() => select(x.id)}
-                  >
-                    <span>{x.id}</span>
-                    {x.title}
-                  </button>
-                ))}
-            </section>
-          ))
+      <div className="search-status" aria-live="polite">
+        {normalized ? `${found.length} matching lessons` : 'Browse by chapter'}
+      </div>
+      <nav className="lesson-nav" aria-label="Chapters and lessons">
+        {normalized && found.length === 0 && (
+          <div className="search-empty">
+            No lessons found for “{query}”.{' '}
+            <button type="button" onClick={() => setQuery('')}>
+              Clear search
+            </button>
+          </div>
         )}
+        {clusters.map((cluster, index) => {
+          const visible = normalized
+            ? found.filter((lesson) => lesson.cluster === cluster)
+            : lessons.filter((lesson) => lesson.cluster === cluster);
+          if (visible.length === 0) return null;
+          const open =
+            Boolean(normalized) ||
+            expanded.includes(cluster) ||
+            active?.cluster === cluster;
+          const panelId = `chapter-${index}`;
+          return (
+            <section className="chapter" key={cluster}>
+              <h2 className="chapter-heading">
+                <button
+                  type="button"
+                  aria-expanded={open}
+                  aria-controls={panelId}
+                  onClick={() => toggle(cluster)}
+                >
+                  <span>{cluster}</span>
+                  <span className="chapter-count">{visible.length}</span>
+                  <span className="chapter-chevron" aria-hidden="true">
+                    ⌄
+                  </span>
+                </button>
+              </h2>
+              <div id={panelId} hidden={!open}>
+                {visible.map((lesson) => (
+                  <a
+                    key={lesson.id}
+                    href={lessonPath(lesson.id)}
+                    className={`nav-link ${state.view === 'lesson' && lesson.id === active?.id ? 'active' : ''}`}
+                    aria-current={
+                      state.view === 'lesson' && lesson.id === active?.id
+                        ? 'page'
+                        : undefined
+                    }
+                    onClick={(event) => {
+                      if (
+                        event.button !== 0 ||
+                        event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey
+                      )
+                        return;
+                      event.preventDefault();
+                      onSelect(lesson.id);
+                    }}
+                  >
+                    <span>{lesson.id}</span>
+                    <Highlight text={lesson.title} query={normalized} />
+                  </a>
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </nav>
       <div className="side-foot">
         Original lessons · Exact arithmetic

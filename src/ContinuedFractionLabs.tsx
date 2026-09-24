@@ -280,12 +280,12 @@ export function ContinuedFractionStaircaseLab({
           }
         >
           <option value="rational">Rational number</option>
-          <option value="sqrt">Square root √D</option>
+          <option value="sqrt">Square root of D</option>
         </select>
         {kind === 'rational' ? (
           <>
             <label htmlFor={`${localId}-numerator`}>
-              Numerator, −999 to 999
+              Numerator, <MathText text={'\\(-999\\) to \\(999\\)'} />
             </label>
             <input
               id={`${localId}-numerator`}
@@ -297,7 +297,7 @@ export function ContinuedFractionStaircaseLab({
               onChange={(event) => setNumerator(event.target.value)}
             />
             <label htmlFor={`${localId}-denominator`}>
-              Positive denominator, 1 to 999
+              Positive denominator, <MathText text={'\\(1\\) to \\(999\\)'} />
             </label>
             <input
               id={`${localId}-denominator`}
@@ -312,7 +312,7 @@ export function ContinuedFractionStaircaseLab({
         ) : (
           <>
             <label htmlFor={`${localId}-radicand`}>
-              Nonsquare D, 2 to 9,999
+              Nonsquare <MathText text={'\\(D\\), \\(2\\) to \\(9999\\)'} />
             </label>
             <input
               id={`${localId}-radicand`}
@@ -330,10 +330,10 @@ export function ContinuedFractionStaircaseLab({
       <fieldset className="cf-lab__presets">
         <legend>Worked examples</legend>
         <button type="button" onClick={chooseRational}>
-          43/19 · finite
+          <MathText text={'\\(43/19\\) · finite'} />
         </button>
         <button type="button" onClick={chooseRootTwo}>
-          √2 · periodic
+          <MathText text={'\\(\\sqrt2\\) · periodic'} />
         </button>
       </fieldset>
       {error && (
@@ -595,7 +595,11 @@ function SqrtReadout({
                   <td>{state.d}</td>
                   <td>{state.coefficient}</td>
                   <td>
-                    {state.index === 0 ? 'initial state' : 'dₙ | D − mₙ²'}
+                    {state.index === 0 ? (
+                      'initial state'
+                    ) : (
+                      <MathText text={'\\(d_n\\mid(D-m_n^2)\\)'} />
+                    )}
                   </td>
                 </tr>
               ))}
@@ -635,7 +639,15 @@ function SqrtReadout({
                   </td>
                   <td>{row.determinantWithPrevious}</td>
                   <td>{row.normDifference}</td>
-                  <td>{row.errorSide === 'below' ? 'below √D' : 'above √D'}</td>
+                  <td>
+                    <MathText
+                      text={
+                        row.errorSide === 'below'
+                          ? 'below \\(\\sqrt D\\)'
+                          : 'above \\(\\sqrt D\\)'
+                      }
+                    />
+                  </td>
                   <td>{row.nextDenominator}</td>
                   <td>
                     <MathText text={`\\(<1/${row.errorBoundDenominator}\\)`} />

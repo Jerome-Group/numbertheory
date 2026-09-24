@@ -1,13 +1,111 @@
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import courseMap from './content/course-map.json';
+import { chapterCheckpoints } from './content/checkpoints';
+import { lessonMatches } from './content/search';
 import { lessons } from './content/lessons';
+import {
+  lessonsForPath,
+  pathDetails,
+  pathIds,
+  type PathId,
+} from './content/paths';
+import { buildCancellationMap } from './math/cancellation';
 import { MathText } from './MathText';
+import { progressStore } from './progress';
 import { type AtlasView, studyStore } from './state';
 
 const clusters = [...new Set(lessons.map((lesson) => lesson.cluster))];
 const labCount = new Set(lessons.map((lesson) => lesson.lab).filter(Boolean))
   .size;
 const course = new Map(courseMap.map((row) => [row.id, row.handouts]));
+
+function initialPath(): PathId | 'all' {
+  try {
+    const value = localStorage.getItem('numbertheory.path.v1');
+    return value && pathIds.includes(value as PathId)
+      ? (value as PathId)
+      : 'all';
+  } catch {
+    return 'all';
+  }
+}
+function PathSelector({
+  selected,
+  choose,
+}: {
+  selected: PathId | 'all';
+  choose: (id: PathId | 'all') => void;
+}) {
+  return (
+    <fieldset className="path-selector">
+      <legend>Learning path</legend>
+      <button
+        type="button"
+        aria-pressed={selected === 'all'}
+        onClick={() => choose('all')}
+      >
+        All lessons
+      </button>
+      {pathIds.map((id) => (
+        <button
+          type="button"
+          key={id}
+          aria-pressed={selected === id}
+          onClick={() => choose(id)}
+        >
+          {pathDetails[id].title}
+        </button>
+      ))}
+    </fieldset>
+  );
+}
+
+function HomeFiberPreview({ open }: { open: (id: string) => void }) {
+  const [factor, setFactor] = useState('4');
+  const map = buildCancellationMap('12', factor);
+  return (
+    <section className="home-fiber" aria-labelledby="home-fiber-title">
+      <span className="instrument-kicker">A QUESTION YOU CAN TEST</span>
+      <h2 id="home-fiber-title">
+        <MathText text={'What survives multiplication modulo \\(12\\)?'} />
+      </h2>
+      <fieldset className="home-fiber-controls">
+        <legend>Choose a factor</legend>
+        {['4', '5'].map((value) => (
+          <button
+            type="button"
+            key={value}
+            aria-pressed={factor === value}
+            onClick={() => setFactor(value)}
+          >
+            <MathText text={`Multiply by \\(${value}\\)`} />
+          </button>
+        ))}
+      </fieldset>
+      <p>
+        <MathText
+          text={`\\(\\gcd(${factor},12)=${map.gcd}\\): each visible output has \\(${map.gcd}\\) input${map.gcd === 1 ? '' : 's'}.`}
+        />
+      </p>
+      <div className="home-fiber-rows">
+        {map.fibers.slice(0, 3).map((fiber) => (
+          <div key={fiber.output}>
+            <MathText
+              text={`\\(\\{${fiber.inputs.join(',')}\\}\\mapsto ${fiber.output}\\)`}
+            />
+          </div>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="home-fiber-link"
+        onClick={() => open('C02')}
+      >
+        Investigate every fiber →
+      </button>
+    </section>
+  );
+}
 
 function Heading({
   eyebrow,
@@ -57,6 +155,22 @@ export function AtlasViews({
   open: (id: string) => void;
 }) {
   const [filter, setFilter] = useState('');
+  const [practiceScope, setPracticeScope] = useState<'all' | 'review'>('all');
+  const progress = useSyncExternalStore(
+    progressStore.subscribe,
+    progressStore.getSnapshot,
+  );
+  const [path, setPath] = useState<PathId | 'all'>(initialPath);
+  const pathLessons = path === 'all' ? lessons : lessonsForPath(path);
+  const pathLessonIds = new Set(pathLessons.map((lesson) => lesson.id));
+  function choosePath(id: PathId | 'all') {
+    setPath(id);
+    try {
+      localStorage.setItem('numbertheory.path.v1', id);
+    } catch {
+      /* Browsing works without storage. */
+    }
+  }
   const [shown, setShown] = useState<string[]>([]);
   const toggle = (id: string) =>
     setShown((current) =>
@@ -69,9 +183,7 @@ export function AtlasViews({
           <div className="hero-copy">
             <p className="eyebrow">A PUBLIC MATHEMATICS ATLAS</p>
             <h1>
-              Follow the
-              <br />
-              <em>integer thread.</em>
+              What does multiplication <em>forget?</em>
             </h1>
             <p>
               Start with proof. Reach primes, congruences, quadratic
@@ -91,22 +203,27 @@ export function AtlasViews({
               </button>
             </div>
           </div>
-          <div className="hero-art" aria-hidden="true">
-            <div className="orbit orbit-one" />
-            <div className="orbit orbit-two" />
-            <div className="orbit orbit-three" />
-            <div className="orbit-center">
-              <MathText text={'\\(\\mathbb Z\\)'} />
-            </div>
-            <span className="orbit-label orbit-a">divisibility</span>
-            <span className="orbit-label orbit-b">congruence</span>
-            <span className="orbit-label orbit-c">proof</span>
+          <HomeFiberPreview open={open} />
+        </section>
+        <section className="path-panel" aria-labelledby="path-heading">
+          <p className="eyebrow">FIVE WAYS THROUGH THE IDEAS</p>
+          <h2 id="path-heading">Choose a learning path</h2>
+          <PathSelector selected={path} choose={choosePath} />
+          <p>
+            {path === 'all'
+              ? 'Browse every published lesson.'
+              : pathDetails[path].description}
+          </p>
+          <div className="path-preview">
+            {pathLessons.slice(0, 5).map((lesson) => (
+              <LessonCard key={lesson.id} id={lesson.id} open={open} />
+            ))}
           </div>
         </section>
         <div className="overview-stats">
           <div>
             <strong>{lessons.length}</strong>
-            <span>complete lessons</span>
+            <span>published modules</span>
           </div>
           <div>
             <strong>{clusters.length}</strong>
@@ -174,6 +291,12 @@ export function AtlasViews({
           title="Explore the atlas"
           lead="A connected route from divisibility to deeper arithmetic. Open any idea, or follow the prerequisites in each lesson."
         />
+        <PathSelector selected={path} choose={choosePath} />
+        <p className="path-description">
+          {path === 'all'
+            ? 'Every published lesson.'
+            : pathDetails[path].description}
+        </p>
         <div className="explore-filter">
           <label htmlFor="atlas-filter">Find a concept</label>
           <input
@@ -188,9 +311,8 @@ export function AtlasViews({
           const matching = lessons.filter(
             (x) =>
               x.cluster === cluster &&
-              `${x.id} ${x.title} ${x.question}`
-                .toLowerCase()
-                .includes(filter.toLowerCase()),
+              pathLessonIds.has(x.id) &&
+              lessonMatches(filter, x),
           );
           return matching.length ? (
             <section className="chapter" key={cluster}>
@@ -203,6 +325,36 @@ export function AtlasViews({
                   <LessonCard key={x.id} id={x.id} open={open} />
                 ))}
               </div>
+              {chapterCheckpoints[cluster] && (
+                <div className="chapter-checkpoint">
+                  <span className="callout-label">CHAPTER CHECKPOINT</span>
+                  <p>
+                    <MathText text={chapterCheckpoints[cluster].prompt} />
+                  </p>
+                  <button
+                    type="button"
+                    aria-expanded={shown.includes(`checkpoint:${cluster}`)}
+                    onClick={() => toggle(`checkpoint:${cluster}`)}
+                  >
+                    {shown.includes(`checkpoint:${cluster}`)
+                      ? 'Hide reasoning'
+                      : 'Compare your reasoning'}
+                  </button>
+                  {shown.includes(`checkpoint:${cluster}`) && (
+                    <p>
+                      <MathText text={chapterCheckpoints[cluster].answer} />
+                    </p>
+                  )}
+                  <div>
+                    {chapterCheckpoints[cluster].links.map((id) => (
+                      <button type="button" key={id} onClick={() => open(id)}>
+                        {id} ·{' '}
+                        {lessons.find((lesson) => lesson.id === id)?.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </section>
           ) : null;
         })}
@@ -216,38 +368,74 @@ export function AtlasViews({
           title="Practice with purpose"
           lead="Try a problem before revealing the proof. Each answer explains why the method works."
         />
+        <fieldset className="practice-scope">
+          <legend>Practice scope</legend>
+          <button
+            type="button"
+            aria-pressed={practiceScope === 'all'}
+            onClick={() => setPracticeScope('all')}
+          >
+            All problems
+          </button>
+          <button
+            type="button"
+            aria-pressed={practiceScope === 'review'}
+            onClick={() => setPracticeScope('review')}
+          >
+            Review later (
+            {
+              Object.values(progress).filter((status) => status === 'review')
+                .length
+            }
+            )
+          </button>
+        </fieldset>
         <div className="practice-list">
-          {lessons.map((lesson) => (
-            <article className="practice-item" key={lesson.id}>
-              <div className="practice-item-head">
-                <span>
-                  {lesson.id} · {lesson.cluster}
-                </span>
-                <h2>{lesson.title}</h2>
-              </div>
-              <p>
-                <MathText text={lesson.practice.prompt} />
-              </p>
-              <div className="practice-item-actions">
-                <button
-                  type="button"
-                  onClick={() => toggle(lesson.id)}
-                  aria-expanded={shown.includes(lesson.id)}
-                >
-                  {shown.includes(lesson.id) ? 'Hide answer' : 'Reveal answer'}
-                </button>
-                <OpenButton id={lesson.id} open={open} />
-              </div>
-              {shown.includes(lesson.id) && (
-                <div className="practice-reveal">
-                  <strong>Justified answer</strong>
-                  <p>
-                    <MathText text={lesson.practice.answer} />
-                  </p>
+          {lessons
+            .filter(
+              (lesson) =>
+                practiceScope === 'all' || progress[lesson.id] === 'review',
+            )
+            .map((lesson) => (
+              <article className="practice-item" key={lesson.id}>
+                <div className="practice-item-head">
+                  <span>
+                    {lesson.id} · {lesson.cluster}
+                  </span>
+                  <h2>{lesson.title}</h2>
                 </div>
-              )}
-            </article>
-          ))}
+                <p>
+                  <MathText text={lesson.practice.prompt} />
+                </p>
+                <div className="practice-item-actions">
+                  <button
+                    type="button"
+                    onClick={() => toggle(lesson.id)}
+                    aria-expanded={shown.includes(lesson.id)}
+                  >
+                    {shown.includes(lesson.id)
+                      ? 'Hide answer'
+                      : 'Reveal answer'}
+                  </button>
+                  <OpenButton id={lesson.id} open={open} />
+                </div>
+                {shown.includes(lesson.id) && (
+                  <div className="practice-reveal">
+                    <strong>Justified answer</strong>
+                    <p>
+                      <MathText text={lesson.practice.answer} />
+                    </p>
+                  </div>
+                )}
+              </article>
+            ))}
+          {practiceScope === 'review' &&
+            !Object.values(progress).includes('review') && (
+              <p>
+                No lessons marked for review. Use “Review later” in a lesson to
+                build your queue.
+              </p>
+            )}
         </div>
       </div>
     );
@@ -311,7 +499,7 @@ export function AtlasViews({
               <h2>
                 {handout}
                 <span>
-                  {handout >= 'MH-H08'
+                  {['MH-H08', 'MH-H09', 'MH-H10'].includes(handout)
                     ? 'Historical alignment · verify current handout'
                     : 'Current handout topic'}
                 </span>

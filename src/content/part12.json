@@ -1,0 +1,494 @@
+[
+  {
+    "id": "N01",
+    "title": "Rings, units, primes, and irreducibles",
+    "cluster": "Toward algebraic number theory",
+    "question": "Why does primality depend on the ring around an element?",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "D05"
+    ],
+    "summary": "A unit, an irreducible, and a prime element play distinct roles; cancellation and factorization require a domain.",
+    "definition": [
+      "A commutative ring with identity has addition, multiplication, and \\(1\\). An integral domain has no nonzero zero divisors. A field is a ring in which every nonzero element is a unit. A unit \\(u\\) has an inverse \\(v\\) satisfying \\(uv=1\\).",
+      "In an integral domain \\(R\\), a nonzero nonunit \\(r\\) is irreducible if \\(r=ab\\) forces \\(a\\) or \\(b\\) to be a unit. It is prime if \\(r\\mid ab\\) forces \\(r\\mid a\\) or \\(r\\mid b\\). Elements differing by a unit are associates."
+    ],
+    "theorem": "In every commutative integral domain with identity, every prime element is irreducible. The converse need not hold in an arbitrary domain.",
+    "proof": [
+      "Let \\(r\\) be prime and suppose \\(r=ab\\). Then \\(r\\mid ab\\), so \\(r\\mid a\\) or \\(r\\mid b\\). In the first case write \\(a=rc\\). Substituting gives \\(r=rcb\\). Since \\(r\\ne0\\) and the ring is a domain, cancellation gives \\(1=cb\\), so \\(b\\) is a unit. The other case is symmetric. Thus \\(r\\) is irreducible. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare the element \\(2\\) in \\(\\mathbb Z\\), \\(\\mathbb Q\\), and \\(\\mathbb Z/6\\mathbb Z\\).",
+      "steps": [
+        "In \\(\\mathbb Z\\), the only units are \\(\\pm1\\); \\(2\\) is a prime element by Euclid's lemma.",
+        "In the field \\(\\mathbb Q\\), \\(2\\) is a unit with inverse \\(1/2\\), so the definitions of prime and irreducible exclude it.",
+        "Modulo \\(6\\), the nonzero classes \\([2]\\) and \\([3]\\) multiply to \\([0]\\). This ring has zero divisors, so the domain theorem cannot simply be applied."
+      ],
+      "conclusion": "An element's role depends on both its multiplication and its units in the stated coefficient ring."
+    },
+    "practice": {
+      "prompt": "Prove that any two associates in an integral domain have the same divisors, and say why irreducible elements must be nonunits.",
+      "hints": [
+        "Write \\(s=ur\\) with \\(u\\) a unit.",
+        "Multiplying a divisibility witness by \\(u\\) or \\(u^{-1}\\) preserves membership in the ring."
+      ],
+      "answer": "If \\(s=ur\\) and \\(d\\mid r\\), then \\(r=de\\) gives \\(s=d(ue)\\), so \\(d\\mid s\\). Conversely, \\(r=u^{-1}s\\) gives the reverse implication. Units are excluded from irreducibility because a unit already divides every element and carries no nontrivial factorization information."
+    },
+    "caution": "Prime implies irreducible in a domain, but the reverse needs an additional factorization property. The phrase ‘prime element’ must always name its ring.",
+    "bridge": "Gaussian integers form a domain where Euclidean division will later supply the missing factorization property.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N02",
+    "title": "Finite groups behind modular arithmetic",
+    "cluster": "Toward algebraic number theory",
+    "question": "Why do all nonempty fibers of a homomorphism have the same size?",
+    "prerequisites": [
+      "N01",
+      "C06"
+    ],
+    "summary": "Cosets partition finite groups, and every nonempty homomorphism fiber is one coset of its kernel.",
+    "definition": [
+      "A group \\(G\\) has an associative operation, identity, and inverses. A subgroup \\(H\\) is closed under that structure; its left coset at \\(g\\) is \\(gH=\\{gh:h\\in H\\}\\). A homomorphism \\(f:G\\to K\\) preserves the operation, and \\(\\ker f=\\{g:f(g)=e_K\\}\\)."
+    ],
+    "theorem": "For a homomorphism of finite groups \\(f:G\\to K\\), each nonempty fiber \\(f^{-1}(y)\\) is a coset of \\(\\ker f\\). Consequently \\(|G|=|\\ker f|\\,|\\operatorname{im} f|\\), and every subgroup \\(H\\le G\\) has order dividing \\(|G|\\).",
+    "proof": [
+      "If \\(f(g)=y\\), then \\(f(gh)=y\\) for every \\(h\\in\\ker f\\), so \\(g\\ker f\\subseteq f^{-1}(y)\\). If \\(f(x)=y\\), then \\(f(g^{-1}x)=e_K\\), so \\(x\\in g\\ker f\\). Thus the fiber equals that coset.",
+      "Multiplication by \\(g\\) bijects \\(\\ker f\\) with \\(g\\ker f\\), so each nonempty fiber has \\(|\\ker f|\\) elements. The fibers indexed by \\(\\operatorname{im} f\\) partition \\(G\\), yielding the formula. The same disjoint-or-equal coset argument partitions \\(G\\) into copies of any subgroup \\(H\\), proving Lagrange's divisibility statement. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Inspect multiplication by \\(4\\) on the additive group \\(\\mathbb Z/12\\mathbb Z\\).",
+      "steps": [
+        "The map \\(f([x])=[4x]\\) is additive: \\(f([x]+[y])=f([x])+f([y])\\).",
+        "Its kernel is \\(\\{[0],[3],[6],[9]\\}\\), so each nonempty fiber has \\(4\\) elements.",
+        "Its image is \\(\\{[0],[4],[8]\\}\\), and \\(12=4\\cdot3\\)."
+      ],
+      "conclusion": "The exact C02 map is a concrete instance of the general coset theorem."
+    },
+    "practice": {
+      "prompt": "In the cyclic group of order \\(12\\), find the kernel size of the power map \\(x\\mapsto x^8\\), and state the hypothesis needed for a power map on a general group to be a homomorphism.",
+      "hints": [
+        "Write each element as \\(g^j\\) for a generator \\(g\\).",
+        "In a nonabelian group, compare \\((xy)^8\\) with \\(x^8y^8\\)."
+      ],
+      "answer": "The equation \\(g^{8j}=e\\) is equivalent to \\(12\\mid8j\\), giving \\(\\gcd(12,8)=4\\) kernel elements. A power map is a homomorphism on an abelian group, since then \\((xy)^8=x^8y^8\\). No such general assertion is made for nonabelian groups."
+    },
+    "caution": "Equal fiber size holds for every group homomorphism; the specific \\(\\gcd(h,k)\\) count uses a cyclic group of order \\(h\\).",
+    "bridge": "A kernel in a ring map becomes an ideal. Quotient structures formalize what a map forgets.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N03",
+    "title": "Ideals and quotients through the integers",
+    "cluster": "Toward algebraic number theory",
+    "question": "What structure does reduction modulo an integer forget?",
+    "prerequisites": [
+      "N01",
+      "D03",
+      "C04"
+    ],
+    "summary": "Every ideal of the integers is generated by one nonnegative integer; quotient maps record congruence as a kernel.",
+    "definition": [
+      "An ideal \\(I\\) of a commutative ring \\(R\\) is an additive subgroup closed under multiplication by every element of \\(R\\). For \\(d\\in\\mathbb Z\\), \\(d\\mathbb Z=\\{dk:k\\in\\mathbb Z\\}\\). The quotient \\(R/I\\) identifies elements whose difference lies in \\(I\\)."
+    ],
+    "theorem": "Every ideal \\(I\\) of \\(\\mathbb Z\\) equals \\(d\\mathbb Z\\) for a unique \\(d\\ge0\\). For \\(a,b\\ge0\\), \\(a\\mathbb Z+b\\mathbb Z=\\gcd(a,b)\\mathbb Z\\) and \\(a\\mathbb Z\\cap b\\mathbb Z=\\operatorname{lcm}(a,b)\\mathbb Z\\), using \\(\\gcd(0,0)=\\operatorname{lcm}(0,b)=0\\).",
+    "proof": [
+      "The zero ideal equals \\(0\\mathbb Z\\). Otherwise an ideal contains a positive integer: negate a negative element if necessary. Let \\(d\\) be its least positive element. For any \\(x\\in I\\), integer division gives \\(x=qd+r\\) with \\(0\\le r<d\\). Since \\(r=x-qd\\in I\\), minimality gives \\(r=0\\). Thus \\(I\\subseteq d\\mathbb Z\\); ideal closure gives the reverse inclusion. If \\(d,e\\ge0\\) generate the same ideal, each divides the other, hence \\(d=e\\).",
+      "The ideal sum consists of all integer combinations \\(ax+by\\), which Bézout identifies with \\(\\gcd(a,b)\\mathbb Z\\), including the zero pair under the stated convention. The intersection consists of common multiples, exactly the multiples of the nonnegative least common multiple; when either input is zero, that set is \\(\\{0\\}\\). \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compute the sum and intersection of \\(6\\mathbb Z\\) and \\(10\\mathbb Z\\).",
+      "steps": [
+        "Since \\(\\gcd(6,10)=2\\), their sum is \\(2\\mathbb Z\\). A certificate is \\(2=2\\cdot6-10\\).",
+        "Their common multiples are multiples of \\(\\operatorname{lcm}(6,10)=30\\), so their intersection is \\(30\\mathbb Z\\).",
+        "Reduction \\(\\mathbb Z\\to\\mathbb Z/6\\mathbb Z\\) has kernel \\(6\\mathbb Z\\), since exactly those integers map to \\([0]\\)."
+      ],
+      "conclusion": "An ideal is a set of integers, while a residue class is one element of a quotient."
+    },
+    "practice": {
+      "prompt": "Classify the ideals \\(0\\mathbb Z\\) and \\(1\\mathbb Z\\), then find the kernel of reduction modulo \\(8\\).",
+      "hints": [
+        "Use the definition of multiples.",
+        "Which integers become the zero class modulo \\(8\\)?"
+      ],
+      "answer": "The ideal \\(0\\mathbb Z=\\{0\\}\\) is the zero ideal; \\(1\\mathbb Z=\\mathbb Z\\) is the whole ring. Reduction modulo \\(8\\) sends exactly multiples of \\(8\\) to \\([0]\\), so its kernel is \\(8\\mathbb Z\\)."
+    },
+    "caution": "A quotient class such as \\([2]\\) is an element, not an ideal. The zero ideal must be included in the integer classification.",
+    "bridge": "The Chinese remainder theorem identifies a quotient by a product of coprime ideals with a product of smaller quotients.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N04",
+    "title": "Euclidean division in Gaussian integers",
+    "cluster": "Toward algebraic number theory",
+    "question": "What replaces a short remainder interval on an integer lattice?",
+    "prerequisites": [
+      "S05",
+      "D04",
+      "N01"
+    ],
+    "summary": "Nearest-lattice-point division gives a remainder of strictly smaller norm, so Euclid and Bézout work in Gaussian integers.",
+    "definition": [
+      "A Gaussian integer is \\(z=a+bi\\) with \\(a,b\\in\\mathbb Z\\) and \\(i^2=-1\\). Its norm is \\(N(z)=z\\overline z=a^2+b^2\\). For a nonzero Gaussian integer, the norm is a positive integer.",
+      "For nonzero \\(\\beta\\), write the rational complex quotient \\(\\alpha/\\beta=u+vi\\). A nearest Gaussian integer \\(q=m+ni\\) satisfies \\(|u-m|\\le1/2\\) and \\(|v-n|\\le1/2\\). Ties may have several valid choices."
+    ],
+    "theorem": "For Gaussian integers \\(\\alpha,\\beta\\) with \\(\\beta\\ne0\\), there exist Gaussian integers \\(q,r\\) such that \\(\\alpha=q\\beta+r\\) and \\(N(r)<N(\\beta)\\). Repeating such divisions terminates and yields a Gaussian gcd and Bézout identity, with gcd unique only up to a unit.",
+    "proof": [
+      "Choose a nearest lattice point \\(q\\) to \\(\\alpha/\\beta\\) by rounding both rational coordinates to integers. Put \\(r=\\alpha-q\\beta\\), a Gaussian integer. Norm multiplicativity gives \\(N(r)=N(\\beta)|\\alpha/\\beta-q|^2\\le N(\\beta)((1/2)^2+(1/2)^2)=N(\\beta)/2<N(\\beta)\\). This inequality also covers ties; uniqueness of \\(q\\) is unnecessary.",
+      "If \\(\\alpha=q\\beta+r\\), a Gaussian integer divides both \\(\\alpha,\\beta\\) exactly when it divides both \\(\\beta,r\\). Each nonzero remainder has a strictly smaller positive integer norm than the preceding divisor, so an infinite chain is impossible. The last nonzero remainder divides both original inputs, and every common divisor divides it. Tracing each remainder as a Gaussian integer combination of the inputs gives a Bézout identity. Multiplication by a unit changes the representative gcd but not its divisors. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Divide \\(7+5i\\) by \\(3+2i\\), then find a Bézout certificate.",
+      "steps": [
+        "The exact quotient point is \\((7+5i)/(3+2i)=(31+i)/13\\). Choose nearest lattice point \\(q=2\\).",
+        "The remainder is \\(r=(7+5i)-2(3+2i)=1+i\\), with \\(N(r)=2<N(3+2i)=13\\).",
+        "Continue: \\(3+2i=2(1+i)+1\\). Back substitution gives \\(1=5(3+2i)-2(7+5i)\\)."
+      ],
+      "conclusion": "The gcd is a unit; \\(1\\) is a normalized representative with an exact certificate."
+    },
+    "practice": {
+      "prompt": "Divide \\(4+7i\\) by \\(2+i\\) exactly, then explain why a divisor \\(\\beta=0\\) is excluded from the theorem.",
+      "hints": [
+        "Multiply the quotient by the conjugate \\(2-i\\).",
+        "At \\(N(\\beta)=0\\), no nonnegative remainder norm can be strictly smaller."
+      ],
+      "answer": "The quotient is \\((4+7i)/(2+i)=(15+10i)/5=3+2i\\), so the remainder is \\(0\\). When \\(\\beta=0\\), the complex quotient is undefined and \\(N(r)<0\\) cannot hold."
+    },
+    "caution": "The norm inequality follows from coordinate rounding, not from multiplicativity alone. A lattice picture is evidence for a selected quotient; the inequality proves every allowed division.",
+    "bridge": "Euclidean division supplies the Bézout step needed to prove Gaussian irreducibles are prime and obtain unique factorization.",
+    "sourceNote": "Original exposition adapted from the provided N04 handoff teaching draft and checked against the exact division certificate. Independent algebraic bridge; no exact MH3210 handout locator asserted.",
+    "lab": "gaussian"
+  },
+  {
+    "id": "N05",
+    "title": "Gaussian factorization and rational primes",
+    "cluster": "Toward algebraic number theory",
+    "question": "Which rational primes split on the Gaussian lattice?",
+    "prerequisites": [
+      "N04",
+      "D05",
+      "Q05"
+    ],
+    "summary": "Gaussian Euclid supplies unique factorization. Rational primes split, remain prime, or ramify according to their residue class.",
+    "definition": [
+      "In \\(\\mathbb Z[i]\\), the units are \\(\\pm1,\\pm i\\), since they have norm \\(1\\). Factorizations differing only by order or multiplication of factors by units are equivalent.",
+      "A rational prime \\(p\\) splits if it is a product of two nonassociate Gaussian primes, remains prime if it is still prime in \\(\\mathbb Z[i]\\), and ramifies if it is a unit times the square of a Gaussian prime."
+    ],
+    "theorem": "The ring \\(\\mathbb Z[i]\\) has unique factorization up to order and units. A positive rational prime \\(p\\) ramifies when \\(p=2\\), splits when \\(p\\equiv1\\pmod4\\), and remains prime when \\(p\\equiv3\\pmod4\\).",
+    "proof": [
+      "Gaussian Euclid gives a gcd and Bézout identity. If an irreducible \\(\\pi\\) does not divide \\(a\\), its gcd with \\(a\\) is a unit; after multiplying a Bézout identity by that unit's inverse, write \\(u\\pi+va=1\\). If \\(\\pi\\mid ab\\), multiplying by \\(b\\) forces \\(\\pi\\mid b\\). Thus irreducibles are prime. Every nonzero nonunit factors by induction on its positive norm: a nontrivial factorization has two factors of norm strictly between \\(1\\) and the original norm. Uniqueness follows by matching a prime from one factorization to an associate in another and cancelling in the domain, then inducting on the remaining factors.",
+      "For \\(p=2\\), compute \\(2=-i(1+i)^2\\), and \\(N(1+i)=2\\) makes \\(1+i\\) irreducible. If \\(p\\equiv3\\pmod4\\) is odd and \\(p=zw\\) with nonunits, norm multiplicativity forces \\(N(z)=N(w)=p\\). But \\(a^2+b^2=p\\) would yield a square root of \\(-1\\) modulo \\(p\\) unless \\(p\\mid b\\); if \\(p\\mid b\\), then \\(a^2=p-b^2\\) also forces \\(p\\mid a\\), contradicting the norm \\(p\\). Euler's criterion rules out a root of \\(-1\\) for \\(p\\equiv3\\pmod4\\). Hence \\(p\\) is irreducible and therefore prime.",
+      "If \\(p\\equiv1\\pmod4\\), choose \\(t\\) with \\(t^2\\equiv-1\\pmod p\\). Let \\(\\pi\\) be a Gaussian gcd of \\(p\\) and \\(t+i\\). It is not a unit: if it were, a Bézout identity for the pair would map to \\(0=1\\) under \\(\\mathbb Z[i]\\to\\mathbb F_p\\), \\(i\\mapsto-t\\). It is not associate to \\(p\\), because \\(p\\nmid(t+i)\\). Its norm is a proper divisor of \\(p^2\\), hence \\(N(\\pi)=p\\). Then \\(p=\\pi\\overline\\pi\\) up to a unit. The two factors cannot be associates for odd \\(p\\): that would require equal or opposite coordinates, or one zero coordinate, forcing \\(p=2a^2\\) or \\(p=a^2\\). Thus \\(p\\) splits. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare rational primes \\(2,3,5\\) in \\(\\mathbb Z[i]\\).",
+      "steps": [
+        "The prime \\(2\\) ramifies as \\(2=-i(1+i)^2\\).",
+        "The prime \\(3\\equiv3\\pmod4\\) remains prime; no Gaussian integer has norm \\(3\\).",
+        "The prime \\(5\\equiv1\\pmod4\\) splits as \\(5=(2+i)(2-i)\\), with each factor of norm \\(5\\)."
+      ],
+      "conclusion": "All three behaviors arise from the same norm and divisibility rules, with \\(2\\) handled separately."
+    },
+    "practice": {
+      "prompt": "Explain why \\(13\\) splits in \\(\\mathbb Z[i]\\), and give a factorization with a norm certificate.",
+      "hints": [
+        "Find two positive squares summing to \\(13\\).",
+        "Conjugate the resulting Gaussian integer."
+      ],
+      "answer": "Since \\(13=2^2+3^2\\), we have \\(13=(2+3i)(2-3i)\\). Each factor has norm \\(13\\), so each is irreducible: a nontrivial factorization would give two integer norms greater than \\(1\\) whose product is the prime \\(13\\). The factors are nonassociate."
+    },
+    "caution": "An irreducible Gaussian integer need not have prime norm; the proof uses Euclid and Bézout to establish primality, not norm multiplicativity alone.",
+    "bridge": "Prime splitting here foreshadows the use of ideals when element factorization stops being unique in other quadratic rings.",
+    "sourceNote": "Original exposition and proof authored for this site from the Gaussian Euclid handoff draft. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N06",
+    "title": "Algebraic numbers and minimal polynomials",
+    "cluster": "Toward algebraic number theory",
+    "question": "Which polynomial captures exactly the algebraic relation of a number?",
+    "prerequisites": [
+      "N01",
+      "F01",
+      "P04"
+    ],
+    "summary": "An algebraic number has one monic irreducible polynomial over the rationals of least degree, and every rational polynomial relation is its multiple.",
+    "definition": [
+      "A complex number \\(\\alpha\\) is algebraic over \\(\\mathbb Q\\) if a nonzero polynomial \\(f\\in\\mathbb Q[X]\\) satisfies \\(f(\\alpha)=0\\). Otherwise it is transcendental. A polynomial is monic when its leading coefficient is \\(1\\).",
+      "The minimal polynomial of an algebraic \\(\\alpha\\) is the unique monic polynomial of least positive degree in \\(\\mathbb Q[X]\\) vanishing at \\(\\alpha\\). Its degree is the degree of \\(\\alpha\\) over \\(\\mathbb Q\\); its complex roots are conjugates of \\(\\alpha\\)."
+    ],
+    "theorem": "For each algebraic complex number \\(\\alpha\\), a unique monic minimal polynomial \\(m_\\alpha\\in\\mathbb Q[X]\\) exists. It is irreducible over \\(\\mathbb Q\\), and a polynomial \\(f\\in\\mathbb Q[X]\\) satisfies \\(f(\\alpha)=0\\) exactly when \\(m_\\alpha\\mid f\\).",
+    "proof": [
+      "The set of positive degrees of nonzero rational polynomials vanishing at \\(\\alpha\\) is nonempty and has a least member. Choose a polynomial of that degree and divide by its nonzero leading coefficient to make it monic. A nonzero constant cannot vanish, so the degree is positive.",
+      "For any \\(f\\) with \\(f(\\alpha)=0\\), polynomial division over the field \\(\\mathbb Q\\) gives \\(f=q m_\\alpha+r\\), where \\(r=0\\) or \\(\\deg r<\\deg m_\\alpha\\). Evaluating at \\(\\alpha\\) gives \\(r(\\alpha)=0\\); minimality forces \\(r=0\\). Thus \\(m_\\alpha\\mid f\\). If \\(m_\\alpha=gh\\) with both factors of positive degree, then \\(g(\\alpha)h(\\alpha)=0\\) in \\(\\mathbb C\\), so one smaller-degree factor vanishes, a contradiction. Hence it is irreducible.",
+      "If two monic least-degree polynomials vanish, each divides the other by the same division argument. Their degrees agree, so the quotient is a nonzero constant; monicity forces that constant to be \\(1\\). Thus they are equal. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare the polynomials for \\(\\sqrt2\\), \\(3/2\\), and \\(1+\\sqrt2\\).",
+      "steps": [
+        "The number \\(\\sqrt2\\) satisfies \\(X^2-2\\); this quadratic has no rational root, so it is irreducible.",
+        "The rational \\(3/2\\) has monic linear polynomial \\(X-3/2\\).",
+        "For \\(1+\\sqrt2\\), squaring \\(X-1\\) gives \\(X^2-2X-1\\). Its roots \\(1\\pm\\sqrt2\\) are irrational, so this quadratic is irreducible over \\(\\mathbb Q\\)."
+      ],
+      "conclusion": "A vanishing polynomial is minimal only after irreducibility and monicity are checked."
+    },
+    "practice": {
+      "prompt": "Find the minimal polynomial of \\(2\\sqrt3\\) over \\(\\mathbb Q\\), and explain why \\(X^4-12X^2\\) is not minimal despite vanishing there.",
+      "hints": [
+        "Square the number, then make the polynomial monic.",
+        "Factor the degree-\\(4\\) polynomial."
+      ],
+      "answer": "The number satisfies \\(X^2-12\\). It is irrational, so this monic quadratic has no rational root and is irreducible. The other polynomial is \\(X^2(X^2-12)\\), a nontrivial multiple of the minimal polynomial, so it vanishes but is not minimal."
+    },
+    "caution": "Do not call an arbitrary annihilating polynomial minimal. Polynomial division over \\(\\mathbb Q\\) and irreducibility are essential to the uniqueness proof.",
+    "bridge": "Minimal polynomials decide algebraic integrality once their coefficients are required to be integers.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N07",
+    "title": "Gauss, rational roots, and Eisenstein",
+    "cluster": "Toward algebraic number theory",
+    "question": "When can integer coefficients certify irreducibility over the rationals?",
+    "prerequisites": [
+      "N06",
+      "D05"
+    ],
+    "summary": "Primitive content carries factorization between integer and rational polynomials; rational roots and Eisenstein give conditional tests.",
+    "definition": [
+      "The content of a nonzero polynomial \\(f\\in\\mathbb Z[X]\\) is the positive gcd of its coefficients. It is primitive when that gcd is \\(1\\). Irreducibility always names the coefficient ring, here \\(\\mathbb Q[X]\\)."
+    ],
+    "theorem": "The product of primitive polynomials in \\(\\mathbb Z[X]\\) is primitive. A primitive \\(f\\in\\mathbb Z[X]\\) of positive degree factors nontrivially over \\(\\mathbb Q[X]\\) exactly when it does so over \\(\\mathbb Z[X]\\). If \\(f(X)=a_nX^n+\\cdots+a_0\\) has \\(a_0\\ne0\\) and a nonzero reduced rational root \\(r/s\\) with \\(s>0\\), then \\(r\\mid a_0\\) and \\(s\\mid a_n\\). If \\(f\\) has positive degree and a prime \\(p\\) divides every nonleading coefficient of \\(f\\), does not divide its leading coefficient, and \\(p^2\\) does not divide its constant coefficient, then \\(f\\) is irreducible over \\(\\mathbb Q\\).",
+    "proof": [
+      "If a prime \\(p\\) divided every coefficient of a product \\(gh\\) of primitive integer polynomials, reduction modulo \\(p\\) would give nonzero polynomials \\(\\overline g,\\overline h\\in\\mathbb F_p[X]\\) with zero product. This contradicts the fact that a polynomial ring over a field has no zero divisors. Thus \\(gh\\) is primitive.",
+      "If primitive \\(f\\) factors in \\(\\mathbb Q[X]\\), write each rational factor as a nonzero rational scalar times a primitive integer polynomial. Then \\(f=\\lambda gh\\) with \\(g,h\\in\\mathbb Z[X]\\) primitive. Since both \\(f\\) and \\(gh\\) have content \\(1\\), clearing the reduced denominator of \\(\\lambda\\) shows its denominator divides every coefficient of \\(gh\\), hence is \\(1\\); its numerator must likewise have absolute value \\(1\\). So \\(f=\\pm gh\\). The converse is immediate.",
+      "For the rational-root test, write \\(f(r/s)=0\\), multiply by \\(s^n\\), and use coprimality of \\(r,s\\). Reducing the resulting integer equality modulo \\(r\\) gives \\(r\\mid a_0s^n\\), hence \\(r\\mid a_0\\). Reducing modulo \\(s\\) gives \\(s\\mid a_nr^n\\), hence \\(s\\mid a_n\\).",
+      "For Eisenstein, suppose a factorization \\(f=gh\\) with positive-degree integer factors exists. Modulo \\(p\\), the hypotheses make \\(\\overline f=cX^n\\) with \\(c\\ne0\\). The factors of this monomial in \\(\\mathbb F_p[X]\\) are monomials, so their constant coefficients vanish because both degrees are positive. Thus \\(p\\) divides the constant coefficients of both \\(g,h\\), forcing \\(p^2\\) to divide the constant coefficient of \\(f\\), a contradiction. Gauss's lemma rules out rational factors too. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare \\(X^3-2\\), \\(X^2-1\\), and \\(X^2+1\\) over \\(\\mathbb Q\\).",
+      "steps": [
+        "For \\(X^3-2\\), the prime \\(2\\) divides each nonleading coefficient, does not divide the leading coefficient, and \\(4\\nmid2\\). Eisenstein proves irreducibility.",
+        "The polynomial \\(X^2-1=(X-1)(X+1)\\) is reducible; it does not meet Eisenstein's constant condition for any prime.",
+        "The polynomial \\(X^2+1\\) has no rational root because a rational square cannot be \\(-1\\), so it is irreducible despite not passing this Eisenstein test."
+      ],
+      "conclusion": "A successful test proves irreducibility; failure of one test leaves the question open."
+    },
+    "practice": {
+      "prompt": "Use the rational-root divisibility condition to list possible rational roots of \\(2X^2-3X+1\\), then factor it.",
+      "hints": [
+        "A reduced root \\(r/s\\) must have \\(r\\mid1\\) and \\(s\\mid2\\).",
+        "Test the finite list in the original polynomial."
+      ],
+      "answer": "The possibilities are \\(\\pm1,\\pm1/2\\). Direct substitution gives roots \\(1\\) and \\(1/2\\), and \\(2X^2-3X+1=(X-1)(2X-1)\\). The divisibility condition follows by multiplying the root equation by \\(s^2\\) and reducing modulo \\(r\\) and \\(s\\)."
+    },
+    "caution": "A rational-root test decides reducibility only for degrees where a linear factor would be necessary. Eisenstein's criterion is sufficient, not necessary.",
+    "bridge": "Monic integer polynomials define algebraic integers; coefficient content helps prove the rational case cleanly.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N08",
+    "title": "Algebraic integers and quadratic rings",
+    "cluster": "Toward algebraic number theory",
+    "question": "Why is the correct integer lattice sometimes larger than \\(\\mathbb Z[\\sqrt d]\\)?",
+    "prerequisites": [
+      "N06",
+      "N07",
+      "S05"
+    ],
+    "summary": "Monic integer relations define algebraic integers; trace and norm reveal the full ring of integers in a quadratic field.",
+    "definition": [
+      "A complex number is an algebraic integer if it satisfies a monic polynomial in \\(\\mathbb Z[X]\\). For squarefree \\(d\\in\\mathbb Z\\setminus\\{0,1\\}\\), the quadratic field \\(K=\\mathbb Q(\\sqrt d)\\) consists of \\(x+y\\sqrt d\\) with \\(x,y\\in\\mathbb Q\\). Its conjugate is \\(x-y\\sqrt d\\), trace is \\(2x\\), and norm is \\(x^2-dy^2\\)."
+    ],
+    "theorem": "The rational algebraic integers are exactly \\(\\mathbb Z\\). For squarefree \\(d\\ne0,1\\), the algebraic integers of \\(\\mathbb Q(\\sqrt d)\\) form \\(\\mathbb Z[\\sqrt d]\\) when \\(d\\equiv2,3\\pmod4\\), and \\(\\mathbb Z[(1+\\sqrt d)/2]\\) when \\(d\\equiv1\\pmod4\\).",
+    "proof": [
+      "Let a reduced rational \\(r/s\\), with \\(s>0\\), satisfy a monic integer polynomial of degree \\(n\\). Multiplying by \\(s^n\\) shows \\(s\\mid r^n\\). Coprimality forces \\(s=1\\). Every integer satisfies \\(X-r\\), proving the rational claim.",
+      "Let \\(\\alpha=x+y\\sqrt d\\) with \\(y\\ne0\\). Its monic minimal polynomial over \\(\\mathbb Q\\) is \\(m=X^2-2xX+(x^2-dy^2)\\). If \\(\\alpha\\) is integral, then \\(m\\) divides some monic \\(F\\in\\mathbb Z[X]\\) over \\(\\mathbb Q\\). Gauss's lemma makes primitive integer factors of \\(F\\); their integer leading coefficients multiply to \\(1\\), so each is monic up to sign. The monic factor \\(m\\) therefore has integer coefficients. Thus \\(a=2x\\in\\mathbb Z\\) and \\(n=x^2-dy^2\\in\\mathbb Z\\). Since \\(4d y^2=a^2-4n\\in\\mathbb Z\\), write \\(2y=b/c\\) in lowest terms. Then \\(c^2\\mid d\\); squarefreeness forces \\(c=1\\), so \\(b=2y\\in\\mathbb Z\\).",
+      "Now \\(\\alpha=(a+b\\sqrt d)/2\\), and integrality of its norm says \\(a^2\\equiv d b^2\\pmod4\\). If \\(d\\equiv2,3\\pmod4\\), a square modulo \\(4\\) is only \\(0\\) or \\(1\\); the congruence forces \\(a,b\\) both even, giving \\(\\alpha\\in\\mathbb Z[\\sqrt d]\\). If \\(d\\equiv1\\pmod4\\), it forces \\(a,b\\) to have the same parity, so \\(\\alpha=(a-b)/2+b(1+\\sqrt d)/2\\) lies in the stated ring. Conversely, these parity conditions make both trace and norm integers; the displayed monic quadratic then proves integrality. The rational case \\(y=0\\) was already handled. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare \\(\\mathbb Z[\\sqrt5]\\) with the full integer ring of \\(\\mathbb Q(\\sqrt5)\\).",
+      "steps": [
+        "Since \\(5\\equiv1\\pmod4\\), the ring is \\(\\mathbb Z[(1+\\sqrt5)/2]\\).",
+        "The element \\(\\phi=(1+\\sqrt5)/2\\) satisfies \\(X^2-X-1\\), a monic integer polynomial, so it is integral.",
+        "Its coefficient of \\(\\sqrt5\\) is \\(1/2\\), so \\(\\phi\\notin\\mathbb Z[\\sqrt5]\\). Its trace is \\(1\\) and norm is \\(-1\\)."
+      ],
+      "conclusion": "The half-integer lattice point is necessary; \\(\\mathbb Z[\\sqrt5]\\) is a proper subring."
+    },
+    "practice": {
+      "prompt": "Find the ring of integers of \\(\\mathbb Q(\\sqrt{-5})\\), and compute trace and norm of \\(2+\\sqrt{-5}\\).",
+      "hints": [
+        "The squarefree integer \\(-5\\) is congruent to \\(3\\pmod4\\).",
+        "Multiply by the conjugate."
+      ],
+      "answer": "The ring of integers is \\(\\mathbb Z[\\sqrt{-5}]\\). For \\(2+\\sqrt{-5}\\), trace is \\(4\\) and norm is \\((2+\\sqrt{-5})(2-\\sqrt{-5})=9\\)."
+    },
+    "caution": "The ring \\(\\mathbb Z[\\sqrt d]\\) is not always the full ring of integers. A monic rational polynomial alone does not establish integrality unless its coefficients are integers.",
+    "bridge": "The full ring \\(\\mathbb Z[\\sqrt{-5}]\\) provides a concrete setting where elements fail unique factorization and ideals explain the failure.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N09",
+    "title": "Failure of factorization and a nonprincipal ideal",
+    "cluster": "Toward algebraic number theory",
+    "question": "What replaces a single factor when unique factorization fails?",
+    "prerequisites": [
+      "N03",
+      "N08",
+      "N01"
+    ],
+    "summary": "The full ring of integers \\(\\mathbb Z[\\sqrt{-5}]\\) has two genuinely different irreducible factorizations of \\(6\\), while a concrete nonprincipal ideal has a simple square.",
+    "definition": [
+      "Let \\(R=\\mathbb Z[t]\\) with \\(t^2=-5\\). Its elements are \\(a+bt\\) for integers \\(a,b\\), with multiplicative norm \\(N(a+bt)=a^2+5b^2\\). Its only units are \\(\\pm1\\).",
+      "The ideal \\(I=(2,1+t)\\) contains every element \\(2r+(1+t)s\\) with \\(r,s\\in R\\). Its square \\(I^2\\) is the ideal generated by pairwise products of these two generators."
+    ],
+    "theorem": "In \\(R=\\mathbb Z[\\sqrt{-5}]\\), the equality \\(6=2\\cdot3=(1+t)(1-t)\\) gives two inequivalent factorizations into irreducibles. The proper ideal \\(I=(2,1+t)\\) is nonprincipal and satisfies \\(I^2=(2)\\).",
+    "proof": [
+      "There is no element of norm \\(2\\) or \\(3\\): if \\(b\\ne0\\), then \\(a^2+5b^2\\ge5\\); if \\(b=0\\), the norm is a square. The norms of \\(2,3,1+t,1-t\\) are \\(4,9,6,6\\). A nontrivial factorization of \\(2\\) would need two norm-\\(2\\) factors; one of \\(3\\) would need two norm-\\(3\\) factors; one of either norm-\\(6\\) element would need norms \\(2\\) and \\(3\\). All are impossible. The factors are irreducible. Their unequal norms and the fact that only \\(\\pm1\\) are units show the two lists cannot match up through associates. Indeed \\(2\\) divides their product \\(6\\) but neither \\(1+t\\) nor \\(1-t\\), so \\(2\\) is not prime.",
+      "Define \\(\\varphi:R\\to\\mathbb F_2\\) by \\(\\varphi(a+bt)=a+b\\pmod2\\). It respects multiplication because \\(t\\mapsto1\\) satisfies \\(1^2\\equiv-5\\pmod2\\). Both generators of \\(I\\) map to zero. Conversely, if \\(a+b\\) is even, write \\(a+bt=b(1+t)+(a-b)\\); the last term is even, so it lies in \\(I\\). Thus \\(I=\\ker\\varphi\\) is proper because \\(1\\notin I\\).",
+      "If \\(I=(\\alpha)\\), then \\(\\alpha\\) divides both \\(2\\) and \\(1+t\\). Hence \\(N(\\alpha)\\) divides both \\(4\\) and \\(6\\), so it is \\(1\\) or \\(2\\). Norm \\(1\\) would make \\(I=R\\), and norm \\(2\\) does not occur. Therefore \\(I\\) is nonprincipal.",
+      "The ideal \\(I^2\\) is generated by \\(4,2(1+t),(1+t)^2=-4+2t\\). Every generator is a multiple of \\(2\\), so \\(I^2\\subseteq(2)\\). Conversely, \\(2=2\\cdot4+(1+t)^2-2(1+t)\\) lies in \\(I^2\\); ideal closure gives \\((2)\\subseteq I^2\\). Hence equality holds. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Test membership of \\(3+t\\) and \\(2+t\\) in \\(I\\).",
+      "steps": [
+        "For \\(3+t\\), the coefficient sum is \\(3+1=4\\), even, so it maps to zero under \\(\\varphi\\) and lies in \\(I\\).",
+        "For \\(2+t\\), the coefficient sum is \\(2+1=3\\), odd, so it maps to the nonzero class and does not lie in \\(I\\).",
+        "The parity test is exact because the kernel proof characterized every element of \\(I\\), not just its generators."
+      ],
+      "conclusion": "The ideal is a parity sublattice of coefficient pairs."
+    },
+    "practice": {
+      "prompt": "Repair the claim ‘every generator of \\(I^2\\) is divisible by \\(2\\), so \\(I^2=(2)\\)’ by identifying the missing containment and proving it.",
+      "hints": [
+        "The sentence proves only \\(I^2\\subseteq(2)\\).",
+        "Express \\(2\\) as an integer linear combination of the three displayed generators."
+      ],
+      "answer": "The missing inclusion is \\((2)\\subseteq I^2\\). The identity \\(2=2\\cdot4+(1+t)^2-2(1+t)\\) puts \\(2\\) in \\(I^2\\). Since \\(I^2\\) is an ideal, it contains every multiple of \\(2\\), proving the reverse containment."
+    },
+    "caution": "This concrete ideal square motivates ideal factorization; it does not prove a general unique ideal-factorization theorem. A norm-multiplicative ring need not have Bézout or unique element factorization.",
+    "bridge": "Prime ideals and quotient fields explain why the kernel \\(I\\) behaves like a prime object even though the element \\(2\\) does not.",
+    "sourceNote": "Original exposition adapted from the provided N09 handoff teaching draft. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N10",
+    "title": "Prime ideals, quotient fields, and CRT",
+    "cluster": "Toward algebraic number theory",
+    "question": "What does primality mean after passing to a quotient ring?",
+    "prerequisites": [
+      "N03",
+      "N05",
+      "N09"
+    ],
+    "summary": "Prime and maximal ideals are detected by their quotients; comaximal ideals support a ring-valued Chinese remainder theorem.",
+    "definition": [
+      "A proper ideal \\(P\\) in a commutative ring \\(R\\) is prime if \\(ab\\in P\\) implies \\(a\\in P\\) or \\(b\\in P\\). A proper ideal \\(M\\) is maximal if there is no ideal strictly between \\(M\\) and \\(R\\). Ideals \\(I,J\\) are comaximal when \\(I+J=R\\)."
+    ],
+    "theorem": "For a commutative ring \\(R\\) with identity, a proper ideal \\(P\\) is prime exactly when \\(R/P\\) is an integral domain, and a proper ideal \\(M\\) is maximal exactly when \\(R/M\\) is a field. If \\(I+J=R\\), then \\(R/(IJ)\\cong R/I\\times R/J\\).",
+    "proof": [
+      "In \\(R/P\\), the product of nonzero classes \\([a][b]\\) vanishes exactly when \\(ab\\in P\\) while \\(a,b\\notin P\\). Thus the quotient has no nonzero zero divisors exactly when \\(P\\) is prime. If \\(M\\) is maximal and \\([a]\\ne[0]\\), the ideal \\(M+(a)\\) properly contains \\(M\\), so it is \\(R\\). An identity \\(1=m+ra\\) gives inverse \\([r]\\) for \\([a]\\). Conversely, if \\(R/M\\) is a field and an ideal \\(J\\) properly contains \\(M\\), choose \\(a\\in J\\setminus M\\); its class has an inverse, forcing \\(1\\in J\\), so \\(J=R\\).",
+      "For comaximal \\(I,J\\), choose \\(u\\in I,v\\in J\\) with \\(u+v=1\\). The map \\(R\\to R/I\\times R/J\\) sending \\(r\\) to its two residue classes has kernel \\(I\\cap J\\). It is surjective: for requested classes \\([a]\\) modulo \\(I\\) and \\([b]\\) modulo \\(J\\), the element \\(av+bu\\) maps to both. Finally, if \\(x\\in I\\cap J\\), then \\(x=xu+xv\\in IJ\\); the reverse inclusion is immediate. Hence \\(I\\cap J=IJ\\), giving the stated quotient isomorphism. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare \\(\\mathbb Z[i]/(p)\\) for rational primes in the three splitting cases.",
+      "steps": [
+        "For every rational prime \\(p\\), the quotient is \\(\\mathbb F_p[X]/(X^2+1)\\), with \\(X\\) representing \\(i\\).",
+        "When \\(p\\equiv3\\pmod4\\), the polynomial is irreducible, so the quotient is a field with \\(p^2\\) elements.",
+        "When \\(p\\equiv1\\pmod4\\), it factors as \\((X-t)(X+t)\\) with distinct roots; comaximal CRT gives \\(\\mathbb F_p\\times\\mathbb F_p\\). For \\(p=2\\), \\(X^2+1=(X+1)^2\\), so the quotient has a nonzero nilpotent class and is not a field or a product of two fields."
+      ],
+      "conclusion": "The quotient detects inert, split, and ramified behavior without conflating the three rings."
+    },
+    "practice": {
+      "prompt": "Show that the ideals \\((3)\\) and \\((5)\\) in \\(\\mathbb Z\\) are comaximal, identify their intersection, and reconstruct the classes \\(2\\pmod3\\) and \\(4\\pmod5\\).",
+      "hints": [
+        "Find a Bézout combination equal to \\(1\\).",
+        "The common multiples form \\(15\\mathbb Z\\)."
+      ],
+      "answer": "The identity \\(1=2\\cdot3-5\\) proves comaximality, and \\((3)\\cap(5)=(15)\\). The number \\(14\\) satisfies \\(14\\equiv2\\pmod3\\) and \\(14\\equiv4\\pmod5\\); its class modulo \\(15\\) is unique by the CRT isomorphism."
+    },
+    "caution": "For arbitrary ideals, the product \\(IJ\\) may be smaller than the intersection \\(I\\cap J\\). Their equality here uses comaximality. A prime element and a prime ideal are different kinds of objects.",
+    "bridge": "Compatible residues at all prime-power levels will form a new ring of inverse-limit sequences.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N11",
+    "title": "Pell units in quadratic orders",
+    "cluster": "Toward algebraic number theory",
+    "question": "Which Pell solutions are units, and in which ring?",
+    "prerequisites": [
+      "N08",
+      "R07",
+      "R08"
+    ],
+    "summary": "Pell equations describe norm-one units with integer coordinates; the maximal quadratic ring may contain additional half-integer units.",
+    "definition": [
+      "For squarefree \\(d>1\\), the order \\(O=\\mathbb Z[\\sqrt d]\\) consists of \\(x+y\\sqrt d\\) with \\(x,y\\in\\mathbb Z\\). Its field norm is \\(N(x+y\\sqrt d)=x^2-dy^2\\). The full ring of integers \\(O_K\\) is given by the parity formula in the quadratic-ring lesson and may strictly contain \\(O\\)."
+    ],
+    "theorem": "An element \\(x+y\\sqrt d\\in O\\) is a unit of \\(O\\) exactly when \\(x^2-dy^2=\\pm1\\). Its norm-one subgroup is closed under multiplication and inversion. In \\(O=\\mathbb Z[\\sqrt2]\\), \\(1+\\sqrt2\\) has norm \\(-1\\), and its square \\(3+2\\sqrt2\\) has norm \\(1\\).",
+    "proof": [
+      "If \\(N(z)=\\pm1\\), then \\(z^{-1}=\\overline z/N(z)=\\pm\\overline z\\in O\\), so \\(z\\) is a unit. Conversely, if \\(zw=1\\) with \\(w\\in O\\), norm multiplicativity gives \\(N(z)N(w)=1\\) in \\(\\mathbb Z\\), hence \\(N(z)=\\pm1\\). Products of norm-one elements have norm one, and their inverses also have norm one.",
+      "Directly, \\(N(1+\\sqrt2)=1-2=-1\\) and \\((1+\\sqrt2)^2=3+2\\sqrt2\\) with norm \\(9-8=1\\). R07 proves the separate completeness claim for positive integer-coordinate norm-one solutions in the specified order; the identity here is its algebraic interpretation, not a proof of a general unit theorem for all number fields. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare an integer-coordinate Pell unit with a half-integer unit in \\(\\mathbb Q(\\sqrt5)\\).",
+      "steps": [
+        "In \\(\\mathbb Z[\\sqrt5]\\), the element \\(2+\\sqrt5\\) has norm \\(4-5=-1\\) and inverse \\(-2+\\sqrt5\\).",
+        "In the larger ring \\(O_K=\\mathbb Z[(1+\\sqrt5)/2]\\), the element \\(\\phi=(1+\\sqrt5)/2\\) has norm \\(-1\\).",
+        "The unit \\(\\phi\\) is not in \\(\\mathbb Z[\\sqrt5]\\), because its \\(\\sqrt5\\)-coefficient is \\(1/2\\)."
+      ],
+      "conclusion": "A Pell classification with integer coordinates says nothing by itself about every unit of the larger ring."
+    },
+    "practice": {
+      "prompt": "Find the inverse of \\(3+2\\sqrt2\\) in \\(\\mathbb Z[\\sqrt2]\\), and decide whether \\(1+\\sqrt2\\) belongs to its norm-one subgroup.",
+      "hints": [
+        "Use conjugation and the norm.",
+        "Compare the signs of the two norms."
+      ],
+      "answer": "The norm of \\(3+2\\sqrt2\\) is \\(1\\), so its inverse is \\(3-2\\sqrt2\\). The element \\(1+\\sqrt2\\) has norm \\(-1\\), so it is a unit but not in the norm-one subgroup. Its square is the displayed norm-one unit."
+    },
+    "caution": "The positive norm-one subgroup of an order is not the full unit group, and the integer-coordinate order may be smaller than the maximal ring. No general Dirichlet unit theorem is proved here.",
+    "bridge": "The sign of the norm separates two unit cosets when a norm-negative unit exists; continued-fraction periodicity gives exact integer-coordinate generators in R07 and R08.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N12",
+    "title": "Compatible residues and p-adic integers",
+    "cluster": "Toward algebraic number theory",
+    "question": "Can infinitely many compatible modular answers form one number?",
+    "prerequisites": [
+      "X03",
+      "F03",
+      "F04",
+      "N03"
+    ],
+    "summary": "A p-adic integer is a compatible residue at every prime-power level; finite views show prefixes, while lifting constructs an entire branch.",
+    "definition": [
+      "Fix a prime \\(p\\). A \\(p\\)-adic integer is a sequence \\((a_k)_{k\\ge1}\\) with \\(a_k\\in\\mathbb Z/p^k\\mathbb Z\\) and \\(a_{k+1}\\equiv a_k\\pmod{p^k}\\) for all \\(k\\ge1\\). The set of all such sequences is denoted \\(\\mathbb Z_p\\). A finite list of levels is only a prefix, not a whole \\(p\\)-adic integer.",
+      "Two \\(p\\)-adic integers are close when their residues agree through a high power of \\(p\\). If they agree modulo \\(p^k\\) but not \\(p^{k+1}\\), their distance is \\(p^{-k}\\); identical sequences have distance \\(0\\)."
+    ],
+    "theorem": "Coordinatewise addition and multiplication make \\(\\mathbb Z_p\\) a commutative ring with identity, and the map \\(\\mathbb Z\\to\\mathbb Z_p\\), \\(n\\mapsto(n\\bmod p^k)_{k\\ge1}\\), is an injective ring homomorphism. If an integer polynomial \\(f\\) has a root \\(a_1\\pmod p\\) with \\(f'(a_1)\\not\\equiv0\\pmod p\\), it has a unique compatible lifted root sequence above \\(a_1\\).",
+    "proof": [
+      "Suppose \\(a_{k+1}\\equiv a_k\\) and \\(b_{k+1}\\equiv b_k\\pmod{p^k}\\). Then their sums and products are congruent at the same level, so coordinatewise operations preserve compatibility. Each residue ring supplies the associative, distributive, identity, and additive-inverse laws at every coordinate. The integer map preserves both operations. If an integer maps to zero, every \\(p^k\\) divides it; a nonzero integer has bounded absolute value, so this is impossible. Hence the map is injective.",
+      "For the lift, assume \\(f(a_k)\\equiv0\\pmod{p^k}\\). Its \\(p\\) candidate extensions are \\(a_k+t p^k\\) for \\(t\\in\\{0,\\ldots,p-1\\}\\). Polynomial expansion gives \\(f(a_k+t p^k)\\equiv f(a_k)+t p^k f'(a_k)\\pmod{p^{k+1}}\\). After division by \\(p^k\\), the condition to vanish modulo \\(p\\) is one linear congruence in \\(t\\). The derivative remains nonzero modulo \\(p\\), so it has exactly one solution. Induction produces a compatible root at every level; uniqueness at each step proves uniqueness of the sequence. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Inspect the first levels of \\(1+3+3^2+\\cdots\\) as a \\(3\\)-adic integer.",
+      "steps": [
+        "The first four finite sums are \\(1,4,13,40\\), representing residues modulo \\(3,9,27,81\\) respectively.",
+        "Each new sum differs from the previous one by \\(3^k\\), so it reduces to that previous residue modulo \\(3^k\\).",
+        "The real partial sums grow, but their \\(3\\)-adic differences become smaller. In \\(\\mathbb Z_3\\), the sequence represents \\(-1/2\\), since \\(2(1+3+\\cdots+3^{k-1})=3^k-1\\equiv-1\\pmod{3^k}\\)."
+      ],
+      "conclusion": "The displayed four levels are a verified prefix; the formula specifies every further level."
+    },
+    "practice": {
+      "prompt": "For \\(p=3\\), add the constant integer sequences for \\(2\\) and \\(2\\) through levels \\(3\\) and \\(9\\), and explain the carry.",
+      "hints": [
+        "Compute \\(2+2\\) in each residue ring separately.",
+        "Reduce the level-\\(9\\) answer modulo \\(3\\)."
+      ],
+      "answer": "At level \\(3\\), \\(2+2\\equiv1\\pmod3\\); at level \\(9\\), \\(2+2\\equiv4\\pmod9\\). The residue \\(4\\) reduces to \\(1\\pmod3\\), so the levels are compatible. The base-\\(3\\) digit carry appears at the second level."
+    },
+    "caution": "A finite tree view cannot display an infinite sequence and cannot prove an arbitrary root exists. The simple-root hypothesis supplies an inductive lift; ordinary real convergence is unrelated to \\(p\\)-adic closeness.",
+    "bridge": "Inverse-limit compatibility extends the CRT perspective from finitely many residue conditions to every prime-power level.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  }
+]

@@ -8,7 +8,7 @@ const sourcePaths = execFileSync(
   { encoding: 'utf8' },
 )
   .split('\0')
-  .filter(Boolean);
+  .filter((path) => path && existsSync(path));
 
 function filesUnder(path) {
   if (!existsSync(path)) return [];

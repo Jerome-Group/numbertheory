@@ -1,0 +1,150 @@
+[
+  {
+    "id": "P01",
+    "title": "Proof grammar: quantifiers and counterexamples",
+    "cluster": "Foundations",
+    "question": "How do we know exactly what a proof must establish?",
+    "prerequisites": ["P00"],
+    "summary": "Quantifiers and implications specify a claim's burden. A counterexample refutes a universal statement; separate arguments establish existence and uniqueness.",
+    "definition": [
+      "For a domain \\(D\\), \\(\\forall x\\in D, P(x)\\) means every allowed \\(x\\) has property \\(P\\), while \\(\\exists x\\in D, P(x)\\) asks for at least one witness. The domain is part of the statement.",
+      "An implication \\(P\\Rightarrow Q\\) says \\(P\\) is sufficient for \\(Q\\), and \\(Q\\) is necessary for \\(P\\). Its converse \\(Q\\Rightarrow P\\) is a separate claim. Existence of an object and uniqueness of that object are also separate claims."
+    ],
+    "theorem": "For any domain \\(D\\) and predicate \\(P\\), the negation of \\(\\forall x\\in D, P(x)\\) is \\(\\exists x\\in D, \\neg P(x)\\). The negation of \\(\\exists x\\in D, P(x)\\) is \\(\\forall x\\in D, \\neg P(x)\\).",
+    "proof": [
+      "To refute the assertion that every allowed \\(x\\) has \\(P(x)\\), it is enough to exhibit one allowed \\(a\\) for which \\(P(a)\\) fails. If no such \\(a\\) exists, the universal assertion holds. These two possibilities are exhaustive, giving the first equivalence.",
+      "To refute the assertion that some allowed \\(x\\) has \\(P(x)\\), one must show that each allowed \\(x\\) fails \\(P(x)\\). Conversely, if all fail, no witness exists. This gives the second equivalence. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Negate the claim that every integer has an integer square root, and decide it.",
+      "steps": [
+        "The original statement is \\(\\forall n\\in\\mathbb Z,\\exists m\\in\\mathbb Z, m^2=n\\).",
+        "Its negation is \\(\\exists n\\in\\mathbb Z,\\forall m\\in\\mathbb Z, m^2\\ne n\\).",
+        "Choose \\(n=-1\\). Every integer square is nonnegative, so no integer \\(m\\) satisfies \\(m^2=-1\\)."
+      ],
+      "conclusion": "The original universal claim is false; \\(-1\\) is a counterexample with its failed condition proved."
+    },
+    "practice": {
+      "prompt": "A proposed proof says, ‘If \\(n\\) is divisible by \\(4\\), it is even. Therefore every even integer is divisible by \\(4\\).’ Name the error, give a counterexample, and write the correct implication.",
+      "hints": [
+        "Compare the direction of the two implications.",
+        "Find an even integer that has no integer quotient on division by \\(4\\)."
+      ],
+      "answer": "The argument assumes the converse. The correct implication is \\(4\\mid n\\Rightarrow 2\\mid n\\), since \\(n=4k=2(2k)\\). The converse fails at \\(n=2\\): \\(2\\mid2\\), but \\(4\\nmid2\\)."
+    },
+    "caution": "A finite list of supporting cases cannot establish a universal theorem. A counterexample must satisfy the stated domain and every hypothesis before it can refute a conclusion.",
+    "bridge": "In a cancellation proof, identify the exact hypothesis that makes the multiplier invertible before reversing an implication.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent foundations module; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "P02",
+    "title": "Strong induction and infinite descent",
+    "cluster": "Foundations",
+    "question": "Why can no counterexample keep producing a smaller one?",
+    "prerequisites": ["P01", "D02"],
+    "summary": "Strong induction proves each case from all earlier cases. Infinite descent proves a claim by forcing a strictly smaller counterexample in a well-ordered domain.",
+    "definition": [
+      "Strong induction on \\(\\mathbb Z_{\\ge0}\\) assumes that, for each \\(n\\), the truth of \\(P(0),\\ldots,P(n-1)\\) implies \\(P(n)\\). The empty list of predecessors at \\(n=0\\) supplies the base case.",
+      "A descent argument assigns each alleged counterexample a measure in \\(\\mathbb Z_{>0}\\), then constructs another counterexample with a strictly smaller measure. Positivity and preservation of every hypothesis are essential."
+    ],
+    "theorem": "Let \\(P(n)\\) be a predicate for \\(n\\in\\mathbb Z_{\\ge0}\\). If \\((\\forall k<n, P(k))\\Rightarrow P(n)\\) for each \\(n\\ge0\\), then \\(P(n)\\) holds for every \\(n\\ge0\\). Equivalently, a nonempty set of positive-integer counterexample measures cannot be closed under strict descent.",
+    "proof": [
+      "Suppose the strong-induction hypothesis holds but some \\(P(n)\\) fails. By well-ordering, choose the least failing \\(m\\). Every \\(k<m\\) satisfies \\(P(k)\\), so the hypothesis gives \\(P(m)\\), a contradiction.",
+      "For descent, assume a counterexample exists and collect the positive measures of all counterexamples. Choose its least member \\(m\\). The proposed construction supplies another counterexample whose positive measure is less than \\(m\\), contradicting minimality. Conversely, the least-counterexample proof is a descent proof with measure \\(n+1\\). \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Use strong induction to show every integer \\(n\\ge2\\) is a product of primes.",
+      "steps": [
+        "For \\(n=2\\), the number is prime, hence a product of one prime.",
+        "For \\(n>2\\), if \\(n\\) is prime we are done. Otherwise write \\(n=ab\\) with integers \\(2\\le a,b<n\\).",
+        "By the strong-induction hypothesis, both \\(a\\) and \\(b\\) are products of primes. Concatenate those products to obtain one for \\(n\\)."
+      ],
+      "conclusion": "The factors are smaller positive integers, so the argument terminates without assuming unique factorization."
+    },
+    "practice": {
+      "prompt": "Explain why a claimed descent ‘replace a counterexample \\(n\\) by \\(n-2\\)’ is incomplete. Repair the statement when counterexamples are positive integers \\(n\\ge3\\) and the construction works only for \\(n\\ge5\\).",
+      "hints": [
+        "A descent must preserve the allowed domain and the counterexample property.",
+        "Which base cases need independent checks?"
+      ],
+      "answer": "One must prove that \\(n-2\\) is still a counterexample, not merely that it is smaller. The construction also requires \\(n-2\\ge3\\), so check \\(n=3\\) and \\(n=4\\) directly. If both are excluded and every alleged counterexample \\(n\\ge5\\) yields another at \\(n-2\\), a least counterexample is impossible."
+    },
+    "caution": "A smaller-looking algebraic expression is not a descent measure until it is proved to be a positive integer and strictly decreases.",
+    "bridge": "Euclid's algorithm terminates by the same well-ordering principle: its positive remainders strictly decrease.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent foundations module; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "P03",
+    "title": "Counting tools for arithmetic",
+    "cluster": "Foundations",
+    "question": "When do two different counts describe the same finite set?",
+    "prerequisites": ["P01"],
+    "summary": "Bijections and double counting turn finite arithmetic structure into identities; pigeonhole and inclusion-exclusion control overlaps.",
+    "definition": [
+      "A bijection between finite sets \\(A\\) and \\(B\\) pairs each element of \\(A\\) with exactly one element of \\(B\\), and conversely. Thus \\(|A|=|B|\\). A finite sum may be reindexed only after such a correspondence or an equivalent partition is specified.",
+      "For finite sets \\(A,B\\), inclusion-exclusion gives \\(|A\\cup B|=|A|+|B|-|A\\cap B|\\). The pigeonhole principle says a map from a set of \\(N+1\\) objects into \\(N\\) boxes has a box with at least two objects."
+    ],
+    "theorem": "For every positive integer \\(n\\) and every function \\(f\\) on its positive divisors, \\(\\sum_{d\\mid n}f(d)=\\sum_{d\\mid n}f(n/d)\\). For integers \\(N\\ge0\\) and \\(0\\le k\\le N\\), \\(\\binom Nk\\) is an integer equal to the number of \\(k\\)-element subsets of an \\(N\\)-element set.",
+    "proof": [
+      "If \\(d\\mid n\\) with \\(d>0\\), then \\(n/d\\) is also a positive divisor. Applying the map twice returns \\(d\\), so it is a bijection. It may have a fixed point when \\(n\\) is a square; a fixed point is counted once, not twice.",
+      "Count ordered lists of \\(k\\) distinct elements from an \\(N\\)-element set. Choosing successively gives \\(N(N-1)\\cdots(N-k+1)\\) lists. Each \\(k\\)-element subset appears in exactly \\(k!\\) orders, so the number of subsets is \\(N(N-1)\\cdots(N-k+1)/k!=\\binom Nk\\). Being a cardinality, it is an integer. The empty subset handles \\(k=0\\). \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Count the positive divisors of \\(36\\) without double-counting its square root.",
+      "steps": [
+        "The divisors below \\(6\\) are \\(1,2,3,4\\), paired respectively with \\(36,18,12,9\\).",
+        "The divisor \\(6\\) pairs with itself, so include it once.",
+        "The resulting set has \\(2\\cdot4+1=9\\) elements."
+      ],
+      "conclusion": "The fixed point explains why a square can have an odd number of positive divisors."
+    },
+    "practice": {
+      "prompt": "A list of \\(6\\) integers is reduced modulo \\(5\\). Prove two have the same remainder, then explain why this implies their difference is divisible by \\(5\\).",
+      "hints": [
+        "There are only \\(5\\) standard remainders.",
+        "Write both integers with the same remainder."
+      ],
+      "answer": "The \\(6\\) integers occupy \\(5\\) remainder boxes, so two, say \\(a,b\\), share a remainder \\(r\\). Write \\(a=5q+r\\), \\(b=5s+r\\); then \\(a-b=5(q-s)\\), so \\(5\\mid(a-b)\\)."
+    },
+    "caution": "Double counting requires a clearly named finite set. Pairing divisors has a fixed point for square inputs, and a picture of pairs alone does not justify doubling every count.",
+    "bridge": "Binomial integrality is available before valuations of binomial coefficients and the finite counting in Bertrand's proof.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent foundations module; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "P04",
+    "title": "Real intervals and integer determinants",
+    "cluster": "Foundations",
+    "question": "Which outside tools do continued fractions need, and where?",
+    "prerequisites": ["P01"],
+    "summary": "Short primers isolate real completeness, determinant-one integer bases, and the first step of the irrational continued-fraction algorithm.",
+    "definition": [
+      "A nested closed-interval sequence has \\([a_{j+1},b_{j+1}]\\subseteq[a_j,b_j]\\) for every \\(j\\). The real completeness property says a bounded nonempty set of reals has a supremum; this is an axiom of the real system used here, not a conclusion from a diagram.",
+      "For integer vectors \\(u=(a,b)\\), \\(v=(c,d)\\), define \\(\\det(u,v)=ad-bc\\). A pair with determinant \\(1\\) or \\(-1\\) is a unimodular integer basis."
+    ],
+    "theorem": "If nonempty closed intervals \\(I_j=[a_j,b_j]\\) are nested and \\(b_j-a_j\\to0\\), they contain exactly one common real number. If integer vectors \\(u=(a,b),v=(c,d)\\) satisfy \\(ad-bc=\\pm1\\), every integer vector has a unique integer expression \\(ru+sv\\).",
+    "proof": [
+      "Nestedness makes the left endpoints nondecreasing and bounded above by every right endpoint. Let \\(x=\\sup_j a_j\\). For a fixed \\(k\\), all left endpoints are at most \\(b_k\\): later intervals lie in \\(I_k\\), and earlier left endpoints are no larger than \\(a_k\\). Thus \\(a_k\\le x\\le b_k\\). If \\(x,y\\) both lie in every interval, \\(|x-y|\\le b_k-a_k\\) for all \\(k\\); shrinking widths force \\(x=y\\).",
+      "For a vector \\((m,n)\\), solve the coefficient equations: \\(r=(dm-cn)/(ad-bc)\\) and \\(s=(an-bm)/(ad-bc)\\). Since the denominator is \\(\\pm1\\), both coefficients are integers. Substitution verifies the expression. If two expressions exist, subtract them and use the same inverse formulas to show both coefficient differences vanish. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Show that \\(u=(2,1)\\) and \\(v=(3,2)\\) form an integer basis, then express \\((1,0)\\).",
+      "steps": [
+        "Compute \\(\\det(u,v)=2\\cdot2-1\\cdot3=1\\).",
+        "The inverse formulas give \\(r=2\\cdot1-3\\cdot0=2\\) and \\(s=2\\cdot0-1\\cdot1=-1\\).",
+        "Check \\(2(2,1)-(3,2)=(1,0)\\)."
+      ],
+      "conclusion": "The determinant certifies both integer coefficients and uniqueness."
+    },
+    "practice": {
+      "prompt": "For the intervals \\(I_j=[1,1+1/(j+1)]\\), with \\(j\\ge0\\), name the common point and identify the completeness hypothesis used in the general theorem. Then decide whether \\((2,0),(0,2)\\) form an integer basis.",
+      "hints": [
+        "The widths tend to \\(0\\); the left endpoints are constant.",
+        "Compute the determinant and test \\((1,0)\\)."
+      ],
+      "answer": "The unique common point is \\(1\\). The general argument takes the real supremum of the bounded set of left endpoints. The two vectors have determinant \\(4\\), and every integer combination has even coordinates, so \\((1,0)\\) is missing; they do not form an integer basis."
+    },
+    "caution": "The interval theorem uses completeness of the real numbers. A shrinking animation supplies intuition, not that axiom. A nonzero determinant permits a rational basis; determinant \\(\\pm1\\) is the condition for an integer basis.",
+    "bridge": "For irrational \\(x\\), define \\(a_0=\\lfloor x\\rfloor\\) and \\(x_1=1/(x-a_0)\\). The denominator is nonzero because \\(x\\) is irrational; repeating gives its continued-fraction terms. The determinant formulas later certify neighboring convergents.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent prerequisites for continued fractions; no exact MH3210 handout locator asserted."
+  }
+]

@@ -14,11 +14,13 @@ Start here: `README.md`, then `AGENTS.md`.
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | Automation | The workflows that run on a pull request or on a new issue, and dependency updates | `.github/` |
 | Application | React reading interface, labs, and shared study state | `src/App.tsx` |
-| Teaching content | Stable concept records and type contract | `src/content/` |
+| Routes and paths | Canonical lesson URLs, legacy URL adapter, selectable routes | `src/routes.ts`, `src/content/paths.ts` |
+| Teaching content | Stable concept records, V2 registry/adapter, handout topic map | `src/content/` |
 | Exact mathematics | Bounded BigInt algorithms and tests | `src/math/` |
 | Agent interface | Feature-detected WebMCP tools over study commands | `src/webmcp/` |
 | Public assets | Original logo and favicon | `public/` |
 | Build validation | Strict LaTeX/content and public-surface checks | `scripts/` |
 | Site binding | ChatGPT Sites project identity and static directory | `.openai/hosting.json` |
+| Redesign evidence | Migration inventory, source status, verification and release results | `docs/lesson-migration-ledger.md`, `docs/source-status.md`, `docs/redesign-verification.md` |
 
 Update this file in the same pull request whenever a top-level area is added, moved, or removed.

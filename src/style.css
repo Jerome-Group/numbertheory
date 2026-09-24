@@ -140,6 +140,7 @@ a {
   color: #c9d7e5;
   font-size: 13.5px;
   line-height: 1.35;
+  text-decoration: none;
 }
 .nav-link span {
   font-size: 11px;
@@ -604,11 +605,13 @@ a {
     bottom: 0;
     width: min(310px, 86vw);
     transform: translateX(-105%);
+    visibility: hidden;
     transition: transform 0.2s;
     box-shadow: 12px 0 28px #11203d33;
   }
   .sidebar.open {
     transform: translateX(0);
+    visibility: visible;
   }
   .scrim {
     display: block;
@@ -1517,5 +1520,559 @@ a {
   }
   .atlas-card {
     min-height: 140px;
+  }
+}
+
+/* Chapter navigation keeps the active chapter available without exposing the full library. */
+.chapter-heading {
+  margin: 0;
+  font: inherit;
+}
+.chapter-heading button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.85rem;
+  border: 0;
+  background: transparent;
+  color: #b7c7db;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  font-weight: 750;
+}
+.chapter-heading button:hover,
+.chapter-heading button:focus-visible {
+  background: #263855;
+  color: #fff;
+}
+.chapter-count {
+  margin-left: auto;
+  opacity: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+.chapter-chevron {
+  font-size: 1.1rem;
+  line-height: 0.7;
+  transition: transform 0.16s ease;
+}
+.chapter-heading button[aria-expanded="true"] .chapter-chevron {
+  transform: rotate(180deg);
+}
+.chapter [hidden] {
+  display: none;
+}
+.search-status {
+  margin: 0.7rem 1.25rem 0;
+  color: #b7c7db;
+  font-size: 0.75rem;
+}
+.search-empty {
+  padding: 1rem;
+  color: #fff;
+  font-size: 0.875rem;
+}
+.search-empty button {
+  border: 0;
+  background: transparent;
+  color: #b5e7ff;
+  text-decoration: underline;
+}
+.nav-link mark {
+  background: #ddfc80;
+  color: #172039;
+}
+:focus-visible {
+  outline: 3px solid #ddfc80;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-chevron {
+    transition: none;
+  }
+}
+.cancellation-lab {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 2rem;
+  margin: 0 0 3rem;
+  padding: 2rem;
+  background: #101626;
+  color: #e7eaf4;
+  border-radius: 10px;
+}
+.cancellation-lab h2 {
+  margin: 0.4rem 0 1rem;
+  font:
+    600 clamp(1.8rem, 2.8vw, 2.6rem) Georgia,
+    serif;
+  color: #fff;
+}
+.cancellation-lab p {
+  line-height: 1.6;
+}
+.cancellation-workspace {
+  min-width: 0;
+  padding: 1.25rem;
+  background: #fffef9;
+  color: #172039;
+  border-radius: 8px;
+}
+.cancellation-workspace form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.7rem;
+}
+.cancellation-workspace label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.cancellation-workspace input {
+  width: 7rem;
+  padding: 0.5rem;
+  border: 1px solid #8f9bb0;
+  border-radius: 5px;
+}
+.cancellation-workspace form button,
+.prediction-row button {
+  padding: 0.62rem 0.8rem;
+  border: 1px solid #2548d8;
+  border-radius: 5px;
+  background: #2548d8;
+  color: #fff;
+}
+.prediction-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.prediction-row button {
+  background: transparent;
+  border-color: #b8c6ee;
+}
+.prediction-row button[aria-pressed="true"] {
+  background: #ddfc80;
+  color: #172039;
+  border-color: #ddfc80;
+}
+.cancellation-presets,
+.fiber-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.75rem 0;
+}
+.cancellation-presets button,
+.fiber-buttons button {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #aab4c8;
+  border-radius: 5px;
+  background: #fff;
+  color: #172039;
+}
+.fiber-buttons button[aria-pressed="true"] {
+  background: #ddfc80;
+  border-color: #172039;
+  font-weight: 700;
+}
+.fiber-summary {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid #d7d9dc;
+  border-bottom: 1px solid #d7d9dc;
+}
+.fiber-summary strong {
+  color: #2548d8;
+  font-size: 1.2rem;
+}
+.fiber-equation {
+  padding: 0.8rem;
+  background: #eef2ff;
+  border-left: 3px solid #2548d8;
+}
+.fiber-table {
+  margin-top: 1rem;
+}
+.fiber-table table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.fiber-table th,
+.fiber-table td {
+  padding: 0.35rem;
+  border-bottom: 1px solid #d7d9dc;
+}
+.lab-boundary {
+  font-size: 0.85rem;
+  color: #546078;
+}
+@media (max-width: 1050px) {
+  .cancellation-lab {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .cancellation-lab {
+    margin: 0 -12px 2rem;
+    padding: 1.2rem;
+  }
+}
+.cancellation-lab fieldset {
+  border: 0;
+  padding: 0;
+}
+.cancellation-lab legend {
+  width: 100%;
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.home-fiber {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding: 1.4rem;
+  background: #fffef9;
+  color: #172039;
+  border-radius: 10px;
+  box-shadow: 0 18px 45px #0002;
+}
+.home-fiber .instrument-kicker {
+  color: #2548d8;
+}
+.home-fiber h2 {
+  margin: 0.7rem 0 1.3rem;
+  font:
+    600 1.65rem / 1.2 Georgia,
+    serif;
+}
+.home-fiber-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+}
+.home-fiber-controls legend {
+  width: 100%;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.home-fiber-controls button {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #8f9bb0;
+  border-radius: 5px;
+  background: #fff;
+  color: #172039;
+}
+.home-fiber-controls button[aria-pressed="true"] {
+  background: #ddfc80;
+  border-color: #172039;
+}
+.home-fiber-rows {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.8rem;
+  background: #eef2ff;
+  border-left: 3px solid #2548d8;
+  overflow-x: auto;
+}
+.home-fiber-link {
+  margin-top: 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #2548d8;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.gaussian-lab {
+  max-width: 960px;
+  margin: 0 auto 2rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line, #d7ddd9);
+  border-radius: 18px;
+  background: #f6f9f5;
+}
+.gaussian-lab h2 {
+  margin: 0.35rem 0;
+}
+.gaussian-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-items: end;
+  margin: 1rem 0;
+}
+.gaussian-fields label {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1 1 130px;
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.gaussian-fields input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #82908b;
+  border-radius: 7px;
+  padding: 0.5rem;
+  font: inherit;
+}
+.gaussian-fields button {
+  min-height: 44px;
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-radius: 7px;
+  background: #173d38;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gaussian-fields button:focus-visible,
+.gaussian-fields input:focus-visible {
+  outline: 3px solid #a5cc62;
+  outline-offset: 2px;
+}
+.gaussian-certificate {
+  padding: 0.9rem 1rem;
+  background: white;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+.gaussian-certificate p {
+  margin: 0.4rem 0;
+}
+.gaussian-certificate details {
+  margin-top: 0.5rem;
+}
+.gaussian-lab .lab-limit {
+  font-size: 0.9rem;
+  max-width: 72ch;
+}
+.square-root-lab {
+  max-width: 960px;
+  margin: 0 auto 2rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line, #d7ddd9);
+  border-radius: 18px;
+  background: #f6f9f5;
+}
+.square-root-lab h2 {
+  margin: 0.35rem 0;
+}
+.square-root-lab form,
+.square-presets,
+.square-local-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+.square-root-lab form {
+  align-items: end;
+}
+.square-root-lab label {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1 1 160px;
+  font-weight: 650;
+}
+.square-root-lab input {
+  min-height: 44px;
+  border: 1px solid #82908b;
+  border-radius: 7px;
+  padding: 0.5rem;
+}
+.square-root-lab button {
+  min-height: 44px;
+  border: 1px solid #173d38;
+  border-radius: 7px;
+  padding: 0.5rem 0.8rem;
+  background: white;
+  color: #173d38;
+  font-weight: 700;
+}
+.square-root-lab form button {
+  background: #173d38;
+  color: white;
+}
+.square-root-lab button:focus-visible,
+.square-root-lab input:focus-visible {
+  outline: 3px solid #a5cc62;
+  outline-offset: 2px;
+}
+.square-local-card {
+  flex: 1 1 220px;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: white;
+  overflow-x: auto;
+}
+.square-local-card h3,
+.square-local-card p {
+  margin: 0.3rem 0;
+}
+.retrieval-prompt,
+.chapter-checkpoint {
+  border: 1px solid #cfdad3;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #f4f8f4;
+}
+.retrieval-prompt p,
+.chapter-checkpoint p {
+  margin: 0 0 0.7rem;
+}
+.progress-actions,
+.practice-scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+.progress-actions button,
+.practice-scope button,
+.retrieval-prompt button,
+.chapter-checkpoint button {
+  min-height: 44px;
+  border: 1px solid #506e64;
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  background: white;
+  color: #173d38;
+  font-weight: 650;
+}
+.progress-actions button[aria-pressed="true"],
+.practice-scope button[aria-pressed="true"] {
+  background: #173d38;
+  color: white;
+}
+.progress-actions span {
+  font-size: 0.9rem;
+}
+.chapter-checkpoint {
+  margin-top: 1.5rem;
+}
+.chapter-checkpoint > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+.proof-repair {
+  border-left: 4px solid #608e73;
+  padding: 1rem 1.2rem;
+  background: #f4f8f4;
+}
+.proof-repair fieldset {
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0;
+  border: 0;
+  padding: 0;
+}
+.proof-repair button {
+  min-height: 44px;
+  border: 1px solid #506e64;
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  background: white;
+  color: #173d38;
+  text-align: left;
+}
+.proof-repair button[aria-pressed="true"] {
+  background: #173d38;
+  color: white;
+}
+.cancellation-practice {
+  border-left: 4px solid #274c78;
+  padding: 1rem 1.2rem;
+  background: #f1f5fa;
+}
+.cancellation-practice label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 650;
+}
+.cancellation-practice textarea {
+  display: block;
+  width: 100%;
+  min-height: 90px;
+  border: 1px solid #8190a5;
+  border-radius: 6px;
+  padding: 0.6rem;
+  font: inherit;
+  resize: vertical;
+}
+.cancellation-practice textarea:focus-visible {
+  outline: 3px solid #7ed9b9;
+  outline-offset: 2px;
+}
+
+@media print {
+  html,
+  body,
+  .app-shell,
+  #main-content,
+  .reading-shell,
+  .reading-grid,
+  .lesson-body {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    color: #000;
+    background: #fff;
+  }
+  .sidebar,
+  .topbar,
+  .context-rail,
+  .breadcrumb,
+  .hero-instrument,
+  .cancellation-lab,
+  .gaussian-lab,
+  .square-root-lab,
+  .lesson-lab-slot,
+  .proof-repair,
+  .cancellation-practice,
+  .practice-actions,
+  .progress-actions,
+  .next-lesson,
+  .skip-link {
+    display: none;
+  }
+  .lesson-head,
+  .lesson-head.with-instrument {
+    display: block;
+    max-width: none;
+  }
+  .lesson-head h1 {
+    font-size: 28pt;
+  }
+  .content-section,
+  .theorem,
+  .practice,
+  .lesson-footer {
+    border-color: #777;
+    background: #fff;
+    color: #000;
+  }
+  .theorem,
+  .worked-steps li {
+    break-inside: avoid-page;
+  }
+  .math-block {
+    overflow: visible;
   }
 }
