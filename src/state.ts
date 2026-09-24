@@ -43,6 +43,7 @@ export type AtlasView =
   | 'learn'
   | 'explore'
   | 'practice'
+  | 'studio'
   | 'reference'
   | 'course'
   | 'not-found';
@@ -375,6 +376,7 @@ export const studyStore = {
         'learn',
         'explore',
         'practice',
+        'studio',
         'reference',
         'course',
       ].includes(view)

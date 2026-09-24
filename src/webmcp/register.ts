@@ -164,7 +164,7 @@ const viewSchema = {
   properties: {
     view: {
       type: 'string',
-      enum: ['learn', 'explore', 'practice', 'reference', 'course'],
+      enum: ['learn', 'explore', 'practice', 'studio', 'reference', 'course'],
     },
   },
   required: ['view'],
@@ -267,7 +267,7 @@ export function registerStudyTools(): () => void {
       name: 'open_number_theory_view',
       title: 'Open atlas route',
       description:
-        'Open the visible Learn, Explore, Practice, Reference, or MH3210 course route.',
+        'Open the visible Learn, Explore, Practice, Studio, Reference, or MH3210 course route.',
       inputSchema: viewSchema,
       annotations: { readOnlyHint: false, untrustedContentHint: false },
       execute(input) {

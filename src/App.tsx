@@ -106,7 +106,14 @@ export function App() {
           </button>
           <nav className="primary-nav" aria-label="Main navigation">
             {(
-              ['learn', 'explore', 'practice', 'reference', 'course'] as const
+              [
+                'learn',
+                'explore',
+                'practice',
+                'studio',
+                'reference',
+                'course',
+              ] as const
             ).map((view) => (
               <button
                 type="button"
