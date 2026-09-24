@@ -1,6 +1,7 @@
 import { lessons } from './content/lessons';
+import { parseProgressExport, type ProgressState } from './progress-schema';
 
-export type ProgressState = Record<string, 'complete' | 'review'>;
+export type { ProgressState } from './progress-schema';
 const storageKey = 'numbertheory.progress.v1';
 const validIds = new Set(lessons.map((lesson) => lesson.id));
 const listeners = new Set<() => void>();
@@ -22,6 +23,16 @@ function load(): ProgressState {
 }
 
 let snapshot = load();
+function persist(next: ProgressState) {
+  snapshot = next;
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(next));
+  } catch {
+    /* Progress remains usable for this browser session. */
+  }
+  for (const listener of listeners) listener();
+}
+
 export const progressStore = {
   subscribe(listener: () => void) {
     listeners.add(listener);
@@ -37,12 +48,15 @@ export const progressStore = {
     const next = { ...snapshot };
     if (status) next[id] = status;
     else delete next[id];
-    snapshot = next;
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(next));
-    } catch {
-      /* Progress remains usable for this browser session. */
-    }
-    for (const listener of listeners) listener();
+    persist(next);
+  },
+  exportJson() {
+    return JSON.stringify({ schemaVersion: 1, lessons: snapshot }, null, 2);
+  },
+  importJson(text: string) {
+    persist(parseProgressExport(text, validIds));
+  },
+  reset() {
+    persist({});
   },
 };

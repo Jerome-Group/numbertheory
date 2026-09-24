@@ -1,4 +1,5 @@
 import { useState, useSyncExternalStore } from 'react';
+import { Diagnostic } from './Diagnostic';
 import courseMap from './content/course-map.json';
 import { chapterCheckpoints } from './content/checkpoints';
 import { lessonMatches } from './content/search';
@@ -12,6 +13,7 @@ import {
 import { buildCancellationMap } from './math/cancellation';
 import { MathText } from './MathText';
 import { progressStore } from './progress';
+import { ProgressControls } from './ProgressControls';
 import { type AtlasView, studyStore } from './state';
 
 const clusters = [...new Set(lessons.map((lesson) => lesson.cluster))];
@@ -220,6 +222,7 @@ export function AtlasViews({
             ))}
           </div>
         </section>
+        <Diagnostic open={open} />
         <div className="overview-stats">
           <div>
             <strong>{lessons.length}</strong>
@@ -436,6 +439,35 @@ export function AtlasViews({
                 build your queue.
               </p>
             )}
+        </div>
+        <ProgressControls />
+      </div>
+    );
+  if (view === 'studio')
+    return (
+      <div className="overview-shell">
+        <Heading
+          eyebrow="EXACT EXPERIMENTS"
+          title="The studio"
+          lead="Change an input, inspect the exact result, then read the proof that explains it. Every instrument links to its full lesson."
+        />
+        <div className="chapter-grid">
+          {lessons
+            .filter((lesson) => lesson.lab)
+            .map((lesson) => (
+              <article className="atlas-card studio-card" key={lesson.id}>
+                <span>
+                  {lesson.id} · {lesson.cluster}
+                </span>
+                <h2>{lesson.title}</h2>
+                <p>
+                  <MathText text={lesson.question} />
+                </p>
+                <button type="button" onClick={() => open(lesson.id)}>
+                  Open exact lab <span aria-hidden="true">→</span>
+                </button>
+              </article>
+            ))}
         </div>
       </div>
     );

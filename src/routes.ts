@@ -35,13 +35,24 @@ export function routeFromLocation(pathname: string, search: string) {
     const view = query.get('view');
     if (
       view &&
-      ['learn', 'explore', 'practice', 'reference', 'course'].includes(view)
+      [
+        'learn',
+        'explore',
+        'practice',
+        'studio',
+        'reference',
+        'course',
+      ].includes(view)
     )
       return { view, lessonId: null };
     return { view: 'learn' as const, lessonId: null };
   }
   const view = pathname.replace(/^\//, '').replace(/\/$/, '');
-  if (['learn', 'explore', 'practice', 'reference', 'course'].includes(view))
+  if (
+    ['learn', 'explore', 'practice', 'studio', 'reference', 'course'].includes(
+      view,
+    )
+  )
     return { view, lessonId: null };
   return { view: 'not-found' as const, lessonId: null };
 }

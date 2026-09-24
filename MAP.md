@@ -13,7 +13,8 @@ Start here: `README.md`, then `AGENTS.md`.
 | Decisions | Architecture decision records | `docs/adr/` |
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | Automation | The workflows that run on a pull request or on a new issue, and dependency updates | `.github/` |
-| Application | React reading interface, labs, and shared study state | `src/App.tsx` |
+| Application | React reading interface, diagnostic, Studio, labs, and shared study state | `src/App.tsx`, `src/AtlasViews.tsx` |
+| Local progress | Validated export/import/reset of lesson marks | `src/progress.ts`, `src/progress-schema.ts` |
 | Routes and paths | Canonical lesson URLs, legacy URL adapter, selectable routes | `src/routes.ts`, `src/content/paths.ts` |
 | Teaching content | Stable concept records, V2 registry/adapter, handout topic map | `src/content/` |
 | Exact mathematics | Bounded BigInt algorithms and tests | `src/math/` |
