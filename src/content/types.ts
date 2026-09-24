@@ -26,5 +26,6 @@ export type Lesson = {
     | 'continued-fraction'
     | 'pell'
     | 'gaussian'
-    | 'cancellation';
+    | 'cancellation'
+    | 'local-squares';
 };

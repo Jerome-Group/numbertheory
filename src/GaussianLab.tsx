@@ -33,7 +33,7 @@ export function GaussianLab() {
   }
   return (
     <section
-      id="gaussian-lab"
+      id="lab"
       className="gaussian-lab"
       aria-labelledby="gaussian-lab-title"
     >

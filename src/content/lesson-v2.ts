@@ -52,6 +52,12 @@ const archetypes: Record<string, LessonArchetype> = {
   Q04: 'proof-workshop',
   R07: 'case-study',
   N04: 'algorithm-lab',
+  P01: 'proof-workshop',
+  X05: 'algorithm-lab',
+  X06: 'proof-workshop',
+  N02: 'structure-bridge',
+  N09: 'case-study',
+  N11: 'structure-bridge',
 };
 function legacyArchetype(lesson: Lesson): LessonArchetype {
   if (archetypes[lesson.id]) return archetypes[lesson.id];
@@ -68,31 +74,95 @@ export function adaptLessonV1(lesson: Lesson): {
   const claimId = `${lesson.id}.claim`;
   const exampleId = `${lesson.id}.example`;
   const exerciseId = `${lesson.id}.practice`;
-  const blocks: LessonBlock[] = [{ kind: 'question', text: lesson.question }];
-  if ((lesson.id === 'C02' || lesson.id === 'N04') && lesson.lab)
-    blocks.push({ kind: 'lab', id: lesson.lab });
-  lesson.definition.forEach((text, index) => {
-    blocks.push({
-      kind: 'definition',
-      id: `${lesson.id}.definition.${index + 1}`,
-      text,
-    });
-  });
-  blocks.push({ kind: 'claim', id: claimId }, { kind: 'proof', id: claimId });
-  blocks.push({ kind: 'example', id: exampleId });
-  if (lesson.lab && lesson.id !== 'C02' && lesson.id !== 'N04')
-    blocks.push({ kind: 'lab', id: lesson.lab });
-  blocks.push({ kind: 'practice', id: exerciseId });
-  blocks.push({ kind: 'boundary', text: lesson.caution });
-  if (lesson.bridge) blocks.push({ kind: 'bridge', text: lesson.bridge });
-  blocks.push({ kind: 'source', text: lesson.sourceNote });
+  const archetype = legacyArchetype(lesson);
+  const question: LessonBlock = { kind: 'question', text: lesson.question };
+  const definitions: LessonBlock[] = lesson.definition.map((text, index) => ({
+    kind: 'definition',
+    id: `${lesson.id}.definition.${index + 1}`,
+    text,
+  }));
+  const claim: LessonBlock = { kind: 'claim', id: claimId };
+  const proof: LessonBlock = { kind: 'proof', id: claimId };
+  const example: LessonBlock = { kind: 'example', id: exampleId };
+  const practice: LessonBlock = { kind: 'practice', id: exerciseId };
+  const boundary: LessonBlock = { kind: 'boundary', text: lesson.caution };
+  const lab: LessonBlock[] = lesson.lab
+    ? [{ kind: 'lab', id: lesson.lab }]
+    : [];
+  const bridge: LessonBlock[] = lesson.bridge
+    ? [{ kind: 'bridge', text: lesson.bridge }]
+    : [];
+  const source: LessonBlock = { kind: 'source', text: lesson.sourceNote };
+  const layouts: Record<LessonArchetype, LessonBlock[]> = {
+    discovery: [
+      question,
+      example,
+      ...definitions,
+      claim,
+      proof,
+      ...lab,
+      practice,
+      boundary,
+      ...bridge,
+      source,
+    ],
+    'proof-workshop': [
+      question,
+      ...definitions,
+      claim,
+      proof,
+      practice,
+      example,
+      ...lab,
+      boundary,
+      ...bridge,
+      source,
+    ],
+    'algorithm-lab': [
+      question,
+      ...lab,
+      ...definitions,
+      claim,
+      example,
+      proof,
+      practice,
+      boundary,
+      ...bridge,
+      source,
+    ],
+    'structure-bridge': [
+      question,
+      ...lab,
+      example,
+      ...definitions,
+      claim,
+      proof,
+      practice,
+      boundary,
+      ...bridge,
+      source,
+    ],
+    'case-study': [
+      question,
+      example,
+      boundary,
+      ...definitions,
+      claim,
+      proof,
+      practice,
+      ...lab,
+      ...bridge,
+      source,
+    ],
+  };
+  const blocks = layouts[archetype];
   return {
     lesson: {
       schemaVersion: 2,
       id: lesson.id,
       title: lesson.title,
       chapterId: lesson.cluster,
-      archetype: legacyArchetype(lesson),
+      archetype,
       prerequisites: lesson.prerequisites.map((lessonId) => ({
         lessonId,
         kind: 'reading',

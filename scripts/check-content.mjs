@@ -36,6 +36,7 @@ const requiredLabs = {
   R01: 'continued-fraction',
   R06: 'pell',
   N04: 'gaussian',
+  X05: 'local-squares',
 };
 const math = /\\\[([\s\S]*?)\\\]|\\\(([\s\S]*?)\\\)/g;
 let formulas = 0;
@@ -76,6 +77,7 @@ for (const lesson of lessons) {
     lesson.practice.answer,
     lesson.caution,
     lesson.bridge ?? '',
+    lesson.sourceNote,
   ];
   for (const [index, value] of fields.entries()) {
     if (typeof value !== 'string') {
@@ -99,6 +101,7 @@ for (const lesson of lessons) {
         `${lesson.id}: raw math symbol outside LaTeX in field ${index}`,
       );
     if (
+      index !== fields.length - 1 &&
       /(?<![A-Za-z0-9])\d+(?![A-Za-z0-9])/.test(
         plain.replace(/Handout \d+/g, ''),
       )
@@ -143,6 +146,45 @@ if (order.length !== ids.size || new Set(order).size !== ids.size)
   errors.push('Order manifest must contain each lesson exactly once.');
 for (const id of order)
   if (!ids.has(id)) errors.push(`Order manifest has unknown lesson ${id}`);
+const checkpointSource = ts.transpileModule(
+  readFileSync('src/content/checkpoints.ts', 'utf8'),
+  {
+    compilerOptions: {
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2022,
+    },
+  },
+).outputText;
+const { chapterCheckpoints } = await import(
+  `data:text/javascript;base64,${Buffer.from(checkpointSource).toString('base64')}`
+);
+for (const cluster of new Set(lessons.map((lesson) => lesson.cluster)))
+  if (!chapterCheckpoints[cluster])
+    errors.push(`Missing chapter checkpoint: ${cluster}`);
+for (const [cluster, checkpoint] of Object.entries(chapterCheckpoints)) {
+  if (!lessons.some((lesson) => lesson.cluster === cluster))
+    errors.push(`Unknown chapter checkpoint: ${cluster}`);
+  for (const id of checkpoint.links)
+    if (!ids.has(id)) errors.push(`${cluster}: unknown checkpoint link ${id}`);
+  for (const field of [checkpoint.prompt, checkpoint.answer]) {
+    const matches = [...field.matchAll(math)];
+    const openings =
+      (field.match(/\\\(/g) ?? []).length + (field.match(/\\\[/g) ?? []).length;
+    if (openings !== matches.length)
+      errors.push(`${cluster}: unmatched checkpoint math`);
+    for (const match of matches) {
+      formulas++;
+      try {
+        katex.renderToString(match[1] ?? match[2], {
+          throwOnError: true,
+          trust: false,
+        });
+      } catch (error) {
+        errors.push(`${cluster}: invalid checkpoint math: ${error.message}`);
+      }
+    }
+  }
+}
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exitCode = 1;

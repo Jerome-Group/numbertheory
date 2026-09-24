@@ -27,11 +27,11 @@ test('legacy adapter retains every teaching field with stable references', () =>
     [
       'question',
       'lab',
+      'example',
       'definition',
       'definition',
       'claim',
       'proof',
-      'example',
       'practice',
       'boundary',
       'bridge',

@@ -27,6 +27,10 @@ import {
 import { buildHenselTree, type HenselTree } from './math/hensel';
 import { type LinearResult, solveLinear } from './math/linear';
 import {
+  solveLocalSquares,
+  type LocalSquareResult,
+} from './math/local-squares';
+import {
   buildQuadraticResidueMap,
   buildResidueClock,
   type QuadraticResidueResult,
@@ -98,6 +102,9 @@ export type StudyState = {
   gc: string;
   gd: string;
   gaussian: GaussianDivision | null;
+  squareM: string;
+  squareA: string;
+  squareResult: LocalSquareResult | null;
 };
 const defaults = {
   view: 'learn' as AtlasView,
@@ -142,6 +149,8 @@ const defaults = {
   gb: '5',
   gc: '3',
   gd: '2',
+  squareM: '72',
+  squareA: '1',
 };
 const listeners = new Set<() => void>();
 function fromUrl(): StudyState {
@@ -174,7 +183,8 @@ function fromUrl(): StudyState {
     orderStudy: UnitOrderSpectrum | null = null,
     lattice: ReciprocityLattice | null = null,
     fiberMap: CancellationMap | null = null,
-    gaussian: GaussianDivision | null = null;
+    gaussian: GaussianDivision | null = null,
+    squareResult: LocalSquareResult | null = null;
   try {
     result = extendedEuclid(values.a, values.b);
   } catch {
@@ -254,6 +264,11 @@ function fromUrl(): StudyState {
   } catch {
     /* The visible lab accepts corrected values. */
   }
+  try {
+    squareResult = solveLocalSquares(values.squareM, values.squareA);
+  } catch {
+    /* The visible lab accepts corrected values. */
+  }
   return {
     ...values,
     view,
@@ -271,6 +286,7 @@ function fromUrl(): StudyState {
     lattice,
     fiberMap,
     gaussian,
+    squareResult,
   };
 }
 let state: StudyState = fromUrl();
@@ -320,6 +336,8 @@ function saveUrl() {
     'gb',
     'gc',
     'gd',
+    'squareM',
+    'squareA',
   ] as const)
     if (state[key] !== defaults[key]) p.set(key, state[key]);
   const path =
@@ -392,6 +410,20 @@ export const studyStore = {
       gc: gaussian.beta.re,
       gd: gaussian.beta.im,
       gaussian,
+    };
+    saveUrl();
+    emit();
+    return state;
+  },
+  setLocalSquares(modulus: string, target: string) {
+    const squareResult = solveLocalSquares(modulus, target);
+    state = {
+      ...state,
+      view: 'lesson',
+      lessonId: 'X05',
+      squareM: String(squareResult.modulus),
+      squareA: squareResult.target,
+      squareResult,
     };
     saveUrl();
     emit();

@@ -1858,3 +1858,139 @@ a {
   font-size: 0.9rem;
   max-width: 72ch;
 }
+.square-root-lab {
+  max-width: 960px;
+  margin: 0 auto 2rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--line, #d7ddd9);
+  border-radius: 18px;
+  background: #f6f9f5;
+}
+.square-root-lab h2 {
+  margin: 0.35rem 0;
+}
+.square-root-lab form,
+.square-presets,
+.square-local-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+.square-root-lab form {
+  align-items: end;
+}
+.square-root-lab label {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1 1 160px;
+  font-weight: 650;
+}
+.square-root-lab input {
+  min-height: 44px;
+  border: 1px solid #82908b;
+  border-radius: 7px;
+  padding: 0.5rem;
+}
+.square-root-lab button {
+  min-height: 44px;
+  border: 1px solid #173d38;
+  border-radius: 7px;
+  padding: 0.5rem 0.8rem;
+  background: white;
+  color: #173d38;
+  font-weight: 700;
+}
+.square-root-lab form button {
+  background: #173d38;
+  color: white;
+}
+.square-root-lab button:focus-visible,
+.square-root-lab input:focus-visible {
+  outline: 3px solid #a5cc62;
+  outline-offset: 2px;
+}
+.square-local-card {
+  flex: 1 1 220px;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: white;
+  overflow-x: auto;
+}
+.square-local-card h3,
+.square-local-card p {
+  margin: 0.3rem 0;
+}
+.retrieval-prompt,
+.chapter-checkpoint {
+  border: 1px solid #cfdad3;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #f4f8f4;
+}
+.retrieval-prompt p,
+.chapter-checkpoint p {
+  margin: 0 0 0.7rem;
+}
+.progress-actions,
+.practice-scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+.progress-actions button,
+.practice-scope button,
+.retrieval-prompt button,
+.chapter-checkpoint button {
+  min-height: 44px;
+  border: 1px solid #506e64;
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  background: white;
+  color: #173d38;
+  font-weight: 650;
+}
+.progress-actions button[aria-pressed="true"],
+.practice-scope button[aria-pressed="true"] {
+  background: #173d38;
+  color: white;
+}
+.progress-actions span {
+  font-size: 0.9rem;
+}
+.chapter-checkpoint {
+  margin-top: 1.5rem;
+}
+.chapter-checkpoint > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.7rem;
+}
+.proof-repair {
+  border-left: 4px solid #608e73;
+  padding: 1rem 1.2rem;
+  background: #f4f8f4;
+}
+.proof-repair fieldset {
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0;
+  border: 0;
+  padding: 0;
+}
+.proof-repair button {
+  min-height: 44px;
+  border: 1px solid #506e64;
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  background: white;
+  color: #173d38;
+  text-align: left;
+}
+.proof-repair button[aria-pressed="true"] {
+  background: #173d38;
+  color: white;
+}

@@ -1,16 +1,11 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { lessons } from './content/lessons';
+import { lessonMatches } from './content/search';
 import { studyStore } from './state';
 import { lessonPath } from './routes';
 
 const clusters = [...new Set(lessons.map((lesson) => lesson.cluster))];
 const preferenceKey = 'numbertheory.navigation.v1';
-const aliases: Record<string, string> = {
-  bezout: 'bézout',
-  mobius: 'möbius',
-  phi: 'totient',
-  'chinese remainder': 'crt',
-};
 function savedChapters(): string[] {
   try {
     const value: unknown = JSON.parse(
@@ -25,12 +20,6 @@ function savedChapters(): string[] {
   } catch {
     return [];
   }
-}
-function lessonMatches(query: string, lesson: (typeof lessons)[number]) {
-  const term = aliases[query] ?? query;
-  return `${lesson.id} ${lesson.title} ${lesson.cluster} ${lesson.question} ${lesson.summary} ${lesson.theorem}`
-    .toLocaleLowerCase()
-    .includes(term);
 }
 function Highlight({ text, query }: { text: string; query: string }) {
   const index = text.toLocaleLowerCase().indexOf(query);

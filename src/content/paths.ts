@@ -47,15 +47,20 @@ export const pathDetails: Record<
       'Q04',
       'Q05',
       'Q06',
+      'Q07',
+      'X05',
       'S01',
       'S04',
       'R01',
       'R02',
       'R03',
+      'X07',
       'R04',
       'R05',
       'R06',
       'R07',
+      'E01',
+      'X06',
     ],
   },
   mh3210: {
@@ -75,7 +80,7 @@ export const pathDetails: Record<
       'Independent extensions beyond verified current handout alignment.',
     ids: lessons
       .filter((lesson) =>
-        /enrichment|original extension|independent extension/i.test(
+        /enrichment|original extension|independent.*extension/i.test(
           lesson.sourceNote,
         ),
       )
@@ -102,10 +107,19 @@ export const pathDetails: Record<
       'N02',
       'N03',
       'N04',
+      'N05',
+      'N06',
+      'N07',
+      'N08',
+      'N09',
+      'N10',
+      'N12',
       'R01',
       'R02',
       'R06',
       'R07',
+      'R08',
+      'N11',
     ],
   },
 };

@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import courseMap from './content/course-map.json';
+import { chapterCheckpoints } from './content/checkpoints';
+import { lessonMatches } from './content/search';
 import { lessons } from './content/lessons';
 import {
   lessonsForPath,
@@ -9,6 +11,7 @@ import {
 } from './content/paths';
 import { buildCancellationMap } from './math/cancellation';
 import { MathText } from './MathText';
+import { progressStore } from './progress';
 import { type AtlasView, studyStore } from './state';
 
 const clusters = [...new Set(lessons.map((lesson) => lesson.cluster))];
@@ -152,6 +155,11 @@ export function AtlasViews({
   open: (id: string) => void;
 }) {
   const [filter, setFilter] = useState('');
+  const [practiceScope, setPracticeScope] = useState<'all' | 'review'>('all');
+  const progress = useSyncExternalStore(
+    progressStore.subscribe,
+    progressStore.getSnapshot,
+  );
   const [path, setPath] = useState<PathId | 'all'>(initialPath);
   const pathLessons = path === 'all' ? lessons : lessonsForPath(path);
   const pathLessonIds = new Set(pathLessons.map((lesson) => lesson.id));
@@ -304,9 +312,7 @@ export function AtlasViews({
             (x) =>
               x.cluster === cluster &&
               pathLessonIds.has(x.id) &&
-              `${x.id} ${x.title} ${x.question}`
-                .toLowerCase()
-                .includes(filter.toLowerCase()),
+              lessonMatches(filter, x),
           );
           return matching.length ? (
             <section className="chapter" key={cluster}>
@@ -319,6 +325,36 @@ export function AtlasViews({
                   <LessonCard key={x.id} id={x.id} open={open} />
                 ))}
               </div>
+              {chapterCheckpoints[cluster] && (
+                <div className="chapter-checkpoint">
+                  <span className="callout-label">CHAPTER CHECKPOINT</span>
+                  <p>
+                    <MathText text={chapterCheckpoints[cluster].prompt} />
+                  </p>
+                  <button
+                    type="button"
+                    aria-expanded={shown.includes(`checkpoint:${cluster}`)}
+                    onClick={() => toggle(`checkpoint:${cluster}`)}
+                  >
+                    {shown.includes(`checkpoint:${cluster}`)
+                      ? 'Hide reasoning'
+                      : 'Compare your reasoning'}
+                  </button>
+                  {shown.includes(`checkpoint:${cluster}`) && (
+                    <p>
+                      <MathText text={chapterCheckpoints[cluster].answer} />
+                    </p>
+                  )}
+                  <div>
+                    {chapterCheckpoints[cluster].links.map((id) => (
+                      <button type="button" key={id} onClick={() => open(id)}>
+                        {id} ·{' '}
+                        {lessons.find((lesson) => lesson.id === id)?.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </section>
           ) : null;
         })}
@@ -332,38 +368,74 @@ export function AtlasViews({
           title="Practice with purpose"
           lead="Try a problem before revealing the proof. Each answer explains why the method works."
         />
+        <fieldset className="practice-scope">
+          <legend>Practice scope</legend>
+          <button
+            type="button"
+            aria-pressed={practiceScope === 'all'}
+            onClick={() => setPracticeScope('all')}
+          >
+            All problems
+          </button>
+          <button
+            type="button"
+            aria-pressed={practiceScope === 'review'}
+            onClick={() => setPracticeScope('review')}
+          >
+            Review later (
+            {
+              Object.values(progress).filter((status) => status === 'review')
+                .length
+            }
+            )
+          </button>
+        </fieldset>
         <div className="practice-list">
-          {lessons.map((lesson) => (
-            <article className="practice-item" key={lesson.id}>
-              <div className="practice-item-head">
-                <span>
-                  {lesson.id} · {lesson.cluster}
-                </span>
-                <h2>{lesson.title}</h2>
-              </div>
-              <p>
-                <MathText text={lesson.practice.prompt} />
-              </p>
-              <div className="practice-item-actions">
-                <button
-                  type="button"
-                  onClick={() => toggle(lesson.id)}
-                  aria-expanded={shown.includes(lesson.id)}
-                >
-                  {shown.includes(lesson.id) ? 'Hide answer' : 'Reveal answer'}
-                </button>
-                <OpenButton id={lesson.id} open={open} />
-              </div>
-              {shown.includes(lesson.id) && (
-                <div className="practice-reveal">
-                  <strong>Justified answer</strong>
-                  <p>
-                    <MathText text={lesson.practice.answer} />
-                  </p>
+          {lessons
+            .filter(
+              (lesson) =>
+                practiceScope === 'all' || progress[lesson.id] === 'review',
+            )
+            .map((lesson) => (
+              <article className="practice-item" key={lesson.id}>
+                <div className="practice-item-head">
+                  <span>
+                    {lesson.id} · {lesson.cluster}
+                  </span>
+                  <h2>{lesson.title}</h2>
                 </div>
-              )}
-            </article>
-          ))}
+                <p>
+                  <MathText text={lesson.practice.prompt} />
+                </p>
+                <div className="practice-item-actions">
+                  <button
+                    type="button"
+                    onClick={() => toggle(lesson.id)}
+                    aria-expanded={shown.includes(lesson.id)}
+                  >
+                    {shown.includes(lesson.id)
+                      ? 'Hide answer'
+                      : 'Reveal answer'}
+                  </button>
+                  <OpenButton id={lesson.id} open={open} />
+                </div>
+                {shown.includes(lesson.id) && (
+                  <div className="practice-reveal">
+                    <strong>Justified answer</strong>
+                    <p>
+                      <MathText text={lesson.practice.answer} />
+                    </p>
+                  </div>
+                )}
+              </article>
+            ))}
+          {practiceScope === 'review' &&
+            !Object.values(progress).includes('review') && (
+              <p>
+                No lessons marked for review. Use “Review later” in a lesson to
+                build your queue.
+              </p>
+            )}
         </div>
       </div>
     );

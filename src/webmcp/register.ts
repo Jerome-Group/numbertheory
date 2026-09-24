@@ -1,4 +1,5 @@
 import { lessons } from '../content/lessons';
+import { lessonMatches } from '../content/search';
 import { claimRegistry } from '../content/registries';
 import { buildCancellationMap } from '../math/cancellation';
 import {
@@ -17,6 +18,7 @@ import {
 } from '../math/group-labs';
 import { buildHenselTree } from '../math/hensel';
 import { solveLinear } from '../math/linear';
+import { solveLocalSquares } from '../math/local-squares';
 import { buildQuadraticResidueMap, buildResidueClock } from '../math/residue';
 import { studyStore } from '../state';
 
@@ -91,6 +93,15 @@ const gaussianSchema = {
     ]),
   ),
   required: ['alphaRe', 'alphaIm', 'betaRe', 'betaIm'],
+  additionalProperties: false,
+};
+const localSquaresSchema = {
+  type: 'object',
+  properties: {
+    modulus: { type: 'string', pattern: '^[1-9][0-9]*$', maxLength: 3 },
+    target: { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 14 },
+  },
+  required: ['modulus', 'target'],
   additionalProperties: false,
 };
 const crtSchema = {
@@ -271,11 +282,9 @@ export function registerStudyTools(): () => void {
       annotations: { readOnlyHint: true, untrustedContentHint: false },
       execute(input) {
         const o = record(input, ['query']);
-        const q = stringField(o.query, 'query', 80).toLowerCase();
+        const q = stringField(o.query, 'query', 80);
         return lessons
-          .filter((x) =>
-            `${x.title} ${x.question} ${x.summary}`.toLowerCase().includes(q),
-          )
+          .filter((x) => lessonMatches(q, x))
           .slice(0, 12)
           .map((x) => ({ id: x.id, title: x.title, question: x.question }));
       },
@@ -339,6 +348,41 @@ export function registerStudyTools(): () => void {
         return {
           lessonId: state.lessonId,
           map: state.fiberMap,
+          url: location.href,
+        };
+      },
+    },
+    {
+      name: 'compute_local_square_roots',
+      title: 'Compute local square roots',
+      description:
+        'Decide a bounded square congruence at every prime power and reconstruct all roots by CRT without changing the page.',
+      inputSchema: localSquaresSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'target']);
+        return solveLocalSquares(
+          stringField(fields.modulus, 'modulus', 3),
+          stringField(fields.target, 'target', 14),
+        );
+      },
+    },
+    {
+      name: 'set_local_square_roots',
+      title: 'Set local square roots',
+      description:
+        'Set the visible X05 prime-power square-root lab and open its lesson.',
+      inputSchema: localSquaresSchema,
+      annotations: { readOnlyHint: false, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'target']);
+        const state = studyStore.setLocalSquares(
+          stringField(fields.modulus, 'modulus', 3),
+          stringField(fields.target, 'target', 14),
+        );
+        return {
+          lessonId: state.lessonId,
+          result: state.squareResult,
           url: location.href,
         };
       },

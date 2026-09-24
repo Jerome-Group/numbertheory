@@ -58,6 +58,7 @@ Baseline: `4aaa44699fffdcb42f74026e7674c99429bdae4b` (60 published IDs). `keep` 
 | Q05 | Supplementary laws and efficient symbol calculation | keep | V1 fields preserved in adapter |
 | Q06 | Jacobi symbols: efficient but not decisive | keep | V1 fields preserved in adapter |
 | Q07 | Square-root formulas and composite moduli | keep | V1 fields preserved in adapter |
+| X05 | Local square roots and reconstruction | new | V1 authoring draft; V2 review pending |
 | S01 | Primes as sums of two squares | keep | V1 fields preserved in adapter |
 | S02 | Character sums as finite counting | keep | V1 fields preserved in adapter |
 | S03 | Jacobsthal’s identity and a second two-squares route | keep | V1 fields preserved in adapter |
@@ -67,12 +68,22 @@ Baseline: `4aaa44699fffdcb42f74026e7674c99429bdae4b` (60 published IDs). `keep` 
 | N02 | Finite groups behind modular arithmetic | new | V1 authoring draft; V2 review pending |
 | N03 | Ideals and quotients through the integers | new | V1 authoring draft; V2 review pending |
 | N04 | Euclidean division in Gaussian integers | new | V1 authoring draft; V2 review pending |
+| N05 | Gaussian factorization and rational primes | new | V1 authoring draft; V2 review pending |
+| N06 | Algebraic numbers and minimal polynomials | new | V1 authoring draft; V2 review pending |
+| N07 | Gauss, rational roots, and Eisenstein | new | V1 authoring draft; V2 review pending |
+| N08 | Algebraic integers and quadratic rings | new | V1 authoring draft; V2 review pending |
+| N09 | Failure of factorization and a nonprincipal ideal | new | V1 authoring draft; V2 review pending |
+| N10 | Prime ideals, quotient fields, and CRT | new | V1 authoring draft; V2 review pending |
+| N12 | Compatible residues and p-adic integers | new | V1 authoring draft; V2 review pending |
 | R01 | Finite continued fractions from Euclid | keep | V1 fields preserved in adapter |
 | R02 | Convergents and determinant-one structure | keep | V1 fields preserved in adapter |
 | R03 | Infinite continued fractions and error bounds | keep | V1 fields preserved in adapter |
+| X07 | Farey neighbors and rational approximation | new | V1 authoring draft; V2 review pending |
 | R04 | Best approximations and the convergent criterion | keep | V1 fields preserved in adapter |
 | R05 | Quadratic irrationals and periodicity | keep | V1 fields preserved in adapter |
 | R06 | Pell: finding and proving a fundamental solution | keep | V1 fields preserved in adapter |
 | R07 | All Pell solutions and norm-one multiplication | keep | V1 fields preserved in adapter |
 | R08 | Negative Pell and a careful boundary | keep | V1 fields preserved in adapter |
+| N11 | Pell units in quadratic orders | new | V1 authoring draft; V2 review pending |
 | E01 | Pythagorean triples and descent | keep | V1 fields preserved in adapter |
+| X06 | Infinite descent and square-area triangles | new | V1 authoring draft; V2 review pending |

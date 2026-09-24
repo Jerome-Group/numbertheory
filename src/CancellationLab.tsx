@@ -39,7 +39,11 @@ export function CancellationLab() {
     }
   }
   return (
-    <section className="cancellation-lab" aria-labelledby="cancellation-title">
+    <section
+      id="lab"
+      className="cancellation-lab"
+      aria-labelledby="cancellation-title"
+    >
       <div className="cancellation-intro">
         <p className="eyebrow">EXACT EXPERIMENT · C02</p>
         <h2 id="cancellation-title">What does multiplication forget?</h2>

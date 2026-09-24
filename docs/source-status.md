@@ -1,7 +1,7 @@
 # Source status and rights
 
 Refreshed 2026-09-24 against the canonical MH3210 course folder and both implementation handoffs. The current lecture-material folder still contains Lectures 01–07; no newer lecture issue was identified there. This is a metadata check, not a fresh theorem/page audit.
-The 60 public lessons contain newly authored explanations, proofs, examples, practice, and visuals.
+The 60 baseline lessons contain original explanations, proofs, examples, practice, and selected visuals. The 23 required additions are original drafts on the redesign branch; their full V2 learning and independent mathematical review remains pending.
 No course PDF, textbook extract, assessment item, source download URL, or private file identifier is
 part of this repository or the site build.
 
@@ -17,7 +17,7 @@ the witness definition of divisibility at zero, while current Handout 01 restric
 to nonzero integers; the lesson flags that difference. D08's sieve and C05's generalized CRT
 are original extensions to the handout route.
 
-Independent mathematical review covered all authored lesson batches. Strict KaTeX parsing,
+Independent mathematical review covered the baseline lesson batches, not the 23 new drafts. Strict KaTeX parsing,
 prerequisite checks, exact arithmetic tests, and a finite certificate for the small Bertrand
 cases run in CI. These checks support correctness, but do not turn course topic alignment into
 an official endorsement. Refresh the handout status and page locators when new current issues

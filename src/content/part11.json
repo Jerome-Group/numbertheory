@@ -145,5 +145,118 @@
     "caution": "The case \\(p=2\\) needs its own formula, and \\(a^n=b^n\\) gives valuation \\(+\\infty\\) rather than a finite equality. Always verify coprimality and parity hypotheses first.",
     "bridge": "The binomial ledger is a reusable proof pattern for lifting a congruence through prime powers.",
     "sourceNote": "Original exposition and proof authored for this site. Independent extension; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "X05",
+    "lab": "local-squares",
+    "title": "Local square roots and reconstruction",
+    "cluster": "Further elementary arithmetic",
+    "question": "Which local conditions decide a square congruence modulo a composite?",
+    "prerequisites": ["Q07", "F04", "X03"],
+    "summary": "Prime-power square roots are decided by unit tests and valuations; CRT recombines exactly the compatible local roots.",
+    "definition": [
+      "For \\(a\\pmod{p^k}\\), its truncated \\(p\\)-valuation is the largest \\(t\\le k\\) for which \\(p^t\\mid a\\). The case \\(t=k\\) means the zero residue. A unit target has \\(t=0\\)."
+    ],
+    "theorem": "Let \\(p\\) be prime and \\(k\\ge1\\). For an odd \\(p\\), a unit \\(a\\pmod{p^k}\\) is a square exactly when \\(a\\pmod p\\) is a square; then it has exactly two roots modulo \\(p^k\\). For \\(p=2\\), an odd \\(a\\) is a square modulo \\(2^k\\) exactly when \\(a\\equiv1\\pmod2\\) for \\(k=1\\), \\(a\\equiv1\\pmod4\\) for \\(k=2\\), or \\(a\\equiv1\\pmod8\\) for \\(k\\ge3\\); the respective root counts are \\(1,2,4\\). For any prime, a nonzero target of truncated valuation \\(t<k\\) is a square only when \\(t=2s\\) is even, and then the question reduces to a unit square modulo \\(p^{k-2s}\\). The zero target has precisely the roots divisible by \\(p^{\\lceil k/2\\rceil}\\). A square congruence modulo \\(m=\\prod p_i^{k_i}\\) is solvable exactly when every prime-power condition is solvable, with all roots reconstructed by CRT.",
+    "proof": [
+      "For odd \\(p\\), a nonzero square modulo \\(p\\) has the two roots \\(x,-x\\). At either root, the derivative of \\(X^2-a\\) is \\(2x\\), a unit modulo \\(p\\). The simple-root lifting argument gives exactly one lift of each root through every power; no other root can occur because every root reduces to one of these two.",
+      "An odd square is \\(1\\pmod8\\). For \\(k=1,2\\), direct checking of the \\(2\\) or \\(4\\) residue classes gives the stated conditions and counts. For \\(k\\ge3\\), start with an odd root modulo \\(8\\) when \\(a\\equiv1\\pmod8\\). If \\(x^2\\equiv a\\pmod{2^k}\\), then \\((x+t2^{k-1})^2\\equiv x^2+t2^k x\\pmod{2^{k+1}}\\). Since \\(x\\) is odd, exactly one choice \\(t\\in\\{0,1\\}\\) corrects the next bit. Thus roots exist at every level. To count them, if odd \\(x,y\\) have equal squares modulo \\(2^k\\), then \\(2^k\\mid(x-y)(x+y)\\) and exactly one of \\(x-y,x+y\\) has valuation \\(1\\). Hence \\(x\\equiv y\\) or \\(x\\equiv-y\\pmod{2^{k-1}}\\), yielding exactly the four distinct roots \\(y,-y,y+2^{k-1},-y+2^{k-1}\\) modulo \\(2^k\\).",
+      "If a nonzero target has valuation \\(t<k\\) and \\(x^2\\equiv a\\pmod{p^k}\\), then \\(2v_p(x)=t\\), so \\(t=2s\\). Writing \\(x=p^s y\\) and \\(a=p^{2s}u\\), division in integer congruences gives \\(y^2\\equiv u\\pmod{p^{k-2s}}\\), with \\(y\\) a unit; conversely each such \\(y\\) gives a root after multiplication by \\(p^s\\). For \\(a\\equiv0\\pmod{p^k}\\), the condition is \\(2v_p(x)\\ge k\\), equivalent to \\(p^{\\lceil k/2\\rceil}\\mid x\\). Finally, CRT is a bijection between residues modulo \\(m\\) and tuples of residues modulo its pairwise coprime prime powers, and it preserves squaring componentwise. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Decide \\(x^2\\equiv1\\pmod{72}\\) using local conditions.",
+      "steps": [
+        "Factor \\(72=8\\cdot9\\). Modulo \\(8\\), all \\(4\\) odd classes square to \\(1\\).",
+        "Modulo \\(9\\), the odd-prime unit rule gives exactly \\(2\\) roots, \\(1\\) and \\(8\\).",
+        "The moduli are coprime, so each of the \\(4\\cdot2=8\\) local root pairs gives one global class modulo \\(72\\)."
+      ],
+      "conclusion": "The local certificates and CRT prove completeness, not just the existence of a tested root."
+    },
+    "practice": {
+      "prompt": "Explain why \\(x^2\\equiv12\\pmod{32}\\) has no solution, and find the roots of \\(x^2\\equiv0\\pmod{16}\\).",
+      "hints": [
+        "The \\(2\\)-valuation of \\(12\\) is even; remove the corresponding square power before testing the odd unit.",
+        "For the zero target, require \\(2v_2(x)\\ge4\\)."
+      ],
+      "answer": "The target \\(12=2^2\\cdot3\\) has \\(s=1\\), so a root would require an odd square congruent to \\(3\\pmod8\\), impossible. For \\(x^2\\equiv0\\pmod{16}\\), we need \\(4\\mid x\\); the roots modulo \\(16\\) are \\(0,4,8,12\\)."
+    },
+    "caution": "The unit criterion at \\(2^k\\) changes at small \\(k\\). This local-to-global argument applies to these polynomial congruences through CRT; it is not a general Hasse principle for arbitrary Diophantine equations.",
+    "bridge": "A local obstruction such as \\(3\\pmod8\\) can rule out a global square before any search. Simple roots lift uniquely, while singular branches need their own analysis.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent elementary extension; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "X07",
+    "title": "Farey neighbors and rational approximation",
+    "cluster": "Further elementary arithmetic",
+    "question": "How close can a fraction with a small denominator fit between neighbors?",
+    "prerequisites": ["P03", "R02", "R03"],
+    "summary": "A determinant-one pair leaves no interior fraction with a smaller denominator than its mediant; pigeonhole gives a finite approximation bound.",
+    "definition": [
+      "Reduced fractions \\(a/b<c/d\\), with \\(b,d>0\\), are Farey neighbors when \\(bc-ad=1\\). Their mediant is \\((a+c)/(b+d)\\). A denominator budget \\(Q\\ge1\\) restricts rational approximants to \\(1\\le q\\le Q\\)."
+    ],
+    "theorem": "If \\(a/b<c/d\\) are reduced Farey neighbors with positive denominators, every reduced fraction \\(r/s\\) strictly between them, with \\(s>0\\), satisfies \\(s\\ge b+d\\). The mediant is a reduced interior fraction with denominator exactly \\(b+d\\). For any real \\(\\alpha\\) and integer \\(Q\\ge1\\), there are integers \\(p,q\\) with \\(1\\le q\\le Q\\) and \\(|\\alpha-p/q|<1/(qQ)\\).",
+    "proof": [
+      "The strict inequalities \\(a/b<r/s<c/d\\) make \\(rb-as\\) and \\(cs-rd\\) positive integers, hence each at least \\(1\\). The determinant identity gives \\(s=d(rb-as)+b(cs-rd)\\), so \\(s\\ge d+b\\). The mediant lies strictly between because \\((a+c)b-a(b+d)=bc-ad=1\\) and \\(c(b+d)-(a+c)d=bc-ad=1\\). A common divisor of \\(a+c\\) and \\(b+d\\) divides \\((a+c)d-c(b+d)=ad-bc=-1\\), so the mediant is reduced.",
+      "For approximation, place the \\(Q+1\\) fractional parts of \\(0\\alpha,\\alpha,\\ldots,Q\\alpha\\) into \\(Q\\) half-open intervals of length \\(1/Q\\) in \\([0,1)\\). Two lie in the same interval. Subtract their indices to obtain \\(1\\le q\\le Q\\), and subtract their integer parts to obtain an integer \\(p\\) with \\(|q\\alpha-p|<1/Q\\). Division by \\(q>0\\) gives the stated metric bound. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Find the first reduced fraction between \\(1/3\\) and \\(1/2\\) by denominator.",
+      "steps": [
+        "The determinant is \\(3\\cdot1-1\\cdot2=1\\), so the endpoints are Farey neighbors.",
+        "The mediant is \\((1+1)/(3+2)=2/5\\), which lies strictly between them.",
+        "Every other interior reduced fraction has denominator at least \\(3+2=5\\)."
+      ],
+      "conclusion": "The exact determinant certificate proves the denominator bound for all interior rationals."
+    },
+    "practice": {
+      "prompt": "For neighbors \\(2/5<1/2\\), find the mediant and prove that no interior reduced fraction has denominator below its denominator.",
+      "hints": [
+        "Check \\(5\\cdot1-2\\cdot2=1\\).",
+        "Apply the two positive integer gaps in the theorem."
+      ],
+      "answer": "The mediant is \\(3/7\\), reduced and strictly between. For any interior \\(r/s\\), the positive integers \\(5r-2s\\) and \\(s-2r\\) are at least \\(1\\). The identity \\(s=2(5r-2s)+5(s-2r)\\) gives \\(s\\ge2+5=7\\)."
+    },
+    "caution": "The denominator bound requires a determinant of exactly \\(1\\), strict interior position, and positive denominators. Dirichlet's bound is a finite metric statement; it does not identify a unique best approximant.",
+    "bridge": "Mediants build the Stern–Brocot tree, while continued-fraction convergents provide another sequence of determinant-one neighbors.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent elementary extension; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "X06",
+    "title": "Infinite descent and square-area triangles",
+    "cluster": "Further elementary arithmetic",
+    "question": "Can an integer right triangle have a nonzero square area?",
+    "prerequisites": ["P02", "E01"],
+    "summary": "A minimal square-area triangle would produce a smaller integer right triangle with square area, contradicting well-ordering.",
+    "definition": [
+      "A positive integer right triangle has positive integer legs \\(x,y\\) and hypotenuse \\(z\\) with \\(x^2+y^2=z^2\\). Its area is \\(xy/2\\). A primitive triple has \\(\\gcd(x,y,z)=1\\).",
+      "A genuine descent chooses a positive integer measure for counterexamples, constructs another object satisfying every original hypothesis, and proves its measure strictly decreases."
+    ],
+    "theorem": "There are no positive integers \\(x,y,z,h\\) with \\(x^2+y^2=z^2\\) and \\(xy/2=h^2\\). Thus no nondegenerate integer right triangle has a square area.",
+    "proof": [
+      "Assume such a triangle exists and choose one with least positive hypotenuse \\(z\\). It must be primitive. Indeed, if \\(g=\\gcd(x,y,z)>1\\), division of all three sides by \\(g\\) gives a smaller integer right triangle. Its area is \\(h^2/g^2\\), an integer because one leg remains even. Hence \\(g^2\\mid h^2\\), so \\(g\\mid h\\), and the smaller area is the square \\((h/g)^2\\), contradicting minimality.",
+      "By the primitive-triple parametrization, after exchanging legs there are \\(m>n>0\\), coprime and of opposite parity, with \\(x=m^2-n^2\\), \\(y=2mn\\), and \\(z=m^2+n^2\\). The square area gives \\(h^2=mn(m-n)(m+n)\\). The four positive factors are pairwise coprime: \\(m,n\\) are coprime; each is coprime to \\(m\\pm n\\); and a common divisor of \\(m-n\\) and \\(m+n\\) divides \\(2m,2n\\), while both factors are odd, so it is \\(1\\). Unique prime factorization forces each factor to be a square. Write \\(m=r^2\\), \\(n=s^2\\), \\(m+n=t^2\\), and \\(m-n=u^2\\), with all four new values positive integers.",
+      "The numbers \\(t,u\\) are odd. Their equations give \\(t^2+u^2=2r^2\\) and \\(t^2-u^2=2s^2\\). Modulo \\(8\\), the first equality makes \\(r\\) odd; since \\(m,n\\) have opposite parity, \\(s\\) is even. Define \\(A=(t+u)/2\\), \\(B=(t-u)/2\\). Because \\(t>u>0\\) and both are odd, \\(A,B\\) are positive integers. Direct calculation gives \\(A^2+B^2=(t^2+u^2)/2=r^2\\) and \\(AB/2=(t^2-u^2)/8=s^2/4=(s/2)^2\\). Thus \\((A,B,r)\\) is another positive integer right triangle with square area.",
+      "Its hypotenuse \\(r\\) is strictly smaller than the original \\(z=r^4+s^4\\), because \\(r,s>0\\). This contradicts the choice of \\(z\\) as least. The descent preserves integrality, positivity, the Pythagorean equation, and square area, so no counterexample exists. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Why does the familiar \\(3,4,5\\) triangle not enter the descent as a counterexample?",
+      "steps": [
+        "Its area is \\(3\\cdot4/2=6\\), which is not a square.",
+        "The primitive parameters are \\(m=2,n=1\\), giving the area product \\(mn(m-n)(m+n)=2\\cdot1\\cdot1\\cdot3=6\\).",
+        "The first factor \\(m=2\\) already fails the necessary square condition obtained in the proof."
+      ],
+      "conclusion": "The factor test diagnoses this example but the descent proves the universal impossibility."
+    },
+    "practice": {
+      "prompt": "In the hypothetical descent, prove that \\(A=(t+u)/2\\), \\(B=(t-u)/2\\), and \\(r\\) satisfy all triangle and square-area hypotheses, then identify the decreasing measure.",
+      "hints": [
+        "Use oddness of \\(t,u\\), positivity \\(t>u\\), and the two sum-and-difference identities.",
+        "Show \\(s\\) is even before calling \\(s/2\\) an integer."
+      ],
+      "answer": "Odd \\(t,u\\) and \\(t>u>0\\) make \\(A,B\\) positive integers. The identity \\(A^2+B^2=r^2\\) gives a right triangle with positive integer hypotenuse. The parity argument makes \\(s/2\\in\\mathbb Z\\), and \\(AB/2=(s/2)^2\\) gives square area. The measure is the hypotenuse: \\(r<r^4+s^4=z\\). Every defining condition is preserved."
+    },
+    "caution": "Dividing a triple by its gcd only reduces to a primitive case; it is not the decisive infinite descent. The decisive construction is the new triangle with smaller hypotenuse and square area.",
+    "bridge": "The same proof grammar appears whenever coprime factors of a square force separate square factors; the conclusion depends on a strictly decreasing positive integer measure.",
+    "sourceNote": "Original exposition written for this site; the descent structure was checked against Wayne Aitken, Fermat's Proof, public California State University San Marcos notes, sections on reduction lemmas and main results. Independent elementary extension; no exact MH3210 handout locator asserted."
   }
 ]
