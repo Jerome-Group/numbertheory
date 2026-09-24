@@ -106,6 +106,10 @@ export function LessonPage({
           <p className="summary">
             <MathText text={lesson.summary} />
           </p>
+          <p className="learning-objective">
+            <strong>By the end: </strong>
+            <MathText text={model.objectives[0]} />
+          </p>
         </div>
         {lesson.lab === 'euclid' && state.result && (
           <div className="hero-instrument">

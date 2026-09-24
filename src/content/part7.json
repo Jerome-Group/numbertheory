@@ -36,7 +36,7 @@
       "answer": "The nonzero squares modulo \\(11\\) are \\(1,3,4,5,9\\), each with exactly two roots. The nonresidues \\(2,6,7,8,10\\) have no roots. The class \\(0\\) has exactly one root, \\(0\\). This accounts for all eleven values of \\(a\\)."
     },
     "caution": "Zero is not a unit or a nonzero square. Its symbol is \\(0\\), and it has one root rather than two.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H08 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "On the unit group \\(\\mathbb F_p^\\times\\), squaring has kernel \\(\\{1,-1\\}\\); the elementary opposite-pair argument proves the same count without group language.",
     "lab": "quadratic"
   },
@@ -78,7 +78,7 @@
       "answer": "Nonresidues are nonzero modulo \\(p\\), so \\(p\\nmid ab\\). Multiplicativity gives \\(\\chi_p(ab)=\\chi_p(a)\\chi_p(b)=(-1)(-1)=1\\). By definition, \\(ab\\) is therefore a nonzero square class."
     },
     "caution": "The symbol value \\(-1\\) is an integer label; its congruent representative modulo \\(p\\) is \\(p-1\\). Do not redefine the symbol to take value \\(p-1\\).",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H08 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "Restricted to \\(\\mathbb F_p^\\times\\), \\(\\chi_p\\) is a multiplicative character; extending it by \\(\\chi_p(0)=0\\) preserves the product rule."
   },
   {
@@ -117,7 +117,7 @@
       "answer": "No least positive residue equals \\(p/2\\) because \\(p\\) is odd. Replacing \\(a\\) by \\(-a\\) swaps each lower-half residue with an upper-half one, so \\(N(-a)=m-N(a)\\). Gauss’s lemma gives \\(\\chi_p(-a)=(-1)^{m-N(a)}=(-1)^m\\chi_p(a)\\). Taking \\(a=1\\), for which \\(\\chi_p(1)=1\\), yields \\(\\chi_p(-1)=(-1)^{(p-1)/2}\\)."
     },
     "caution": "The cutoff is the exact half interval; the argument requires \\(p\\nmid a\\). A nonunit would create a zero residue and break the permutation.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H08 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "The sign comes from individual negations after folding; no permutation-sign computation is needed."
   },
   {
@@ -160,7 +160,7 @@
       "answer": "Since \\(11\\equiv2\\pmod3\\), \\(\\chi_3(11)=\\chi_3(2)=-1\\). Both primes are \\(3\\pmod4\\), so reciprocity gives \\(\\chi_{11}(3)=-\\chi_3(11)=1\\). Directly, \\(5^2=25\\equiv3\\pmod{11}\\), confirming that \\(3\\) is a square. The minus sign comes from \\(((3-1)/2)((11-1)/2)=1\\cdot5\\), which is odd."
     },
     "caution": "The diagonal is empty because the primes are distinct and coprime. A lattice picture without the no-boundary-point argument leaves a gap.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H08 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "Reciprocity compares square behavior in two different finite fields. The rectangle is a finite counting proof, not an embedding of one field into the other.",
     "lab": "lattice"
   }

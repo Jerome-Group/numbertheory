@@ -290,7 +290,9 @@ function fromUrl(): StudyState {
   };
 }
 let state: StudyState = fromUrl();
+let revision = 0;
 function emit() {
+  revision++;
   for (const listener of listeners) listener();
 }
 function saveUrl() {
@@ -354,6 +356,9 @@ export const studyStore = {
   },
   getSnapshot() {
     return state;
+  },
+  getRevision() {
+    return revision;
   },
   openLesson(lessonId: string) {
     if (!lessons.some((x) => x.id === lessonId))

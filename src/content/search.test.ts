@@ -35,4 +35,5 @@ test('search covers aliases, accents, notation, methods, and questions', () => {
   ])
     assert.equal(lessonMatches(query, lesson), true, query);
   assert.equal(lessonMatches('Pell equation', lesson), false);
+  assert.equal(lessonMatches('Möbius divisor', lesson), true);
 });

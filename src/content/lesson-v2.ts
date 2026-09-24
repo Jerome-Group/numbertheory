@@ -1,4 +1,5 @@
 import type { Lesson } from './types';
+import objectives from './objectives.json' with { type: 'json' };
 
 export type LessonArchetype =
   | 'discovery'
@@ -167,7 +168,7 @@ export function adaptLessonV1(lesson: Lesson): {
         lessonId,
         kind: 'reading',
       })),
-      objectives: [],
+      objectives: [(objectives as Record<string, string>)[lesson.id]],
       blocks,
       migration: 'legacy-adapted',
     },

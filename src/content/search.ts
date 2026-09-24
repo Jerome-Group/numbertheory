@@ -18,10 +18,19 @@ const normalize = (text: string) =>
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
 
-export function lessonMatches(query: string, lesson: Lesson): boolean {
+export function lessonSearchScore(query: string, lesson: Lesson): number {
   const term = normalize(query);
-  if (!term) return true;
+  if (!term) return 1;
   const target = aliases[term] ?? term;
+  const words = target.split(' ');
+  const title = normalize(lesson.title);
+  const question = normalize(lesson.question);
+  const summary = normalize(lesson.summary);
+  if (normalize(lesson.id) === target) return 100;
+  if (title.includes(target)) return 90;
+  if (words.every((word) => title.includes(word))) return 80;
+  if (question.includes(target)) return 70;
+  if (summary.includes(target)) return 60;
   const corpus = normalize(
     [
       lesson.id,
@@ -36,5 +45,10 @@ export function lessonMatches(query: string, lesson: Lesson): boolean {
       lesson.practice.prompt,
     ].join(' '),
   );
-  return corpus.includes(target);
+  if (corpus.includes(target)) return 40;
+  return words.every((word) => corpus.includes(word)) ? 20 : 0;
+}
+
+export function lessonMatches(query: string, lesson: Lesson): boolean {
+  return lessonSearchScore(query, lesson) > 0;
 }

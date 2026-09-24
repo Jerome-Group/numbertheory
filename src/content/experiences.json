@@ -1,0 +1,75 @@
+{
+  "P00": {
+    "eyebrow": "PROOF REPAIR · P00",
+    "title": "Find the missing bridge",
+    "legend": "Which step fails?",
+    "revealLabel": "Show a decisive counterexample",
+    "prompt": "A draft says: “\\(n^2+n+41\\) is prime for the first \\(10\\) nonnegative integers, so it is prime for every \\(n\\ge0\\).”",
+    "choices": [
+      { "id": "sample", "label": "The table checks only a finite sample." },
+      { "id": "base", "label": "The base case was not checked." },
+      { "id": "algebra", "label": "The expression was simplified incorrectly." }
+    ],
+    "correct": "sample",
+    "correctFeedback": "Correct. The examples do not cover every allowed integer.",
+    "wrongFeedback": "Look at the move from checked cases to every integer.",
+    "reveal": "At \\(n=41\\), \\(n^2+n+41=41(41+2)\\), which is composite. One counterexample refutes the universal claim. A valid proof of a true universal claim would need an argument covering every allowed input."
+  },
+  "C02": {
+    "eyebrow": "REASONING LADDER · C02",
+    "title": "From error to method",
+    "stages": [
+      {
+        "kind": "Diagnose",
+        "prompt": "A proof cancels \\(4\\) from \\(4a\\equiv4b\\pmod{12}\\) and concludes \\(a\\equiv b\\pmod{12}\\). Which condition failed?",
+        "hint": "Compute \\(\\gcd(4,12)\\) before cancelling.",
+        "answer": "The factor \\(4\\) is not a unit modulo \\(12\\), since \\(\\gcd(4,12)=4\\). The valid conclusion is \\(a\\equiv b\\pmod3\\)."
+      },
+      {
+        "kind": "Compute",
+        "prompt": "How many inputs lie in each attained fiber of \\(x\\mapsto4x\\pmod{12}\\), and how many outputs are attained?",
+        "hint": "Divide the modulus by \\(\\gcd(4,12)\\) to count attained outputs.",
+        "answer": "Each attained output has \\(\\gcd(4,12)=4\\) inputs. Exactly \\(12/4=3\\) outputs are attained: \\(0,4,8\\)."
+      },
+      {
+        "kind": "Transfer",
+        "prompt": "If \\(6a\\equiv6b\\pmod{14}\\), what is the strongest congruence on \\(a-b\\)? Give two distinct classes modulo \\(14\\) with the same output.",
+        "hint": "First compute \\(\\gcd(6,14)=2\\); then reduce the modulus.",
+        "answer": "The equivalence is \\(a\\equiv b\\pmod7\\). Classes \\(1\\) and \\(8\\) differ by \\(7\\), and \\(6\\cdot1\\equiv6\\cdot8\\pmod{14}\\). They are distinct modulo \\(14\\)."
+      }
+    ],
+    "outro": "All three stages complete. Return to the theorem and explain why the reduced modulus is exact."
+  },
+  "Q04": {
+    "eyebrow": "PROOF CHECK · Q04",
+    "title": "Which boundary can the line hit?",
+    "legend": "Choose the divisibility argument",
+    "revealLabel": "Show the proof step",
+    "prompt": "For distinct odd primes \\(p,q\\), the lattice proof divides a \\((p-1)/2\\) by \\((q-1)/2\\) rectangle by the line \\(qx=py\\). Could an interior lattice point lie on that line?",
+    "choices": [
+      { "id": "none", "label": "No: coprimality would force a coordinate beyond the rectangle." },
+      { "id": "both", "label": "Yes: every point with equal coordinates lies on the line." },
+      { "id": "middle", "label": "Only when both primes are \\(1\\pmod4\\)." }
+    ],
+    "correct": "none",
+    "correctFeedback": "Correct. Now identify which coordinate must contain the other prime.",
+    "wrongFeedback": "Check what the equality forces by Euclid’s lemma.",
+    "reveal": "If \\(qx=py\\) with \\(p\\) and \\(q\\) distinct primes, then \\(p\\mid x\\) and \\(q\\mid y\\). But \\(0<x<p\\) and \\(0<y<q\\), so neither is possible. Thus the two sides partition every interior lattice point, which makes the parity count exact."
+  },
+  "R07": {
+    "eyebrow": "CASE STUDY · R07",
+    "title": "Three units, three different roles",
+    "legend": "Choose the generator",
+    "revealLabel": "Show the exact classification",
+    "prompt": "In \\(\\mathbb Z[\\sqrt2]\\), compare \\(-1\\), \\(1+\\sqrt2\\), and \\(3+2\\sqrt2\\). Which one generates the positive-real norm-one solutions?",
+    "choices": [
+      { "id": "minus", "label": "\\(-1\\)" },
+      { "id": "negative", "label": "\\(1+\\sqrt2\\)" },
+      { "id": "positive", "label": "\\(3+2\\sqrt2\\)" }
+    ],
+    "correct": "positive",
+    "correctFeedback": "Correct. Check the norm and the positive-real condition separately.",
+    "wrongFeedback": "Compute the norm first, then check positivity under the chosen real embedding.",
+    "reveal": "The norms are \\(N(-1)=1\\), \\(N(1+\\sqrt2)=-1\\), and \\(N(3+2\\sqrt2)=1\\). The positive-real norm-one subgroup is \\(\\{(3+2\\sqrt2)^k:k\\in\\mathbb Z\\}\\). The full norm-one group also has their negatives, so it is not infinite cyclic; \\(1+\\sqrt2\\) is a unit of norm \\(-1\\)."
+  }
+}

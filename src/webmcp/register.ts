@@ -1,6 +1,8 @@
 import { lessons } from '../content/lessons';
-import { lessonMatches } from '../content/search';
+import { chapterCheckpoints } from '../content/checkpoints';
+import { lessonSearchScore } from '../content/search';
 import { claimRegistry } from '../content/registries';
+import { lessonV2 } from '../content/registries';
 import { buildCancellationMap } from '../math/cancellation';
 import {
   buildPellOrbit,
@@ -21,6 +23,7 @@ import { solveLinear } from '../math/linear';
 import { solveLocalSquares } from '../math/local-squares';
 import { buildQuadraticResidueMap, buildResidueClock } from '../math/residue';
 import { studyStore } from '../state';
+import { lessonPath } from '../routes';
 
 type Tool = {
   name: string;
@@ -245,9 +248,17 @@ export function registerStudyTools(): () => void {
         const lesson = lessons.find((x) => x.id === s.lessonId);
         return {
           view: s.view,
+          revision: studyStore.getRevision(),
           lessonId: s.view === 'lesson' ? s.lessonId : null,
           title: s.view === 'lesson' ? lesson?.title : null,
           lab: s.view === 'lesson' ? (lesson?.lab ?? null) : null,
+          prerequisites:
+            s.view === 'lesson' ? (lesson?.prerequisites ?? []) : [],
+          archetype:
+            s.view === 'lesson'
+              ? (lessonV2.find((item) => item.id === s.lessonId)?.archetype ??
+                null)
+              : null,
           url: location.href,
         };
       },
@@ -282,11 +293,46 @@ export function registerStudyTools(): () => void {
       annotations: { readOnlyHint: true, untrustedContentHint: false },
       execute(input) {
         const o = record(input, ['query']);
-        const q = stringField(o.query, 'query', 80);
+        const q = stringField(o.query, 'query', 80).trim();
+        if (!q) throw new Error('Enter a search term.');
         return lessons
-          .filter((x) => lessonMatches(q, x))
+          .map((lesson) => ({ lesson, score: lessonSearchScore(q, lesson) }))
+          .filter((item) => item.score > 0)
+          .sort((a, b) => b.score - a.score)
           .slice(0, 12)
-          .map((x) => ({ id: x.id, title: x.title, question: x.question }));
+          .map(({ lesson }) => ({
+            id: lesson.id,
+            title: lesson.title,
+            question: lesson.question,
+            url: new URL(lessonPath(lesson.id), location.origin).href,
+          }));
+      },
+    },
+    {
+      name: 'get_number_theory_checkpoint',
+      title: 'Get chapter checkpoint',
+      description:
+        'Read an original chapter synthesis prompt and its lesson links without revealing the comparison answer.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          chapter: { type: 'string', enum: Object.keys(chapterCheckpoints) },
+        },
+        required: ['chapter'],
+        additionalProperties: false,
+      },
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['chapter']);
+        const chapter = stringField(fields.chapter, 'chapter', 80);
+        const checkpoint = chapterCheckpoints[chapter];
+        if (!checkpoint) throw new Error('Unknown chapter.');
+        return {
+          chapter,
+          prompt: checkpoint.prompt,
+          lessonIds: checkpoint.links,
+          url: new URL('/explore', location.origin).href,
+        };
       },
     },
     {
@@ -919,9 +965,46 @@ export function registerStudyTools(): () => void {
     },
   ];
   for (const tool of tools) {
+    const schema = tool.inputSchema as {
+      type: string;
+      properties: Record<string, unknown>;
+      required?: string[];
+      additionalProperties: boolean;
+    };
+    const registered = tool.annotations.readOnlyHint
+      ? tool
+      : {
+          ...tool,
+          description: `${tool.description} Pass the current context revision to reject stale changes; omission preserves the original tool contract.`,
+          inputSchema: {
+            ...schema,
+            properties: {
+              ...schema.properties,
+              expectedRevision: { type: 'integer', minimum: 0 },
+            },
+          },
+          execute(input: unknown) {
+            const fields = record(input, [
+              ...Object.keys(schema.properties),
+              'expectedRevision',
+            ]);
+            const expected = fields.expectedRevision;
+            if (expected !== undefined) {
+              if (!Number.isSafeInteger(expected) || Number(expected) < 0)
+                throw new Error('Invalid expectedRevision.');
+              if (expected !== studyStore.getRevision())
+                throw new Error('Page state changed. Read context and retry.');
+            }
+            const { expectedRevision: _expectedRevision, ...original } = fields;
+            const result = tool.execute(original);
+            return typeof result === 'object' && result !== null
+              ? { ...result, revision: studyStore.getRevision() }
+              : result;
+          },
+        };
     try {
       void Promise.resolve(
-        context.registerTool(tool, { signal: controller.signal }),
+        context.registerTool(registered, { signal: controller.signal }),
       ).catch(() => {});
     } catch {
       /* Reading and labs remain usable without browser tool support. */

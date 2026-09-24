@@ -38,7 +38,7 @@
       "answer": "The rule gives \\(S(4)=\\chi(2)S(1)=-2\\). Directly, the argument residues are \\(0,2,0,0,3\\), whose character values are \\(0,-1,0,0,-1\\); these sum to \\(-2\\)."
     },
     "caution": "The signs of \\(S(1)\\) and \\(S(\\ell)\\) depend on the chosen nonresidue and coordinate choices; their squared sum is fixed. The pairing step needs \\(p\\equiv1\\pmod4\\).",
-    "sourceNote": "Original proof, example, and practice authored for this site. Topic alignment: current official MH3210 Handout 00. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H09 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "This identity gives another existence proof for prime sums of two squares; the earlier descent proof remains useful for constructing the representation."
   },
   {
@@ -77,7 +77,7 @@
       "answer": "Yes. The factorization \\(325=5^2\\cdot13\\) contains no prime congruent to \\(3\\pmod4\\) to an odd exponent. Since \\(13=2^2+3^2\\), multiplication by \\(5^2\\) yields \\(325=(5\\cdot2)^2+(5\\cdot3)^2=10^2+15^2\\)."
     },
     "caution": "The criterion concerns exponents in the prime factorization, not whether \\(n\\) itself is congruent to \\(1\\pmod4\\). It applies to positive \\(n\\); zero is handled separately.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H09 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "The product identity becomes the norm law in the Gaussian integers."
   },
   {
@@ -157,7 +157,7 @@
       "answer": "\\([1;2,2]=1+1/(2+1/2)=1+2/5=7/5\\). Splitting the final entry gives \\([1;2,1,1]\\), which has the same value because its inner tail \\(1+1/1\\) equals \\(2\\)."
     },
     "caution": "The first entry may be negative; the later entries are positive. A trailing one creates a second finite expansion unless the canonical convention is imposed.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "The next lesson turns Euclid’s quotients into integer recurrences.",
     "lab": "continued-fraction"
   },
@@ -167,7 +167,8 @@
     "cluster": "Continued fractions",
     "question": "Why are successive convergents reduced and tightly linked?",
     "prerequisites": [
-      "R01"
+      "R01",
+      "P04"
     ],
     "summary": "Two integer recurrences produce the convergents, and their adjacent determinant is always one in absolute value.",
     "definition": [
@@ -198,7 +199,7 @@
       "answer": "The convergents are \\(p_0/q_0=1/1\\), \\(p_1/q_1=3/2\\), and \\(p_2/q_2=7/5\\). Their last adjacent determinant is \\(p_2q_1-p_1q_2=7\\cdot2-3\\cdot5=-1=(-1)^{2-1}\\), so \\(7/5\\) is reduced."
     },
     "caution": "The determinant sign depends on the order of the two columns; its absolute value is always \\(1\\). The initial index \\(k=0\\) has determinant \\(-1\\) under this convention.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "The determinant identity controls the gap between successive convergents and proves convergence of an infinite expansion."
   },
   {
@@ -207,7 +208,8 @@
     "cluster": "Continued fractions",
     "question": "Why do infinite continued fractions converge, and how accurate are their convergents?",
     "prerequisites": [
-      "R02"
+      "R02",
+      "P04"
     ],
     "summary": "Alternating convergents form nested rational brackets whose lengths tend to zero; the resulting number is irrational and has an explicit error bound.",
     "definition": [
@@ -240,7 +242,7 @@
       "answer": "Because \\(17^2=289>288=2\\cdot12^2\\) and both numbers are positive, \\(17/12>\\sqrt2\\). The next denominator is \\(q_4=2\\cdot12+5=29\\), so \\(0<17/12-\\sqrt2<1/(12\\cdot29)=1/348\\)."
     },
     "caution": "The error bound assumes an infinite expansion with positive later entries. A finite rational expansion terminates and its last convergent has zero error.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "These bounds explain why Euclid’s quotient sequence yields unusually accurate rational approximations."
   }
 ]

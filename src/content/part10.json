@@ -38,7 +38,7 @@
     },
     "caution": "“Best approximation” is incomplete unless it names first-kind or second-kind error and the denominator bound. The Legendre criterion is sufficient only with reduced numerator and denominator and the strict threshold.",
     "bridge": "The integer-basis proof uses the same determinant-one structure to compare rational approximants; quadratic surds add a finite-state mechanism that forces their continued fractions to repeat.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
   },
   {
     "id": "R05",
@@ -46,7 +46,8 @@
     "cluster": "Continued fractions",
     "question": "Why do square roots generate repeating continued-fraction states?",
     "prerequisites": [
-      "R03"
+      "R03",
+      "N06"
     ],
     "summary": "Exact integer recurrences give finitely many states for square roots, while conjugation reduces every real quadratic irrational to a finite set of reduced states. This proves eventual periodicity and the pure-periodic criterion without relying on decimal patterns.",
     "definition": [
@@ -56,7 +57,7 @@
     "theorem": "Every real quadratic irrational has an eventually periodic simple continued fraction, and every irrational with an eventually periodic simple continued fraction is quadratic. Among quadratic irrationals, \\(\\xi\\) is purely periodic if and only if \\(\\xi>1\\) and its conjugate satisfies \\(-1<\\xi'<0\\). In particular, the exact recurrence above gives eventual periodicity for \\(\\sqrt D\\) for every positive nonsquare integer \\(D\\), whether or not \\(D\\) is squarefree.",
     "proof": [
       "For the square-root recurrence, induction gives \\(\\xi_n=(\\sqrt D+m_n)/d_n\\). The invariant \\(d_n\\mid D-m_n^2\\) holds initially; because \\(m_{n+1}\\equiv-m_n\\pmod{d_n}\\), it implies \\(d_n\\mid D-m_{n+1}^2\\), so \\(d_{n+1}\\) is an integer. Every digit \\(a_n\\) is at least \\(1\\). The floor inequalities give \\(d_na_n\\le\\sqrt D+m_n<d_n(a_n+1)\\). The first implies \\(m_{n+1}<\\sqrt D\\), since \\(\\sqrt D\\) is irrational; and \\(a_n,d_n\\ge1\\) with \\(m_n<\\sqrt D\\) imply \\(m_{n+1}=d_na_n-m_n\\ge d_n-m_n>1-\\sqrt D> -\\sqrt D\\). Thus \\(D-m_{n+1}^2>0\\) and \\(d_{n+1}>0\\). The state \\((m_n,d_n)\\) has only finitely many possibilities: \\(m_n\\) is an integer with \\(\\lvert m_n\\rvert<\\sqrt D\\), and \\(d_n\\) is a positive divisor of \\(D-m_n^2\\). The next digit and state are determined by the current state, so a repeated state starts a periodic tail.",
-      "For a general real quadratic irrational, its quadratic formula writes \\(\\xi_0=(P_0+\\sqrt{\\Delta})/Q_0\\) with integers \\(P_0,Q_0\\ne0\\), positive nonsquare integer \\(\\Delta\\), and \\(Q_0\\mid\\Delta-P_0^2\\). Indeed, for \\(AX^2+BX+C=0\\) use its discriminant \\(\\Delta=B^2-4AC\\); the two roots have this form with \\(P_0=-B,Q_0=2A\\) or \\(P_0=B,Q_0=-2A\\), and divisibility follows from \\(\\Delta-B^2=-4AC\\). At each continued-fraction step set \\(P_{n+1}=a_nQ_n-P_n\\) and \\(Q_{n+1}=(\\Delta-P_{n+1}^2)/Q_n\\). Since \\(P_{n+1}\\equiv-P_n\\pmod{Q_n}\\), the divisibility invariant is preserved; rationalizing \\(1/(\\xi_n-a_n)\\) shows \\(\\xi_{n+1}=(P_{n+1}+\\sqrt{\\Delta})/Q_{n+1}\\). The denominators may initially be signed, but are nonzero because \\(\\Delta\\) is nonsquare.",
+      "For a general real quadratic irrational, its quadratic formula writes \\(\\xi_0=(P_0+\\sqrt{\\Delta})/Q_0\\) with integers \\(P_0,Q_0\\) and \\(Q_0\\ne0\\), positive nonsquare integer \\(\\Delta\\), and \\(Q_0\\mid\\Delta-P_0^2\\). Indeed, for \\(AX^2+BX+C=0\\) use its discriminant \\(\\Delta=B^2-4AC\\); the two roots have this form with \\(P_0=-B,Q_0=2A\\) or \\(P_0=B,Q_0=-2A\\), and divisibility follows from \\(\\Delta-B^2=-4AC\\). At each continued-fraction step set \\(P_{n+1}=a_nQ_n-P_n\\) and \\(Q_{n+1}=(\\Delta-P_{n+1}^2)/Q_n\\). Since \\(P_{n+1}\\equiv-P_n\\pmod{Q_n}\\), the divisibility invariant is preserved; rationalizing \\(1/(\\xi_n-a_n)\\) shows \\(\\xi_{n+1}=(P_{n+1}+\\sqrt{\\Delta})/Q_{n+1}\\). The denominators may initially be signed, but are nonzero because \\(\\Delta\\) is nonsquare.",
       "After the initial digit, start at \\(n\\ge1\\), where \\(\\xi_n>1\\) and \\(a_n\\ge1\\). The conjugate orbit eventually enters \\((-1,0)\\). If \\(\\xi_n'<0\\) but is at most \\(-1\\), then \\(\\xi_{n+1}'=1/(\\xi_n'-a_n)\\in(-1/2,0)\\). If \\(\\xi_n'>0\\) and its floor differs from \\(a_n\\), then \\(\\xi_{n+1}'\\) is negative when the conjugate floor is smaller; when it is larger, \\(\\xi_{n+1}'\\in(0,1)\\), so the following step is negative. If the floors agree, \\(\\xi_{n+1}'>1\\) and iteration continues; if they agree forever, the two complete quotients have identical infinite simple continued fractions, contradicting that they are distinct conjugates. A negative value below \\(-1\\) enters \\((-1,0)\\) one step later. Once \\(\\xi_n'\\in(-1,0)\\), it remains there because \\(a_n\\ge1\\) and \\(\\xi_{n+1}'=1/(\\xi_n'-a_n)\\in(-1,0)\\).",
       "Call such a complete quotient reduced. In the integer representation \\(\\xi_n=(P_n+\\sqrt{\\Delta})/Q_n\\), its conjugate is \\((P_n-\\sqrt{\\Delta})/Q_n\\). Reduction implies \\(Q_n>0\\), \\(0<P_n<\\sqrt{\\Delta}\\), and \\(Q_n<P_n+\\sqrt{\\Delta}<2\\sqrt{\\Delta}\\): the first sign follows from \\(\\xi_n>\\xi_n'\\), and \\(P_n>0\\) follows from \\(\\xi_n+\\xi_n'>0\\). There are finitely many integer pairs \\((P_n,Q_n)\\). The recurrence is deterministic, so a state repeats and the tail is periodic. This proves quadratic irrational implies eventual periodicity.",
       "Conversely, if the digits repeat after a finite prefix, the periodic tail is fixed by the fractional-linear map of one period. The period matrix is a product of \\(M(a)=\\begin{pmatrix}a&1\\\\1&0\\end{pmatrix}\\), so its fixed-point equation is a nonzero quadratic equation with integer coefficients. The tail, and then the original number by the finite prefix transformation, is quadratic. It is irrational by hypothesis, so its degree is exactly two.",
@@ -81,7 +82,7 @@
     },
     "caution": "Do not infer a period from repeated decimal digits. The recurrence uses exact integer states and applies to nonsquare D whether or not D is squarefree; pure periodicity requires the stated conjugate interval.",
     "bridge": "Periodic square-root states give exact norm identities for convergents; the parity of their period will locate the fundamental Pell solution.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "lab": "continued-fraction"
   },
   {
@@ -103,8 +104,8 @@
       "The complete-quotient identity is \\(\\sqrt D=(p_k\\alpha_{k+1}+p_{k-1})/(q_k\\alpha_{k+1}+q_{k-1})\\), where \\(\\alpha_{k+1}=(\\sqrt D+m_{k+1})/d_{k+1}\\). Using the adjacent determinant \\(p_kq_{k-1}-p_{k-1}q_k=(-1)^{k-1}\\) gives \\(p_k-q_k\\sqrt D=(-1)^{k-1}/(q_k\\alpha_{k+1}+q_{k-1})\\). Comparing the coefficients of \\(1\\) and \\(\\sqrt D\\) in the complete-quotient identity also gives \\(p_k=q_km_{k+1}+d_{k+1}q_{k-1}\\), hence \\(p_k+q_k\\sqrt D=d_{k+1}(q_k\\alpha_{k+1}+q_{k-1})\\). Multiplying the last two equations proves the exact norm identity \\(p_k^2-Dq_k^2=(-1)^{k+1}d_{k+1}\\), including \\(k=0\\).",
       "The complete quotient \\(\\alpha_1=1/(\\sqrt D-a_0)\\) has conjugate \\(\\alpha_1'=-1/(\\sqrt D+a_0)\\in(-1,0)\\), and \\(\\alpha_1>1\\). By the pure-periodic criterion, its state cycle starts immediately; its least period is the digit period \\(L\\) of \\(\\sqrt D\\), so \\(\\alpha_{L+1}=\\alpha_1\\). Since \\(\\alpha_L=a_L+1/\\alpha_{L+1}\\), conjugating and substituting \\(\\alpha_1'=-1/(\\sqrt D+a_0)\\) gives \\(\\alpha_L'=a_L-a_0-\\sqrt D\\). But the state formula gives \\(\\alpha_L'=(m_L-\\sqrt D)/d_L\\). Equality in \\(\\mathbb Q(\\sqrt D)\\) forces \\(d_L=1\\) and \\(m_L=a_L-a_0\\).",
       "Every state \\(\\alpha_n\\) for \\(n\\ge1\\) is reduced. If \\(d_n=1\\), then \\(\\alpha_n' =m_n-\\sqrt D\\in(-1,0)\\), so \\(m_n<\\sqrt D<m_n+1\\) and therefore \\(m_n=a_0\\). Thus the state is \\((a_0,1)\\), the state occurring at \\(n=L\\). Minimality of the period means this state occurs exactly when \\(n\\) is a positive multiple of \\(L\\). Consequently, \\(d_n=1\\) exactly at those indices.",
-      "The norm identity now gives a convergent of norm \\(1\\) when \\(n=k+1\\) is an even multiple of \\(L\\). The first such index is \\(n=L\\) if \\(L\\) is even and \\(n=2L\\) if \\(L\\) is odd. This proves existence at \\(k=L-1\\) or \\(k=2L-1\\), respectively.",
-      "It remains to prove minimality. If \\(x^2-Dy^2=1\\) with \\(x,y>0\\), then \\(\\gcd(x,y)=1\\), since a common divisor squared would divide \\(1\\). The equation gives \\(x^2-y^2=(D-1)y^2+1>0\\), so \\(x/y>1\\). Also \\(x/y>\\sqrt D>1\\), and \\(x/y-\\sqrt D=1/[y^2(x/y+\\sqrt D)]<1/(2y^2)\\). The Legendre criterion from R04 makes \\(x/y\\) a convergent. Because it is reduced, its denominator is the convergent denominator \\(q_k=y\\); the norm identity then forces \\(k+1\\) to be an even multiple of \\(L\\). No earlier convergent can be a positive solution. The denominators increase after the initial possible tie \\(q_0=q_1=1\\), and the candidate indices are at least \\(1\\), so the first candidate also has least \\(y\\) and least \\(x\\)."
+      "The norm identity now gives a convergent of norm \\(1\\) when \\(n=k+1\\) is an even integer divisible by \\(L\\). The first such index is \\(n=L\\) if \\(L\\) is even and \\(n=2L\\) if \\(L\\) is odd. This proves existence at \\(k=L-1\\) or \\(k=2L-1\\), respectively.",
+      "It remains to prove minimality. If \\(x^2-Dy^2=1\\) with \\(x,y>0\\), then \\(\\gcd(x,y)=1\\), since a common divisor squared would divide \\(1\\). The equation gives \\(x^2-y^2=(D-1)y^2+1>0\\), so \\(x/y>1\\). Also \\(x/y>\\sqrt D>1\\), and \\(x/y-\\sqrt D=1/[y^2(x/y+\\sqrt D)]<1/(2y^2)\\). The Legendre criterion from R04 makes \\(x/y\\) a convergent. Because it is reduced, its denominator is the convergent denominator \\(q_k=y\\); the norm identity then forces \\(k+1\\) to be an even integer divisible by \\(L\\). No earlier convergent can be a positive solution. The denominators increase after the initial possible tie \\(q_0=q_1=1\\), and the candidate indices are at least \\(1\\), so the first candidate also has least \\(y\\) and least \\(x\\)."
     ],
     "example": {
       "prompt": "Find the fundamental solution for \\(D=13\\) and show why a small search window misses it.",
@@ -125,7 +126,7 @@
     },
     "caution": "A bounded search can fail to display the fundamental point. Positive Pell solvability and minimality come from the period theorem, not from a search viewport.",
     "bridge": "The fundamental norm-one element generates further solutions by multiplication; a separate completeness argument is needed to show that no positive solutions are missed.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "lab": "pell"
   },
   {
@@ -166,7 +167,7 @@
     },
     "caution": "Showing that powers generate infinitely many solutions is not a completeness proof. The reduction to the interval \\( [1,\\varepsilon)\\) rules out every other positive solution.",
     "bridge": "For the Pell equation, the positive-real norm-one subgroup is \\(\\langle\\varepsilon\\rangle\\), while the full integer norm-one group is \\(\\{\\pm\\varepsilon^k:k\\in\\mathbb Z\\}\\). The latter contains \\(-1\\) of order \\(2\\), so it is not infinite cyclic. Units of norm \\(-1\\), when they exist, form a separate coset; the fundamental norm-one solution need not generate every unit of the quadratic order.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional."
   },
   {
     "id": "R08",
@@ -186,7 +187,7 @@
     "proof": [
       "First, the square-root states \\( (m_n,d_n)\\) for \\(n\\ge1\\) are reduced and cycle with least period \\(L\\). If \\(d_n=1\\), then the conjugate complete quotient is \\(m_n-\\sqrt D\\in(-1,0)\\); hence \\(m_n<\\sqrt D<m_n+1\\) and \\(m_n=a_0\\). This is the unique state \\( (a_0,1)\\), which occurs at \\(n=L\\); minimality of the state period shows \\(d_n=1\\) exactly when \\(n\\) is a positive multiple of \\(L\\).",
       "Neither coordinate can vanish, since that would require \\(x^2=-1\\) or \\(Dy^2=1\\). Replacing an integer solution by absolute values gives \\(x,y>0\\); the equation also implies \\(x\\ge y\\), because \\(x^2-y^2=(D-1)y^2-1\\ge0\\). Thus \\(\\gcd(x,y)=1\\). Since \\(x/y<\\sqrt D\\), we have \\(\\sqrt D-x/y=1/[y^2(\\sqrt D+x/y)]<1/(2y^2)\\), as \\(\\sqrt D+x/y>1+1=2\\). The Legendre criterion makes \\(x/y\\) a convergent \\(p_k/q_k\\), and reducedness gives \\(x=p_k,y=q_k\\). Its norm identity forces \\(d_{k+1}=1\\) and \\(k+1\\) odd. The state fact then says \\(k+1\\) is an odd multiple of \\(L\\). Such an index exists exactly when \\(L\\) is odd; the first is \\(k+1=L\\), yielding the claimed convergent.",
-      "Conversely, if \\(L\\) is odd, the state fact gives \\(d_L=1\\). At \\(k=L-1\\), the norm identity is \\(p_{L-1}^2-Dq_{L-1}^2=(-1)^L d_L=-1\\). For a positive nonsquare \\(D\\), these convergents have positive coordinates, so this is a positive solution. If \\(L\\) is even, every index with \\(d_{k+1}=1\\) has \\(k+1\\) an even multiple of \\(L\\), making the norm identity positive; the preceding argument rules out any negative-norm solution."
+      "Conversely, if \\(L\\) is odd, the state fact gives \\(d_L=1\\). At \\(k=L-1\\), the norm identity is \\(p_{L-1}^2-Dq_{L-1}^2=(-1)^L d_L=-1\\). For a positive nonsquare \\(D\\), these convergents have positive coordinates, so this is a positive solution. If \\(L\\) is even, every index with \\(d_{k+1}=1\\) has \\(k+1\\) an even integer divisible by \\(L\\), making the norm identity positive; the preceding argument rules out any negative-norm solution."
     ],
     "example": {
       "prompt": "Compare negative Pell for \\(D=2\\) and \\(D=3\\).",
@@ -206,7 +207,7 @@
     },
     "caution": "The odd-period criterion concerns norm \\(-1\\) only. It does not follow from positive-Pell solvability, and a local modular obstruction can prove nonexistence without computing a period.",
     "bridge": "The norm identities classify positive and negative Pell behavior. Pythagorean triples use a related integer factorization but require a separate parity and coprimality argument.",
-    "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
+    "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H10 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "lab": "pell"
   },
   {

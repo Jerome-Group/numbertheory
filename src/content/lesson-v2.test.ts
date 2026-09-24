@@ -39,6 +39,8 @@ test('legacy adapter retains every teaching field with stable references', () =>
     ],
   );
   assert.equal(adapted.lesson.migration, 'legacy-adapted');
+  assert.equal(adapted.lesson.objectives.length, 1);
+  assert.ok(adapted.lesson.objectives[0].includes('cancellation'));
   assert.equal(adapted.claims[0].statement, old.theorem);
   assert.deepEqual(adapted.claims[0].proof, old.proof);
   assert.deepEqual(adapted.examples[0].steps, old.example.steps);

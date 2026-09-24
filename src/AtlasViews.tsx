@@ -499,7 +499,7 @@ export function AtlasViews({
               <h2>
                 {handout}
                 <span>
-                  {handout >= 'MH-H08'
+                  {['MH-H08', 'MH-H09', 'MH-H10'].includes(handout)
                     ? 'Historical alignment · verify current handout'
                     : 'Current handout topic'}
                 </span>

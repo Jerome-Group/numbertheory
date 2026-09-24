@@ -1,6 +1,6 @@
 # Lesson migration ledger
 
-Baseline: `4aaa44699fffdcb42f74026e7674c99429bdae4b` (60 published IDs). `keep` retains the original lesson and canonical claim in the V1 adapter; it does not mean the fuller V2 learning contract has been reviewed. New modules are original drafts requiring the same review before release.
+Baseline: `4aaa44699fffdcb42f74026e7674c99429bdae4b` (60 published IDs). `keep` retains the original lesson and canonical claim in the V1 adapter; it does not mean the fuller V2 learning contract has been reviewed. Every listed lesson now has a distinct learner objective in `src/content/objectives.json`. Claim hypotheses remain within their theorem text rather than separately indexed; the V1 adapter is retained. New modules are original drafts requiring the same review before release.
 
 | ID | Title | Disposition | Current migration state |
 | --- | --- | --- | --- |

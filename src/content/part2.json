@@ -174,6 +174,7 @@
     "question": "Why can a composite number pass a Fermat test that every prime must pass?",
     "prerequisites": [
       "C06",
+      "C04",
       "D05"
     ],
     "summary": "Fermat’s congruence is necessary for primality under its coprimality hypothesis, but it is not sufficient. The squarefree composite \\(561\\) passes the Fermat congruence for every coprime base, showing why a test result is evidence rather than a proof.",
@@ -215,7 +216,8 @@
     "cluster": "Arithmetic functions",
     "question": "When do values on prime powers determine an arithmetic function everywhere?",
     "prerequisites": [
-      "D05"
+      "D05",
+      "C07"
     ],
     "summary": "Multiplicativity is a rule for coprime inputs; complete multiplicativity removes that restriction. Unique factorization then shows that a multiplicative function is determined by its values on prime powers, but those values need not be powers of its value at the prime.",
     "definition": [

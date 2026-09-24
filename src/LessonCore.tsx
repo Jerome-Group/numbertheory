@@ -7,7 +7,8 @@ import {
 } from './content/registries';
 import type { Lesson } from './content/types';
 import { MathText } from './MathText';
-import { ProofRepair } from './ProofRepair';
+import { CancellationPractice } from './CancellationPractice';
+import { ChoiceCheck } from './ChoiceCheck';
 import { NextLesson, Practice } from './StudyPanels';
 
 export function LessonCore({
@@ -67,7 +68,8 @@ export function LessonCore({
             if (!claim) throw new Error(`Missing proof ${block.id}`);
             return (
               <div key={`${block.id}.proof`}>
-                {lesson.id === 'P00' && <ProofRepair />}
+                {lesson.id === 'P00' && <ChoiceCheck id="P00" />}
+                {lesson.id === 'Q04' && <ChoiceCheck id="Q04" />}
                 <section id="proof" className="content-section">
                   <h2>Why it is true</h2>
                   {claim.proof.map((text, step) => (
@@ -83,24 +85,27 @@ export function LessonCore({
             const example = exampleRegistry.get(block.id);
             if (!example) throw new Error(`Missing example ${block.id}`);
             return (
-              <section id="example" className="content-section" key={block.id}>
-                <h2>Worked example</h2>
-                <p className="section-lead">
-                  <MathText text={example.prompt} />
-                </p>
-                <ol className="worked-steps">
-                  {example.steps.map((text, step) => (
-                    <li key={`${block.id}.${step}`}>
-                      <span className="step-text">
-                        <MathText text={text} />
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-                <p className="result-line">
-                  <MathText text={example.conclusion} />
-                </p>
-              </section>
+              <div key={block.id}>
+                {lesson.id === 'R07' && <ChoiceCheck id="R07" />}
+                <section id="example" className="content-section">
+                  <h2>Worked example</h2>
+                  <p className="section-lead">
+                    <MathText text={example.prompt} />
+                  </p>
+                  <ol className="worked-steps">
+                    {example.steps.map((text, step) => (
+                      <li key={`${block.id}.${step}`}>
+                        <span className="step-text">
+                          <MathText text={text} />
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="result-line">
+                    <MathText text={example.conclusion} />
+                  </p>
+                </section>
+              </div>
             );
           }
           case 'lab':
@@ -111,8 +116,22 @@ export function LessonCore({
             ) : null;
           case 'practice': {
             const exercise = exerciseRegistry.get(block.id);
-            if (!exercise) throw new Error(`Missing exercise ${block.id}`);
-            return <Practice key={block.id} lesson={lesson} />;
+            const claimBlock = model.blocks.find(
+              (item) => item.kind === 'claim',
+            );
+            const claim = claimBlock && claimRegistry.get(claimBlock.id);
+            if (!exercise || !claim)
+              throw new Error(`Missing practice dependencies ${block.id}`);
+            return (
+              <div key={block.id}>
+                {lesson.id === 'C02' && <CancellationPractice />}
+                <Practice
+                  lessonId={lesson.id}
+                  claim={claim}
+                  exercise={exercise}
+                />
+              </div>
+            );
           }
           case 'boundary':
             return (

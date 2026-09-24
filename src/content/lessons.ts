@@ -156,7 +156,7 @@ const foundations: Lesson[] = [
     question: 'Can the greatest common divisor be built from the inputs?',
     prerequisites: ['D02'],
     summary:
-      'The gcd is the least positive integer combination of two nonzero inputs. This produces a certificate before we discuss a fast algorithm.',
+      'The gcd is the least positive integer combination when the two inputs are not both zero. This produces a certificate before we discuss a fast algorithm.',
     definition: [
       'For integers \\(a,b\\), not both zero, \\(\\gcd(a,b)\\) is the greatest positive common divisor. Its sign is always positive.',
     ],

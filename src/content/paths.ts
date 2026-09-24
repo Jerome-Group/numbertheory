@@ -66,8 +66,8 @@ export const pathDetails: Record<
   mh3210: {
     title: 'MH3210',
     description:
-      'Topic alignment with the current overview; late handout locators remain provisional.',
-    ids: courseMap.map((row) => row.id),
+      'Current topic alignment through Handout 07; later Handouts 08–10 are historical same-course mappings awaiting current verification.',
+    ids: courseMap.filter((row) => row.handouts.length).map((row) => row.id),
   },
   computational: {
     title: 'Computational',
