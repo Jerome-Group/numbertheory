@@ -1,4 +1,5 @@
 import order from './order.json';
+import part0 from './part0.json';
 import part1 from './part1.json';
 import part2 from './part2.json';
 import part3 from './part3.json';
@@ -9,6 +10,8 @@ import part7 from './part7.json';
 import part8 from './part8.json';
 import part9 from './part9.json';
 import part10 from './part10.json';
+import part11 from './part11.json';
+import part12 from './part12.json';
 import type { Lesson } from './types';
 
 const foundations: Lesson[] = [
@@ -240,6 +243,7 @@ const foundations: Lesson[] = [
 
 export const lessons: Lesson[] = [
   ...foundations,
+  ...(part0 as Lesson[]),
   ...(part1 as Lesson[]),
   ...(part2 as Lesson[]),
   ...(part3 as Lesson[]),
@@ -250,4 +254,6 @@ export const lessons: Lesson[] = [
   ...(part8 as Lesson[]),
   ...(part9 as Lesson[]),
   ...(part10 as Lesson[]),
+  ...(part11 as Lesson[]),
+  ...(part12 as Lesson[]),
 ].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));

@@ -5,8 +5,11 @@ import ts from '@typescript/typescript6';
 let source = readFileSync('src/content/lessons.ts', 'utf8');
 source = source.replace(
   /import (\w+) from '\.\/(.+\.json)';/g,
-  (_, variable, file) =>
-    `const ${variable} = ${readFileSync(`src/content/${file}`, 'utf8')};`,
+  (_, variable, file) => {
+    const contents = readFileSync(`src/content/${file}`, 'utf8');
+    JSON.parse(contents);
+    return `const ${variable} = ${contents};`;
+  },
 );
 const compiled = ts.transpileModule(source, {
   compilerOptions: {
@@ -22,6 +25,7 @@ const ids = new Set();
 const requiredLabs = {
   D04: 'euclid',
   C01: 'residue',
+  C02: 'cancellation',
   C03: 'linear',
   C04: 'crt',
   A03: 'divisor',
@@ -31,6 +35,7 @@ const requiredLabs = {
   Q04: 'lattice',
   R01: 'continued-fraction',
   R06: 'pell',
+  N04: 'gaussian',
 };
 const math = /\\\[([\s\S]*?)\\\]|\\\(([\s\S]*?)\\\)/g;
 let formulas = 0;
@@ -77,6 +82,12 @@ for (const lesson of lessons) {
       errors.push(`${lesson.id}: non-text field ${index}`);
       continue;
     }
+    if (
+      [...value].some(
+        (char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127,
+      )
+    )
+      errors.push(`${lesson.id}: control character in field ${index}`);
     const openings =
       (value.match(/\\\(/g) ?? []).length + (value.match(/\\\[/g) ?? []).length;
     const matches = [...value.matchAll(math)];
@@ -87,6 +98,12 @@ for (const lesson of lessons) {
       errors.push(
         `${lesson.id}: raw math symbol outside LaTeX in field ${index}`,
       );
+    if (
+      /(?<![A-Za-z0-9])\d+(?![A-Za-z0-9])/.test(
+        plain.replace(/Handout \d+/g, ''),
+      )
+    )
+      errors.push(`${lesson.id}: raw number outside LaTeX in field ${index}`);
     for (const match of matches) {
       formulas++;
       try {
@@ -105,6 +122,27 @@ for (const lesson of lessons) {
 for (const lesson of lessons)
   for (const pre of lesson.prerequisites)
     if (!ids.has(pre)) errors.push(`${lesson.id}: missing prerequisite ${pre}`);
+const byId = new Map(lessons.map((lesson) => [lesson.id, lesson]));
+const visited = new Set();
+const visiting = new Set();
+function visit(id, trail) {
+  if (visiting.has(id)) {
+    errors.push(`Prerequisite cycle: ${[...trail, id].join(' -> ')}`);
+    return;
+  }
+  if (visited.has(id)) return;
+  visiting.add(id);
+  for (const pre of byId.get(id)?.prerequisites ?? [])
+    if (byId.has(pre)) visit(pre, [...trail, id]);
+  visiting.delete(id);
+  visited.add(id);
+}
+for (const id of ids) visit(id, []);
+const order = JSON.parse(readFileSync('src/content/order.json', 'utf8'));
+if (order.length !== ids.size || new Set(order).size !== ids.size)
+  errors.push('Order manifest must contain each lesson exactly once.');
+for (const id of order)
+  if (!ids.has(id)) errors.push(`Order manifest has unknown lesson ${id}`);
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exitCode = 1;

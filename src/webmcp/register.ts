@@ -1,10 +1,13 @@
 import { lessons } from '../content/lessons';
+import { claimRegistry } from '../content/registries';
+import { buildCancellationMap } from '../math/cancellation';
 import {
   buildPellOrbit,
   buildRationalContinuedFraction,
   buildSqrtContinuedFraction,
 } from '../math/continued-fraction';
 import { solveCrt } from '../math/crt';
+import { divideGaussian } from '../math/gaussian';
 import { extendedEuclid } from '../math/euclid';
 import {
   buildDivisorIncidenceStudy,
@@ -55,6 +58,12 @@ const idSchema = {
   required: ['lessonId'],
   additionalProperties: false,
 };
+const claimSchema = {
+  type: 'object',
+  properties: { claimId: { type: 'string', enum: [...claimRegistry.keys()] } },
+  required: ['claimId'],
+  additionalProperties: false,
+};
 const integerSchema = {
   type: 'object',
   properties: {
@@ -62,6 +71,26 @@ const integerSchema = {
     b: { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 14 },
   },
   required: ['a', 'b'],
+  additionalProperties: false,
+};
+const cancellationSchema = {
+  type: 'object',
+  properties: {
+    modulus: { type: 'string', pattern: '^[1-9][0-9]*$', maxLength: 2 },
+    factor: { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 14 },
+  },
+  required: ['modulus', 'factor'],
+  additionalProperties: false,
+};
+const gaussianSchema = {
+  type: 'object',
+  properties: Object.fromEntries(
+    ['alphaRe', 'alphaIm', 'betaRe', 'betaIm'].map((key) => [
+      key,
+      { type: 'string', pattern: '^-?(0|[1-9][0-9]*)$', maxLength: 4 },
+    ]),
+  ),
+  required: ['alphaRe', 'alphaIm', 'betaRe', 'betaIm'],
   additionalProperties: false,
 };
 const crtSchema = {
@@ -262,6 +291,105 @@ export function registerStudyTools(): () => void {
         const id = stringField(o.lessonId, 'lessonId', 8);
         const s = studyStore.openLesson(id);
         return { lessonId: s.lessonId, url: location.href };
+      },
+    },
+    {
+      name: 'get_number_theory_claim',
+      title: 'Get theorem and proof',
+      description:
+        'Read a public claim, its preserved proof, dependencies and source status without changing the page.',
+      inputSchema: claimSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['claimId']);
+        const id = stringField(fields.claimId, 'claimId', 32);
+        const claim = claimRegistry.get(id);
+        if (!claim) throw new Error('Unknown claim ID.');
+        return claim;
+      },
+    },
+    {
+      name: 'compute_cancellation_map',
+      title: 'Compute multiplication fibers',
+      description:
+        'Return the exact bounded multiplication map and its fibers without changing the page.',
+      inputSchema: cancellationSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'factor']);
+        return buildCancellationMap(
+          stringField(fields.modulus, 'modulus', 2),
+          stringField(fields.factor, 'factor', 14),
+        );
+      },
+    },
+    {
+      name: 'set_cancellation_map',
+      title: 'Set multiplication fibers',
+      description:
+        'Set the visible exact C02 multiplication map and open its lesson.',
+      inputSchema: cancellationSchema,
+      annotations: { readOnlyHint: false, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, ['modulus', 'factor']);
+        const state = studyStore.setCancellationMap(
+          stringField(fields.modulus, 'modulus', 2),
+          stringField(fields.factor, 'factor', 14),
+        );
+        return {
+          lessonId: state.lessonId,
+          map: state.fiberMap,
+          url: location.href,
+        };
+      },
+    },
+    {
+      name: 'compute_gaussian_division',
+      title: 'Compute Gaussian division',
+      description:
+        'Return an exact Gaussian quotient, remainder, and strict norm certificate without changing the page.',
+      inputSchema: gaussianSchema,
+      annotations: { readOnlyHint: true, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, [
+          'alphaRe',
+          'alphaIm',
+          'betaRe',
+          'betaIm',
+        ]);
+        return divideGaussian(
+          stringField(fields.alphaRe, 'alphaRe', 4),
+          stringField(fields.alphaIm, 'alphaIm', 4),
+          stringField(fields.betaRe, 'betaRe', 4),
+          stringField(fields.betaIm, 'betaIm', 4),
+        );
+      },
+    },
+    {
+      name: 'set_gaussian_division',
+      title: 'Set Gaussian division',
+      description:
+        'Set the visible exact Gaussian division lab and open its lesson.',
+      inputSchema: gaussianSchema,
+      annotations: { readOnlyHint: false, untrustedContentHint: false },
+      execute(input) {
+        const fields = record(input, [
+          'alphaRe',
+          'alphaIm',
+          'betaRe',
+          'betaIm',
+        ]);
+        const state = studyStore.setGaussianDivision(
+          stringField(fields.alphaRe, 'alphaRe', 4),
+          stringField(fields.alphaIm, 'alphaIm', 4),
+          stringField(fields.betaRe, 'betaRe', 4),
+          stringField(fields.betaIm, 'betaIm', 4),
+        );
+        return {
+          lessonId: state.lessonId,
+          division: state.gaussian,
+          url: location.href,
+        };
       },
     },
     {

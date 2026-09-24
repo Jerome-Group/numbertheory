@@ -1,0 +1,148 @@
+[
+  {
+    "id": "N01",
+    "title": "Rings, units, primes, and irreducibles",
+    "cluster": "Toward algebraic number theory",
+    "question": "Why does primality depend on the ring around an element?",
+    "prerequisites": ["C01", "C02", "D05"],
+    "summary": "A unit, an irreducible, and a prime element play distinct roles; cancellation and factorization require a domain.",
+    "definition": [
+      "A commutative ring with identity has addition, multiplication, and \\(1\\). An integral domain has no nonzero zero divisors. A field is a ring in which every nonzero element is a unit. A unit \\(u\\) has an inverse \\(v\\) satisfying \\(uv=1\\).",
+      "In an integral domain \\(R\\), a nonzero nonunit \\(r\\) is irreducible if \\(r=ab\\) forces \\(a\\) or \\(b\\) to be a unit. It is prime if \\(r\\mid ab\\) forces \\(r\\mid a\\) or \\(r\\mid b\\). Elements differing by a unit are associates."
+    ],
+    "theorem": "In every commutative integral domain with identity, every prime element is irreducible. The converse need not hold in an arbitrary domain.",
+    "proof": [
+      "Let \\(r\\) be prime and suppose \\(r=ab\\). Then \\(r\\mid ab\\), so \\(r\\mid a\\) or \\(r\\mid b\\). In the first case write \\(a=rc\\). Substituting gives \\(r=rcb\\). Since \\(r\\ne0\\) and the ring is a domain, cancellation gives \\(1=cb\\), so \\(b\\) is a unit. The other case is symmetric. Thus \\(r\\) is irreducible. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compare the element \\(2\\) in \\(\\mathbb Z\\), \\(\\mathbb Q\\), and \\(\\mathbb Z/6\\mathbb Z\\).",
+      "steps": [
+        "In \\(\\mathbb Z\\), the only units are \\(\\pm1\\); \\(2\\) is a prime element by Euclid's lemma.",
+        "In the field \\(\\mathbb Q\\), \\(2\\) is a unit with inverse \\(1/2\\), so the definitions of prime and irreducible exclude it.",
+        "Modulo \\(6\\), the nonzero classes \\([2]\\) and \\([3]\\) multiply to \\([0]\\). This ring has zero divisors, so the domain theorem cannot simply be applied."
+      ],
+      "conclusion": "An element's role depends on both its multiplication and its units in the stated coefficient ring."
+    },
+    "practice": {
+      "prompt": "Prove that any two associates in an integral domain have the same divisors, and say why irreducible elements must be nonunits.",
+      "hints": [
+        "Write \\(s=ur\\) with \\(u\\) a unit.",
+        "Multiplying a divisibility witness by \\(u\\) or \\(u^{-1}\\) preserves membership in the ring."
+      ],
+      "answer": "If \\(s=ur\\) and \\(d\\mid r\\), then \\(r=de\\) gives \\(s=d(ue)\\), so \\(d\\mid s\\). Conversely, \\(r=u^{-1}s\\) gives the reverse implication. Units are excluded from irreducibility because a unit already divides every element and carries no nontrivial factorization information."
+    },
+    "caution": "Prime implies irreducible in a domain, but the reverse needs an additional factorization property. The phrase ‘prime element’ must always name its ring.",
+    "bridge": "Gaussian integers form a domain where Euclidean division will later supply the missing factorization property.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N02",
+    "title": "Finite groups behind modular arithmetic",
+    "cluster": "Toward algebraic number theory",
+    "question": "Why do all nonempty fibers of a homomorphism have the same size?",
+    "prerequisites": ["N01", "C06"],
+    "summary": "Cosets partition finite groups, and every nonempty homomorphism fiber is one coset of its kernel.",
+    "definition": [
+      "A group \\(G\\) has an associative operation, identity, and inverses. A subgroup \\(H\\) is closed under that structure; its left coset at \\(g\\) is \\(gH=\\{gh:h\\in H\\}\\). A homomorphism \\(f:G\\to K\\) preserves the operation, and \\(\\ker f=\\{g:f(g)=e_K\\}\\)."
+    ],
+    "theorem": "For a homomorphism of finite groups \\(f:G\\to K\\), each nonempty fiber \\(f^{-1}(y)\\) is a coset of \\(\\ker f\\). Consequently \\(|G|=|\\ker f|\\,|\\operatorname{im} f|\\), and every subgroup \\(H\\le G\\) has order dividing \\(|G|\\).",
+    "proof": [
+      "If \\(f(g)=y\\), then \\(f(gh)=y\\) for every \\(h\\in\\ker f\\), so \\(g\\ker f\\subseteq f^{-1}(y)\\). If \\(f(x)=y\\), then \\(f(g^{-1}x)=e_K\\), so \\(x\\in g\\ker f\\). Thus the fiber equals that coset.",
+      "Multiplication by \\(g\\) bijects \\(\\ker f\\) with \\(g\\ker f\\), so each nonempty fiber has \\(|\\ker f|\\) elements. The fibers indexed by \\(\\operatorname{im} f\\) partition \\(G\\), yielding the formula. The same disjoint-or-equal coset argument partitions \\(G\\) into copies of any subgroup \\(H\\), proving Lagrange's divisibility statement. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Inspect multiplication by \\(4\\) on the additive group \\(\\mathbb Z/12\\mathbb Z\\).",
+      "steps": [
+        "The map \\(f([x])=[4x]\\) is additive: \\(f([x]+[y])=f([x])+f([y])\\).",
+        "Its kernel is \\(\\{[0],[3],[6],[9]\\}\\), so each nonempty fiber has \\(4\\) elements.",
+        "Its image is \\(\\{[0],[4],[8]\\}\\), and \\(12=4\\cdot3\\)."
+      ],
+      "conclusion": "The exact C02 map is a concrete instance of the general coset theorem."
+    },
+    "practice": {
+      "prompt": "In the cyclic group of order \\(12\\), find the kernel size of the power map \\(x\\mapsto x^8\\), and state the hypothesis needed for a power map on a general group to be a homomorphism.",
+      "hints": [
+        "Write each element as \\(g^j\\) for a generator \\(g\\).",
+        "In a nonabelian group, compare \\((xy)^8\\) with \\(x^8y^8\\)."
+      ],
+      "answer": "The equation \\(g^{8j}=e\\) is equivalent to \\(12\\mid8j\\), giving \\(\\gcd(12,8)=4\\) kernel elements. A power map is a homomorphism on an abelian group, since then \\((xy)^8=x^8y^8\\). No such general assertion is made for nonabelian groups."
+    },
+    "caution": "Equal fiber size holds for every group homomorphism; the specific \\(\\gcd(h,k)\\) count uses a cyclic group of order \\(h\\).",
+    "bridge": "A kernel in a ring map becomes an ideal. Quotient structures formalize what a map forgets.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N03",
+    "title": "Ideals and quotients through the integers",
+    "cluster": "Toward algebraic number theory",
+    "question": "What structure does reduction modulo an integer forget?",
+    "prerequisites": ["N01", "D03", "C04"],
+    "summary": "Every ideal of the integers is generated by one nonnegative integer; quotient maps record congruence as a kernel.",
+    "definition": [
+      "An ideal \\(I\\) of a commutative ring \\(R\\) is an additive subgroup closed under multiplication by every element of \\(R\\). For \\(d\\in\\mathbb Z\\), \\(d\\mathbb Z=\\{dk:k\\in\\mathbb Z\\}\\). The quotient \\(R/I\\) identifies elements whose difference lies in \\(I\\)."
+    ],
+    "theorem": "Every ideal \\(I\\) of \\(\\mathbb Z\\) equals \\(d\\mathbb Z\\) for a unique \\(d\\ge0\\). For \\(a,b\\ge0\\), \\(a\\mathbb Z+b\\mathbb Z=\\gcd(a,b)\\mathbb Z\\) and \\(a\\mathbb Z\\cap b\\mathbb Z=\\operatorname{lcm}(a,b)\\mathbb Z\\), using \\(\\gcd(0,0)=\\operatorname{lcm}(0,b)=0\\).",
+    "proof": [
+      "The zero ideal equals \\(0\\mathbb Z\\). Otherwise an ideal contains a positive integer: negate a negative element if necessary. Let \\(d\\) be its least positive element. For any \\(x\\in I\\), integer division gives \\(x=qd+r\\) with \\(0\\le r<d\\). Since \\(r=x-qd\\in I\\), minimality gives \\(r=0\\). Thus \\(I\\subseteq d\\mathbb Z\\); ideal closure gives the reverse inclusion. If \\(d,e\\ge0\\) generate the same ideal, each divides the other, hence \\(d=e\\).",
+      "The ideal sum consists of all integer combinations \\(ax+by\\), which Bézout identifies with \\(\\gcd(a,b)\\mathbb Z\\), including the zero pair under the stated convention. The intersection consists of common multiples, exactly the multiples of the nonnegative least common multiple; when either input is zero, that set is \\(\\{0\\}\\). \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Compute the sum and intersection of \\(6\\mathbb Z\\) and \\(10\\mathbb Z\\).",
+      "steps": [
+        "Since \\(\\gcd(6,10)=2\\), their sum is \\(2\\mathbb Z\\). A certificate is \\(2=2\\cdot6-10\\).",
+        "Their common multiples are multiples of \\(\\operatorname{lcm}(6,10)=30\\), so their intersection is \\(30\\mathbb Z\\).",
+        "Reduction \\(\\mathbb Z\\to\\mathbb Z/6\\mathbb Z\\) has kernel \\(6\\mathbb Z\\), since exactly those integers map to \\([0]\\)."
+      ],
+      "conclusion": "An ideal is a set of integers, while a residue class is one element of a quotient."
+    },
+    "practice": {
+      "prompt": "Classify the ideals \\(0\\mathbb Z\\) and \\(1\\mathbb Z\\), then find the kernel of reduction modulo \\(8\\).",
+      "hints": [
+        "Use the definition of multiples.",
+        "Which integers become the zero class modulo \\(8\\)?"
+      ],
+      "answer": "The ideal \\(0\\mathbb Z=\\{0\\}\\) is the zero ideal; \\(1\\mathbb Z=\\mathbb Z\\) is the whole ring. Reduction modulo \\(8\\) sends exactly multiples of \\(8\\) to \\([0]\\), so its kernel is \\(8\\mathbb Z\\)."
+    },
+    "caution": "A quotient class such as \\([2]\\) is an element, not an ideal. The zero ideal must be included in the integer classification.",
+    "bridge": "The Chinese remainder theorem identifies a quotient by a product of coprime ideals with a product of smaller quotients.",
+    "sourceNote": "Original exposition and proof authored for this site. Independent algebraic bridge; no exact MH3210 handout locator asserted."
+  },
+  {
+    "id": "N04",
+    "title": "Euclidean division in Gaussian integers",
+    "cluster": "Toward algebraic number theory",
+    "question": "What replaces a short remainder interval on an integer lattice?",
+    "prerequisites": ["S05", "D04", "N01"],
+    "summary": "Nearest-lattice-point division gives a remainder of strictly smaller norm, so Euclid and Bézout work in Gaussian integers.",
+    "definition": [
+      "A Gaussian integer is \\(z=a+bi\\) with \\(a,b\\in\\mathbb Z\\) and \\(i^2=-1\\). Its norm is \\(N(z)=z\\overline z=a^2+b^2\\). For a nonzero Gaussian integer, the norm is a positive integer.",
+      "For nonzero \\(\\beta\\), write the rational complex quotient \\(\\alpha/\\beta=u+vi\\). A nearest Gaussian integer \\(q=m+ni\\) satisfies \\(|u-m|\\le1/2\\) and \\(|v-n|\\le1/2\\). Ties may have several valid choices."
+    ],
+    "theorem": "For Gaussian integers \\(\\alpha,\\beta\\) with \\(\\beta\\ne0\\), there exist Gaussian integers \\(q,r\\) such that \\(\\alpha=q\\beta+r\\) and \\(N(r)<N(\\beta)\\). Repeating such divisions terminates and yields a Gaussian gcd and Bézout identity, with gcd unique only up to a unit.",
+    "proof": [
+      "Choose a nearest lattice point \\(q\\) to \\(\\alpha/\\beta\\) by rounding both rational coordinates to integers. Put \\(r=\\alpha-q\\beta\\), a Gaussian integer. Norm multiplicativity gives \\(N(r)=N(\\beta)|\\alpha/\\beta-q|^2\\le N(\\beta)((1/2)^2+(1/2)^2)=N(\\beta)/2<N(\\beta)\\). This inequality also covers ties; uniqueness of \\(q\\) is unnecessary.",
+      "If \\(\\alpha=q\\beta+r\\), a Gaussian integer divides both \\(\\alpha,\\beta\\) exactly when it divides both \\(\\beta,r\\). Each nonzero remainder has a strictly smaller positive integer norm than the preceding divisor, so an infinite chain is impossible. The last nonzero remainder divides both original inputs, and every common divisor divides it. Tracing each remainder as a Gaussian integer combination of the inputs gives a Bézout identity. Multiplication by a unit changes the representative gcd but not its divisors. \\(\\square\\)"
+    ],
+    "example": {
+      "prompt": "Divide \\(7+5i\\) by \\(3+2i\\), then find a Bézout certificate.",
+      "steps": [
+        "The exact quotient point is \\((7+5i)/(3+2i)=(31+i)/13\\). Choose nearest lattice point \\(q=2\\).",
+        "The remainder is \\(r=(7+5i)-2(3+2i)=1+i\\), with \\(N(r)=2<N(3+2i)=13\\).",
+        "Continue: \\(3+2i=2(1+i)+1\\). Back substitution gives \\(1=5(3+2i)-2(7+5i)\\)."
+      ],
+      "conclusion": "The gcd is a unit; \\(1\\) is a normalized representative with an exact certificate."
+    },
+    "practice": {
+      "prompt": "Divide \\(4+7i\\) by \\(2+i\\) exactly, then explain why a divisor \\(\\beta=0\\) is excluded from the theorem.",
+      "hints": [
+        "Multiply the quotient by the conjugate \\(2-i\\).",
+        "At \\(N(\\beta)=0\\), no nonnegative remainder norm can be strictly smaller."
+      ],
+      "answer": "The quotient is \\((4+7i)/(2+i)=(15+10i)/5=3+2i\\), so the remainder is \\(0\\). When \\(\\beta=0\\), the complex quotient is undefined and \\(N(r)<0\\) cannot hold."
+    },
+    "caution": "The norm inequality follows from coordinate rounding, not from multiplicativity alone. A lattice picture is evidence for a selected quotient; the inequality proves every allowed division.",
+    "bridge": "Euclidean division supplies the Bézout step needed to prove Gaussian irreducibles are prime and obtain unique factorization.",
+    "sourceNote": "Original exposition adapted from the provided N04 handoff teaching draft and checked against the exact division certificate. Independent algebraic bridge; no exact MH3210 handout locator asserted.",
+    "lab": "gaussian"
+  }
+]

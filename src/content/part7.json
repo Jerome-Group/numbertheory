@@ -37,7 +37,7 @@
     },
     "caution": "Zero is not a unit or a nonzero square. Its symbol is \\(0\\), and it has one root rather than two.",
     "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
-    "bridge": "On the unit group \\(\\mathbb F_p^\times\\), squaring has kernel \\(\\{1,-1\\}\\); the elementary opposite-pair argument proves the same count without group language.",
+    "bridge": "On the unit group \\(\\mathbb F_p^\\times\\), squaring has kernel \\(\\{1,-1\\}\\); the elementary opposite-pair argument proves the same count without group language.",
     "lab": "quadratic"
   },
   {
@@ -79,7 +79,7 @@
     },
     "caution": "The symbol value \\(-1\\) is an integer label; its congruent representative modulo \\(p\\) is \\(p-1\\). Do not redefine the symbol to take value \\(p-1\\).",
     "sourceNote": "Original proof, example, and practice authored for this site. Optional enrichment; no direct current MH3210 handout alignment is claimed. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
-    "bridge": "Restricted to \\(\\mathbb F_p^\times\\), \\(\\chi_p\\) is a multiplicative character; extending it by \\(\\chi_p(0)=0\\) preserves the product rule."
+    "bridge": "Restricted to \\(\\mathbb F_p^\\times\\), \\(\\chi_p\\) is a multiplicative character; extending it by \\(\\chi_p(0)=0\\) preserves the product rule."
   },
   {
     "id": "Q03",

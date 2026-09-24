@@ -3,7 +3,7 @@
     "id": "C06",
     "title": "Fermat and Euler: why powers return",
     "cluster": "Modular arithmetic",
-    "question": "Why does a power of an invertible residue return to 1, and why does that exponent not tell us the first return?",
+    "question": "Why does a power of an invertible residue return to \\(1\\), and why does that exponent not tell us the first return?",
     "prerequisites": [
       "C02"
     ],

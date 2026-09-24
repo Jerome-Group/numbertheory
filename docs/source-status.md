@@ -1,6 +1,6 @@
 # Source status and rights
 
-Reviewed 2026-09-23 against the canonical MH3210 source tree and both implementation handoffs.
+Refreshed 2026-09-24 against the canonical MH3210 course folder and both implementation handoffs. The current lecture-material folder still contains Lectures 01–07; no newer lecture issue was identified there. This is a metadata check, not a fresh theorem/page audit.
 The 60 public lessons contain newly authored explanations, proofs, examples, practice, and visuals.
 No course PDF, textbook extract, assessment item, source download URL, or private file identifier is
 part of this repository or the site build.

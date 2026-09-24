@@ -24,5 +24,7 @@ export type Lesson = {
     | 'order'
     | 'lattice'
     | 'continued-fraction'
-    | 'pell';
+    | 'pell'
+    | 'gaussian'
+    | 'cancellation';
 };

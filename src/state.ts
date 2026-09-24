@@ -1,5 +1,10 @@
 import { lessons } from './content/lessons';
 import {
+  buildCancellationMap,
+  type CancellationMap,
+} from './math/cancellation';
+import { lessonPath, routeFromLocation, viewPath } from './routes';
+import {
   buildPellOrbit,
   buildRationalContinuedFraction,
   buildSqrtContinuedFraction,
@@ -8,6 +13,7 @@ import {
   type SqrtContinuedFraction,
 } from './math/continued-fraction';
 import { type CrtResult, solveCrt } from './math/crt';
+import { divideGaussian, type GaussianDivision } from './math/gaussian';
 import { type EuclidResult, extendedEuclid } from './math/euclid';
 import {
   buildDivisorIncidenceStudy,
@@ -34,7 +40,8 @@ export type AtlasView =
   | 'explore'
   | 'practice'
   | 'reference'
-  | 'course';
+  | 'course'
+  | 'not-found';
 export type StudyState = {
   view: AtlasView;
   lessonId: string;
@@ -83,6 +90,14 @@ export type StudyState = {
   latticeP: string;
   latticeQ: string;
   lattice: ReciprocityLattice | null;
+  fiberN: string;
+  fiberC: string;
+  fiberMap: CancellationMap | null;
+  ga: string;
+  gb: string;
+  gc: string;
+  gd: string;
+  gaussian: GaussianDivision | null;
 };
 const defaults = {
   view: 'learn' as AtlasView,
@@ -121,6 +136,12 @@ const defaults = {
   orderG: '3',
   latticeP: '7',
   latticeQ: '11',
+  fiberN: '12',
+  fiberC: '4',
+  ga: '7',
+  gb: '5',
+  gc: '3',
+  gd: '2',
 };
 const listeners = new Set<() => void>();
 function fromUrl(): StudyState {
@@ -132,19 +153,12 @@ function fromUrl(): StudyState {
         defaults[key as keyof typeof defaults],
     ]),
   ) as typeof defaults;
-  const lessonId = lessons.some((x) => x.id === values.lessonId)
-    ? values.lessonId
-    : defaults.lessonId;
-  const view = [
-    'lesson',
-    'learn',
-    'explore',
-    'practice',
-    'reference',
-    'course',
-  ].includes(values.view)
-    ? values.view
-    : defaults.view;
+  const route = routeFromLocation(location.pathname, location.search);
+  const lessonId =
+    route.lessonId && lessons.some((x) => x.id === route.lessonId)
+      ? route.lessonId
+      : defaults.lessonId;
+  const view = route.view as AtlasView;
   let result: EuclidResult | null = null,
     crt: CrtResult | null = null,
     linear: LinearResult | null = null,
@@ -158,7 +172,9 @@ function fromUrl(): StudyState {
     pell: PellOrbit | null = null,
     divisorStudy: DivisorIncidenceStudy | null = null,
     orderStudy: UnitOrderSpectrum | null = null,
-    lattice: ReciprocityLattice | null = null;
+    lattice: ReciprocityLattice | null = null,
+    fiberMap: CancellationMap | null = null,
+    gaussian: GaussianDivision | null = null;
   try {
     result = extendedEuclid(values.a, values.b);
   } catch {
@@ -228,6 +244,16 @@ function fromUrl(): StudyState {
   } catch {
     /* The visible lab accepts corrected values. */
   }
+  try {
+    fiberMap = buildCancellationMap(values.fiberN, values.fiberC);
+  } catch {
+    /* The visible lab accepts corrected values. */
+  }
+  try {
+    gaussian = divideGaussian(values.ga, values.gb, values.gc, values.gd);
+  } catch {
+    /* The visible lab accepts corrected values. */
+  }
   return {
     ...values,
     view,
@@ -243,6 +269,8 @@ function fromUrl(): StudyState {
     divisorStudy,
     orderStudy,
     lattice,
+    fiberMap,
+    gaussian,
   };
 }
 let state: StudyState = fromUrl();
@@ -251,8 +279,6 @@ function emit() {
 }
 function saveUrl() {
   const p = new URLSearchParams();
-  p.set('lesson', state.lessonId);
-  if (state.view !== defaults.view) p.set('view', state.view);
   for (const key of [
     'a',
     'b',
@@ -288,9 +314,18 @@ function saveUrl() {
     'orderG',
     'latticeP',
     'latticeQ',
+    'fiberN',
+    'fiberC',
+    'ga',
+    'gb',
+    'gc',
+    'gd',
   ] as const)
     if (state[key] !== defaults[key]) p.set(key, state[key]);
-  history.pushState(null, '', `${location.pathname}?${p.toString()}`);
+  const path =
+    state.view === 'lesson' ? lessonPath(state.lessonId) : viewPath(state.view);
+  const search = p.toString();
+  history.pushState(null, '', search ? `${path}?${search}` : path);
 }
 export const studyStore = {
   subscribe(listener: () => void) {
@@ -323,6 +358,41 @@ export const studyStore = {
     )
       throw new Error('Unknown atlas view.');
     state = { ...state, view };
+    saveUrl();
+    emit();
+    return state;
+  },
+  setCancellationMap(modulus: string, factor: string) {
+    const fiberMap = buildCancellationMap(modulus, factor);
+    state = {
+      ...state,
+      view: 'lesson',
+      lessonId: 'C02',
+      fiberN: String(fiberMap.modulus),
+      fiberC: fiberMap.factor,
+      fiberMap,
+    };
+    saveUrl();
+    emit();
+    return state;
+  },
+  setGaussianDivision(
+    alphaRe: string,
+    alphaIm: string,
+    betaRe: string,
+    betaIm: string,
+  ) {
+    const gaussian = divideGaussian(alphaRe, alphaIm, betaRe, betaIm);
+    state = {
+      ...state,
+      view: 'lesson',
+      lessonId: 'N04',
+      ga: gaussian.alpha.re,
+      gb: gaussian.alpha.im,
+      gc: gaussian.beta.re,
+      gd: gaussian.beta.im,
+      gaussian,
+    };
     saveUrl();
     emit();
     return state;
