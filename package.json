@@ -10,8 +10,14 @@
     "format:check": "biome format .",
     "lint": "biome lint .",
     "test": "node --test src/math/*.test.ts src/content/*.test.ts src/*.test.ts && node scripts/check-bertrand-certificate.mjs",
-    "check:content": "node scripts/check-content.mjs && node scripts/check-math-surface.mjs",
-    "check:public": "node scripts/check-public-surface.mjs"
+    "check:content": "node scripts/check-content.mjs && node scripts/check-learning-content.mjs && node scripts/check-math-surface.mjs",
+    "check:public": "node scripts/check-public-surface.mjs",
+    "verify": "node scripts/verification/verify.mjs verify .",
+    "verify:release": "node scripts/verification/verify.mjs verify:release .",
+    "verify:help": "node scripts/verification/verify.mjs help",
+    "verify:map": "node scripts/verification/verify.mjs map .",
+    "verify:identity": "node scripts/verification/verify.mjs fingerprint .",
+    "test:verification": "node --test scripts/verification/verify.test.mjs scripts/verification/runner-boundaries.test.mjs scripts/verification/learning-content.test.mjs scripts/verification/evidence.test.mjs"
   },
   "dependencies": {
     "katex": "^0.18.7",

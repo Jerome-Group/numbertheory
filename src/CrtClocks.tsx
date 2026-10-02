@@ -1,5 +1,5 @@
-import type { CrtResult } from './math/crt';
 import { MathText } from './MathText';
+import type { CrtResult } from './math/crt';
 
 function Clock({
   modulus,

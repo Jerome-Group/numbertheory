@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { LabHeader } from './GroupLabHeader';
+import { MathText } from './MathText';
 import type {
   ArithmeticFunction,
   DivisorIncidenceStudy,
 } from './math/group-labs';
 import { buildDivisorIncidenceStudy } from './math/group-labs';
-import { MathText } from './MathText';
-import { LabHeader } from './GroupLabHeader';
 import './GroupLabs.css';
 
 const functionLabels: Record<ArithmeticFunction, string> = {

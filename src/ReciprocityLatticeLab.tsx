@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { LabHeader } from './GroupLabHeader';
+import { MathText } from './MathText';
 import type { ReciprocityLattice } from './math/group-labs';
 import { buildReciprocityLattice } from './math/group-labs';
-import { MathText } from './MathText';
-import { LabHeader } from './GroupLabHeader';
 import './GroupLabs.css';
 
 export type ReciprocityLabInputs = { p: string; q: string };

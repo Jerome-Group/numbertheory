@@ -1,8 +1,8 @@
 import { useEffect, useId, useState } from 'react';
+import { LabHeader } from './GroupLabHeader';
+import { MathText } from './MathText';
 import type { UnitOrderSpectrum } from './math/group-labs';
 import { buildUnitOrderSpectrum } from './math/group-labs';
-import { MathText } from './MathText';
-import { LabHeader } from './GroupLabHeader';
 import './GroupLabs.css';
 
 export type UnitOrderLabInputs = { prime: string; candidate: string };

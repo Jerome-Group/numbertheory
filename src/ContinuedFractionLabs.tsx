@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from 'react';
+import { type FormEvent, useId, useState } from 'react';
 import { MathText } from './MathText';
 import {
   buildRationalContinuedFraction,
@@ -741,5 +741,5 @@ function positionLabel(position: 'below' | 'above' | 'exact') {
       : 'above input';
 }
 
-export { PellHyperbolaOrbitLab } from './PellLab';
 export type { PellHyperbolaOrbitLabProps } from './PellLab';
+export { PellHyperbolaOrbitLab } from './PellLab';

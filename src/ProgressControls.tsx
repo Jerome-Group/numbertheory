@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { progressStore } from './progress';
 
 export function ProgressControls() {
+  const progress = useSyncExternalStore(
+    progressStore.subscribe,
+    progressStore.getSnapshot,
+  );
+  const [backup, setBackup] = useState(false);
+  const [restore, setRestore] = useState('');
   const [message, setMessage] = useState(
     'Only this browser stores your marks.',
   );
@@ -13,9 +19,14 @@ export function ProgressControls() {
     const link = document.createElement('a');
     link.href = url;
     link.download = 'number-theory-progress.json';
+    document.body.append(link);
     link.click();
+    link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1_000);
-    setMessage('Progress export started.');
+    setBackup(true);
+    setMessage(
+      'Download requested. The backup text below contains the same marks.',
+    );
   }
   async function importProgress(file: File | undefined) {
     if (!file) return;
@@ -64,8 +75,66 @@ export function ProgressControls() {
         >
           Clear marks
         </button>
+        <button
+          type="button"
+          aria-expanded={backup}
+          onClick={() => setBackup(!backup)}
+        >
+          {backup ? 'Hide backup text' : 'Show backup text'}
+        </button>
       </div>
       <p role="status">{message}</p>
+      {progressStore.getStorageStatus() === 'recovered' && (
+        <p role="alert">
+          Some saved marks were unreadable. Valid marks were kept; restore a
+          backup if needed.
+        </p>
+      )}
+      {progressStore.getStorageStatus() === 'session' && (
+        <p role="alert">
+          Storage unavailable: marks last for this session. Keep a backup before
+          closing.
+        </p>
+      )}
+      {backup && (
+        <div className="progress-text-backup">
+          <label>
+            Progress backup
+            <textarea
+              readOnly
+              value={JSON.stringify(
+                { schemaVersion: 1, lessons: progress },
+                null,
+                2,
+              )}
+            />
+          </label>
+          <label>
+            Restore from backup text
+            <textarea
+              value={restore}
+              onChange={(event) => setRestore(event.target.value)}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => {
+              try {
+                progressStore.importJson(restore);
+                setMessage('Progress restored from backup text.');
+              } catch (error) {
+                setMessage(
+                  error instanceof Error
+                    ? error.message
+                    : 'Invalid progress backup.',
+                );
+              }
+            }}
+          >
+            Restore backup text
+          </button>
+        </div>
+      )}
     </section>
   );
 }

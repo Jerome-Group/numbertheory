@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from 'react';
+import { type FormEvent, useId, useState } from 'react';
 import { MathText } from './MathText';
 import { buildPellOrbit, type PellOrbit } from './math/continued-fraction';
 import './ContinuedFractionLabs.css';

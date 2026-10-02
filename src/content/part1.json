@@ -5,7 +5,8 @@
     "cluster": "Divisibility",
     "question": "Why does a prime dividing a product have to divide a factor?",
     "prerequisites": [
-      "D03"
+      "D03",
+      "P02"
     ],
     "summary": "Bézout’s identity gives the prime-divisor rule. That rule makes prime factorizations unique.",
     "definition": [

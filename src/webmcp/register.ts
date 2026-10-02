@@ -1,8 +1,7 @@
-import { lessons } from '../content/lessons';
 import { chapterCheckpoints } from '../content/checkpoints';
+import { lessons } from '../content/lessons';
+import { claimRegistry, lessonV2 } from '../content/registries';
 import { lessonSearchScore } from '../content/search';
-import { claimRegistry } from '../content/registries';
-import { lessonV2 } from '../content/registries';
 import { buildCancellationMap } from '../math/cancellation';
 import {
   buildPellOrbit,
@@ -10,20 +9,20 @@ import {
   buildSqrtContinuedFraction,
 } from '../math/continued-fraction';
 import { solveCrt } from '../math/crt';
-import { divideGaussian } from '../math/gaussian';
 import { extendedEuclid } from '../math/euclid';
+import { divideGaussian } from '../math/gaussian';
 import {
+  type ArithmeticFunction,
   buildDivisorIncidenceStudy,
   buildReciprocityLattice,
   buildUnitOrderSpectrum,
-  type ArithmeticFunction,
 } from '../math/group-labs';
 import { buildHenselTree } from '../math/hensel';
 import { solveLinear } from '../math/linear';
 import { solveLocalSquares } from '../math/local-squares';
 import { buildQuadraticResidueMap, buildResidueClock } from '../math/residue';
-import { studyStore } from '../state';
 import { lessonPath } from '../routes';
+import { studyStore } from '../state';
 
 type Tool = {
   name: string;

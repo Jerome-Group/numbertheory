@@ -1,5 +1,5 @@
-import { lessons } from './lessons';
 import { adaptLessonV1 } from './lesson-v2';
+import { lessons } from './lessons';
 
 const adapted = lessons.map(adaptLessonV1);
 export const lessonV2 = adapted.map((record) => record.lesson);

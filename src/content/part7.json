@@ -5,7 +5,8 @@
     "cluster": "Quadratic arithmetic",
     "question": "Which nonzero residues occur as squares, and why are there half as many?",
     "prerequisites": [
-      "C02"
+      "C02",
+      "D05"
     ],
     "summary": "Squaring pairs each nonzero input with its negative. The Legendre symbol records whether a residue is zero, a nonzero square, or a nonsquare.",
     "definition": [
