@@ -966,6 +966,15 @@ button {
   .drawer-close {
     color: var(--ink);
   }
+  .content-section,
+  .reading-shell #lab,
+  .lab,
+  .cancellation-lab,
+  .gaussian-lab,
+  .square-root-lab,
+  .overview-shell .chapter {
+    scroll-margin-top: 160px;
+  }
 }
 @media (max-width: 600px) {
   .reading-shell,
@@ -986,15 +995,6 @@ button {
   .primary-nav button {
     font-size: 12px;
     padding: 9px 10px;
-  }
-  .content-section,
-  .reading-shell #lab,
-  .lab,
-  .cancellation-lab,
-  .gaussian-lab,
-  .square-root-lab,
-  .overview-shell .chapter {
-    scroll-margin-top: 160px;
   }
   .lesson-head h1 {
     font-size: 33px;
