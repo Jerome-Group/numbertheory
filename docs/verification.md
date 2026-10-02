@@ -20,6 +20,8 @@ The baseline inventory rejects deleted, added or replaced lesson IDs, even at th
 
 The six complete journeys cover a new learner's diagnostic→proof→practice→mark, a returning review queue, search→prerequisite→lab→share/reload, progress transfer/reset, agent computation versus visible state, and mobile keyboard reading. Test positive and negative paths: invalid/composite/zero/bounded lab inputs as applicable, incompatible solvable-system contrasts, empty search/filter states, unknown routes, stale revisions, extra fields, aborted/remounted registrations, corrupt/denied storage, invalid progress without partial mutation, backup recovery and history/reload.
 
+Progress transfer checks the actual clipboard JSON, selectable-text fallback, text restoration and compatible file import. The map records the retired download feature and its replacement: file download stopped in actual in-app-browser QA, confirmed by the user. A download request is not successful export evidence.
+
 The Node contract harness uses a mocked host and exact arithmetic oracles. It does not render DOM or establish native-browser compatibility. Native WebMCP and human UI journeys require in-app-browser observations. Content parsing and independent review complement one another: a valid formula can still express the wrong mathematics.
 
 ## External evidence schema1
@@ -36,4 +38,4 @@ Freeze source and build before final observation/review. Generate identity and c
 
 Issue first, attributed branch/commits, independent Standards and Spec review, open/attach PR. Required checks must pass on its exact current head; respect protections and dependency policy. A reviewed merge is not a deployment. Publish that merged source through the existing Sites binding, then verify production assets, routes, interactions and journeys. Preserve audience/domain/access.
 
-Before deployment retain the preceding Sites version, source commit and progress schema. The Oct3 baseline source is `5247fc839b0a4d2dcbd20ac74025fdea390f2e96`, local tag `rollback/pre-learning-redesign-2026-10-03`; preceding deployed Sites version is4. Roll back by redeploying version4 on the same project/domain, then check production. Source rollback uses a reviewed revert PR; never reset main or bypass protections. Local progress remains schema1/key `numbertheory.progress.v1`; export marks or use backup text before clearing/importing a browser's marks.
+Before deployment retain the preceding Sites version, source commit and progress schema. The Oct3 baseline source is `5247fc839b0a4d2dcbd20ac74025fdea390f2e96`, local tag `rollback/pre-learning-redesign-2026-10-03`; preceding deployed Sites version is4. Roll back by redeploying version4 on the same project/domain, then check production. Source rollback uses a reviewed revert PR; never reset main or bypass protections. Local progress remains schema1/key `numbertheory.progress.v1`; copy a JSON backup before clearing/importing a browser's marks.

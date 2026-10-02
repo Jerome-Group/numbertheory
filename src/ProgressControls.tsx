@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useRef, useState, useSyncExternalStore } from 'react';
 import { progressStore } from './progress';
 
 export function ProgressControls() {
@@ -7,26 +7,23 @@ export function ProgressControls() {
     progressStore.getSnapshot,
   );
   const [backup, setBackup] = useState(false);
+  const backupText = useRef<HTMLTextAreaElement>(null);
   const [restore, setRestore] = useState('');
   const [message, setMessage] = useState(
     'Only this browser stores your marks.',
   );
-  function exportProgress() {
-    const blob = new Blob([progressStore.exportJson()], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'number-theory-progress.json';
-    document.body.append(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1_000);
+  async function copyProgress() {
     setBackup(true);
-    setMessage(
-      'Download requested. The backup text below contains the same marks.',
-    );
+    try {
+      await navigator.clipboard.writeText(progressStore.exportJson());
+      setMessage('JSON backup copied. Save it somewhere you can find again.');
+    } catch {
+      setMessage('Select and copy the backup text below to save your marks.');
+      requestAnimationFrame(() => {
+        backupText.current?.focus();
+        backupText.current?.select();
+      });
+    }
   }
   async function importProgress(file: File | undefined) {
     if (!file) return;
@@ -48,8 +45,8 @@ export function ProgressControls() {
       <h2 id="progress-title">Your local progress</h2>
       <p>Save a copy, restore it on this device, or clear every local mark.</p>
       <div className="progress-management-actions">
-        <button type="button" onClick={exportProgress}>
-          Export marks
+        <button type="button" onClick={() => void copyProgress()}>
+          Copy JSON backup
         </button>
         <label>
           Import marks
@@ -101,6 +98,7 @@ export function ProgressControls() {
           <label>
             Progress backup
             <textarea
+              ref={backupText}
               readOnly
               value={JSON.stringify(
                 { schemaVersion: 1, lessons: progress },

@@ -243,7 +243,7 @@ export async function scopeMap(root) {
     'practice-hints-answer',
     'local-mark-complete-review-clear',
     'practice-review-queue',
-    'progress-export-download',
+    'progress-export-copy-backup',
     'progress-import-roundtrip',
     'progress-reset-reload',
     'progress-invalid-atomic',
@@ -345,6 +345,14 @@ export async function scopeMap(root) {
     ),
     figures: Object.keys(figures),
     features,
+    retiredFeatures: [
+      {
+        id: 'progress-export-download',
+        replacement: 'progress-export-copy-backup',
+        reason:
+          'In-app browser download stopped during actual QA; copyable schema1 JSON provides a verifiable transfer path. JSON file import remains compatible.',
+      },
+    ],
     journeys,
   };
   map.requiredCoverage = [

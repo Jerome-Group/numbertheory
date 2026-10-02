@@ -227,6 +227,12 @@ button {
   font-size: 17px;
   line-height: 1.8;
 }
+.lesson-footer {
+  color: var(--muted);
+}
+.reading-shell #lab {
+  scroll-margin-top: 85px;
+}
 .intuition-section {
   border-bottom: 0;
   padding: 26px 0 16px;
@@ -404,6 +410,60 @@ button {
 }
 .lab-controls button {
   background: var(--blue);
+}
+.cancellation-lab,
+.cancellation-lab h2,
+.cancellation-lab .prediction-row button {
+  color: var(--ink);
+}
+.cancellation-lab .prediction-row button {
+  border-color: var(--blue);
+}
+.residue-visual p,
+.group-lab .group-lab__limit,
+.cf-lab .cf-lab__limit,
+.pell-lab .pell-lab__limit,
+.explore-filter label,
+.chapter-heading button > span:first-child,
+.overview-stats span,
+.overview-shell .chapter h2 span,
+.course-group h2 span,
+.breadcrumb span {
+  color: var(--muted);
+}
+.reference-list article > span,
+.course-group button span {
+  color: var(--blue);
+}
+.reading-shell .lab-badge,
+.reading-shell .nt-lab__badge,
+.reading-shell .hensel-lab__badge,
+.reading-shell .group-lab__badge,
+.reading-shell .cf-lab__badge,
+.reading-shell .pell-lab__badge {
+  background: var(--blue-wash);
+  color: var(--blue);
+}
+.gaussian-lab .instrument-kicker,
+.group-lab .group-lab__label,
+.cf-lab .cf-lab__result-card > span,
+.pell-lab .pell-lab__readout > span {
+  color: var(--blue);
+}
+.residue-visual .visual-heading {
+  color: var(--muted);
+}
+.residue-legend span:first-child {
+  color: #23614f;
+}
+.residue-legend span:nth-child(2) {
+  color: #7c4d0c;
+}
+.group-lab .group-lab__cycle-center {
+  fill: var(--muted);
+}
+.chapter-count {
+  opacity: 1;
 }
 .answer-strip,
 .hero-instrument {
@@ -921,6 +981,7 @@ button {
     padding: 9px 10px;
   }
   .content-section,
+  .reading-shell #lab,
   .lab,
   .cancellation-lab,
   .gaussian-lab,
