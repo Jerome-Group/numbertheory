@@ -22,6 +22,11 @@ export function ChoiceCheck({ id }: { id: ChoiceId }) {
           <button
             key={item.id}
             type="button"
+            aria-label={
+              'spokenLabel' in item && typeof item.spokenLabel === 'string'
+                ? item.spokenLabel
+                : item.label
+            }
             aria-pressed={choice === item.id}
             onClick={() => setChoice(item.id)}
           >

@@ -329,10 +329,18 @@ export function ContinuedFractionStaircaseLab({
       </form>
       <fieldset className="cf-lab__presets">
         <legend>Worked examples</legend>
-        <button type="button" onClick={chooseRational}>
+        <button
+          type="button"
+          aria-label="43 divided by 19, finite continued fraction"
+          onClick={chooseRational}
+        >
           <MathText text={'\\(43/19\\) · finite'} />
         </button>
-        <button type="button" onClick={chooseRootTwo}>
+        <button
+          type="button"
+          aria-label="Square root of 2, periodic continued fraction"
+          onClick={chooseRootTwo}
+        >
           <MathText text={'\\(\\sqrt2\\) · periodic'} />
         </button>
       </fieldset>

@@ -72,6 +72,7 @@ function HomeFiberPreview({ open }: { open: (id: string) => void }) {
           <button
             type="button"
             key={value}
+            aria-label={`Multiply by ${value}`}
             aria-pressed={factor === value}
             onClick={() => setFactor(value)}
           >
@@ -395,7 +396,9 @@ export function AtlasViews({
             .map((cluster, index) => (
               <li key={cluster}>
                 <span aria-hidden="true">{index ? '→' : ''}</span>
-                <a href={`#chapter-${clusters.indexOf(cluster)}`}>{cluster}</a>
+                <a href={`#atlas-chapter-${clusters.indexOf(cluster)}`}>
+                  {cluster}
+                </a>
               </li>
             ))}
         </ol>
@@ -424,7 +427,7 @@ export function AtlasViews({
           return matching.length ? (
             <section
               className="chapter"
-              id={`chapter-${clusters.indexOf(cluster)}`}
+              id={`atlas-chapter-${clusters.indexOf(cluster)}`}
               key={cluster}
             >
               <h2>

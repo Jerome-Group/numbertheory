@@ -50,3 +50,15 @@ test('missing, late, and duplicate path prerequisites fail', () => {
       ).some((error) => /prerequisite|duplicate|unknown/.test(error)),
     );
 });
+test('mathematical choices require a readable control label', () => {
+  const copy = structuredClone(record);
+  copy.check.choices[0].text = '\\(x^2\\)';
+  for (const label of [undefined, '', '\\(x^2\\)']) {
+    copy.check.choices[0].label = label;
+    assert.ok(
+      run([lesson], { A: copy }).some((error) => /spoken label/.test(error)),
+    );
+  }
+  copy.check.choices[0].label = 'x squared';
+  assert.deepEqual(run([lesson], { A: copy }), []);
+});

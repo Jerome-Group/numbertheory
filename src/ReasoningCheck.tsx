@@ -24,6 +24,7 @@ export function ReasoningCheck({ id }: { id: string }) {
           <button
             type="button"
             key={item.text}
+            aria-label={item.label ?? item.text}
             aria-pressed={choice === index}
             onClick={() => setChoice(index)}
           >

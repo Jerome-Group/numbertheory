@@ -884,6 +884,10 @@ button {
     gap: 10px;
     height: auto;
   }
+  .topbar-name {
+    display: block;
+    font-weight: 700;
+  }
   .reading-shell,
   .overview-shell {
     padding: 24px;
@@ -905,11 +909,24 @@ button {
     padding: 0 12px;
   }
   .primary-nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: minmax(44px, auto);
+    height: auto;
+    overflow: visible;
     gap: 2px;
   }
   .primary-nav button {
     font-size: 12px;
     padding: 9px 10px;
+  }
+  .content-section,
+  .lab,
+  .cancellation-lab,
+  .gaussian-lab,
+  .square-root-lab,
+  .overview-shell .chapter {
+    scroll-margin-top: 160px;
   }
   .lesson-head h1 {
     font-size: 33px;

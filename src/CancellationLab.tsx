@@ -114,6 +114,7 @@ export function CancellationLab() {
             <button
               type="button"
               key={`${preset.modulus}-${preset.factor}`}
+              aria-label={`Multiply by ${preset.factor} modulo ${preset.modulus}`}
               onClick={() => run(preset.modulus, preset.factor)}
             >
               <MathText text={preset.label} />

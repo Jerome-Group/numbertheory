@@ -42,7 +42,7 @@ export function App() {
       pendingSection.current ??
       (hash === 'main-content' ||
       (state.view === 'lesson' && sections.includes(hash)) ||
-      (state.view === 'explore' && /^chapter-\d+$/.test(hash))
+      (state.view === 'explore' && /^atlas-chapter-\d+$/.test(hash))
         ? hash
         : null);
     if (requestedSection) {

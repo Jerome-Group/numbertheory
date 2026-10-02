@@ -60,17 +60,20 @@
         {
           "text": "\\(\\forall x\\in D,\\neg P(x)\\).",
           "correct": true,
-          "feedback": "Every allowed witness must be ruled out."
+          "feedback": "Every allowed witness must be ruled out.",
+          "label": "For every x in the domain D, P of x is false."
         },
         {
           "text": "\\(\\exists x\\in D,\\neg P(x)\\).",
           "correct": false,
-          "feedback": "One failure can coexist with another successful witness."
+          "feedback": "One failure can coexist with another successful witness.",
+          "label": "There exists an x in the domain D for which P of x is false."
         },
         {
           "text": "\\(\\forall x\\in D,P(x)\\).",
           "correct": false,
-          "feedback": "It asserts universal success rather than ruling out every possible witness."
+          "feedback": "It asserts universal success rather than ruling out every possible witness.",
+          "label": "For every x in the domain D, P of x is true."
         }
       ]
     }
@@ -423,17 +426,20 @@
         {
           "text": "\\(\\max(v_p(a),v_p(b))\\).",
           "correct": true,
-          "feedback": "A multiple must contain enough copies for each input, and the larger exponent is the least sufficient choice."
+          "feedback": "A multiple must contain enough copies for each input, and the larger exponent is the least sufficient choice.",
+          "label": "The maximum of the exponent of the prime p in a and the exponent of p in b."
         },
         {
           "text": "\\(\\min(v_p(a),v_p(b))\\).",
           "correct": false,
-          "feedback": "That describes common divisors and may omit prime copies needed by one input."
+          "feedback": "That describes common divisors and may omit prime copies needed by one input.",
+          "label": "The minimum of the exponent of the prime p in a and the exponent of p in b."
         },
         {
           "text": "\\(v_p(a)+v_p(b)\\) always.",
           "correct": false,
-          "feedback": "Adding exponents gives the product, which can include unnecessarily repeated prime copies."
+          "feedback": "Adding exponents gives the product, which can include unnecessarily repeated prime copies.",
+          "label": "The sum of the exponent of the prime p in a and the exponent of p in b, always."
         }
       ]
     }
@@ -668,17 +674,20 @@
         {
           "text": "\\(n/\\gcd(|c|,n)\\).",
           "correct": true,
-          "feedback": "Removing the common factor makes the remaining cancellation legal."
+          "feedback": "Removing the common factor makes the remaining cancellation legal.",
+          "label": "n divided by the greatest common divisor of the absolute value of c and n."
         },
         {
           "text": "\\(n\\) for every \\(c\\).",
           "correct": false,
-          "feedback": "A nonunit can merge distinct classes, so the original modulus can carry more information than survives."
+          "feedback": "A nonunit can merge distinct classes, so the original modulus can carry more information than survives.",
+          "label": "n, for every c."
         },
         {
           "text": "\\(\\gcd(|c|,n)\\) always.",
           "correct": false,
-          "feedback": "The surviving modulus is the quotient by the gcd, not generally the gcd itself."
+          "feedback": "The surviving modulus is the quotient by the gcd, not generally the gcd itself.",
+          "label": "The greatest common divisor of the absolute value of c and n, always."
         }
       ]
     }
@@ -1164,12 +1173,14 @@
         {
           "text": "\\(\\varepsilon\\), supported only at one.",
           "correct": true,
-          "feedback": "It selects the sole summand with complementary divisor one."
+          "feedback": "It selects the sole summand with complementary divisor one.",
+          "label": "Epsilon, the function equal to one at the positive integer one and zero at every other positive integer."
         },
         {
           "text": "The constant-one function \\(\\mathbf 1\\).",
           "correct": false,
-          "feedback": "Convolving with it sums all divisor values rather than selecting one."
+          "feedback": "Convolving with it sums all divisor values rather than selecting one.",
+          "label": "The constant-one function, equal to one at every positive integer."
         },
         {
           "text": "Pointwise multiplication by one.",
@@ -1812,17 +1823,20 @@
         {
           "text": "\\(q=7\\)",
           "correct": true,
-          "feedback": "Yes. The denominator exceeds one and is coprime to the base, so every nonzero remainder stays on an invertible cycle."
+          "feedback": "Yes. The denominator exceeds one and is coprime to the base, so every nonzero remainder stays on an invertible cycle.",
+          "label": "q equals seven."
         },
         {
           "text": "\\(q=12\\)",
           "correct": false,
-          "feedback": "Its common factor with \\(10\\) prevents using that order directly. Separate the initial nonrepeating part before studying the later cycle."
+          "feedback": "Its common factor with \\(10\\) prevents using that order directly. Separate the initial nonrepeating part before studying the later cycle.",
+          "label": "q equals twelve."
         },
         {
           "text": "\\(q=8\\)",
           "correct": false,
-          "feedback": "A power of \\(10\\) is divisible by \\(8\\), so the expansion terminates. The base is not a unit modulo this denominator."
+          "feedback": "A power of \\(10\\) is divisible by \\(8\\), so the expansion terminates. The base is not a unit modulo this denominator.",
+          "label": "q equals eight."
         }
       ]
     }
@@ -1863,17 +1877,20 @@
         {
           "text": "Otherwise a polynomial of degree below \\(p-1\\) would have all \\(p-1\\) nonzero classes as roots.",
           "correct": true,
-          "feedback": "Correct. The contradiction uses the field root bound and an explicit smaller annihilating exponent."
+          "feedback": "Correct. The contradiction uses the field root bound and an explicit smaller annihilating exponent.",
+          "label": "Otherwise a polynomial of degree less than p minus one would have all p minus one nonzero residue classes as roots."
         },
         {
           "text": "Every group with \\(p-1\\) elements is cyclic.",
           "correct": false,
-          "feedback": "Group size alone does not imply cyclicity. The special field root bound is the additional argument here."
+          "feedback": "Group size alone does not imply cyclicity. The special field root bound is the additional argument here.",
+          "label": "Every group with p minus one elements is cyclic."
         },
         {
           "text": "Euler’s theorem says every unit has order exactly \\(p-1\\).",
           "correct": false,
-          "feedback": "Euler supplies a return exponent, not the least one. For example, nonidentity units can lie in shorter cycles."
+          "feedback": "Euler supplies a return exponent, not the least one. For example, nonidentity units can lie in shorter cycles.",
+          "label": "Euler’s theorem says every unit has order exactly p minus one."
         }
       ]
     }
@@ -1910,17 +1927,20 @@
         {
           "text": "\\(a^{p-1}\\not\\equiv1\\pmod{p^2}\\)",
           "correct": true,
-          "feedback": "Yes. This makes the initial valuation exactly one, which drives the full-order formula at all higher levels."
+          "feedback": "Yes. This makes the initial valuation exactly one, which drives the full-order formula at all higher levels.",
+          "label": "a raised to the power p minus one is not congruent to one modulo p squared."
         },
         {
           "text": "Only that \\(a\\) is nonzero modulo \\(p\\).",
           "correct": false,
-          "feedback": "Nonzero means a unit, not a generator. Even a primitive residue needs a check on the chosen representative at the next level."
+          "feedback": "Nonzero means a unit, not a generator. Even a primitive residue needs a check on the chosen representative at the next level.",
+          "label": "Only that a is nonzero modulo p."
         },
         {
           "text": "\\(a^{p-1}\\equiv1\\pmod{p^2}\\)",
           "correct": false,
-          "feedback": "That is the exceptional condition. It gives a return exponent too small for a generator modulo \\(p^2\\)."
+          "feedback": "That is the exceptional condition. It gives a return exponent too small for a generator modulo \\(p^2\\).",
+          "label": "a raised to the power p minus one is congruent to one modulo p squared."
         }
       ]
     }
@@ -1961,7 +1981,8 @@
         {
           "text": "CRT gives four distinct square roots of one from the sign choices modulo \\(4\\) and \\(3\\).",
           "correct": true,
-          "feedback": "Correct. A cyclic group cannot contain this many self-inverse elements."
+          "feedback": "Correct. A cyclic group cannot contain this many self-inverse elements.",
+          "label": "The Chinese remainder theorem gives four distinct square roots of one from the sign choices modulo four and modulo three."
         },
         {
           "text": "Every composite modulus has a noncyclic unit group.",
@@ -1971,7 +1992,8 @@
         {
           "text": "It contains the unit \\(-1\\).",
           "correct": false,
-          "feedback": "A cyclic group may contain \\(-1\\) as its unique nonidentity involution. The obstruction is the presence of additional involutions."
+          "feedback": "A cyclic group may contain \\(-1\\) as its unique nonidentity involution. The obstruction is the presence of additional involutions.",
+          "label": "It contains the unit negative one."
         }
       ]
     }
@@ -2012,7 +2034,8 @@
         {
           "text": "No: \\(U(8)\\) is not cyclic, and all four of its units square to one.",
           "correct": true,
-          "feedback": "Correct. Group cardinality cannot replace a cyclic generator and its order."
+          "feedback": "Correct. Group cardinality cannot replace a cyclic generator and its order.",
+          "label": "No: the group of units modulo eight is not cyclic, and all four of its units square to one."
         },
         {
           "text": "Yes: the formula needs only a group with four elements.",
@@ -2098,7 +2121,8 @@
         {
           "text": "The permitted values \\(-1,0,1\\) represent distinct classes modulo an odd prime.",
           "correct": true,
-          "feedback": "Correct. The restricted value set supplies the injectivity needed to pass from congruence to equality."
+          "feedback": "Correct. The restricted value set supplies the injectivity needed to pass from congruence to equality.",
+          "label": "The permitted values negative one, zero and one represent distinct residue classes modulo an odd prime."
         },
         {
           "text": "Congruent integers are always equal.",
@@ -2137,12 +2161,14 @@
         {
           "text": "\\(p\\nmid a\\), so \\(a\\) is a unit modulo the prime \\(p\\).",
           "correct": true,
-          "feedback": "Correct. This eliminates collisions caused by a noninvertible multiplier."
+          "feedback": "Correct. This eliminates collisions caused by a noninvertible multiplier.",
+          "label": "The prime p does not divide a, so a is a unit modulo p."
         },
         {
           "text": "\\(a\\) is positive.",
           "correct": false,
-          "feedback": "Sign does not determine invertibility. A negative representative coprime to \\(p\\) is equally cancellable."
+          "feedback": "Sign does not determine invertibility. A negative representative coprime to \\(p\\) is equally cancellable.",
+          "label": "a is positive."
         },
         {
           "text": "The residues were sorted first.",
@@ -2231,17 +2257,20 @@
         {
           "text": "Both \\(\\chi_{11}(-1)\\) and \\(\\chi_{11}(2)\\).",
           "correct": true,
-          "feedback": "Correct. Both are negative here, so their product is positive."
+          "feedback": "Correct. Both are negative here, so their product is positive.",
+          "label": "Both the Legendre symbol of negative one modulo eleven and the Legendre symbol of two modulo eleven."
         },
         {
           "text": "Only the factor for \\(2\\); changing the sign never changes a square class.",
           "correct": false,
-          "feedback": "Negative one is a nonsquare modulo \\(11\\). Dropping its contribution reverses the answer."
+          "feedback": "Negative one is a nonsquare modulo \\(11\\). Dropping its contribution reverses the answer.",
+          "label": "Only the factor for two; changing the sign never changes a square class."
         },
         {
           "text": "Apply reciprocity by swapping \\(2\\) and \\(11\\).",
           "correct": false,
-          "feedback": "The reciprocity law here swaps odd primes. The numerator two uses its supplementary law."
+          "feedback": "The reciprocity law here swaps odd primes. The numerator two uses its supplementary law.",
+          "label": "Apply reciprocity by swapping two and eleven."
         }
       ]
     }
@@ -2278,7 +2307,8 @@
         {
           "text": "It gives the product of local signs; the root problem still fails modulo \\(3\\).",
           "correct": true,
-          "feedback": "Correct. Two negative local signs multiply to one without providing either local root."
+          "feedback": "Correct. Two negative local signs multiply to one without providing either local root.",
+          "label": "It gives the product of local signs; the root problem still fails modulo three."
         },
         {
           "text": "It proves that two global roots exist.",
@@ -2288,7 +2318,8 @@
         {
           "text": "It proves that \\(15\\) is prime.",
           "correct": false,
-          "feedback": "The Jacobi definition allows composite denominators. Its value cannot certify primality."
+          "feedback": "The Jacobi definition allows composite denominators. Its value cannot certify primality.",
+          "label": "It proves that fifteen is prime."
         }
       ]
     }
@@ -2321,17 +2352,20 @@
         {
           "text": "\\(p=11,a=5\\), since \\(5\\) is a nonzero square modulo \\(11\\).",
           "correct": true,
-          "feedback": "Correct. The modulus has the required prime class and the target passes the square hypothesis."
+          "feedback": "Correct. The modulus has the required prime class and the target passes the square hypothesis.",
+          "label": "p equals eleven and a equals five, since five is a nonzero square modulo eleven."
         },
         {
           "text": "\\(p=13,a=4\\)",
           "correct": false,
-          "feedback": "The target is a square, but the modulus is one modulo four; the stated exponent is not an integer."
+          "feedback": "The target is a square, but the modulus is one modulo four; the stated exponent is not an integer.",
+          "label": "p equals thirteen and a equals four."
         },
         {
           "text": "\\(p=15,a=1\\)",
           "correct": false,
-          "feedback": "The modulus is composite. Its prime-power root lists must be combined by CRT instead."
+          "feedback": "The modulus is composite. Its prime-power root lists must be combined by CRT instead.",
+          "label": "p equals fifteen and a equals one."
         }
       ]
     }
@@ -2364,7 +2398,8 @@
         {
           "text": "No. Each unit root modulo \\(3\\) has three free extensions for \\(y\\) modulo \\(9\\).",
           "correct": true,
-          "feedback": "Correct. To recover \\(x\\) modulo \\(27\\), \\(y=x/3\\) must be tracked modulo \\(9\\), giving six roots in total."
+          "feedback": "Correct. To recover \\(x\\) modulo \\(27\\), \\(y=x/3\\) must be tracked modulo \\(9\\), giving six roots in total.",
+          "label": "No. Each unit root modulo three has three free extensions for y modulo nine."
         },
         {
           "text": "Yes. The two unit roots always give exactly two roots of the original target.",
@@ -2425,7 +2460,8 @@
         {
           "text": "That the initial root of negative one already gives \\(p=t^2+1\\).",
           "correct": false,
-          "feedback": "The initial certificate generally gives a multiple of \\(p\\). The descent removes that extra multiplier."
+          "feedback": "The initial certificate generally gives a multiple of \\(p\\). The descent removes that extra multiplier.",
+          "label": "That the initial root of negative one already gives p equals t squared plus one."
         }
       ]
     }
@@ -2466,7 +2502,8 @@
         {
           "text": "The normalization divides by \\(b-a\\), which is zero on the diagonal.",
           "correct": true,
-          "feedback": "Correct. The diagonal has its own count and cannot use an inverse of zero."
+          "feedback": "Correct. The diagonal has its own count and cannot use an inverse of zero.",
+          "label": "The normalization divides by b minus a, which is zero on the diagonal."
         },
         {
           "text": "The symbol is undefined at zero.",
@@ -2517,7 +2554,8 @@
         {
           "text": "It gives \\(\\chi_p(-1)=1\\), so opposite-index contributions agree.",
           "correct": true,
-          "feedback": "Correct. Equal opposite contributions make the character sum an even integer."
+          "feedback": "Correct. Equal opposite contributions make the character sum an even integer.",
+          "label": "It gives the Legendre symbol of negative one modulo p equal to one, so opposite-index contributions agree."
         },
         {
           "text": "It ensures every nonzero class is a square.",
@@ -2716,17 +2754,20 @@
         {
           "text": "The ideal \\(8\\mathbb Z\\), containing all integers that reduce to zero.",
           "correct": true,
-          "feedback": "Correct. The kernel is a whole subset of the source ring."
+          "feedback": "Correct. The kernel is a whole subset of the source ring.",
+          "label": "The ideal eight times the integers, containing all integers that reduce to zero."
         },
         {
           "text": "The single quotient element \\([8]_8\\).",
           "correct": false,
-          "feedback": "That element equals the zero class in the target. The kernel consists of source elements, not one target element."
+          "feedback": "That element equals the zero class in the target. The kernel consists of source elements, not one target element.",
+          "label": "The single quotient element represented by eight modulo eight."
         },
         {
           "text": "The ideal \\(\\mathbb Z\\).",
           "correct": false,
-          "feedback": "Not every integer reduces to zero. For example, one does not lie in the kernel."
+          "feedback": "Not every integer reduces to zero. For example, one does not lie in the kernel.",
+          "label": "The ideal consisting of all integers."
         }
       ]
     }
@@ -2798,12 +2839,14 @@
         {
           "text": "A nontrivial factorization would force a Gaussian factor of norm \\(p\\), which is impossible; Gaussian irreducibles are prime.",
           "correct": true,
-          "feedback": "Correct. Both the norm obstruction and the previously proved irreducible-to-prime bridge are required."
+          "feedback": "Correct. Both the norm obstruction and the previously proved irreducible-to-prime bridge are required.",
+          "label": "A nontrivial factorization would force a Gaussian factor of norm p, which is impossible; Gaussian irreducibles are prime."
         },
         {
           "text": "Its Gaussian norm \\(p^2\\) is a rational prime.",
           "correct": false,
-          "feedback": "That norm is a prime square. Prime norm is not the reason these elements remain prime."
+          "feedback": "That norm is a prime square. Prime norm is not the reason these elements remain prime.",
+          "label": "Its Gaussian norm, p squared, is a rational prime."
         },
         {
           "text": "Every rational prime remains prime in every larger ring.",
@@ -2841,7 +2884,8 @@
         {
           "text": "It has the smaller annihilating factor \\(X^2-12\\).",
           "correct": true,
-          "feedback": "Correct. Vanishing alone is insufficient; the least-degree monic relation is the irreducible quadratic."
+          "feedback": "Correct. Vanishing alone is insufficient; the least-degree monic relation is the irreducible quadratic.",
+          "label": "It has the smaller annihilating factor X squared minus twelve."
         },
         {
           "text": "A minimal polynomial may not be monic.",
@@ -2931,7 +2975,8 @@
         {
           "text": "It satisfies \\(X^2-X-1\\), but its \\(\\sqrt5\\)-coefficient is not an integer.",
           "correct": true,
-          "feedback": "Correct. A monic integer relation proves integrality, while the coefficient excludes it from the smaller order."
+          "feedback": "Correct. A monic integer relation proves integrality, while the coefficient excludes it from the smaller order.",
+          "label": "It satisfies the polynomial X squared minus X minus one, but its coefficient of the square root of five is not an integer."
         },
         {
           "text": "Every quadratic number is an algebraic integer.",
@@ -2978,7 +3023,8 @@
         {
           "text": "It proves only \\(I^2\\subseteq(2)\\); one must also show \\(2\\in I^2\\).",
           "correct": true,
-          "feedback": "Correct. Containing two then gives all its multiples by ideal closure."
+          "feedback": "Correct. Containing two then gives all its multiples by ideal closure.",
+          "label": "It proves only that the product ideal I squared is contained in the principal ideal generated by two; one must also show that the element two belongs to the product ideal I squared."
         },
         {
           "text": "It already proves equality because both sets are ideals.",
@@ -2988,7 +3034,8 @@
         {
           "text": "It proves that \\(I\\) is principal.",
           "correct": false,
-          "feedback": "The square of a nonprincipal ideal can be principal. The generator argument applies to \\(I^2\\), not \\(I\\)."
+          "feedback": "The square of a nonprincipal ideal can be principal. The generator argument applies to \\(I^2\\), not \\(I\\).",
+          "label": "It proves that the ideal I is principal."
         }
       ]
     }
@@ -3017,17 +3064,20 @@
         {
           "text": "When \\(I+J=R\\), giving selectors and \\(I\\cap J=IJ\\).",
           "correct": true,
-          "feedback": "Correct. Comaximality supplies both surjectivity and the required kernel equality."
+          "feedback": "Correct. Comaximality supplies both surjectivity and the required kernel equality.",
+          "label": "When the sum of the ideals I and J equals the ring R, giving selectors and equality of their intersection with their product ideal."
         },
         {
           "text": "Whenever \\(I\\) and \\(J\\) are distinct.",
           "correct": false,
-          "feedback": "Distinctness does not make their sum the whole ring. Without comaximality the selectors may not exist."
+          "feedback": "Distinctness does not make their sum the whole ring. Without comaximality the selectors may not exist.",
+          "label": "Whenever the ideals I and J are distinct."
         },
         {
           "text": "Whenever \\(IJ\\subseteq I\\cap J\\).",
           "correct": false,
-          "feedback": "That containment always holds here; the theorem needs equality and surjectivity, which use comaximality."
+          "feedback": "That containment always holds here; the theorem needs equality and surjectivity, which use comaximality.",
+          "label": "Whenever the product ideal I J is contained in the intersection of the ideals I and J."
         }
       ]
     }
@@ -3103,7 +3153,8 @@
         {
           "text": "It ends in one; combining that final tail gives \\([1;2,2]\\).",
           "correct": true,
-          "feedback": "Correct. Both values agree, but the canonical endpoint convention selects the latter."
+          "feedback": "Correct. Both values agree, but the canonical endpoint convention selects the latter.",
+          "label": "It ends in one; combining that final tail gives the continued fraction with initial entry one and later entries two and two."
         },
         {
           "text": "It contains a later partial quotient equal to one.",
@@ -3287,12 +3338,14 @@
         {
           "text": "It uniquely minimizes \\(|b\\sqrt2-a|\\) among integer pairs with \\(0<b<12\\).",
           "correct": true,
-          "feedback": "Correct. This is the stated second-kind error and the strict denominator range."
+          "feedback": "Correct. This is the stated second-kind error and the strict denominator range.",
+          "label": "It uniquely minimizes the absolute value of b times the square root of two minus a among integer pairs a and b with b strictly between zero and twelve."
         },
         {
           "text": "It beats every rational with denominator at most \\(12\\) in ordinary absolute error.",
           "correct": false,
-          "feedback": "This changes both the error measure and the strict endpoint. The next convergent itself is excluded from the theorem’s range."
+          "feedback": "This changes both the error measure and the strict endpoint. The next convergent itself is excluded from the theorem’s range.",
+          "label": "It beats every rational with denominator at most twelve in ordinary absolute error."
         },
         {
           "text": "Every convergent must satisfy the strict Legendre inequality.",
@@ -3346,7 +3399,8 @@
         {
           "text": "Its conjugate is below \\(-1\\), so it fails the reduced-conjugate criterion at the initial state.",
           "correct": true,
-          "feedback": "Correct. A periodic tail need not start at the first digit."
+          "feedback": "Correct. A periodic tail need not start at the first digit.",
+          "label": "Its conjugate is less than negative one, so it fails the reduced-conjugate criterion at the initial state."
         },
         {
           "text": "A quadratic irrational can never be purely periodic.",
@@ -3356,7 +3410,8 @@
         {
           "text": "The number \\(2\\) is not squarefree.",
           "correct": false,
-          "feedback": "It is squarefree, and squarefreeness is not required for this periodicity theorem. The conjugate interval distinguishes pure periodicity."
+          "feedback": "It is squarefree, and squarefreeness is not required for this periodicity theorem. The conjugate interval distinguishes pure periodicity.",
+          "label": "The number two is not squarefree."
         }
       ]
     }
@@ -3397,12 +3452,14 @@
         {
           "text": "\\(p_{2L-1}/q_{2L-1}\\)",
           "correct": true,
-          "feedback": "Correct. The first period return has negative norm; the second has positive norm one."
+          "feedback": "Correct. The first period return has negative norm; the second has positive norm one.",
+          "label": "The convergent with numerator p subscript two L minus one and denominator q subscript two L minus one."
         },
         {
           "text": "\\(p_{L-1}/q_{L-1}\\)",
           "correct": false,
-          "feedback": "At an odd period return the norm is negative one. It solves the negative Pell equation instead."
+          "feedback": "At an odd period return the norm is negative one. It solves the negative Pell equation instead.",
+          "label": "The convergent with numerator p subscript L minus one and denominator q subscript L minus one."
         },
         {
           "text": "The first point found in a bounded plot.",
@@ -3440,17 +3497,20 @@
         {
           "text": "\\(\\{(3+2\\sqrt2)^k:k\\in\\mathbb Z\\}\\)",
           "correct": true,
-          "feedback": "Correct. Negative powers remain positive as real numbers, but have negative second coordinate."
+          "feedback": "Correct. Negative powers remain positive as real numbers, but have negative second coordinate.",
+          "label": "The set of powers of the quantity three plus two times the square root of two, with exponent k ranging over every integer."
         },
         {
           "text": "Only the powers with \\(k\\ge1\\).",
           "correct": false,
-          "feedback": "Those give positive-coordinate solutions, not a subgroup: the identity and inverses are missing."
+          "feedback": "Those give positive-coordinate solutions, not a subgroup: the identity and inverses are missing.",
+          "label": "Only the powers with exponent k greater than or equal to one."
         },
         {
           "text": "The powers of \\(1+\\sqrt2\\) with all integer exponents.",
           "correct": false,
-          "feedback": "Odd powers have norm negative one. They do not lie in the norm-one subgroup."
+          "feedback": "Odd powers have norm negative one. They do not lie in the norm-one subgroup.",
+          "label": "The powers of one plus the square root of two with all integer exponents."
         }
       ]
     }
@@ -3483,7 +3543,8 @@
         {
           "text": "No. The square-root period is even, and the negative equation already fails modulo \\(3\\).",
           "correct": true,
-          "feedback": "Correct. Positive and negative norm equations have different solvability criteria."
+          "feedback": "Correct. Positive and negative norm equations have different solvability criteria.",
+          "label": "No. The square-root period is even, and the negative equation already fails modulo three."
         },
         {
           "text": "Yes. Negating both coordinates changes the norm sign.",
@@ -3522,7 +3583,8 @@
         {
           "text": "No. The full ring also contains the half-integer unit \\((1+\\sqrt5)/2\\).",
           "correct": true,
-          "feedback": "Correct. The chosen order is smaller, so its coefficient restrictions exclude that unit."
+          "feedback": "Correct. The chosen order is smaller, so its coefficient restrictions exclude that unit.",
+          "label": "No. The full ring also contains the half-integer unit one plus the square root of five, all divided by two."
         },
         {
           "text": "Yes. A field has only one possible integer coefficient lattice.",

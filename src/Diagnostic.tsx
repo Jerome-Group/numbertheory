@@ -23,6 +23,11 @@ const prompts = [
       'When \\(\\gcd(c,n)=1\\)',
     ],
     correct: 2,
+    spokenChoices: [
+      'Whenever c is not zero',
+      'Whenever n is greater than one',
+      'When the gcd of c and n equals one',
+    ],
     next: 'C02',
   },
   {
@@ -34,6 +39,11 @@ const prompts = [
       '\\(N(\\alpha\\beta)=0\\)',
     ],
     correct: 1,
+    spokenChoices: [
+      'The norm of alpha times beta equals the norm of alpha plus the norm of beta',
+      'The norm of alpha times beta equals the norm of alpha times the norm of beta',
+      'The norm of alpha times beta equals zero',
+    ],
     next: 'N04',
   },
 ] as const;
@@ -62,6 +72,11 @@ export function Diagnostic({ open }: { open: (id: string) => void }) {
             <label key={choice}>
               <input
                 type="radio"
+                aria-label={
+                  'spokenChoices' in prompt
+                    ? prompt.spokenChoices[choiceIndex]
+                    : choice
+                }
                 name={`diagnostic-${index}`}
                 checked={answers[index] === choiceIndex}
                 onChange={() => {

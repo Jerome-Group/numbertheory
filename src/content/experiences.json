@@ -6,9 +6,18 @@
     "revealLabel": "Show a decisive counterexample",
     "prompt": "A draft says: “\\(n^2+n+41\\) is prime for the first \\(10\\) nonnegative integers, so it is prime for every \\(n\\ge0\\).”",
     "choices": [
-      { "id": "sample", "label": "The table checks only a finite sample." },
-      { "id": "base", "label": "The base case was not checked." },
-      { "id": "algebra", "label": "The expression was simplified incorrectly." }
+      {
+        "id": "sample",
+        "label": "The table checks only a finite sample."
+      },
+      {
+        "id": "base",
+        "label": "The base case was not checked."
+      },
+      {
+        "id": "algebra",
+        "label": "The expression was simplified incorrectly."
+      }
     ],
     "correct": "sample",
     "correctFeedback": "Correct. The examples do not cover every allowed integer.",
@@ -47,9 +56,19 @@
     "revealLabel": "Show the proof step",
     "prompt": "For distinct odd primes \\(p,q\\), the lattice proof divides a \\((p-1)/2\\) by \\((q-1)/2\\) rectangle by the line \\(qx=py\\). Could an interior lattice point lie on that line?",
     "choices": [
-      { "id": "none", "label": "No: coprimality would force a coordinate beyond the rectangle." },
-      { "id": "both", "label": "Yes: every point with equal coordinates lies on the line." },
-      { "id": "middle", "label": "Only when both primes are \\(1\\pmod4\\)." }
+      {
+        "id": "none",
+        "label": "No: coprimality would force a coordinate beyond the rectangle."
+      },
+      {
+        "id": "both",
+        "label": "Yes: every point with equal coordinates lies on the line."
+      },
+      {
+        "id": "middle",
+        "label": "Only when both primes are \\(1\\pmod4\\).",
+        "spokenLabel": "Only when both primes are congruent to one modulo four."
+      }
     ],
     "correct": "none",
     "correctFeedback": "Correct. Now identify which coordinate must contain the other prime.",
@@ -63,9 +82,21 @@
     "revealLabel": "Show the exact classification",
     "prompt": "In \\(\\mathbb Z[\\sqrt2]\\), compare \\(-1\\), \\(1+\\sqrt2\\), and \\(3+2\\sqrt2\\). Which one generates the positive-real norm-one solutions?",
     "choices": [
-      { "id": "minus", "label": "\\(-1\\)" },
-      { "id": "negative", "label": "\\(1+\\sqrt2\\)" },
-      { "id": "positive", "label": "\\(3+2\\sqrt2\\)" }
+      {
+        "id": "minus",
+        "label": "\\(-1\\)",
+        "spokenLabel": "Negative one"
+      },
+      {
+        "id": "negative",
+        "label": "\\(1+\\sqrt2\\)",
+        "spokenLabel": "One plus the square root of two"
+      },
+      {
+        "id": "positive",
+        "label": "\\(3+2\\sqrt2\\)",
+        "spokenLabel": "Three plus twice the square root of two"
+      }
     ],
     "correct": "positive",
     "correctFeedback": "Correct. Check the norm and the positive-real condition separately.",

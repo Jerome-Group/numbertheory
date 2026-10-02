@@ -81,13 +81,25 @@ export function SquareRootLab() {
       </form>
       <fieldset className="square-presets">
         <legend>Example congruences</legend>
-        <button type="button" onClick={() => run('72', '1')}>
+        <button
+          type="button"
+          aria-label="x squared congruent to 1 modulo 72"
+          onClick={() => run('72', '1')}
+        >
           <MathText text={'\\(x^2\\equiv1\\pmod{72}\\)'} />
         </button>
-        <button type="button" onClick={() => run('32', '12')}>
+        <button
+          type="button"
+          aria-label="x squared congruent to 12 modulo 32"
+          onClick={() => run('32', '12')}
+        >
           <MathText text={'\\(x^2\\equiv12\\pmod{32}\\)'} />
         </button>
-        <button type="button" onClick={() => run('16', '0')}>
+        <button
+          type="button"
+          aria-label="x squared congruent to 0 modulo 16"
+          onClick={() => run('16', '0')}
+        >
           <MathText text={'\\(x^2\\equiv0\\pmod{16}\\)'} />
         </button>
       </fieldset>

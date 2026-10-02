@@ -7,7 +7,12 @@ export type Teaching = {
   proofSteps: { label: string; reason: string }[];
   check: {
     prompt: string;
-    choices: { text: string; correct: boolean; feedback: string }[];
+    choices: {
+      text: string;
+      label?: string;
+      correct: boolean;
+      feedback: string;
+    }[];
   };
 };
 

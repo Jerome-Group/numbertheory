@@ -82,6 +82,15 @@ export function validateLearningContent(
       choices.forEach((choice, index) => {
         text(choice.text, `${lesson.id}.choice.${index}`);
         text(choice.feedback, `${lesson.id}.feedback.${index}`);
+        if (
+          (choice.text.includes('\\(') || choice.label !== undefined) &&
+          (typeof choice.label !== 'string' ||
+            !choice.label.trim() ||
+            choice.label.includes('\\'))
+        )
+          errors.push(
+            `${lesson.id}.choice.${index}: mathematical controls need a plain spoken label`,
+          );
       });
   }
   for (const [id, path] of Object.entries(paths)) {
