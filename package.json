@@ -14,7 +14,7 @@
     "check:public": "node scripts/check-public-surface.mjs"
   },
   "dependencies": {
-    "katex": "^0.18.7",
+    "katex": "^0.18.9",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
