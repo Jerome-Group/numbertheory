@@ -7,11 +7,18 @@ export function ProgressControls() {
     progressStore.getSnapshot,
   );
   const [backup, setBackup] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
   const backupText = useRef<HTMLTextAreaElement>(null);
+  const clearButton = useRef<HTMLButtonElement>(null);
+  const cancelButton = useRef<HTMLButtonElement>(null);
   const [restore, setRestore] = useState('');
   const [message, setMessage] = useState(
     'Only this browser stores your marks.',
   );
+  function closeReset() {
+    setConfirmReset(false);
+    requestAnimationFrame(() => clearButton.current?.focus());
+  }
   async function copyProgress() {
     setBackup(true);
     try {
@@ -61,13 +68,12 @@ export function ProgressControls() {
         </label>
         <button
           type="button"
+          ref={clearButton}
+          aria-expanded={confirmReset}
+          aria-controls="progress-reset-confirmation"
           onClick={() => {
-            if (
-              window.confirm('Clear all local lesson marks on this device?')
-            ) {
-              progressStore.reset();
-              setMessage('All local marks cleared.');
-            }
+            setConfirmReset(true);
+            requestAnimationFrame(() => cancelButton.current?.focus());
           }}
         >
           Clear marks
@@ -80,6 +86,43 @@ export function ProgressControls() {
           {backup ? 'Hide backup text' : 'Show backup text'}
         </button>
       </div>
+      {confirmReset && (
+        <fieldset
+          id="progress-reset-confirmation"
+          className="progress-reset-confirmation"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+              closeReset();
+            }
+          }}
+        >
+          <legend>Confirm clearing marks</legend>
+          <p id="progress-reset-question">
+            Clear every local lesson mark on this device? Keep a JSON backup
+            first.
+          </p>
+          <button
+            type="button"
+            ref={cancelButton}
+            aria-describedby="progress-reset-question"
+            onClick={closeReset}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            aria-describedby="progress-reset-question"
+            onClick={() => {
+              progressStore.reset();
+              closeReset();
+              setMessage('All local marks cleared.');
+            }}
+          >
+            Clear all marks
+          </button>
+        </fieldset>
+      )}
       <p role="status">{message}</p>
       {progressStore.getStorageStatus() === 'recovered' && (
         <p role="alert">

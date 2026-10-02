@@ -1050,6 +1050,25 @@ button {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+.reading-shell #lab label {
+  display: block;
+}
+.progress-reset-confirmation {
+  margin: 18px 0;
+  padding: 18px;
+  background: var(--blue-wash);
+  border-left: 4px solid var(--blue);
+  border-radius: 4px;
+}
+.progress-reset-confirmation button {
+  margin-right: 8px;
+  min-height: 44px;
+}
+.reading-shell #lab label input,
+.reading-shell #lab label select {
+  display: block;
+  margin-top: 7px;
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
