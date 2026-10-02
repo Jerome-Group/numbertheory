@@ -29,7 +29,9 @@ export function ReasoningCheck({ id }: { id: string }) {
             onClick={() => setChoice(index)}
           >
             <span aria-hidden="true">{String.fromCharCode(65 + index)}</span>
-            <MathText text={item.text} />
+            <span className="reasoning-choice-text">
+              <MathText text={item.text} />
+            </span>
           </button>
         ))}
       </fieldset>

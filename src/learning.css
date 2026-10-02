@@ -352,6 +352,7 @@ button {
   margin: 12px 0 18px;
 }
 .reasoning-check fieldset {
+  min-inline-size: 0;
   border: 0;
   padding: 0;
   margin: 0;
@@ -365,6 +366,7 @@ button {
 }
 .reasoning-check button {
   display: flex;
+  min-width: 0;
   gap: 14px;
   align-items: baseline;
   text-align: left;
@@ -377,9 +379,14 @@ button {
   color: var(--ink);
 }
 .reasoning-check button > span:first-child {
+  flex: none;
   font-size: 11px;
   font-weight: 800;
   color: #526535;
+}
+.reasoning-choice-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .reasoning-check button[aria-pressed="true"] {
   border: 2px solid var(--blue);
