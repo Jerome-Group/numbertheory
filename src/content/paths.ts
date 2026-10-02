@@ -149,14 +149,26 @@ export function closePrerequisites(ids: string[]) {
 for (const id of pathIds)
   pathDetails[id].ids = closePrerequisites(pathTargets[id]);
 
+let sessionPath: PathId | 'all' | undefined;
 export function selectedPath(): PathId | 'all' {
+  if (sessionPath !== undefined) return sessionPath;
   try {
     const value = localStorage.getItem('numbertheory.path.v1');
-    return value && pathIds.includes(value as PathId)
-      ? (value as PathId)
-      : 'all';
+    sessionPath =
+      value && pathIds.includes(value as PathId) ? (value as PathId) : 'all';
+    return sessionPath;
   } catch {
     return 'all';
+  }
+}
+export function selectLearningPath(id: PathId | 'all') {
+  if (id !== 'all' && !pathIds.includes(id))
+    throw new Error(`Unknown learning path ${id}`);
+  sessionPath = id;
+  try {
+    localStorage.setItem('numbertheory.path.v1', id);
+  } catch {
+    /* The selected route remains available in this session. */
   }
 }
 export function lessonsForPath(id: PathId) {

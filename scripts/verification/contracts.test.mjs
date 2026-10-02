@@ -41,6 +41,8 @@ const { registerStudyTools } = await loadRepositoryModule(
   'src/webmcp/register.ts',
 );
 const { lessons } = await loadRepositoryModule(root, 'src/content/lessons.ts');
+const { selectedPath, selectLearningPath, lessonsForPath } =
+  await loadRepositoryModule(root, 'src/content/paths.ts');
 const stop = registerStudyTools();
 test('all 83 lesson commands and six view commands resolve; unknown ID is atomic', () => {
   for (const lesson of lessons) {
@@ -278,6 +280,23 @@ test('denied storage retains usable current-session progress', () => {
     assert.equal(progressStore.getSnapshot().D04, 'complete');
   } finally {
     localStorage.setItem = original;
+  }
+});
+test('denied storage preserves the selected learning route; invalid selection is atomic', () => {
+  const previous = selectedPath();
+  const original = localStorage.setItem;
+  localStorage.setItem = () => {
+    throw new Error('Denied');
+  };
+  try {
+    selectLearningPath('ant');
+    assert.equal(selectedPath(), 'ant');
+    assert.equal(lessonsForPath(selectedPath()).at(-1).id, 'N11');
+    assert.throws(() => selectLearningPath('missing'));
+    assert.equal(selectedPath(), 'ant');
+  } finally {
+    localStorage.setItem = original;
+    selectLearningPath(previous);
   }
 });
 test('registration abort removes every tool; absent host does not throw', () => {

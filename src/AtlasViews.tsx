@@ -9,6 +9,7 @@ import {
   pathIds,
   pathTargets,
   selectedPath,
+  selectLearningPath,
 } from './content/paths';
 import { claimRegistry, exerciseRegistry } from './content/registries';
 import { lessonMatches } from './content/search';
@@ -216,12 +217,8 @@ export function AtlasViews({
     </div>
   );
   function choosePath(id: PathId | 'all') {
+    selectLearningPath(id);
     setPath(id);
-    try {
-      localStorage.setItem('numbertheory.path.v1', id);
-    } catch {
-      /* Browsing works without storage. */
-    }
   }
   const [shown, setShown] = useState<string[]>([]);
   const toggle = (id: string) =>

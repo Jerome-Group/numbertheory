@@ -7,11 +7,11 @@ const prompts = [
     question:
       'A pattern holds for the first \\(100\\) integers. What proves it for every integer?',
     choices: [
-      'More examples',
       'A valid universal argument',
+      'More examples',
       'A larger diagram',
     ],
-    correct: 1,
+    correct: 0,
     next: 'P00',
   },
   {
@@ -19,10 +19,10 @@ const prompts = [
       'When may \\(c\\) be cancelled from \\(ac\\equiv bc\\pmod n\\) without changing the modulus?',
     choices: [
       'Whenever \\(c\\ne0\\)',
-      'When \\(\\gcd(c,n)=1\\)',
       'Whenever \\(n>1\\)',
+      'When \\(\\gcd(c,n)=1\\)',
     ],
-    correct: 1,
+    correct: 2,
     next: 'C02',
   },
   {
