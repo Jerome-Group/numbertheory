@@ -88,6 +88,7 @@ export function ReciprocityLatticeLab({
         <label>
           Odd prime <MathText text={'\\(p\\)'} />, 3–31
           <input
+            aria-label="Odd prime p, from three to thirty-one"
             inputMode="numeric"
             value={p}
             onChange={(event) => setP(event.target.value)}
@@ -96,6 +97,7 @@ export function ReciprocityLatticeLab({
         <label>
           Distinct odd prime <MathText text={'\\(q\\)'} />, 3–31
           <input
+            aria-label="Distinct odd prime q, from three to thirty-one"
             inputMode="numeric"
             value={q}
             onChange={(event) => setQ(event.target.value)}
@@ -341,10 +343,10 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
           </caption>
           <thead>
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Column coordinate x">
                 <MathText text={'\\(x\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Floor of q times x divided by p">
                 <MathText text={'\\(\\lfloor qx/p\\rfloor\\)'} />
               </th>
               <th scope="col">Points below</th>
@@ -375,10 +377,10 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
           </caption>
           <thead>
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Row coordinate y">
                 <MathText text={'\\(y\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Floor of p times y divided by q">
                 <MathText text={'\\(\\lfloor py/q\\rfloor\\)'} />
               </th>
               <th scope="col">Points above</th>

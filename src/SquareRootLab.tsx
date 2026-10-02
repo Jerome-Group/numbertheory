@@ -64,6 +64,7 @@ export function SquareRootLab() {
         <label>
           Modulus <MathText text={'\\(m\\)'} />
           <input
+            aria-label="Modulus m"
             inputMode="numeric"
             value={modulus}
             onChange={(event) => setModulus(event.target.value)}
@@ -72,6 +73,7 @@ export function SquareRootLab() {
         <label>
           Target <MathText text={'\\(a\\)'} />
           <input
+            aria-label="Target a"
             inputMode="numeric"
             value={target}
             onChange={(event) => setTarget(event.target.value)}

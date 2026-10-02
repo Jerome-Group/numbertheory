@@ -93,6 +93,7 @@ export function CancellationLab() {
           <label>
             Modulus <MathText text={'\\(n\\)'} />
             <input
+              aria-label="Modulus n"
               value={modulus}
               onChange={(event) => setModulus(event.target.value)}
               inputMode="numeric"
@@ -101,6 +102,7 @@ export function CancellationLab() {
           <label>
             Factor <MathText text={'\\(c\\)'} />
             <input
+              aria-label="Factor c"
               value={factor}
               onChange={(event) => setFactor(event.target.value)}
               inputMode="numeric"
@@ -142,6 +144,7 @@ export function CancellationLab() {
                 <button
                   type="button"
                   key={fiber.output}
+                  aria-label={`Show inputs mapping to ${fiber.output} modulo ${map.modulus}`}
                   aria-pressed={selected?.output === fiber.output}
                   onClick={() => setSelectedOutput(fiber.output)}
                 >

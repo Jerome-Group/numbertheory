@@ -116,6 +116,22 @@ export function validateLearningContent(
     if (!byId.has(id)) errors.push(`Unknown figure lesson ${id}`);
     text(figure.title, `${id}.figure.title`);
     text(figure.caption, `${id}.figure.caption`);
+    for (const [labels, count, axis] of [
+      [figure.headerLabels, figure.headers.length, 'column'],
+      [figure.rowLabels, figure.rows.length, 'row'],
+    ]) {
+      if (
+        !Array.isArray(labels) ||
+        labels.length !== count ||
+        labels.some(
+          (label) =>
+            typeof label !== 'string' || !label.trim() || label.includes('\\'),
+        )
+      )
+        errors.push(
+          `${id}: figure ${axis} headers need aligned plain spoken labels`,
+        );
+    }
     figure.headers.forEach((value, index) => {
       text(value, `${id}.figure.header.${index}`);
     });

@@ -318,7 +318,10 @@ export function PellHyperbolaOrbitLab({
                 <th scope="col">Power n</th>
                 <th scope="col">x</th>
                 <th scope="col">y</th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="Norm: x squared minus D times y squared"
+                >
                   <MathText text={'\\(x^2-Dy^2\\)'} />
                 </th>
               </tr>

@@ -390,6 +390,7 @@ export async function scopeMap(root) {
     'assertion:no-document-overflow',
     'assertion:no-console-network-errors',
     'assertion:no-katex-errors-raw-delimiters',
+    'assertion:accessible-control-header-names',
   ];
   map.scopeHash = hash(JSON.stringify(map));
   return map;

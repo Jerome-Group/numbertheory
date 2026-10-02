@@ -62,3 +62,34 @@ test('mathematical choices require a readable control label', () => {
   copy.check.choices[0].label = 'x squared';
   assert.deepEqual(run([lesson], { A: copy }), []);
 });
+
+test('figure header names cannot disappear or drift from their table dimensions', () => {
+  const figure = {
+    title: 'Powers',
+    caption: 'Compare an exact value.',
+    headers: ['Input'],
+    headerLabels: ['Input'],
+    rows: [['\\(p^2\\)']],
+    rowLabels: ['Prime p squared'],
+  };
+  const validate = (candidate) =>
+    validateLearningContent(
+      [lesson],
+      { A: record },
+      {},
+      { A: candidate },
+      {
+        lessonIds: ['A'],
+      },
+    );
+  assert.deepEqual(validate(figure), []);
+  for (const key of ['headerLabels', 'rowLabels']) {
+    for (const labels of [undefined, [], [''], ['\\(p^2\\)'], ['One', 'Two']]) {
+      assert.ok(
+        validate({ ...figure, [key]: labels }).some((error) =>
+          /aligned plain spoken labels/.test(error),
+        ),
+      );
+    }
+  }
+});

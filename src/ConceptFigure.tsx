@@ -47,8 +47,12 @@ export function ConceptFigure({ id }: { id: string }) {
         <table>
           <thead>
             <tr>
-              {figure.headers.map((text) => (
-                <th key={text} scope="col">
+              {figure.headers.map((text, index) => (
+                <th
+                  key={text}
+                  scope="col"
+                  aria-label={figure.headerLabels[index]}
+                >
                   <MathText text={text} />
                 </th>
               ))}
@@ -59,7 +63,11 @@ export function ConceptFigure({ id }: { id: string }) {
               <tr key={index}>
                 {row.map((text, col) =>
                   col === 0 ? (
-                    <th key={col} scope="row">
+                    <th
+                      key={col}
+                      scope="row"
+                      aria-label={figure.rowLabels[index]}
+                    >
                       <MathText text={text} />
                     </th>
                   ) : (

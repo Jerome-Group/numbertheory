@@ -509,34 +509,40 @@ function DivisorTermsTable({
         <thead>
           {inversion ? (
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Divisor d">
                 <MathText text={'\\(d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Complementary divisor n divided by d">
                 <MathText text={'\\(n/d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Möbius function at d">
                 <MathText text={'\\(\\mu(d)\\)'} />
               </th>
-              <th scope="col">
+              <th
+                scope="col"
+                aria-label="Capital F evaluated at n divided by d"
+              >
                 <MathText text={'\\(F(n/d)\\)'} />
               </th>
-              <th scope="col">
+              <th
+                scope="col"
+                aria-label="Möbius function at d times capital F evaluated at n divided by d"
+              >
                 <MathText text={'\\(\\mu(d)F(n/d)\\)'} />
               </th>
             </tr>
           ) : (
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Divisor d">
                 <MathText text={'\\(d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Complementary divisor n divided by d">
                 <MathText text={'\\(n/d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="f evaluated at d">
                 <MathText text={'\\(f(d)\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="g evaluated at n divided by d">
                 <MathText text={'\\(g(n/d)\\)'} />
               </th>
               <th scope="col">Product</th>

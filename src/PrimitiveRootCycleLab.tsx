@@ -115,6 +115,7 @@ export function PrimitiveRootCycleLab({
         <label>
           Odd prime <MathText text={'\\(p\\)'} />, 3–31
           <input
+            aria-label="Odd prime p, from three to thirty-one"
             inputMode="numeric"
             value={prime}
             onChange={(event) => setPrime(event.target.value)}
@@ -124,6 +125,7 @@ export function PrimitiveRootCycleLab({
           Candidate <MathText text={'\\(a\\)'} />, 1–
           <MathText text={'\\(p-1\\)'} />
           <input
+            aria-label="Candidate a, from one to p minus one"
             inputMode="numeric"
             value={candidate}
             onChange={(event) => setCandidate(event.target.value)}
@@ -394,16 +396,19 @@ function PowerOrderTable({ result }: { result: UnitOrderSpectrum }) {
         </caption>
         <thead>
           <tr>
-            <th scope="col">
+            <th scope="col" aria-label="Exponent k">
               <MathText text={'\\(k\\)'} />
             </th>
-            <th scope="col">
+            <th scope="col" aria-label="a raised to exponent k">
               <MathText text={'\\(a^k\\)'} />
             </th>
-            <th scope="col">
+            <th scope="col" aria-label="Greatest common divisor of h and k">
               <MathText text={'\\(\\gcd(h,k)\\)'} />
             </th>
-            <th scope="col">
+            <th
+              scope="col"
+              aria-label="h divided by the greatest common divisor of h and k"
+            >
               <MathText text={'\\(h/\\gcd(h,k)\\)'} />
             </th>
             <th scope="col">Computed order</th>
@@ -479,13 +484,16 @@ function GeneratorTestTable({ result }: { result: UnitOrderSpectrum }) {
         <caption>Prime-divisor tests for candidate {result.candidate}</caption>
         <thead>
           <tr>
-            <th scope="col">
+            <th scope="col" aria-label="Prime divisor r of p minus one">
               <MathText text={'\\(r\\mid p-1\\)'} />
             </th>
-            <th scope="col">
+            <th scope="col" aria-label="The quantity p minus one divided by r">
               <MathText text={'\\((p-1)/r\\)'} />
             </th>
-            <th scope="col">
+            <th
+              scope="col"
+              aria-label="a raised to the exponent given by p minus one divided by r"
+            >
               <MathText text={'\\(a^{(p-1)/r}\\)'} />
             </th>
             <th scope="col">Test</th>
