@@ -118,7 +118,9 @@ export function SquareRootLab() {
           <div className="square-local-grid">
             {result.local.map((item) => (
               <div className="square-local-card" key={item.modulus}>
-                <h3>
+                <h3
+                  aria-label={`Local modulus ${item.prime} to the power ${item.exponent}`}
+                >
                   <MathText
                     text={`\\(\\bmod ${item.prime}^{${item.exponent}}\\)`}
                   />

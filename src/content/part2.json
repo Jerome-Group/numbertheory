@@ -91,7 +91,7 @@
       "C02",
       "D05"
     ],
-    "summary": "In a prime modulus, inversion pairs every nonzero residue except the self-inverse classes. Those two classes multiply to \\(-1\\), giving Wilson’s congruence. Conversely, any composite modulus has a proper prime divisor that contradicts the same factorial congruence.",
+    "summary": "In an odd prime modulus, inversion pairs every nonzero residue except the two self-inverse classes. Those classes multiply to \\(-1\\), giving Wilson’s congruence. The prime \\(2\\) is checked separately. Conversely, any composite modulus has a proper prime divisor that contradicts the same factorial congruence.",
     "definition": [
       "A nonzero class modulo a prime \\(p\\) has a multiplicative inverse. A class is self-inverse when it equals its own inverse, equivalently when \\(x^2\\equiv1\\pmod p\\).",
       "For an integer \\(n>1\\), the factorial \\((n-1)!\\) is the product \\(1\\cdot2\\cdots(n-1)\\). Wilson’s congruence is the assertion \\((n-1)!\\equiv-1\\pmod n\\)."

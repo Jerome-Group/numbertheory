@@ -3,12 +3,12 @@
     "id": "Q01",
     "title": "Quadratic residues and the Legendre symbol",
     "cluster": "Quadratic arithmetic",
-    "question": "Which nonzero residues occur as squares, and why are there half as many?",
+    "question": "Over an odd prime modulus, which nonzero residues occur as squares, and why are there half as many?",
     "prerequisites": [
       "C02",
       "D05"
     ],
-    "summary": "Squaring pairs each nonzero input with its negative. The Legendre symbol records whether a residue is zero, a nonzero square, or a nonsquare.",
+    "summary": "Over an odd prime modulus, squaring pairs each nonzero input with its distinct negative. The Legendre symbol records whether a residue is zero, a nonzero square, or a nonsquare.",
     "definition": [
       "Fix an odd prime \\(p\\). A nonzero class \\([a]_p\\) is a quadratic residue when \\(x^2\\equiv a\\pmod p\\) for some integer \\(x\\); otherwise it is a quadratic nonresidue.",
       "Define \\(\\chi_p(a)=0\\) when \\(p\\mid a\\), \\(\\chi_p(a)=1\\) when \\(a\\) is a nonzero square modulo \\(p\\), and \\(\\chi_p(a)=-1\\) otherwise. Its value depends only on \\([a]_p\\)."

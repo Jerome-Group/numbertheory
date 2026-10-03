@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { validateLearningContent } from './learning-content.mjs';
+import { validateMathSurface } from './math-surface.mjs';
 
 const lesson = { id: 'A', proof: ['argument'], prerequisites: [] };
 const record = {
@@ -92,4 +93,36 @@ test('figure header names cannot disappear or drift from their table dimensions'
       );
     }
   }
+});
+
+test('math-only headings require spoken labels; source checks do not stand in for native AX', () => {
+  for (const attributes of [
+    '',
+    'aria-label=""',
+    'aria-label={""}',
+    'aria-label={"\\\\(p^k\\\\)"}',
+    'aria-label={name}',
+  ]) {
+    const source =
+      '<h3 ' + attributes + '><MathText text={"\\\\(p^k\\\\)"} /></h3>';
+    assert.ok(
+      validateMathSurface(source).some((error) =>
+        error.includes('MathText-only heading'),
+      ),
+    );
+  }
+  for (const source of [
+    '<h3>Local modulus <MathText text={"\\\\(p^k\\\\)"} /></h3>',
+    '<h3 aria-label="Modulo eight"><MathText text={"\\\\(p^k\\\\)"} /></h3>',
+    '<h3 aria-label={"Modulo eight"}><MathText text={"\\\\(p^k\\\\)"} /></h3>',
+    '<h3 aria-label={\u0060Local modulus \u0024{prime} to the power \u0024{exponent}\u0060}><><MathText text={"\\\\(p^k\\\\)"} /></></h3>',
+  ]) {
+    assert.deepEqual(validateMathSurface(source), []);
+  }
+  for (const source of [
+    '<h3><MathText text={prompt} /></h3>',
+    '<h3><MathText text={"Compare the roots"} /></h3>',
+  ])
+    assert.deepEqual(validateMathSurface(source), []);
+  assert.ok(validateMathSurface('<h3><MathText /></h2>').length);
 });

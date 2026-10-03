@@ -45,12 +45,12 @@
     "id": "S04",
     "title": "Which integers are sums of two squares?",
     "cluster": "Sums of squares",
-    "question": "Which prime exponents prevent an integer from being a sum of two squares?",
+    "question": "Which prime exponents prevent a positive integer from being a sum of two squares?",
     "prerequisites": [
       "S01",
       "D05"
     ],
-    "summary": "The obstruction is exactly an odd exponent at a prime congruent to three modulo four.",
+    "summary": "For a positive integer, the obstruction is exactly an odd exponent at a prime congruent to three modulo four. Zero is representable separately as a sum of two zero squares.",
     "definition": [
       "A nonnegative integer \\(n\\) is representable if \\(n=x^2+y^2\\) for integers \\(x,y\\). For positive \\(n\\), write its prime factorization as \\(n=2^a\\prod_i p_i^{e_i}\\prod_j q_j^{f_j}\\), where \\(p_i\\equiv1\\pmod4\\) and \\(q_j\\equiv3\\pmod4\\)."
     ],
