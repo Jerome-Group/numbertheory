@@ -1,0 +1,3733 @@
+{
+  "P00": {
+    "intuition": "A first failure would have an immediate successful predecessor. Induction rules out precisely that first break in the chain.",
+    "strategy": "Use a finite initial segment to establish a least member, then apply that principle to the set of failures.",
+    "hypotheses": [
+      "For well-ordering, the set is a nonempty subset of the nonnegative integers.",
+      "For induction, the base case holds and the successor implication holds at every nonnegative index."
+    ],
+    "proofSteps": [
+      {
+        "label": "Find the first member",
+        "reason": "A chosen member bounds a finite nonempty initial segment. Its minimum is global because every member outside the segment is larger."
+      },
+      {
+        "label": "Rule out first failure",
+        "reason": "The base excludes zero as a failure; minimality makes the predecessor successful, so the step contradicts failure."
+      }
+    ],
+    "check": {
+      "prompt": "Why does the least failing index have a predecessor in the domain?",
+      "choices": [
+        {
+          "text": "The base case excludes zero.",
+          "correct": true,
+          "feedback": "Exactly: the least failure is positive, so its predecessor is nonnegative."
+        },
+        {
+          "text": "Every integer has a nonnegative predecessor.",
+          "correct": false,
+          "feedback": "Zero and negative integers do not. The base case is what excludes the problematic endpoint."
+        },
+        {
+          "text": "Testing several cases establishes the step.",
+          "correct": false,
+          "feedback": "A finite table does not establish an implication for every index."
+        }
+      ]
+    }
+  },
+  "P01": {
+    "intuition": "A universal assertion has no exceptions; an existence assertion needs just one witness. Negation exchanges these two burdens.",
+    "strategy": "Describe exactly what must fail, keeping the original domain unchanged.",
+    "hypotheses": [
+      "The same domain is used before and after negation.",
+      "A counterexample belongs to the domain and satisfies any hypotheses."
+    ],
+    "proofSteps": [
+      {
+        "label": "Negate every case",
+        "reason": "The universal claim is false exactly when at least one allowed input fails; no failing input means all succeed."
+      },
+      {
+        "label": "Negate a witness",
+        "reason": "To deny existence, every possible witness must fail. Denying one particular witness is insufficient."
+      }
+    ],
+    "check": {
+      "prompt": "What negates \\(\\exists x\\in D, P(x)\\)?",
+      "promptLabel": "What negates: there exists an x in the domain D such that P of x holds?",
+      "choices": [
+        {
+          "text": "\\(\\forall x\\in D,\\neg P(x)\\).",
+          "correct": true,
+          "feedback": "Every allowed witness must be ruled out.",
+          "label": "For every x in the domain D, P of x is false."
+        },
+        {
+          "text": "\\(\\exists x\\in D,\\neg P(x)\\).",
+          "correct": false,
+          "feedback": "One failure can coexist with another successful witness.",
+          "label": "There exists an x in the domain D for which P of x is false."
+        },
+        {
+          "text": "\\(\\forall x\\in D,P(x)\\).",
+          "correct": false,
+          "feedback": "It asserts universal success rather than ruling out every possible witness.",
+          "label": "For every x in the domain D, P of x is true."
+        }
+      ]
+    }
+  },
+  "P03": {
+    "intuition": "Divisor complementation renames each divisor exactly once, preserving the count. Forgetting selection order instead groups ordered lists into equally sized fibers; dividing by the number of orderings counts the subsets.",
+    "strategy": "Name the counted objects, then verify the correspondence or the number of orderings for each object.",
+    "hypotheses": [
+      "The integer whose divisors are counted is positive.",
+      "The selection size satisfies \\(0\\le k\\le N\\) with integer bounds."
+    ],
+    "proofSteps": [
+      {
+        "label": "Pair complementary divisors",
+        "reason": "Applying complementation twice returns the original divisor, so the map is bijective. A square-root divisor is a fixed point, not a second copy."
+      },
+      {
+        "label": "Forget selection order",
+        "reason": "Each subset has exactly as many ordered lists as permutations of its elements. Dividing by that common count yields an integer cardinality."
+      }
+    ],
+    "check": {
+      "prompt": "What happens to the square-root divisor when reindexing a divisor sum for a square?",
+      "choices": [
+        {
+          "text": "It appears once, mapped to itself.",
+          "correct": true,
+          "feedback": "Reindexing changes names, not multiplicities."
+        },
+        {
+          "text": "It must appear twice like a pair.",
+          "correct": false,
+          "feedback": "A fixed point is one divisor; doubling it changes the sum."
+        },
+        {
+          "text": "It must be omitted.",
+          "correct": false,
+          "feedback": "It is a valid positive divisor and remains in the sum."
+        }
+      ]
+    }
+  },
+  "P04": {
+    "intuition": "Nested nonempty closed real intervals whose widths shrink to zero trap one real number. A determinant of unit magnitude lets an integer coordinate system be inverted without fractions.",
+    "strategy": "Use completeness for interval existence and shrinking widths for uniqueness; use explicit inverse formulas for the integer basis.",
+    "hypotheses": [
+      "Intervals are nonempty, closed, nested, and their widths tend to zero.",
+      "The ambient numbers are real, so bounded nonempty sets have suprema.",
+      "Integer basis vectors have determinant \\(\\pm1\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Trap the supremum",
+        "reason": "Nestedness bounds every left endpoint by each right endpoint. Completeness supplies their supremum; shrinking widths exclude two common points."
+      },
+      {
+        "label": "Invert integer coordinates",
+        "reason": "Division by a determinant of unit magnitude preserves integrality. The inverse formulas also force uniqueness of the coefficients."
+      }
+    ],
+    "check": {
+      "prompt": "What does a nonzero integer determinant guarantee without the unit-magnitude condition?",
+      "choices": [
+        {
+          "text": "Unique rational coefficients for an integer vector.",
+          "correct": true,
+          "feedback": "The inverse exists over the rationals; its denominators need not cancel."
+        },
+        {
+          "text": "Integer coefficients for every integer vector.",
+          "correct": false,
+          "feedback": "A determinant such as two can leave half-integer coefficients."
+        },
+        {
+          "text": "A common point for nested intervals.",
+          "correct": false,
+          "feedback": "The determinant statement concerns bases, not interval completeness."
+        }
+      ]
+    }
+  },
+  "D01": {
+    "intuition": "Dividing means being built from an integer number of copies. Combining two multiples of the same integer produces another multiple.",
+    "strategy": "Replace each divisibility assertion by its integer witness, then factor out the common divisor.",
+    "hypotheses": [
+      "Inputs and combination coefficients are integers.",
+      "Divisibility uses the witness equation, including the zero cases."
+    ],
+    "proofSteps": [
+      {
+        "label": "Expose integer witnesses",
+        "reason": "The definition supplies two integer quotients; no division by a possibly zero divisor is required."
+      },
+      {
+        "label": "Build the new witness",
+        "reason": "An integer linear combination of the two witnesses is again an integer, establishing the desired divisibility."
+      }
+    ],
+    "check": {
+      "prompt": "Why does \\(d\\mid a,b\\) imply \\(d\\mid xa+yb\\)?",
+      "promptLabel": "Why does d dividing both a and b imply that d divides x times a plus y times b?",
+      "choices": [
+        {
+          "text": "The new quotient is an integer combination of the old quotients.",
+          "correct": true,
+          "feedback": "The witness remains integral because all coefficients are integers."
+        },
+        {
+          "text": "The combination is numerically larger than the divisor.",
+          "correct": false,
+          "feedback": "Numerical size neither establishes nor prevents divisibility."
+        },
+        {
+          "text": "Every real combination is a multiple in the required sense.",
+          "correct": false,
+          "feedback": "The required witness is an integer; arbitrary real coefficients can destroy integrality."
+        }
+      ]
+    }
+  },
+  "D02": {
+    "intuition": "Remainders are representatives inside one block of width equal to the divisor. Moving down another block cannot stay nonnegative once the smallest candidate is reached.",
+    "strategy": "Minimize a nonnegative candidate remainder, then compare two purported remainders by subtracting their equations.",
+    "hypotheses": [
+      "The dividend is an integer of either sign.",
+      "The divisor is a positive integer.",
+      "The standard remainder is nonnegative and smaller than the divisor."
+    ],
+    "proofSteps": [
+      {
+        "label": "Choose the least candidate",
+        "reason": "A sufficiently negative quotient supplies a nonnegative candidate. Well-ordering then applies to an actual nonempty set."
+      },
+      {
+        "label": "Exclude another full block",
+        "reason": "If the least candidate were at least the divisor, subtracting a positive block would give a smaller nonnegative candidate."
+      },
+      {
+        "label": "Compare two representatives",
+        "reason": "Their difference is a multiple of the divisor with magnitude smaller than that divisor; only zero can satisfy both conditions."
+      }
+    ],
+    "check": {
+      "prompt": "Why is \\(-17=5(-3)-2\\) not standard division with remainder?",
+      "promptLabel": "Why is the equation negative seventeen equals five times negative three minus two not standard division with remainder?",
+      "choices": [
+        {
+          "text": "Its remainder is negative.",
+          "correct": true,
+          "feedback": "Standard remainders for divisor five lie from zero through four."
+        },
+        {
+          "text": "The quotient is negative.",
+          "correct": false,
+          "feedback": "Negative quotients are allowed; the restriction concerns the remainder."
+        },
+        {
+          "text": "A negative dividend has no standard remainder.",
+          "correct": false,
+          "feedback": "The existence proof allows either sign of dividend."
+        }
+      ]
+    }
+  },
+  "P02": {
+    "intuition": "A descent construction cannot keep producing smaller positive integer counterexamples: eventually it would have to pass a least one.",
+    "strategy": "Assume failures exist, choose the least allowed measure, and apply a construction that preserves counterexample status while strictly decreasing it.",
+    "hypotheses": [
+      "Strong induction includes zero via an empty predecessor hypothesis.",
+      "A descent measure is a positive integer.",
+      "The new object preserves every counterexample hypothesis and has smaller measure."
+    ],
+    "proofSteps": [
+      {
+        "label": "Select the least failure",
+        "reason": "All smaller indices succeed by minimality, exactly supplying the strong-induction hypothesis at the alleged failure."
+      },
+      {
+        "label": "Contradict the least measure",
+        "reason": "A preserved counterexample with a smaller positive measure belongs to the same set, contradicting its least element."
+      }
+    ],
+    "check": {
+      "prompt": "Which construction establishes an infinite-descent contradiction?",
+      "choices": [
+        {
+          "text": "A new counterexample with strictly smaller positive integer measure.",
+          "correct": true,
+          "feedback": "All three properties are needed: preserved failure, positivity, and strict decrease."
+        },
+        {
+          "text": "A smaller real-valued measure.",
+          "correct": false,
+          "feedback": "Positive reals can decrease indefinitely; integer well-ordering does not apply."
+        },
+        {
+          "text": "A smaller object that is no longer a counterexample.",
+          "correct": false,
+          "feedback": "It lies outside the selected counterexample set and cannot contradict minimality."
+        }
+      ]
+    }
+  },
+  "D03": {
+    "intuition": "The least positive integer combination is too small to leave a positive remainder when dividing either input. It therefore becomes both a common divisor and a certificate.",
+    "strategy": "Minimize positive combinations, use division to force divisibility, then compare with every common divisor.",
+    "hypotheses": [
+      "The integer inputs are not both zero.",
+      "Combination coefficients are integers.",
+      "The chosen combination is positive."
+    ],
+    "proofSteps": [
+      {
+        "label": "Minimize positive combinations",
+        "reason": "A nonzero input supplies a positive combination, so well-ordering applies; excluding two zero inputs is essential here."
+      },
+      {
+        "label": "Force zero remainders",
+        "reason": "A positive remainder would be another smaller positive combination. Minimality therefore forces the candidate to divide both inputs."
+      },
+      {
+        "label": "Establish the generator",
+        "reason": "Every common divisor divides the candidate combination. Its own divisibility proves it is the gcd, while scaling its certificate generates every multiple."
+      }
+    ],
+    "check": {
+      "prompt": "Does an integer combination alone certify the gcd?",
+      "choices": [
+        {
+          "text": "No; its value must also divide both inputs.",
+          "correct": true,
+          "feedback": "The combination bounds all common divisors, but divisibility of both inputs supplies the other half."
+        },
+        {
+          "text": "Yes; every positive combination is the gcd.",
+          "correct": false,
+          "feedback": "Positive combinations can be larger than the least one and need not divide either input."
+        },
+        {
+          "text": "Only when both coefficients are positive.",
+          "correct": false,
+          "feedback": "Negative coefficients are legal; checking divisibility is the missing requirement."
+        }
+      ]
+    }
+  },
+  "D04": {
+    "intuition": "Each remainder replaces a large input without changing which integers divide both. The descending sizes make this preserved information eventually easy to read.",
+    "strategy": "Prove common-divisor preservation in both directions, then prove termination independently.",
+    "hypotheses": [
+      "Inputs are not both zero and are normalized to absolute values.",
+      "Each division uses a positive divisor and a standard remainder."
+    ],
+    "proofSteps": [
+      {
+        "label": "Preserve common divisors",
+        "reason": "The remainder is a combination of the old pair, and the old dividend is a combination of the new pair. Both contain exactly the same divisor information."
+      },
+      {
+        "label": "Stop at the gcd",
+        "reason": "Positive remainders strictly decrease, so the process terminates. The final positive entry is the gcd of itself and zero, preserved throughout."
+      }
+    ],
+    "check": {
+      "prompt": "What proves that Euclid stops?",
+      "choices": [
+        {
+          "text": "Strict decrease of the positive remainders.",
+          "correct": true,
+          "feedback": "A decreasing sequence of positive integers cannot continue forever."
+        },
+        {
+          "text": "Preservation of the gcd alone.",
+          "correct": false,
+          "feedback": "An invariant can remain true in a process that repeats forever; a decreasing measure supplies termination."
+        },
+        {
+          "text": "Back substitution.",
+          "correct": false,
+          "feedback": "Back substitution recovers a certificate after the divisions; it does not establish termination."
+        }
+      ]
+    }
+  },
+  "D05": {
+    "intuition": "A prime has no intermediate common divisor with another integer. That rigidity lets it be extracted from a product and makes factor lists agree one prime at a time.",
+    "strategy": "Derive the prime-divisor rule from Bézout, then establish existence by strong induction and uniqueness by matching and cancelling prime factors.",
+    "hypotheses": [
+      "The prime is greater than one.",
+      "The factored integer is greater than one.",
+      "The matched prime factor is nonzero, permitting integer cancellation."
+    ],
+    "proofSteps": [
+      {
+        "label": "Use Bézout to extract",
+        "reason": "If the prime misses one factor, their gcd is one; a Bézout certificate transfers product divisibility to the other factor without assuming factorization uniqueness."
+      },
+      {
+        "label": "Factor smaller integers",
+        "reason": "A composite splits into two factors strictly between one and itself, so strong induction supplies factorizations of both."
+      },
+      {
+        "label": "Match and cancel primes",
+        "reason": "The prime-divisor rule matches a factor on the other side. Primality forces equality; cancellation reduces the number of factors."
+      }
+    ],
+    "check": {
+      "prompt": "Why should unique factorization not be used to prove the prime-divisor rule here?",
+      "choices": [
+        {
+          "text": "Unique factorization is proved using that rule.",
+          "correct": true,
+          "feedback": "Using the desired conclusion earlier would create a circular dependency."
+        },
+        {
+          "text": "Bézout only works after unique factorization.",
+          "correct": false,
+          "feedback": "The earlier least-positive-combination proof establishes Bézout independently."
+        },
+        {
+          "text": "Prime factors cannot be cancelled.",
+          "correct": false,
+          "feedback": "They are nonzero integers, so cancellation is legal."
+        }
+      ]
+    }
+  },
+  "D06": {
+    "intuition": "A positive integer is determined by its prime exponents, with only finitely many nonzero entries. Common divisors choose lower coordinates; common multiples choose upper coordinates.",
+    "strategy": "Translate divisibility into coordinate inequalities, then compare the minimum and maximum exponent choices.",
+    "hypotheses": [
+      "Both inputs are positive integers.",
+      "Prime valuations are finite exponents for nonzero inputs."
+    ],
+    "proofSteps": [
+      {
+        "label": "Compare prime exponents",
+        "reason": "A quotient is integral exactly when subtracting the input exponents leaves only nonnegative exponents."
+      },
+      {
+        "label": "Choose extrema coordinatewise",
+        "reason": "Taking minima produces a common divisor containing every other one; maxima produce a common multiple dividing every other one."
+      },
+      {
+        "label": "Add the two extrema",
+        "reason": "At each prime, minimum plus maximum equals the sum of the two exponents. Unique factorization converts coordinate equality into integer equality."
+      }
+    ],
+    "check": {
+      "prompt": "For positive \\(a,b\\), which exponent belongs to their lcm?",
+      "promptLabel": "For positive a and b, which exponent belongs to their least common multiple?",
+      "choices": [
+        {
+          "text": "\\(\\max(v_p(a),v_p(b))\\).",
+          "correct": true,
+          "feedback": "A multiple must contain enough copies for each input, and the larger exponent is the least sufficient choice.",
+          "label": "The maximum of the exponent of the prime p in a and the exponent of p in b."
+        },
+        {
+          "text": "\\(\\min(v_p(a),v_p(b))\\).",
+          "correct": false,
+          "feedback": "That describes common divisors and may omit prime copies needed by one input.",
+          "label": "The minimum of the exponent of the prime p in a and the exponent of p in b."
+        },
+        {
+          "text": "\\(v_p(a)+v_p(b)\\) always.",
+          "correct": false,
+          "feedback": "Adding exponents gives the product, which can include unnecessarily repeated prime copies.",
+          "label": "The sum of the exponent of the prime p in a and the exponent of p in b, always."
+        }
+      ]
+    }
+  },
+  "X03": {
+    "intuition": "Prime divisibility in a fraction counts numerator copies minus denominator copies. In a sum, unequal lowest exponents cannot cancel each other.",
+    "strategy": "Cross-multiply to prove independence of representation, then factor out the smaller prime power before examining the sum.",
+    "hypotheses": [
+      "The prime is fixed.",
+      "Fraction denominators are nonzero.",
+      "Product inputs are nonzero; zero in sums uses the infinity convention.",
+      "Unequal valuations guarantee equality; equal valuations require checking cancellation."
+    ],
+    "proofSteps": [
+      {
+        "label": "Make the definition independent",
+        "reason": "Equal fractions give an integer product equality. Additivity of prime exponents makes numerator-minus-denominator unchanged."
+      },
+      {
+        "label": "Inspect the lowest power",
+        "reason": "After extracting the smaller power, unequal valuations leave one numerator nonzero modulo the prime and the other zero. Equal valuations can instead cancel."
+      }
+    ],
+    "check": {
+      "prompt": "Which condition guarantees that the valuation of a sum equals the smaller input valuation?",
+      "choices": [
+        {
+          "text": "When the two input valuations differ.",
+          "correct": true,
+          "feedback": "Only one summand contributes at the lowest prime power, so it cannot be cancelled."
+        },
+        {
+          "text": "Whenever both inputs are nonzero.",
+          "correct": false,
+          "feedback": "Two equally low prime powers may cancel, increasing the valuation or giving zero."
+        },
+        {
+          "text": "When the summand with larger real magnitude is chosen.",
+          "correct": false,
+          "feedback": "Ordinary magnitude and prime divisibility are different measurements."
+        }
+      ]
+    }
+  },
+  "D07": {
+    "intuition": "The possible integer combinations form the multiples of the gcd. Once one point is found, the remaining solutions move in an integer direction that leaves the equation unchanged.",
+    "strategy": "Use the gcd criterion for existence, then subtract a known solution and use coprimality to parametrize the differences.",
+    "hypotheses": [
+      "Coefficients and target are integers.",
+      "The gcd parametrization applies when the coefficients are not both zero; the zero equation is treated separately.",
+      "The parameter runs through all integers; zero coefficients need their stated cases."
+    ],
+    "proofSteps": [
+      {
+        "label": "Decide integer existence",
+        "reason": "Every combination is divisible by the gcd; scaling a Bézout certificate reaches every target divisible by it."
+      },
+      {
+        "label": "Describe every displacement",
+        "reason": "Subtracting removes the target. Dividing by the gcd leaves coprime coefficients, forcing the stated integral step; zero coefficients are checked separately."
+      },
+      {
+        "label": "Separate the zero equation",
+        "reason": "With both coefficients zero the left side is always zero, so the target alone determines whether every pair or no pair works."
+      }
+    ],
+    "check": {
+      "prompt": "For \\(ax+by=c\\) with integer coefficients \\((a,b)\\ne(0,0)\\), what decides existence of an integer solution?",
+      "promptLabel": "For a times x plus b times y equals c, with integer coefficients a and b not both zero, what decides existence of an integer solution?",
+      "choices": [
+        {
+          "text": "The gcd of the coefficients divides the target.",
+          "correct": true,
+          "feedback": "This is both necessary and sufficient when the coefficients are not both zero."
+        },
+        {
+          "text": "The real line contains a point.",
+          "correct": false,
+          "feedback": "A real solution need not have integer coordinates."
+        },
+        {
+          "text": "The two coefficients are prime.",
+          "correct": false,
+          "feedback": "Primality is unnecessary; their gcd controls integer reachability."
+        }
+      ]
+    }
+  },
+  "X02": {
+    "intuition": "Coprime coin values cover every residue, but a valid purchase also needs nonnegative counts. Choosing a bounded count of one coin controls the sign of the other.",
+    "strategy": "Show the proposed largest gap is impossible, then use a complete residue set and an inequality to represent every larger amount.",
+    "hypotheses": [
+      "Coin values are coprime integers greater than one.",
+      "Counts and target are nonnegative integers."
+    ],
+    "proofSteps": [
+      {
+        "label": "Exclude the proposed gap",
+        "reason": "Coprimality cancels the other coin value modulo each denomination, forcing both counts too large for the proposed target."
+      },
+      {
+        "label": "Represent all larger amounts",
+        "reason": "A bounded residue representative makes the other count integral. The target bound forces it above minus one, hence nonnegative because it is an integer."
+      }
+    ],
+    "check": {
+      "prompt": "Why is a Bézout representation alone insufficient for a coin purchase?",
+      "choices": [
+        {
+          "text": "Its counts may be negative.",
+          "correct": true,
+          "feedback": "Integer solvability does not satisfy the extra nonnegative-count requirement."
+        },
+        {
+          "text": "Bézout never gives integer coefficients.",
+          "correct": false,
+          "feedback": "Integer coefficients are exactly what Bézout provides; their signs are the issue."
+        },
+        {
+          "text": "Coprime denominations do not cover residues.",
+          "correct": false,
+          "feedback": "Multiplication by a coprime denomination permutes the residues; nonnegativity still needs a bound."
+        }
+      ]
+    }
+  },
+  "D08": {
+    "intuition": "Adding one to a product escapes divisibility by every prime in the product. Trial division is finite because two large factors cannot multiply to a smaller number.",
+    "strategy": "Contradict a complete finite prime list with a new prime divisor; bound a factor of every composite by its square root.",
+    "hypotheses": [
+      "The tested integer exceeds one.",
+      "A proposed finite list contains all primes, for the contradiction argument.",
+      "Trial division checks every prime up to the square root."
+    ],
+    "proofSteps": [
+      {
+        "label": "Escape the finite list",
+        "reason": "A prime dividing the product plus one cannot divide the product, since it would divide their difference one. The new prime need not equal the whole constructed number."
+      },
+      {
+        "label": "Bound a composite factor",
+        "reason": "At least one factor of a composite is at most its square root; a prime divisor of that factor is therefore within the tested range."
+      }
+    ],
+    "check": {
+      "prompt": "What does Euclid’s product-plus-one construction guarantee?",
+      "choices": [
+        {
+          "text": "A prime divisor absent from the proposed list.",
+          "correct": true,
+          "feedback": "Every listed prime misses the new number; any prime divisor is therefore new."
+        },
+        {
+          "text": "The constructed number is always prime.",
+          "correct": false,
+          "feedback": "The proof uses a prime divisor of the constructed number, which itself may be composite."
+        },
+        {
+          "text": "A formula for prime density.",
+          "correct": false,
+          "feedback": "The contradiction establishes infinitude, not how frequently primes occur."
+        }
+      ]
+    }
+  },
+  "C01": {
+    "intuition": "A congruence class collects integer labels separated by full modulus blocks. Arithmetic is meaningful on these collections only if changing labels does not change the result.",
+    "strategy": "Use divisibility of differences for equivalence and for independence of addition and multiplication from representatives.",
+    "hypotheses": [
+      "The modulus is a positive integer.",
+      "Representatives and witness coefficients are integers."
+    ],
+    "proofSteps": [
+      {
+        "label": "Verify equivalence",
+        "reason": "Zero, negation, and addition of divisible differences establish reflexivity, symmetry, and transitivity."
+      },
+      {
+        "label": "Respect addition representatives",
+        "reason": "The sum of two modulus multiples is another modulus multiple, so both label changes disappear at the class level."
+      },
+      {
+        "label": "Respect product representatives",
+        "reason": "Rewriting the product difference as two terms exposes a modulus factor in each, proving independence of both labels."
+      }
+    ],
+    "check": {
+      "prompt": "What does equality of residue classes assert?",
+      "choices": [
+        {
+          "text": "The difference of representatives is divisible by the modulus.",
+          "correct": true,
+          "feedback": "Representatives can differ as integers while naming the same class."
+        },
+        {
+          "text": "The integer representatives must be equal.",
+          "correct": false,
+          "feedback": "Adding a modulus changes the representative but leaves the class unchanged."
+        },
+        {
+          "text": "Only addition, not multiplication, is well-defined.",
+          "correct": false,
+          "feedback": "The product-difference identity proves multiplication independent of representatives too."
+        }
+      ]
+    }
+  },
+  "C02": {
+    "intuition": "Multiplication by a unit preserves all residue information; multiplication by a nonunit merges some distinctions. Cancellation then keeps only a smaller modulus.",
+    "strategy": "Use Bézout for inverses, remove the shared gcd before cancellation, and exhibit a nonzero annihilating class.",
+    "hypotheses": [
+      "The unit and zero-divisor claims use a modulus at least two.",
+      "The cancellation factor may be zero; the reduced modulus can be one.",
+      "The zero-divisor construction starts with a nonzero nonunit class."
+    ],
+    "proofSteps": [
+      {
+        "label": "Certify a unit",
+        "reason": "A Bézout combination equal to one becomes an inverse modulo the modulus. Conversely an inverse yields such a combination and forces gcd one."
+      },
+      {
+        "label": "Reduce before cancellation",
+        "reason": "Removing the common gcd leaves a coprime factor and modulus. Bézout cancels that factor only at this reduced modulus."
+      },
+      {
+        "label": "Exhibit lost information",
+        "reason": "For a nonzero nonunit, the gcd lies strictly between one and the modulus. The complementary quotient is nonzero but its product with the factor is zero."
+      }
+    ],
+    "check": {
+      "prompt": "After cancelling \\(c\\) from \\(ac\\equiv bc\\pmod n\\), what modulus is justified?",
+      "promptLabel": "After cancelling c from a times c congruent to b times c modulo n, what modulus is justified?",
+      "choices": [
+        {
+          "text": "\\(n/\\gcd(|c|,n)\\).",
+          "correct": true,
+          "feedback": "Removing the common factor makes the remaining cancellation legal.",
+          "label": "n divided by the greatest common divisor of the absolute value of c and n."
+        },
+        {
+          "text": "\\(n\\) for every \\(c\\).",
+          "correct": false,
+          "feedback": "A nonunit can merge distinct classes, so the original modulus can carry more information than survives.",
+          "label": "n, for every c."
+        },
+        {
+          "text": "\\(\\gcd(|c|,n)\\) always.",
+          "correct": false,
+          "feedback": "The surviving modulus is the quotient by the gcd, not generally the gcd itself.",
+          "label": "The greatest common divisor of the absolute value of c and n, always."
+        }
+      ]
+    }
+  },
+  "C03": {
+    "intuition": "A nonunit coefficient cannot reach every residue and can reach an allowed residue in several ways. The gcd measures both the obstruction and the multiplicity.",
+    "strategy": "Turn the congruence into a Diophantine equation, solve after gcd reduction, then count its lifts back to the original modulus.",
+    "hypotheses": [
+      "The modulus is positive and coefficients are integers.",
+      "The target must be divisible by the coefficient–modulus gcd.",
+      "Counts refer to distinct classes modulo the original modulus."
+    ],
+    "proofSteps": [
+      {
+        "label": "Identify the obstruction",
+        "reason": "Introducing the modulus multiple gives an integer linear equation, whose gcd criterion exactly decides solvability."
+      },
+      {
+        "label": "Solve the reduced class",
+        "reason": "Removing the gcd makes the coefficient invertible; modulus one is handled as its single class instead."
+      },
+      {
+        "label": "Count the original classes",
+        "reason": "Stepping by the reduced modulus gives exactly gcd-many distinct classes before repeating modulo the original modulus."
+      }
+    ],
+    "check": {
+      "prompt": "If the gcd is three and the congruence is soluble, how many solutions modulo the original modulus occur?",
+      "choices": [
+        {
+          "text": "Three.",
+          "correct": true,
+          "feedback": "The single reduced solution has three distinct lifts to the original modulus."
+        },
+        {
+          "text": "One.",
+          "correct": false,
+          "feedback": "That counts only the reduced class and loses the distinct original classes."
+        },
+        {
+          "text": "None.",
+          "correct": false,
+          "feedback": "A nontrivial gcd prevents some targets, but the stated target is soluble."
+        }
+      ]
+    }
+  },
+  "C04": {
+    "intuition": "A selector isolates one remainder coordinate while vanishing at the others. Adding scaled selectors sets all coordinates independently.",
+    "strategy": "Construct selectors with inverses, verify their residues, then prove differences of solutions are divisible by the whole product.",
+    "hypotheses": [
+      "The positive moduli are pairwise coprime.",
+      "Remainders are arbitrary integers.",
+      "Modulus-one conditions impose no restriction."
+    ],
+    "proofSteps": [
+      {
+        "label": "Construct coordinate selectors",
+        "reason": "Pairwise coprimality makes the complementary product invertible in its own coordinate. Modulus one is removed before seeking an inverse."
+      },
+      {
+        "label": "Assemble the remainder vector",
+        "reason": "Each selector contributes only to its own coordinate, so their weighted sum realizes every specified remainder."
+      },
+      {
+        "label": "Prove product uniqueness",
+        "reason": "Coprime divisibility combines successively into divisibility by the product. Conversely that product shift preserves every remainder."
+      }
+    ],
+    "check": {
+      "prompt": "What permits the selector for one coordinate?",
+      "choices": [
+        {
+          "text": "The complementary product is coprime to that modulus.",
+          "correct": true,
+          "feedback": "Bézout therefore gives an inverse in that coordinate."
+        },
+        {
+          "text": "Every modulus is prime.",
+          "correct": false,
+          "feedback": "Composite moduli work too; pairwise coprimality is the relevant condition."
+        },
+        {
+          "text": "The remainders must be coprime.",
+          "correct": false,
+          "feedback": "Remainders are arbitrary; independence depends on the moduli."
+        }
+      ]
+    }
+  },
+  "C05": {
+    "intuition": "Shared modulus factors demand shared remainder information. Once that agreement holds, the combined class repeats at the least common multiple.",
+    "strategy": "Translate agreement into a linear equation, construct a solution with Bézout, and derive the correct repetition modulus.",
+    "hypotheses": [
+      "Both moduli are positive integers.",
+      "Solvability holds exactly when the gcd divides the difference of the remainders.",
+      "Each merge must pass a fresh compatibility check."
+    ],
+    "proofSteps": [
+      {
+        "label": "Test shared information",
+        "reason": "A solution makes the remainder difference an integer combination of the moduli. The gcd criterion gives necessity and Bézout supplies sufficiency."
+      },
+      {
+        "label": "Find the repetition modulus",
+        "reason": "For quotient modulus greater than one, coprimality gives a unique parameter class by inversion; quotient modulus one has its sole class. The resulting shift in the solution is the lcm."
+      },
+      {
+        "label": "Merge exact solution sets",
+        "reason": "Every merged congruence describes precisely the preceding solutions; a later incompatibility rules out the whole system."
+      }
+    ],
+    "check": {
+      "prompt": "For compatible noncoprime moduli, what is the solution’s uniqueness modulus?",
+      "choices": [
+        {
+          "text": "Their least common multiple.",
+          "correct": true,
+          "feedback": "It is the smallest positive shift preserving both conditions."
+        },
+        {
+          "text": "Their product in every case.",
+          "correct": false,
+          "feedback": "The product repeats solutions too late and can describe several copies of the same lcm class."
+        },
+        {
+          "text": "Shared factors imply no solution.",
+          "correct": false,
+          "feedback": "Shared factors require agreement of remainders, not automatic inconsistency."
+        }
+      ]
+    }
+  },
+  "C06": {
+    "intuition": "Multiplying all units by one unit rearranges them without losing any. Their unchanged product forces a power of the multiplier to return to one.",
+    "strategy": "Prove the permutation, compare its product, cancel the unit product, and specialize to primes.",
+    "hypotheses": [
+      "Euler’s theorem requires a modulus at least two and a unit base.",
+      "The all-integer Fermat statement separately includes bases divisible by the prime.",
+      "The guaranteed exponent is not asserted to be the least return."
+    ],
+    "proofSteps": [
+      {
+        "label": "Permute the unit classes",
+        "reason": "Multiplication by the base has an inverse because the base is a unit; therefore it gives the same finite set in a new order."
+      },
+      {
+        "label": "Cancel the product",
+        "reason": "The two products agree, and the product being cancelled is itself a unit. Cancellation isolates the required power."
+      },
+      {
+        "label": "Include every prime case",
+        "reason": "For a prime all nonzero classes are units; divisible bases give the remaining all-integer congruence directly."
+      },
+      {
+        "label": "Count subgroup cosets",
+        "reason": "Cosets have equal subgroup size and partition the finite unit group, so the order divides the total number of units."
+      }
+    ],
+    "check": {
+      "prompt": "What does Euler’s theorem tell us about the least return exponent?",
+      "choices": [
+        {
+          "text": "It divides the totient, but may be smaller.",
+          "correct": true,
+          "feedback": "The theorem guarantees a return, while the least return is the order."
+        },
+        {
+          "text": "It always equals the totient.",
+          "correct": false,
+          "feedback": "A unit can generate a proper subgroup and return earlier."
+        },
+        {
+          "text": "The same return works for nonunit bases.",
+          "correct": false,
+          "feedback": "Permutation and cancellation use an inverse; nonunits lack it."
+        }
+      ]
+    }
+  },
+  "C07": {
+    "intuition": "For one prime power, remove exactly the multiples of its prime. Across coprime pieces, a unit is independently a unit in every coordinate.",
+    "strategy": "Count the prime-power units, use the CRT correspondence, then combine distinct prime powers.",
+    "hypotheses": [
+      "Prime-power exponents are positive in the local count.",
+      "The two-factor product rule requires coprime inputs.",
+      "The value at one is the empty-product convention."
+    ],
+    "proofSteps": [
+      {
+        "label": "Count excluded multiples",
+        "reason": "A class fails coprimality with a prime power exactly when its representative is divisible by that prime."
+      },
+      {
+        "label": "Identify CRT coordinates",
+        "reason": "Equality in both coprime coordinates forces equality modulo their product. Equal finite cardinalities turn this injection into a bijection."
+      },
+      {
+        "label": "Restrict to the units",
+        "reason": "A class is coprime to the product exactly when both coordinates are units, so the unit subset is a Cartesian product."
+      },
+      {
+        "label": "Combine distinct prime powers",
+        "reason": "Distinct prime powers are coprime, permitting repeated multiplication of their local counts; extracting the powers gives the product formula."
+      }
+    ],
+    "check": {
+      "prompt": "Why can the totient of a product not always be factored?",
+      "choices": [
+        {
+          "text": "Shared prime factors destroy independent CRT coordinates.",
+          "correct": true,
+          "feedback": "The multiplicative rule assumes coprime inputs."
+        },
+        {
+          "text": "The prime-power count is approximate.",
+          "correct": false,
+          "feedback": "It exactly counts excluded multiples of the prime."
+        },
+        {
+          "text": "The value at one is zero.",
+          "correct": false,
+          "feedback": "The convention is one, consistent with an empty product."
+        }
+      ]
+    }
+  },
+  "C08": {
+    "intuition": "Inverse pairs contribute one to the total product. Over an odd prime modulus only the two self-inverse classes remain unpaired; the prime two is checked separately.",
+    "strategy": "Pair inverses for the forward direction; for the converse, use a proper prime divisor of a composite to contradict the factorial congruence.",
+    "hypotheses": [
+      "The tested integer exceeds one.",
+      "The forward pairing uses a prime modulus.",
+      "The even prime is checked separately."
+    ],
+    "proofSteps": [
+      {
+        "label": "Locate the fixed classes",
+        "reason": "Every nonzero class has an inverse over the prime field. Primality turns the factored square-root equation into exactly the two fixed possibilities."
+      },
+      {
+        "label": "Multiply the inverse pairs",
+        "reason": "Each distinct pair contributes one, leaving the fixed-class product; the separate even-prime check handles coincident signs."
+      },
+      {
+        "label": "Exclude every composite",
+        "reason": "A proper prime divisor already occurs in the factorial. The claimed remainder minus one would force that prime to divide one."
+      }
+    ],
+    "check": {
+      "prompt": "Why are there only two self-inverse classes for an odd prime?",
+      "choices": [
+        {
+          "text": "Primality forces one factor of the square-minus-one expression to vanish.",
+          "correct": true,
+          "feedback": "The factors are the class minus one and plus one."
+        },
+        {
+          "text": "Every composite modulus also has exactly two.",
+          "correct": false,
+          "feedback": "Nonzero zero divisors can allow additional roots of the same factored equation."
+        },
+        {
+          "text": "Inverse pairing never has fixed classes.",
+          "correct": false,
+          "feedback": "One and minus one are their own inverses and remain unpaired."
+        }
+      ]
+    }
+  },
+  "C09": {
+    "intuition": "Reading one binary digit doubles the exponent already built and optionally adds one. For decryption, each prime coordinate is recovered before CRT recombines them.",
+    "strategy": "Maintain the binary-prefix invariant; prove decryption separately at each prime, including zero messages.",
+    "hypotheses": [
+      "The power exponent is a nonnegative integer and modulus is positive.",
+      "RSA uses distinct primes and positive encryption and decryption exponents.",
+      "Their product is one modulo the totient.",
+      "The demonstration is arithmetic, not secure encryption."
+    ],
+    "proofSteps": [
+      {
+        "label": "State the prefix invariant",
+        "reason": "The empty prefix represents exponent zero. Its canonical residue is one for modulus greater than one and zero for modulus one, establishing the invariant even at exponent zero."
+      },
+      {
+        "label": "Process the next bit",
+        "reason": "Squaring doubles the prefix exponent and optional multiplication adds the bit, preserving exactly the invariant needed at termination."
+      },
+      {
+        "label": "Recover one prime coordinate",
+        "reason": "A base divisible by the prime is handled directly; other bases use Fermat because the exponent difference is divisible by the prime minus one."
+      },
+      {
+        "label": "Recombine prime coordinates",
+        "reason": "Distinct primes are coprime, so equality in each coordinate gives equality modulo their product. This covers nonunit messages too."
+      }
+    ],
+    "check": {
+      "prompt": "Why does the toy RSA proof consider a message divisible by a prime separately?",
+      "choices": [
+        {
+          "text": "Fermat’s unit form does not apply to that coordinate.",
+          "correct": true,
+          "feedback": "Both message and positive power are zero there, giving a direct proof."
+        },
+        {
+          "text": "Such a message cannot be decrypted.",
+          "correct": false,
+          "feedback": "The separate zero case shows the identity still holds."
+        },
+        {
+          "text": "CRT requires every message to be a unit.",
+          "correct": false,
+          "feedback": "CRT combines arbitrary compatible coordinate values."
+        }
+      ]
+    }
+  },
+  "C10": {
+    "intuition": "Fermat gives a property every prime has, but some composites imitate it. A correct forward implication is not automatically a primality criterion.",
+    "strategy": "Prove the prime implication, then certify a composite that passes in each of its prime coordinates.",
+    "hypotheses": [
+      "Fermat-test bases are coprime to the tested modulus.",
+      "The counterexample has distinct prime factors.",
+      "Its exponent is divisible by each factor’s prime-minus-one."
+    ],
+    "proofSteps": [
+      {
+        "label": "Verify every prime passes",
+        "reason": "The coprime-base hypothesis permits the unit form of Fermat, establishing the necessary condition."
+      },
+      {
+        "label": "Build local imitations",
+        "reason": "The counterexample exponent is a multiple of each prime-minus-one, so Fermat forces a return in each prime coordinate."
+      },
+      {
+        "label": "Combine the false positive",
+        "reason": "Coprime factors combine those local returns into the global congruence, while the explicit factorization certifies compositeness."
+      }
+    ],
+    "check": {
+      "prompt": "What follows from a coprime base failing the Fermat test?",
+      "choices": [
+        {
+          "text": "The tested integer is composite.",
+          "correct": true,
+          "feedback": "A prime would pass every eligible base, so failure refutes primality."
+        },
+        {
+          "text": "Passing another base would restore primality.",
+          "correct": false,
+          "feedback": "A valid failure already contradicts a necessary prime property."
+        },
+        {
+          "text": "Passing every coprime base proves primality.",
+          "correct": false,
+          "feedback": "The displayed composite passes every coprime base."
+        }
+      ]
+    }
+  },
+  "A01": {
+    "intuition": "Distinct prime powers are the independent pieces a multiplicative function can safely separate. Copies of the same prime must remain together unless complete multiplicativity is known.",
+    "strategy": "Split off one coprime prime-power block at a time, checking the defining value at one.",
+    "hypotheses": [
+      "The function is multiplicative, including value one at one.",
+      "The prime-power decomposition uses distinct primes.",
+      "The product rule is invoked only across coprime factors."
+    ],
+    "proofSteps": [
+      {
+        "label": "Identify independent blocks",
+        "reason": "Distinct prime powers have no shared prime, so they meet the coprimality condition. A single block needs no splitting."
+      },
+      {
+        "label": "Split off one block",
+        "reason": "The last prime power is coprime to the preceding product, allowing exactly one legal use of multiplicativity."
+      },
+      {
+        "label": "Repeat the legal split",
+        "reason": "Repeating separates all distinct prime powers. The empty factorization requires the defining value at one."
+      }
+    ],
+    "check": {
+      "prompt": "Which values determine a merely multiplicative function?",
+      "choices": [
+        {
+          "text": "Its values at every prime power and at one.",
+          "correct": true,
+          "feedback": "Distinct prime powers combine coprimely, but repeated copies of one prime cannot generally be split."
+        },
+        {
+          "text": "Its values at primes alone.",
+          "correct": false,
+          "feedback": "The value at a squared prime need not be the square of the value at that prime."
+        },
+        {
+          "text": "Its value at one alone.",
+          "correct": false,
+          "feedback": "The normalization gives no values for the prime-power blocks."
+        }
+      ]
+    }
+  },
+  "A02": {
+    "intuition": "A divisor chooses independently how many copies of each prime to retain. Counting or weighting these choices turns a divisor sum into a finite product.",
+    "strategy": "Establish the exponent-choice bijection, distribute the finite sums, and use disjoint prime supports for multiplicativity.",
+    "hypotheses": [
+      "The integer is positive.",
+      "The power weight has nonnegative integer exponent.",
+      "Multiplicativity combines only coprime inputs.",
+      "Empty products at one equal one."
+    ],
+    "proofSteps": [
+      {
+        "label": "Encode every divisor",
+        "reason": "Unique factorization gives one bounded exponent choice for each divisor and ensures each choice produces exactly one divisor."
+      },
+      {
+        "label": "Count and weight choices",
+        "reason": "Independent choices multiply their counts. Distributing the finite product of sums assigns the required weight to each exponent vector once."
+      },
+      {
+        "label": "Pair coprime divisors",
+        "reason": "Disjoint prime supports give a unique pair of component divisors for every divisor of the product, so divisor counts multiply."
+      },
+      {
+        "label": "Factor the weighted sum",
+        "reason": "The weight of a divisor pair factors, and a finite double sum separates into the product of component sums."
+      }
+    ],
+    "check": {
+      "prompt": "Why does multiplying divisor sums fail for noncoprime inputs?",
+      "choices": [
+        {
+          "text": "Shared primes make component divisor choices nonunique.",
+          "correct": true,
+          "feedback": "Different pairs can represent the same divisor, so the Cartesian-product argument no longer applies."
+        },
+        {
+          "text": "The sums have infinitely many terms.",
+          "correct": false,
+          "feedback": "Every positive integer has finitely many divisors; overlap is the issue."
+        },
+        {
+          "text": "Unique factorization itself fails for integers.",
+          "correct": false,
+          "feedback": "It remains valid and reveals exactly why the prime supports overlap."
+        }
+      ]
+    }
+  },
+  "A03": {
+    "intuition": "Convolution distributes an integer between complementary factors. Associativity merely regroups a three-factor allocation; its identity keeps only one allocation.",
+    "strategy": "Reindex by complementary divisors and ordered factor triples, then factor coprime divisor choices.",
+    "hypotheses": [
+      "Arithmetic functions are defined on positive integers.",
+      "Every divisor sum is finite.",
+      "Preserving multiplicativity requires both functions to be multiplicative.",
+      "The preservation claim uses coprime product inputs."
+    ],
+    "proofSteps": [
+      {
+        "label": "Swap complementary factors",
+        "reason": "Complementation bijects the divisor index set with itself, reversing the roles of the two functions without changing the sum."
+      },
+      {
+        "label": "Regroup three factors",
+        "reason": "Both parenthesizations enumerate the same ordered triples whose product is the input. Finiteness permits rearrangement."
+      },
+      {
+        "label": "Isolate the identity term",
+        "reason": "The convolution identity vanishes unless the complementary factor is one, leaving exactly the original function value."
+      },
+      {
+        "label": "Separate coprime allocations",
+        "reason": "Disjoint prime supports uniquely split each divisor between the inputs; multiplicativity splits each summand and the finite sum factors."
+      }
+    ],
+    "check": {
+      "prompt": "Which function is the convolution identity?",
+      "choices": [
+        {
+          "text": "\\(\\varepsilon\\), supported only at one.",
+          "correct": true,
+          "feedback": "It selects the sole summand with complementary divisor one.",
+          "label": "Epsilon, the function equal to one at the positive integer one and zero at every other positive integer."
+        },
+        {
+          "text": "The constant-one function \\(\\mathbf 1\\).",
+          "correct": false,
+          "feedback": "Convolving with it sums all divisor values rather than selecting one.",
+          "label": "The constant-one function, equal to one at every positive integer."
+        },
+        {
+          "text": "Pointwise multiplication by one.",
+          "correct": false,
+          "feedback": "Convolution is a divisor sum, so its identity must select the correct divisor term."
+        }
+      ]
+    }
+  },
+  "A04": {
+    "intuition": "Signed squarefree divisor choices cancel every proper aggregate. This cancellation lets a weighted divisor sum isolate the original value.",
+    "strategy": "Prove the Möbius divisor-sum identity by prime subsets, then regroup the transformed finite sum so that only one coefficient survives.",
+    "hypotheses": [
+      "Inputs are positive integers.",
+      "Prime-square divisors contribute zero under the Möbius definition.",
+      "No multiplicativity assumption on the transformed function is required."
+    ],
+    "proofSteps": [
+      {
+        "label": "Encode squarefree divisors",
+        "reason": "Nonzero Möbius terms correspond exactly to subsets of the distinct prime divisors; one is treated separately as the empty subset."
+      },
+      {
+        "label": "Cancel all subsets",
+        "reason": "Choosing or omitting each prime contributes opposite signs, so a nonempty prime set has total weight zero."
+      },
+      {
+        "label": "Isolate the original value",
+        "reason": "Regrouping by the original divisor exposes a Möbius divisor sum as its coefficient. All coefficients vanish except the one for the whole input."
+      },
+      {
+        "label": "Recover the forward transform",
+        "reason": "The established convolution inverse and associativity undo the inversion in the other direction, proving equivalence."
+      }
+    ],
+    "check": {
+      "prompt": "Does Möbius inversion require the original function to be multiplicative?",
+      "choices": [
+        {
+          "text": "No; the finite cancellation works for any arithmetic function.",
+          "correct": true,
+          "feedback": "The proof groups function values with coefficients supplied by the Möbius identity."
+        },
+        {
+          "text": "Yes; only prime-power values can be inverted.",
+          "correct": false,
+          "feedback": "The reindexing proof makes no multiplicativity assumption."
+        },
+        {
+          "text": "Yes; it is division of function values.",
+          "correct": false,
+          "feedback": "The inverse is a weighted divisor sum, not pointwise division."
+        }
+      ]
+    }
+  },
+  "A05": {
+    "intuition": "A local calculation at each prime power reaches all integers only through multiplicativity. For a completely multiplicative function, complementary weights collapse to one common factor.",
+    "strategy": "Justify local-to-global reduction before computing prime powers; separately use complete multiplicativity for the convolution inverse.",
+    "hypotheses": [
+      "Inputs are positive integers.",
+      "Both sides of each local-to-global identity are multiplicative.",
+      "The inverse formula requires complete multiplicativity and value one at one."
+    ],
+    "proofSteps": [
+      {
+        "label": "Justify local reduction",
+        "reason": "Unique coprime divisor decomposition makes convolution multiplicative, ensuring the proposed divisor sums and their comparison functions are determined by prime powers."
+      },
+      {
+        "label": "Compute each prime power",
+        "reason": "The totient terms telescope; squared Möbius terms retain only exponents zero and one. Multiplicativity then extends these local identities."
+      },
+      {
+        "label": "Extract the common weight",
+        "reason": "Complete multiplicativity makes the complementary function factors equal the function at the whole input, even when the factors share primes. Möbius cancellation leaves the identity."
+      }
+    ],
+    "check": {
+      "prompt": "When does agreement on every prime power prove agreement everywhere?",
+      "choices": [
+        {
+          "text": "When both functions are multiplicative.",
+          "correct": true,
+          "feedback": "Then every positive integer decomposes into independent prime-power blocks."
+        },
+        {
+          "text": "Whenever the functions agree at primes.",
+          "correct": false,
+          "feedback": "Prime values do not fix the values at higher powers for merely multiplicative functions."
+        },
+        {
+          "text": "For arbitrary arithmetic functions.",
+          "correct": false,
+          "feedback": "Without multiplicativity, values on products of distinct primes remain unconstrained."
+        }
+      ]
+    }
+  },
+  "A06": {
+    "intuition": "An even perfect number has a power-of-two block and an odd block. The divisor-sum equation leaves the odd block so little room that it must be prime.",
+    "strategy": "Verify the proposed construction, then use the perfect-number equation to constrain the odd part and exclude any extra divisors.",
+    "hypotheses": [
+      "The classification concerns even positive integers only.",
+      "Perfection means divisor sum equals twice the input.",
+      "The Mersenne factor must be prime; its shape alone is insufficient."
+    ],
+    "proofSteps": [
+      {
+        "label": "Verify the construction",
+        "reason": "The odd prime factor and power of two are coprime, so their divisor sums multiply to twice the proposed number."
+      },
+      {
+        "label": "Constrain the odd part",
+        "reason": "The consecutive factors in the divisor-sum equation are coprime, forcing divisibility of the odd part and an exact sum expression."
+      },
+      {
+        "label": "Exclude extra divisors",
+        "reason": "If the residual factor exceeded one, three distinct positive divisors would already exceed the allowed sum. Its value must be one, leaving a prime odd part."
+      },
+      {
+        "label": "Force the exponent prime",
+        "reason": "A composite exponent factors the Mersenne number into two integers greater than one, contradicting its required primality."
+      }
+    ],
+    "check": {
+      "prompt": "Which conclusion does the classification establish?",
+      "choices": [
+        {
+          "text": "Exactly the stated form for even perfect numbers.",
+          "correct": true,
+          "feedback": "The argument separates a nontrivial power of two and therefore applies to even inputs."
+        },
+        {
+          "text": "Every prime exponent produces a perfect number.",
+          "correct": false,
+          "feedback": "The corresponding Mersenne number must itself be prime."
+        },
+        {
+          "text": "No odd perfect number exists.",
+          "correct": false,
+          "feedback": "The proof does not classify or exclude odd perfect numbers."
+        }
+      ]
+    }
+  },
+  "B01": {
+    "intuition": "Adding fractional parts can cross one integer boundary, creating a carry. Counting multiples is counting which integer indices fit under a quotient.",
+    "strategy": "Separate integer and fractional parts, then translate a multiple bound into a greatest allowed index.",
+    "hypotheses": [
+      "The floor-sum identity applies to real inputs, with fractional parts defined as the input minus its floor.",
+      "Counting uses positive integer multiple size and integer interval endpoints."
+    ],
+    "proofSteps": [
+      {
+        "label": "Identify the carry",
+        "reason": "The fractional parts sum to a value between zero and two, so its floor is exactly zero or one; integer parts contribute unchanged."
+      },
+      {
+        "label": "Count allowed indices",
+        "reason": "A positive multiple lies under the bound exactly when its positive index does. Subtracting the count through the preceding endpoint gives closed-interval counts."
+      }
+    ],
+    "check": {
+      "prompt": "When does the floor-of-sum exceed the sum of floors by one?",
+      "choices": [
+        {
+          "text": "When the fractional parts sum to at least one.",
+          "correct": true,
+          "feedback": "Their sum crosses the next integer boundary, including equality."
+        },
+        {
+          "text": "Whenever either real input is negative.",
+          "correct": false,
+          "feedback": "The fractional-part decomposition handles signs; crossing the boundary determines the carry."
+        },
+        {
+          "text": "Never; floor is linear.",
+          "correct": false,
+          "feedback": "Two fractional parts can create a carry that neither separate floor records."
+        }
+      ]
+    }
+  },
+  "B02": {
+    "intuition": "Each multiple of the prime contributes one copy; multiples of its square contribute another; higher powers add further layers. Count copies layer by layer.",
+    "strategy": "Double-count the prime copies in the factorial, then subtract factorial valuations for the binomial coefficient.",
+    "hypotheses": [
+      "The prime is fixed and the factorial index is nonnegative.",
+      "The binomial index lies between zero and the factorial index.",
+      "Prime-power layers above the factorial index contribute zero, so the displayed sum is finite."
+    ],
+    "proofSteps": [
+      {
+        "label": "Count copies by layers",
+        "reason": "A factor divisible by a higher power appears once in each relevant layer, exactly reproducing its valuation. Layers beyond the bound contain no factors."
+      },
+      {
+        "label": "Subtract the factorial weights",
+        "reason": "The integer binomial identity gives an equality of products, so valuation additivity justifies subtraction. The floor-carry identity makes each resulting layer nonnegative."
+      }
+    ],
+    "check": {
+      "prompt": "Why is counting multiples of the prime alone insufficient for a factorial valuation?",
+      "choices": [
+        {
+          "text": "Higher prime powers contribute additional copies.",
+          "correct": true,
+          "feedback": "A multiple of the prime square contributes at least two copies and must be counted in a second layer."
+        },
+        {
+          "text": "Some multiples contribute no copies.",
+          "correct": false,
+          "feedback": "Every multiple of the prime contributes at least one; the missed contribution is the extra copies."
+        },
+        {
+          "text": "Factorial valuation is not additive.",
+          "correct": false,
+          "feedback": "Additivity is exactly why the contributions from factors can be counted."
+        }
+      ]
+    }
+  },
+  "X04": {
+    "intuition": "For distinct integers that agree modulo an odd prime and are not divisible by it, taking their prime-th powers adds exactly one factor of that prime to their difference. Raising both to a positive exponent coprime to the prime adds none.",
+    "strategy": "Isolate the uniquely lowest-valuation binomial term, factor coprime exponents, and handle powers of two separately.",
+    "hypotheses": [
+      "For the odd-prime formula, the prime divides the difference and divides neither base.",
+      "The exponent is a positive integer and the power difference is nonzero.",
+      "For the two-adic formula, both bases are odd and the exponent is even."
+    ],
+    "proofSteps": [
+      {
+        "label": "Isolate the lowest term",
+        "reason": "The first binomial term has one additional prime copy. All other terms have strictly higher valuation, so they cannot cancel it; oddness and unit bases ensure these bounds."
+      },
+      {
+        "label": "Separate exponent factors",
+        "reason": "The coprime-exponent factor sum stays nonzero modulo the prime, preserving valuation. Each subsequent prime-exponent step adds one copy."
+      },
+      {
+        "label": "Handle repeated squaring",
+        "reason": "For odd bases the first square uses both difference and sum valuations. Later squared bases have sum exactly twice an odd integer, adding one copy per step."
+      }
+    ],
+    "check": {
+      "prompt": "Can the odd-prime lifting formula be applied unchanged at prime two?",
+      "choices": [
+        {
+          "text": "No; the two-adic formula uses additional parity and sum conditions.",
+          "correct": true,
+          "feedback": "The lowest-term comparison changes at two, requiring the separate argument."
+        },
+        {
+          "text": "Yes; every prime has the same binomial valuation bounds.",
+          "correct": false,
+          "feedback": "The strict separation used for odd primes can fail at two."
+        },
+        {
+          "text": "Yes, even when the power difference is zero.",
+          "correct": false,
+          "feedback": "Zero has infinite valuation, excluded from these finite equalities."
+        }
+      ]
+    }
+  },
+  "B03": {
+    "intuition": "A central binomial coefficient is large by counting. If the prime interval were empty, its prime factors would be too restricted to make it that large.",
+    "strategy": "Build the prime-product bound, compare lower and upper binomial bounds under the empty-interval assumption, then close both large and finite ranges.",
+    "hypotheses": [
+      "The input is an integer greater than one.",
+      "The contradiction bound applies from the explicit large-input threshold.",
+      "All smaller inputs require the finite prime coverage certificate.",
+      "The required prime lies strictly inside both endpoints."
+    ],
+    "proofSteps": [
+      {
+        "label": "Bound accumulated primes",
+        "reason": "Primes in each upper half divide a suitable binomial coefficient. Strong induction combines this with the total binomial sum to bound the prime product."
+      },
+      {
+        "label": "Count and bound small factors",
+        "reason": "The largest binomial coefficient is at least the average. Prime-power valuations separately bound what every small prime can contribute."
+      },
+      {
+        "label": "Restrict the remaining primes",
+        "reason": "Large primes contribute at most once, and floor differences exclude the upper subinterval. The assumed prime gap leaves only a bounded product."
+      },
+      {
+        "label": "Contradict the large-input inequality",
+        "reason": "Monotonic normalized logarithmic terms extend a strict verified threshold inequality to every larger input, making the opposing bounds incompatible."
+      },
+      {
+        "label": "Certify every small input",
+        "reason": "Trial division certifies each listed prime, and overlapping strict-interval coverage reaches every remaining integer. Finite coverage completes the universal claim."
+      }
+    ],
+    "check": {
+      "prompt": "Why are the finite coverage intervals still needed after the large-input contradiction?",
+      "choices": [
+        {
+          "text": "The inequality was established only above its explicit threshold.",
+          "correct": true,
+          "feedback": "The smaller integers require a separate exact argument to complete the universal theorem."
+        },
+        {
+          "text": "A plot of several intervals proves all larger cases.",
+          "correct": false,
+          "feedback": "A finite picture cannot establish every large-input inequality."
+        },
+        {
+          "text": "The large-input proof gives primes at the endpoints.",
+          "correct": false,
+          "feedback": "The theorem and coverage conditions require strict interior primes."
+        }
+      ]
+    }
+  },
+  "B04": {
+    "intuition": "A prime between half the factorial bound and the bound itself appears only once. Applying a strict interval theorem twice places two primes on opposite sides of the shared boundary.",
+    "strategy": "Choose integer parameters carefully, check odd/even endpoints, and handle inputs too small for the interval theorem separately.",
+    "hypotheses": [
+      "Factorial bounds are integers at least two.",
+      "Bertrand’s parameter is an integer greater than one.",
+      "All asserted interval endpoints remain strict."
+    ],
+    "proofSteps": [
+      {
+        "label": "Place a single factorial factor",
+        "reason": "Using the floor of half the bound creates an allowed Bertrand parameter. Parity checks put the resulting prime strictly above half, and small exceptions are verified directly."
+      },
+      {
+        "label": "Separate two prime intervals",
+        "reason": "The second parameter is twice the first. Strict bounds place the primes on opposite sides of the shared endpoint, guaranteeing distinctness."
+      }
+    ],
+    "check": {
+      "prompt": "If \\(N/2<p\\le N\\), why does the prime \\(p\\) occur exactly once in \\(N!\\)?",
+      "promptLabel": "If N divided by two is less than p and p is at most N, why does the prime p occur exactly once in N factorial?",
+      "choices": [
+        {
+          "text": "Its second multiple already exceeds the bound.",
+          "correct": true,
+          "feedback": "The factor \\(p\\) is included, while \\(2p>N\\); also \\(p^2\\ge2p>N\\), so the total valuation is one."
+        },
+        {
+          "text": "Every prime below the bound has valuation one.",
+          "correct": false,
+          "feedback": "Smaller primes can appear in several factors and higher powers."
+        },
+        {
+          "text": "A prime equal to half the bound works as well.",
+          "correct": false,
+          "feedback": "Its second multiple is then included, so the strict inequality matters."
+        }
+      ]
+    }
+  },
+  "F01": {
+    "intuition": "A root removes one linear factor. Over a field, any other root must survive in the remaining polynomial because its nonzero difference from the first root is cancellable.",
+    "strategy": "Prove the factor theorem, induct on degree using field cancellation, then separate formal polynomials from their evaluation functions.",
+    "hypotheses": [
+      "The root bound uses a nonzero formal polynomial over a prime field.",
+      "Distinct roots have a nonzero difference, invertible in the field.",
+      "Composite residue rings need not satisfy that cancellation."
+    ],
+    "proofSteps": [
+      {
+        "label": "Remove a linear factor",
+        "reason": "The monomial difference identity factors each term, yielding the factor theorem without division. Over the field the quotient degree drops by one."
+      },
+      {
+        "label": "Pass remaining roots downward",
+        "reason": "At another root the removed linear factor is nonzero and therefore invertible, forcing the quotient to vanish. Induction then bounds the count."
+      },
+      {
+        "label": "Distinguish functions from polynomials",
+        "reason": "Composite-ring cancellation can fail. Even over a field, a nonzero formal polynomial can induce the zero function when its degree permits enough roots."
+      }
+    ],
+    "check": {
+      "prompt": "Why does the degree-bound induction need a field?",
+      "choices": [
+        {
+          "text": "The difference of two distinct roots must be cancellable.",
+          "correct": true,
+          "feedback": "Its inverse forces the quotient polynomial to vanish at the second root."
+        },
+        {
+          "text": "The factor theorem holds only over fields.",
+          "correct": false,
+          "feedback": "The monomial identity proves it in any commutative coefficient ring."
+        },
+        {
+          "text": "Different polynomials always induce different functions over a field.",
+          "correct": false,
+          "feedback": "The lesson’s prime-degree example is a nonzero polynomial inducing the zero function."
+        }
+      ]
+    }
+  },
+  "F02": {
+    "intuition": "Coprime modulus coordinates are independent. A polynomial vanishes globally exactly when it vanishes in each coordinate, so root sets combine as products.",
+    "strategy": "Show evaluation respects reduction, restrict CRT to root classes, then iterate over distinct prime powers.",
+    "hypotheses": [
+      "Polynomial coefficients are integers.",
+      "The component moduli are positive and coprime.",
+      "Prime-power factors belong to distinct primes."
+    ],
+    "proofSteps": [
+      {
+        "label": "Commute evaluation with reduction",
+        "reason": "Powers and sums preserve congruence, so the polynomial’s root condition is independent of the chosen representative."
+      },
+      {
+        "label": "Restrict CRT to roots",
+        "reason": "Every global root reduces to local roots. CRT recombines any local pair uniquely, and coprimality makes the polynomial value divisible by the product."
+      },
+      {
+        "label": "Iterate distinct prime powers",
+        "reason": "Unique factorization supplies pairwise coprime prime-power coordinates. Repeated bijections multiply local counts; modulus one is a neutral single class."
+      }
+    ],
+    "check": {
+      "prompt": "When do local polynomial root counts multiply?",
+      "choices": [
+        {
+          "text": "Across coprime factors of the modulus.",
+          "correct": true,
+          "feedback": "CRT then gives a unique global root for every independent local-root tuple."
+        },
+        {
+          "text": "Across any two powers of the same prime.",
+          "correct": false,
+          "feedback": "Those factors are not coprime; their root conditions are not independent coordinates."
+        },
+        {
+          "text": "Only for linear polynomials.",
+          "correct": false,
+          "feedback": "Evaluation compatibility and CRT work for every integer polynomial."
+        }
+      ]
+    }
+  },
+  "F03": {
+    "intuition": "A new base-prime digit changes the polynomial value by a linear correction at the next precision. A nonzero derivative selects exactly one correction.",
+    "strategy": "Discard higher-order terms using exact divisibility, divide out the old root precision, and solve the resulting digit congruence.",
+    "hypotheses": [
+      "The prime is fixed and the old precision exponent is at least one.",
+      "The polynomial has integer coefficients.",
+      "The representative is already a root at the old precision.",
+      "Unique lifting requires derivative nonzero modulo the prime."
+    ],
+    "proofSteps": [
+      {
+        "label": "Discard higher-order terms",
+        "reason": "Every quadratic-or-higher correction contains twice the old prime precision, which reaches the next precision when the exponent is at least one."
+      },
+      {
+        "label": "Extract the digit equation",
+        "reason": "The old-root hypothesis makes the quotient integral. Dividing the exact divisibility condition by the old prime power leaves a congruence modulo the prime."
+      },
+      {
+        "label": "Select the unique digit",
+        "reason": "A nonzero derivative is invertible in the prime field. Its linear equation has one digit class, corresponding to one distinct next-level representative."
+      }
+    ],
+    "check": {
+      "prompt": "What makes the old-level quotient in the digit equation an integer?",
+      "choices": [
+        {
+          "text": "The representative is a root modulo the old prime power.",
+          "correct": true,
+          "feedback": "That is precisely divisibility of the polynomial value by the denominator."
+        },
+        {
+          "text": "The derivative is nonzero.",
+          "correct": false,
+          "feedback": "The derivative controls uniqueness of the correction, not divisibility of the old value."
+        },
+        {
+          "text": "A decimal approximation is near zero.",
+          "correct": false,
+          "feedback": "Nearness as a real number does not establish exact integer divisibility."
+        }
+      ]
+    }
+  },
+  "F04": {
+    "intuition": "At a singular root the next digit has no linear influence at the next precision. Either the existing value already fits and every digit works, or none can repair it.",
+    "strategy": "Use the same exact digit equation and set its derivative coefficient to zero; retest each surviving branch at later levels.",
+    "hypotheses": [
+      "The modulus base is prime and the polynomial has integer coefficients.",
+      "The old representative is a root at a positive prime-power precision.",
+      "The derivative vanishes modulo the prime.",
+      "The no-lift/all-lifts claim covers exactly one next step."
+    ],
+    "proofSteps": [
+      {
+        "label": "Remove digit dependence",
+        "reason": "The singular hypothesis kills the digit coefficient modulo the prime, leaving only the old-level quotient condition."
+      },
+      {
+        "label": "Count and limit the branches",
+        "reason": "A nonzero quotient residue rejects every digit; zero accepts all distinct digits. New representatives have new quotients, so later survival requires another test."
+      }
+    ],
+    "check": {
+      "prompt": "If every digit lifts at one singular step, what follows about the next step?",
+      "choices": [
+        {
+          "text": "Each new representative must be tested again.",
+          "correct": true,
+          "feedback": "Its quotient changes, so a branch that survived can later die."
+        },
+        {
+          "text": "All branches survive forever.",
+          "correct": false,
+          "feedback": "The theorem describes one step and supplies no such future guarantee."
+        },
+        {
+          "text": "Exactly one branch must survive next.",
+          "correct": false,
+          "feedback": "The next quotient and derivative determine the count; no fixed prediction follows."
+        }
+      ]
+    }
+  },
+  "F05": {
+    "intuition": "Knowing the roots fixes a low-degree polynomial over a field. An exact equality of two integer evaluations then carries coefficient information beyond the first prime precision.",
+    "strategy": "Compare monic polynomials modulo the prime, derive the exact evaluation identity, and retain only terms that can survive at each higher precision.",
+    "hypotheses": [
+      "The prime is at least five.",
+      "The symmetric sums come from the specified integer product polynomial.",
+      "Coefficient comparison first occurs in the prime field.",
+      "Dividing by a prime lowers the modulus by one power."
+    ],
+    "proofSteps": [
+      {
+        "label": "Identify the field polynomial",
+        "reason": "The monic polynomials have the same roots; their lower-degree difference has too many roots unless zero. Comparing coefficients establishes initial prime divisibility."
+      },
+      {
+        "label": "Create an exact identity",
+        "reason": "Oddness makes the two integer product evaluations equal. Subtracting their identical constant terms yields an equality usable at higher prime powers."
+      },
+      {
+        "label": "Strengthen one coefficient",
+        "reason": "The initial coefficient divisibility and exponent bounds make all but one term vanish at the chosen precision. Dividing its divisibility by one prime yields the stronger result."
+      },
+      {
+        "label": "Retain the next two terms",
+        "reason": "At the higher precision only two terms can survive. Their relation gives the refinement after lowering the modulus appropriately on division; the threshold includes the endpoint prime."
+      }
+    ],
+    "check": {
+      "prompt": "Does the prime-field polynomial comparison alone prove the stronger coefficient congruences?",
+      "choices": [
+        {
+          "text": "No; the exact evaluation identity supplies the extra precision.",
+          "correct": true,
+          "feedback": "Field comparison gives one prime factor; termwise divisibility in the integer identity yields the additional powers."
+        },
+        {
+          "text": "Yes; equality modulo a prime is equality at every prime power.",
+          "correct": false,
+          "feedback": "Higher precision requires additional information, not repetition of the same field equality."
+        },
+        {
+          "text": "No; integer polynomials cannot be reduced to a field.",
+          "correct": false,
+          "feedback": "Reduction is valid and proves the initial coefficient divisibility; its limitation is precision."
+        }
+      ]
+    }
+  },
+  "U01": {
+    "intuition": "A unit’s powers trace a finite cycle starting at one. The first return divides every later return; taking a power changes how quickly that same cycle is traversed.",
+    "strategy": "Use finite repetition and cancellation for existence, divide exponents by the first return, then reduce the divisibility condition for a powered element.",
+    "hypotheses": [
+      "The modulus is at least two and the base is a unit.",
+      "Return exponents are nonnegative; order is the least positive return.",
+      "The power exponent may be zero, using the stated gcd convention."
+    ],
+    "proofSteps": [
+      {
+        "label": "Establish a first return",
+        "reason": "Finitely many residue classes force repeated powers. Unit cancellation converts a repetition into a positive return to one, so a least return exists."
+      },
+      {
+        "label": "Divide by the first return",
+        "reason": "The remainder exponent would also return to one. Minimality forces it to be zero, while multiples of the order plainly return."
+      },
+      {
+        "label": "Reduce the powered cycle",
+        "reason": "A return of the powered element means the original order divides the product exponent. Removing the gcd leaves coprime factors, forcing the least return stated."
+      }
+    ],
+    "check": {
+      "prompt": "Does a unit’s order always equal the number of units modulo its modulus?",
+      "choices": [
+        {
+          "text": "No; it is the size of the subgroup generated by that unit.",
+          "correct": true,
+          "feedback": "The orbit can cover only part of the unit group, so its return may be earlier."
+        },
+        {
+          "text": "Yes; every unit visits every other unit.",
+          "correct": false,
+          "feedback": "That happens for a generator, not for an arbitrary unit."
+        },
+        {
+          "text": "Order is defined for every residue, including nonunits.",
+          "correct": false,
+          "feedback": "Existence of a return to one depends on unit cancellation."
+        }
+      ]
+    }
+  },
+  "X01": {
+    "intuition": "Long division remembers only its current remainder. A terminating expansion reaches zero; a repeating expansion returns to an earlier remainder.",
+    "strategy": "Translate finite digits into a denominator dividing a power of the base, then identify the remainder cycle with multiplicative order.",
+    "hypotheses": [
+      "The base \\(B\\ge2\\) and denominator \\(q>0\\) are integers.",
+      "The fraction \\(a/q\\) is reduced.",
+      "The pure-period formula requires \\(q>1\\) and \\(\\gcd(q,B)=1\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Clear the digit denominator",
+        "reason": "Reducedness prevents a denominator factor from hiding in the numerator, so writing a finite expansion over \\(B^k\\) forces the original denominator to divide \\(B^k\\)."
+      },
+      {
+        "label": "Identify the remainder return",
+        "reason": "Both the base and initial remainder are invertible modulo \\(q\\). Cancelling them makes a repeated remainder equivalent to a return power of the base; deterministic long division then supplies the same digit tail."
+      }
+    ],
+    "check": {
+      "prompt": "Which denominator permits the pure decimal period to be obtained directly as \\(\\operatorname{ord}_q(10)\\)?",
+      "promptLabel": "Which denominator permits the pure decimal period to be obtained directly as the multiplicative order of ten modulo q?",
+      "choices": [
+        {
+          "text": "\\(q=7\\)",
+          "correct": true,
+          "feedback": "Yes. The denominator exceeds one and is coprime to the base, so every nonzero remainder stays on an invertible cycle.",
+          "label": "q equals seven."
+        },
+        {
+          "text": "\\(q=12\\)",
+          "correct": false,
+          "feedback": "Its common factor with \\(10\\) prevents using that order directly. Separate the initial nonrepeating part before studying the later cycle.",
+          "label": "q equals twelve."
+        },
+        {
+          "text": "\\(q=8\\)",
+          "correct": false,
+          "feedback": "A power of \\(10\\) is divisible by \\(8\\), so the expansion terminates. The base is not a unit modulo this denominator.",
+          "label": "q equals eight."
+        }
+      ]
+    }
+  },
+  "U02": {
+    "intuition": "A generator must contain every prime-power component of the group size in its order. The field root bound prevents any one component from being absent everywhere.",
+    "strategy": "Use coset counting to bound orders, the polynomial root bound to force each prime-power component, and commuting products to assemble one generator.",
+    "hypotheses": [
+      "The modulus \\(p\\) is an odd prime.",
+      "The nonzero residue classes form a commutative group of size \\(p-1\\).",
+      "The root bound applies to nonzero formal polynomials over the field \\(\\mathbb F_p\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Orders divide the size",
+        "reason": "Equal-sized cosets turn the finite group into a partition by the cyclic subgroup of one element. This establishes divisibility without presuming a generator of the whole group."
+      },
+      {
+        "label": "Force each prime component",
+        "reason": "If a full prime-power component occurred in no order, one smaller power polynomial would vanish at every nonzero field element, contradicting its degree bound."
+      },
+      {
+        "label": "Isolate the prime powers",
+        "reason": "The power-order formula removes the factor coprime to the selected prime, leaving an element whose order is exactly the required prime power."
+      },
+      {
+        "label": "Assemble commuting components",
+        "reason": "Commutativity permits rearranging powers of the product. The overlap between components of coprime orders is trivial, so a return exponent must contain every selected prime power."
+      },
+      {
+        "label": "Count all generators",
+        "reason": "Once a generator exists, exponent classes parametrize the entire group bijectively. The power-order formula identifies exactly which exponents retain full order."
+      }
+    ],
+    "check": {
+      "prompt": "Why does the proof force an element whose order contains each prime-power factor of \\(p-1\\)?",
+      "promptLabel": "Why does the proof force an element whose order contains each prime-power factor of p minus one?",
+      "choices": [
+        {
+          "text": "Otherwise a polynomial of degree below \\(p-1\\) would have all \\(p-1\\) nonzero classes as roots.",
+          "correct": true,
+          "feedback": "Correct. The contradiction uses the field root bound and an explicit smaller annihilating exponent.",
+          "label": "Otherwise a polynomial of degree less than p minus one would have all p minus one nonzero residue classes as roots."
+        },
+        {
+          "text": "Every group with \\(p-1\\) elements is cyclic.",
+          "correct": false,
+          "feedback": "Group size alone does not imply cyclicity. The special field root bound is the additional argument here.",
+          "label": "Every group with p minus one elements is cyclic."
+        },
+        {
+          "text": "Euler’s theorem says every unit has order exactly \\(p-1\\).",
+          "correct": false,
+          "feedback": "Euler supplies a return exponent, not the least one. For example, nonidentity units can lie in shorter cycles.",
+          "label": "Euler’s theorem says every unit has order exactly p minus one."
+        }
+      ]
+    }
+  },
+  "U03": {
+    "intuition": "A primitive residue modulo \\(p\\) can lose its ability to generate at the next level. A single nonzero next digit in \\(a^{p-1}-1\\) makes each further prime-power level add the required order factor.",
+    "strategy": "Prove the exact valuation increment under a prime power, translate return exponents into divisibility, and repair exceptional representatives by adding \\(p\\).",
+    "hypotheses": [
+      "The prime \\(p\\) is odd.",
+      "The class of \\(a\\) has order \\(p-1\\) modulo \\(p\\).",
+      "The all-level order formula requires \\(a^{p-1}\\not\\equiv1\\pmod{p^2}\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Raise the valuation once",
+        "reason": "The leading binomial term has at least one fewer factor of \\(p\\) than every later term. Oddness of \\(p\\) ensures the final term cannot cancel that leading contribution."
+      },
+      {
+        "label": "Separate coprime exponents",
+        "reason": "An exponent coprime to \\(p\\) leaves a geometric-sum factor nonzero modulo \\(p\\); decomposing an arbitrary exponent therefore isolates precisely the valuation contributed by its prime-power part."
+      },
+      {
+        "label": "Read the exact order",
+        "reason": "Reduction first forces a multiple of \\(p-1\\). Nonexceptionality starts the remaining valuation at exactly one, so the least return exponent acquires exactly \\(p^{k-1}\\)."
+      },
+      {
+        "label": "Repair the representative",
+        "reason": "Adding \\(p\\) preserves the residue modulo \\(p\\) but changes the next digit of its \\((p-1)\\)-st power by a nonzero amount. Thus it repairs an exceptional lift without changing the original order."
+      }
+    ],
+    "check": {
+      "prompt": "What must be checked before concluding that a chosen primitive representative modulo \\(p\\) generates modulo every \\(p^k\\)?",
+      "promptLabel": "What must be checked before concluding that a chosen primitive representative modulo p generates modulo every p to the power k?",
+      "choices": [
+        {
+          "text": "\\(a^{p-1}\\not\\equiv1\\pmod{p^2}\\)",
+          "correct": true,
+          "feedback": "Yes. This makes the initial valuation exactly one, which drives the full-order formula at all higher levels.",
+          "label": "a raised to the power p minus one is not congruent to one modulo p squared."
+        },
+        {
+          "text": "Only that \\(a\\) is nonzero modulo \\(p\\).",
+          "correct": false,
+          "feedback": "Nonzero means a unit, not a generator. Even a primitive residue needs a check on the chosen representative at the next level.",
+          "label": "Only that a is nonzero modulo p."
+        },
+        {
+          "text": "\\(a^{p-1}\\equiv1\\pmod{p^2}\\)",
+          "correct": false,
+          "feedback": "That is the exceptional condition. It gives a return exponent too small for a generator modulo \\(p^2\\).",
+          "label": "a raised to the power p minus one is congruent to one modulo p squared."
+        }
+      ]
+    }
+  },
+  "U04": {
+    "intuition": "A cyclic group can have at most one nonidentity element of order two. Independent sign choices in CRT coordinates expose moduli with too many such elements.",
+    "strategy": "Construct generators for the allowed prime-power forms, then rule out every other factorization using multiple square roots of one.",
+    "hypotheses": [
+      "The modulus \\(n\\ge2\\) is an integer.",
+      "An odd prime-power factor has the generator supplied by U03.",
+      "Independent CRT coordinates require coprime factors."
+    ],
+    "proofSteps": [
+      {
+        "label": "Construct the allowed generators",
+        "reason": "The odd prime-power result provides the nontrivial generator; adjoining the trivial unit group modulo two changes no order. The small moduli must be handled directly."
+      },
+      {
+        "label": "Bound the involutions",
+        "reason": "Exponent classes in a cyclic group admit at most two solutions of the square-one equation. Finding more than two is therefore a structural obstruction, not a failed search for a generator."
+      },
+      {
+        "label": "Separate odd-prime signs",
+        "reason": "Two coprime odd-prime-power coordinates independently distinguish their positive and negative identity classes. CRT preserves all four choices as distinct global units."
+      },
+      {
+        "label": "Inspect large two powers",
+        "reason": "The extra square-one classes at a sufficiently large power of two already obstruct cyclicity; adding other CRT coordinates cannot remove them."
+      },
+      {
+        "label": "Finish the factor cases",
+        "reason": "A factor of four combined with an odd-prime-power factor gives the same independent-sign obstruction. The remaining factorizations exhaust exactly the allowed list."
+      }
+    ],
+    "check": {
+      "prompt": "Why does \\(U(12)\\) fail to be cyclic?",
+      "promptLabel": "Why does the unit group modulo twelve fail to be cyclic?",
+      "choices": [
+        {
+          "text": "CRT gives four distinct square roots of one from the sign choices modulo \\(4\\) and \\(3\\).",
+          "correct": true,
+          "feedback": "Correct. A cyclic group cannot contain this many self-inverse elements.",
+          "label": "The Chinese remainder theorem gives four distinct square roots of one from the sign choices modulo four and modulo three."
+        },
+        {
+          "text": "Every composite modulus has a noncyclic unit group.",
+          "correct": false,
+          "feedback": "Composite moduli such as \\(9\\) and \\(10\\) do admit primitive roots. The obstruction concerns their particular factorization."
+        },
+        {
+          "text": "It contains the unit \\(-1\\).",
+          "correct": false,
+          "feedback": "A cyclic group may contain \\(-1\\) as its unique nonidentity involution. The obstruction is the presence of additional involutions.",
+          "label": "It contains the unit negative one."
+        }
+      ]
+    }
+  },
+  "U05": {
+    "intuition": "In a cyclic group, taking a power multiplies the exponent index. A root problem therefore becomes a linear congruence with an exact fiber size.",
+    "strategy": "Use the exponent-class bijection, solve the index congruence, and distinguish its cyclic formula from the general kernel-coset principle.",
+    "hypotheses": [
+      "For the index and \\(\\gcd(k,h)\\) formulas, \\(G=\\langle g\\rangle\\) is cyclic of finite order \\(h\\ge1\\).",
+      "The exponent \\(k\\ge1\\) is an integer and the target belongs to \\(G\\).",
+      "The final equal-fiber argument uses a finite abelian group so the power map is a homomorphism."
+    ],
+    "proofSteps": [
+      {
+        "label": "Parametrize by exponent classes",
+        "reason": "Generation gives every element an index; the exact order identifies precisely which exponents coincide. Both directions are needed before counting exponent solutions as distinct roots."
+      },
+      {
+        "label": "Solve the index congruence",
+        "reason": "The gcd criterion separates impossible targets from attainable ones. Dividing by the gcd leaves an invertible coefficient at the reduced modulus."
+      },
+      {
+        "label": "Restore the original indices",
+        "reason": "One reduced exponent class splits into exactly the gcd-many classes at the original modulus. The exponent bijection transfers that count without duplication."
+      },
+      {
+        "label": "Remove the chosen index",
+        "reason": "The intrinsic target-power condition is equivalent to index divisibility because the generator has exactly the stated order. This equivalence needs cyclicity."
+      },
+      {
+        "label": "Identify general kernel fibers",
+        "reason": "Translating an attained fiber by one chosen preimage makes it the kernel. This proves equal sizes without asserting the cyclic gcd formula in a noncyclic group."
+      }
+    ],
+    "check": {
+      "prompt": "Can \\(\\gcd(2,4)=2\\) count the solutions of \\(x^2=1\\) in \\(U(8)\\)?",
+      "promptLabel": "Can the greatest common divisor of two and four, equal to two, count the solutions of x squared equals one in the unit group modulo eight?",
+      "choices": [
+        {
+          "text": "No: \\(U(8)\\) is not cyclic, and all four of its units square to one.",
+          "correct": true,
+          "feedback": "Correct. Group cardinality cannot replace a cyclic generator and its order.",
+          "label": "No: the group of units modulo eight is not cyclic, and all four of its units square to one."
+        },
+        {
+          "text": "Yes: the formula needs only a group with four elements.",
+          "correct": false,
+          "feedback": "The index congruence requires a bijection from exponent classes via a generator. No such generator exists here."
+        },
+        {
+          "text": "No: noncyclic groups cannot have equal nonempty fibers.",
+          "correct": false,
+          "feedback": "The square map here is still a homomorphism on an abelian group. Equal fibers remain valid; their kernel size is four."
+        }
+      ]
+    }
+  },
+  "Q01": {
+    "intuition": "Nonzero roots come in opposite pairs. Over an odd prime field, two roots give the same square only when they belong to the same pair.",
+    "strategy": "Factor a difference of squares, apply Euclid’s lemma, and count the opposite-pair fibers.",
+    "hypotheses": [
+      "The modulus \\(p\\) is an odd prime.",
+      "The two-root conclusion concerns nonzero square targets.",
+      "The zero class is treated separately."
+    ],
+    "proofSteps": [
+      {
+        "label": "Restrict the equal-square fibers",
+        "reason": "Primality converts a zero product into one zero factor. This is the step that excludes extra square roots from different opposite pairs."
+      },
+      {
+        "label": "Count the opposite pairs",
+        "reason": "Oddness makes a nonzero class distinct from its negative. The first step ensures different pairs have different images, so pair counting counts squares exactly."
+      },
+      {
+        "label": "Separate the zero fiber",
+        "reason": "The prime-divisor rule forces a root of zero to be zero. It must not be included in the nonzero two-element fibers."
+      }
+    ],
+    "check": {
+      "prompt": "Which claim holds modulo an odd prime?",
+      "choices": [
+        {
+          "text": "A nonzero square has exactly two roots, while zero has exactly one.",
+          "correct": true,
+          "feedback": "Correct. The nonzero and zero cases have different fiber sizes."
+        },
+        {
+          "text": "Every target has exactly two roots.",
+          "correct": false,
+          "feedback": "Nonresidues have none and zero has one. The two-root statement requires a nonzero square target."
+        },
+        {
+          "text": "The same two-root bound holds modulo every odd composite.",
+          "correct": false,
+          "feedback": "The prime-product cancellation is essential. Composite moduli can have more than two square roots of one."
+        }
+      ]
+    }
+  },
+  "Q02": {
+    "intuition": "The half-exponent separates nonzero squares from nonsquares. The field root bound shows that no nonsquare can join the square half.",
+    "strategy": "Fill the root set of the half-power polynomial with known squares, use Fermat to force the remaining sign, then upgrade congruent symbol values to integer equality.",
+    "hypotheses": [
+      "The modulus \\(p\\) is an odd prime.",
+      "The symbol takes integer values in \\(\\{-1,0,1\\}\\).",
+      "The root bound is applied over the field, not a composite residue ring."
+    ],
+    "proofSteps": [
+      {
+        "label": "Exhaust the positive-sign roots",
+        "reason": "The known square classes already reach the degree bound. Thus a nonzero nonsquare cannot also have half-power one."
+      },
+      {
+        "label": "Force the negative sign",
+        "reason": "Fermat restricts the half-power to roots of the square-one equation. The field has no zero divisors, and the positive sign has already been excluded."
+      },
+      {
+        "label": "Recover integer multiplicativity",
+        "reason": "The three allowed symbol values are distinct modulo an odd prime. Therefore the modular equality between symbols proves the stronger integer equality."
+      }
+    ],
+    "check": {
+      "prompt": "Why can the final congruence of symbol values be read as equality of integers?",
+      "choices": [
+        {
+          "text": "The permitted values \\(-1,0,1\\) represent distinct classes modulo an odd prime.",
+          "correct": true,
+          "feedback": "Correct. The restricted value set supplies the injectivity needed to pass from congruence to equality.",
+          "label": "The permitted values negative one, zero and one represent distinct residue classes modulo an odd prime."
+        },
+        {
+          "text": "Congruent integers are always equal.",
+          "correct": false,
+          "feedback": "Congruence normally identifies infinitely many integers. Only the restricted symbol-value set makes the inference valid."
+        },
+        {
+          "text": "The exponent is even for every odd prime.",
+          "correct": false,
+          "feedback": "Its parity varies. The argument depends on distinct symbol values, not the parity of the half-exponent."
+        }
+      ]
+    }
+  },
+  "Q03": {
+    "intuition": "Folding nonzero residues into the centered half of the residue system records only a sign. Those signs retain exactly the information needed for the Legendre symbol.",
+    "strategy": "Prove the absolute values form a permutation, multiply its entries, and legally cancel the factorial.",
+    "hypotheses": [
+      "The prime \\(p\\) is odd and \\(p\\nmid a\\).",
+      "The indices run from \\(1\\) through \\((p-1)/2\\).",
+      "The factorial of that index range is nonzero modulo \\(p\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Prove the absolute-value permutation",
+        "reason": "Cancellation by the unit \\(a\\) reduces any repeated absolute value to equal or opposite indices. The half-range excludes distinct opposite indices."
+      },
+      {
+        "label": "Compare the signed products",
+        "reason": "The same product is expressed once by multiplication by \\(a\\) and once by its sign count. The invertible factorial allows cancellation, after which Euler’s criterion identifies the sign."
+      }
+    ],
+    "check": {
+      "prompt": "Which assumption permits cancellation of \\(a\\) in the permutation argument?",
+      "promptLabel": "Which assumption permits cancellation of a in the permutation argument?",
+      "choices": [
+        {
+          "text": "\\(p\\nmid a\\), so \\(a\\) is a unit modulo the prime \\(p\\).",
+          "correct": true,
+          "feedback": "Correct. This eliminates collisions caused by a noninvertible multiplier.",
+          "label": "The prime p does not divide a, so a is a unit modulo p."
+        },
+        {
+          "text": "\\(a\\) is positive.",
+          "correct": false,
+          "feedback": "Sign does not determine invertibility. A negative representative coprime to \\(p\\) is equally cancellable.",
+          "label": "a is positive."
+        },
+        {
+          "text": "The residues were sorted first.",
+          "correct": false,
+          "feedback": "Sorting does not prove distinctness or make multiplication reversible. The unit hypothesis does."
+        }
+      ]
+    }
+  },
+  "Q04": {
+    "intuition": "The reciprocity signs are parities of two complementary lattice counts. Their sum is the size of one rectangle because the dividing line contains no allowed lattice point.",
+    "strategy": "Bridge Gauss signs to floor-sum parity, partition a bounded rectangle by an empty diagonal, and multiply the resulting signs.",
+    "hypotheses": [
+      "\\(p,q\\) are distinct odd primes.",
+      "The floor-parity bridge requires an odd numerator coprime to its prime denominator.",
+      "The rectangle uses positive coordinates no larger than the respective half-ranges."
+    ],
+    "proofSteps": [
+      {
+        "label": "Prepare the parity bridge",
+        "reason": "Gauss’s signed permutation relates least residues to a fixed set of absolute values. Introducing upper-half indicators makes their parity contribution explicit."
+      },
+      {
+        "label": "Cancel the index sum",
+        "reason": "Oddness of the numerator makes the extra multiple of the index sum even. The remaining parity equation is exactly the bridge between floor counts and Gauss signs."
+      },
+      {
+        "label": "Count below the line",
+        "reason": "The half-range keeps each floor count within the rectangle. Coprimality ensures no floor threshold coincides with a lattice point on the line."
+      },
+      {
+        "label": "Count the complementary region",
+        "reason": "Every allowed point lies strictly on one side because equality would force a coordinate divisible by the opposite prime. Thus the two counts exhaust the rectangle once."
+      },
+      {
+        "label": "Translate counts into reciprocity",
+        "reason": "Multiplying signs adds their parity exponents. The rectangle size determines that exponent, and the prime residue classes modulo four determine whether it is odd."
+      }
+    ],
+    "check": {
+      "prompt": "What breaks if the two prime parameters are equal?",
+      "choices": [
+        {
+          "text": "The diagonal can contain allowed lattice points, so the two strict regions need not partition the rectangle.",
+          "correct": true,
+          "feedback": "Correct. The empty-diagonal proof uses coprimality of distinct primes."
+        },
+        {
+          "text": "The Legendre symbol ceases to have a zero value.",
+          "correct": false,
+          "feedback": "The zero value still exists; indeed the numerator equals the modulus. The partition and nonzero-symbol hypotheses fail."
+        },
+        {
+          "text": "The rectangle necessarily has even area.",
+          "correct": false,
+          "feedback": "Its parity can vary. The issue is points on the dividing line, not the parity of the area."
+        }
+      ]
+    }
+  },
+  "Q05": {
+    "intuition": "The sign and factor-two contributions can be settled from a prime’s small residue classes before reciprocity handles the remaining odd factors.",
+    "strategy": "Derive the sign law from Euler, count the upper-half doubled residues with Gauss, and compare the four odd residue classes modulo eight.",
+    "hypotheses": [
+      "The denominator \\(p\\) is an odd prime.",
+      "Reciprocity swaps distinct odd prime factors, after handling sign and powers of two.",
+      "Any factor divisible by \\(p\\) gives symbol zero and must be separated."
+    ],
+    "proofSteps": [
+      {
+        "label": "Determine the negative-one sign",
+        "reason": "Euler’s criterion evaluates the half-power of negative one directly. Distinctness of the two signs modulo an odd prime upgrades that congruence to equality."
+      },
+      {
+        "label": "Count the doubled upper half",
+        "reason": "The doubled half-range does not wrap past the modulus. Therefore the negative-fold count is a single exact interval count."
+      },
+      {
+        "label": "Compare the four odd classes",
+        "reason": "Both sign formulas depend only on parity. Checking the four odd classes modulo eight proves the exponent expression without assuming an approximate count."
+      }
+    ],
+    "check": {
+      "prompt": "When computing \\(\\chi_{11}(-2)\\), which factors must be retained?",
+      "promptLabel": "When computing the Legendre symbol with numerator negative two and prime denominator eleven, which factors must be retained?",
+      "choices": [
+        {
+          "text": "Both \\(\\chi_{11}(-1)\\) and \\(\\chi_{11}(2)\\).",
+          "correct": true,
+          "feedback": "Correct. Both are negative here, so their product is positive.",
+          "label": "Both the Legendre symbol of negative one modulo eleven and the Legendre symbol of two modulo eleven."
+        },
+        {
+          "text": "Only the factor for \\(2\\); changing the sign never changes a square class.",
+          "correct": false,
+          "feedback": "Negative one is a nonsquare modulo \\(11\\). Dropping its contribution reverses the answer.",
+          "label": "Only the factor for two; changing the sign never changes a square class."
+        },
+        {
+          "text": "Apply reciprocity by swapping \\(2\\) and \\(11\\).",
+          "correct": false,
+          "feedback": "The reciprocity law here swaps odd primes. The numerator two uses its supplementary law.",
+          "label": "Apply reciprocity by swapping two and eleven."
+        }
+      ]
+    }
+  },
+  "Q06": {
+    "intuition": "The Jacobi symbol compresses several local square signs into one product. That compression makes it fast to compute but can hide two simultaneous local obstructions.",
+    "strategy": "Multiply prime-level laws with multiplicity, track their parity on odd products, and use decreasing Euclidean remainders for evaluation.",
+    "hypotheses": [
+      "Jacobi denominators are positive odd integers; denominator one uses the empty product.",
+      "The reciprocity statement requires its two odd arguments to be coprime.",
+      "A symbol of one alone does not certify a root modulo a composite."
+    ],
+    "proofSteps": [
+      {
+        "label": "Multiply the local definitions",
+        "reason": "Unique factorization fixes which prime signs occur and how often. Local multiplicativity then extends to both arguments, including zero factors."
+      },
+      {
+        "label": "Combine supplementary signs",
+        "reason": "The parity identities show that the prime-level exponents combine into the stated exponent for the whole odd denominator."
+      },
+      {
+        "label": "Combine the reciprocity pairs",
+        "reason": "Coprimality prevents repeated primes across the two arguments. Every local pair therefore meets prime reciprocity, and its multiplicity contributes to the global sign."
+      },
+      {
+        "label": "Follow decreasing remainders",
+        "reason": "Reduction, extracting twos, and reciprocity preserve the symbol while decreasing the Euclidean parameters. Computation terminates without resolving individual local root conditions."
+      }
+    ],
+    "check": {
+      "prompt": "What does \\(J(2,15)=1\\) prove about \\(x^2\\equiv2\\pmod{15}\\)?",
+      "promptLabel": "What does the Jacobi symbol with numerator two and denominator fifteen, equal to one, prove about x squared congruent to two modulo fifteen?",
+      "choices": [
+        {
+          "text": "It gives the product of local signs; the root problem still fails modulo \\(3\\).",
+          "correct": true,
+          "feedback": "Correct. Two negative local signs multiply to one without providing either local root.",
+          "label": "It gives the product of local signs; the root problem still fails modulo three."
+        },
+        {
+          "text": "It proves that two global roots exist.",
+          "correct": false,
+          "feedback": "The Jacobi value has discarded which primes supply negative signs. Root existence requires every local condition."
+        },
+        {
+          "text": "It proves that \\(15\\) is prime.",
+          "correct": false,
+          "feedback": "The Jacobi definition allows composite denominators. Its value cannot certify primality.",
+          "label": "It proves that fifteen is prime."
+        }
+      ]
+    }
+  },
+  "Q07": {
+    "intuition": "For a prime congruent to three modulo four, the half-power square test can be converted directly into a square-root exponent. Composite roots must instead be assembled from complete local lists.",
+    "strategy": "Square the proposed power using Euler’s criterion, prove the prime root list complete, and apply CRT to coprime prime powers.",
+    "hypotheses": [
+      "The power formula requires a prime \\(p\\equiv3\\pmod4\\).",
+      "The target is a nonzero quadratic residue for the two-root formula.",
+      "The zero target and composite moduli have separate arguments."
+    ],
+    "proofSteps": [
+      {
+        "label": "Verify the power root",
+        "reason": "The residue-class condition makes the exponent integral. Euler’s criterion removes the extra half-power factor when the proposed value is squared."
+      },
+      {
+        "label": "Prove the prime list complete",
+        "reason": "Factorization of the difference of squares and primality force any root to be one of the two opposite values. Nonzero targets ensure those values are distinct."
+      },
+      {
+        "label": "Reconstruct composite roots",
+        "reason": "CRT is a bijection on coprime prime-power coordinates. Complete local lists therefore give a complete global list, whereas a prime exponent formula does not transfer directly."
+      }
+    ],
+    "check": {
+      "prompt": "Which input allows the formula \\(a^{(p+1)/4}\\) to produce a nonzero root?",
+      "promptLabel": "Which input allows a raised to the exponent obtained by adding one to p and dividing that sum by four to produce a nonzero root?",
+      "choices": [
+        {
+          "text": "\\(p=11,a=5\\), since \\(5\\) is a nonzero square modulo \\(11\\).",
+          "correct": true,
+          "feedback": "Correct. The modulus has the required prime class and the target passes the square hypothesis.",
+          "label": "p equals eleven and a equals five, since five is a nonzero square modulo eleven."
+        },
+        {
+          "text": "\\(p=13,a=4\\)",
+          "correct": false,
+          "feedback": "The target is a square, but the modulus is one modulo four; the stated exponent is not an integer.",
+          "label": "p equals thirteen and a equals four."
+        },
+        {
+          "text": "\\(p=15,a=1\\)",
+          "correct": false,
+          "feedback": "The modulus is composite. Its prime-power root lists must be combined by CRT instead.",
+          "label": "p equals fifteen and a equals one."
+        }
+      ]
+    }
+  },
+  "X05": {
+    "intuition": "A global square is a square in every prime-power coordinate. Within one coordinate, its valuation tells us which square power to remove before testing the remaining unit.",
+    "strategy": "Separate unit, nonunit, and zero targets; prove the prime-power criteria and root multiplicities; reconstruct through CRT.",
+    "hypotheses": [
+      "\\(p\\) is prime and \\(k\\ge1\\).",
+      "The nonunit reduction uses truncated valuation \\(t<k\\); the zero target is separate.",
+      "CRT combines distinct prime-power factors of the modulus."
+    ],
+    "proofSteps": [
+      {
+        "label": "Lift the odd-prime units",
+        "reason": "The two nonzero roots modulo an odd prime have invertible derivatives. Unique digit lifting preserves both their existence and completeness at every higher level."
+      },
+      {
+        "label": "Handle the two-power units",
+        "reason": "Odd-square parity changes the criterion at the first two levels. Above them, changing a lower bit corrects the next square bit; factoring equal squares then restricts roots to four classes."
+      },
+      {
+        "label": "Remove valuations and reconstruct",
+        "reason": "An exact nonzero target valuation must be twice the root valuation. Division leaves a unit congruence, but recovering all roots also requires its free higher digits; zero instead permits every sufficiently divisible root. CRT preserves every local choice."
+      }
+    ],
+    "check": {
+      "prompt": "For \\(x^2\\equiv9\\pmod{27}\\), does multiplying just the representatives of \\(y^2\\equiv1\\pmod3\\) by \\(3\\) give all roots?",
+      "promptLabel": "For x squared congruent to nine modulo twenty-seven, does multiplying just the representatives of y squared congruent to one modulo three by three give all roots?",
+      "choices": [
+        {
+          "text": "No. Each unit root modulo \\(3\\) has three free extensions for \\(y\\) modulo \\(9\\).",
+          "correct": true,
+          "feedback": "Correct. To recover \\(x\\) modulo \\(27\\), \\(y=x/3\\) must be tracked modulo \\(9\\), giving six roots in total.",
+          "label": "No. Each unit root modulo three has three free extensions for y modulo nine."
+        },
+        {
+          "text": "Yes. The two unit roots always give exactly two roots of the original target.",
+          "correct": false,
+          "feedback": "Removing a square power changes the relevant modulus. Higher digits of the divided root create additional distinct original roots."
+        },
+        {
+          "text": "No roots exist because the target is not a unit.",
+          "correct": false,
+          "feedback": "Nonunits may be squares. The target has even valuation and its divided unit is a square."
+        }
+      ]
+    }
+  },
+  "S01": {
+    "intuition": "A modular square root of negative one first supplies a multiple of the desired prime as a sum of squares. A descent shrinks that multiplier until it must be one.",
+    "strategy": "Use Wilson’s theorem for an initial modular certificate, minimize the positive multiplier, and apply centered remainders with the two-squares product identity.",
+    "hypotheses": [
+      "The prime \\(p\\) is odd; the sufficiency argument assumes \\(p\\equiv1\\pmod4\\).",
+      "The minimized multiplier satisfies \\(1\\le m<p\\).",
+      "The descent must preserve integral coordinates and a positive smaller multiplier."
+    ],
+    "proofSteps": [
+      {
+        "label": "Exclude the wrong prime class",
+        "reason": "Parity forces an odd sum of two squares to have exactly one odd coordinate, giving the necessary residue class modulo four."
+      },
+      {
+        "label": "Create a bounded multiplier",
+        "reason": "Wilson supplies a root of negative one; choosing its bounded representative turns the modular certificate into a positive sum of squares below the square of the prime."
+      },
+      {
+        "label": "Shrink the remainder norm",
+        "reason": "Centered representatives minimize coordinate size while preserving divisibility by the multiplier. Their norm therefore supplies a smaller candidate multiplier."
+      },
+      {
+        "label": "Rule out a zero descent",
+        "reason": "If both centered coordinates vanished, the original multiplier would divide the prime. Its strict bounds and the prime hypothesis exclude that degenerate case."
+      },
+      {
+        "label": "Preserve the represented multiple",
+        "reason": "The product identity and congruent coordinates make both new coordinates divisible by the old multiplier. Division creates a genuine smaller representation, contradicting minimality unless the multiplier is one."
+      }
+    ],
+    "check": {
+      "prompt": "What must be proved before the centered-remainder construction gives a descent?",
+      "choices": [
+        {
+          "text": "The new multiplier is a positive integer smaller than the old one, and the divided coordinates are integers.",
+          "correct": true,
+          "feedback": "Correct. Both validity of the new object and strict positive decrease are essential."
+        },
+        {
+          "text": "Only that the new coordinates look smaller.",
+          "correct": false,
+          "feedback": "Coordinate size alone does not establish integrality or preserve a positive represented multiple."
+        },
+        {
+          "text": "That the initial root of negative one already gives \\(p=t^2+1\\).",
+          "correct": false,
+          "feedback": "The initial certificate generally gives a multiple of \\(p\\). The descent removes that extra multiplier.",
+          "label": "That the initial root of negative one already gives p equals t squared plus one."
+        }
+      ]
+    }
+  },
+  "S02": {
+    "intuition": "A character sum can encode a count: adding one to a quadratic symbol gives the number of square roots of its argument.",
+    "strategy": "Normalize distinct shifts by an affine bijection, then double-count the resulting conic through an invertible change to a hyperbola.",
+    "hypotheses": [
+      "The modulus \\(p\\) is an odd prime.",
+      "Symbol zero contributes zero; root counting uses \\(1+\\chi_p(z)\\).",
+      "The off-diagonal substitution requires \\(a\\ne b\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Balance the symbol values",
+        "reason": "The equal nonzero square and nonsquare counts cancel. Retaining the zero class separately makes the root-count expression correct at every argument."
+      },
+      {
+        "label": "Separate the diagonal",
+        "reason": "When the two shifts coincide, every nonzero argument is a square. This case cannot use the off-diagonal substitution because its denominator vanishes."
+      },
+      {
+        "label": "Normalize distinct shifts",
+        "reason": "The shift difference is invertible in the field, so the substitution permutes every index. Its square factor contributes symbol one."
+      },
+      {
+        "label": "Interpret the sum as points",
+        "reason": "The square-root formula converts each summand into the number of points above one horizontal parameter. Oddness makes the change involving division by two invertible."
+      },
+      {
+        "label": "Count the hyperbola exactly",
+        "reason": "A nonzero parameter determines both factors of a product equal to one and uniquely recovers the original point. This bijection supplies the exact off-diagonal count."
+      }
+    ],
+    "check": {
+      "prompt": "Why must \\(a=b\\) be separated from \\(a\\ne b\\)?",
+      "promptLabel": "Why must a equals b be separated from a not equal to b?",
+      "choices": [
+        {
+          "text": "The normalization divides by \\(b-a\\), which is zero on the diagonal.",
+          "correct": true,
+          "feedback": "Correct. The diagonal has its own count and cannot use an inverse of zero.",
+          "label": "The normalization divides by b minus a, which is zero on the diagonal."
+        },
+        {
+          "text": "The symbol is undefined at zero.",
+          "correct": false,
+          "feedback": "The symbol is explicitly defined to be zero there. Omitting those terms would spoil the count."
+        },
+        {
+          "text": "The field has no squares when the shifts coincide.",
+          "correct": false,
+          "feedback": "On the diagonal the nonzero arguments are all squares, giving the different value \\(p-1\\)."
+        }
+      ]
+    }
+  },
+  "S03": {
+    "intuition": "Sum the squared character sums over every parameter, then group the nonzero parameters into squares and nonsquares. The same second moment gives an exact two-squares identity.",
+    "strategy": "Prove scaling and evenness, evaluate a second moment by the correlation identity, and partition its parameter set into squares and nonsquares.",
+    "hypotheses": [
+      "\\(p\\) is a prime congruent to one modulo four.",
+      "\\(\\ell\\) is a nonzero quadratic nonresidue.",
+      "The scaling parameter \\(k\\) is nonzero."
+    ],
+    "proofSteps": [
+      {
+        "label": "Compare scaled parameter sums",
+        "reason": "An invertible rescaling permutes the summation indices. Multiplicativity isolates its cubic factor, whose sign is the same as the original scaling parameter."
+      },
+      {
+        "label": "Establish integral half sums",
+        "reason": "Negative-one has symbol one in the stated prime class, so opposite indices contribute equally. This makes every sum even and allows division by two later."
+      },
+      {
+        "label": "Expand the second moment",
+        "reason": "All sums are finite, so exchanging them is legitimate. The correlation theorem separates equal-square indices from the remaining pairs."
+      },
+      {
+        "label": "Count the equal-square pairs",
+        "reason": "Each nonzero index has exactly two opposite partners. The negative-one sign makes both partners contribute positively to the surviving moment."
+      },
+      {
+        "label": "Recover the two squares",
+        "reason": "Scaling makes squared sums constant on each of the two equally sized nonzero parameter classes. Equating this count with the evaluated moment yields the identity; evenness turns it into integer squares."
+      }
+    ],
+    "check": {
+      "prompt": "Under the hypothesis \\(p\\equiv1\\pmod4\\), why do opposite-index contributions to \\(S(m)\\) agree?",
+      "promptLabel": "Under the hypothesis p congruent to one modulo four, why do opposite-index contributions to S of m agree?",
+      "choices": [
+        {
+          "text": "It gives \\(\\chi_p(-1)=1\\), so opposite-index contributions agree.",
+          "correct": true,
+          "feedback": "Correct. Equal opposite contributions make the character sum an even integer.",
+          "label": "It gives the Legendre symbol of negative one modulo p equal to one, so opposite-index contributions agree."
+        },
+        {
+          "text": "It ensures every nonzero class is a square.",
+          "correct": false,
+          "feedback": "Exactly half of the nonzero classes are squares; the nonsquare class is essential to the identity."
+        },
+        {
+          "text": "It makes every character sum positive.",
+          "correct": false,
+          "feedback": "Character sums may be negative. The identity uses their squares and their evenness, not positivity."
+        }
+      ]
+    }
+  },
+  "S04": {
+    "intuition": "In a positive sum of two squares, a prime congruent to three modulo four cannot have an odd exponent. Each divisibility step forces it into both coordinates; removing their common prime factor removes two copies from the sum.",
+    "strategy": "Iterate the prime obstruction for necessity, then combine prime representations and square factors using the two-squares product identity.",
+    "hypotheses": [
+      "The factorization criterion concerns positive integers \\(n\\).",
+      "Obstructing factors are primes congruent to three modulo four.",
+      "Zero is a separate representable input."
+    ],
+    "proofSteps": [
+      {
+        "label": "Force division of both coordinates",
+        "reason": "If one coordinate were invertible modulo an obstructing prime, their ratio would be a square root of negative one. The prime obstruction excludes this and forces division of both."
+      },
+      {
+        "label": "Remove powers in pairs",
+        "reason": "Dividing both coordinates preserves representability while removing two prime factors. An odd leftover exponent would contradict the same obstruction at the last stage."
+      },
+      {
+        "label": "Construct all allowed products",
+        "reason": "Eligible primes have representations, and even powers of obstructing primes are already squares. The multiplicative identity combines all these factors without losing integral coordinates."
+      }
+    ],
+    "check": {
+      "prompt": "Why is \\(21=3\\cdot7\\) not a sum of two integer squares?",
+      "promptLabel": "Why is twenty-one, equal to three times seven, not a sum of two integer squares?",
+      "choices": [
+        {
+          "text": "Its primes congruent to three modulo four have odd exponents.",
+          "correct": true,
+          "feedback": "Correct. Either obstructing prime alone prevents a representation."
+        },
+        {
+          "text": "It is congruent to one modulo four, which is forbidden.",
+          "correct": false,
+          "feedback": "It is one modulo four, but that condition is only a preliminary allowance, not a sufficient criterion for composite integers."
+        },
+        {
+          "text": "Every composite integer fails the two-squares test.",
+          "correct": false,
+          "feedback": "Composite integers such as \\(65\\) are representable. The prime exponents decide the question."
+        }
+      ]
+    }
+  },
+  "S05": {
+    "intuition": "Complex multiplication packages the two-squares product identity into one norm law. A Gaussian inverse can remain integral only at norm one.",
+    "strategy": "Expand Gaussian multiplication, use nonnegative integer norms to characterize units, and solve the norm-one equation.",
+    "hypotheses": [
+      "All coefficients lie in \\(\\mathbb Z\\).",
+      "The Gaussian norm is \\(a^2+b^2\\), a nonnegative integer.",
+      "A unit inverse must also lie in \\(\\mathbb Z[i]\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Package the product identity",
+        "reason": "The coefficient multiplication remains integral, and its norm expansion is precisely the two-squares identity."
+      },
+      {
+        "label": "Characterize integral inverses",
+        "reason": "Multiplicative nonnegative integer norms force a unit and its inverse to have norm one. Conversely, conjugation supplies an integral inverse at norm one."
+      },
+      {
+        "label": "List the norm-one points",
+        "reason": "Integer squares summing to one allow only one coordinate of absolute value one and the other zero, exhausting the units."
+      }
+    ],
+    "check": {
+      "prompt": "Does norm multiplicativity alone prove unique factorization in \\(\\mathbb Z[i]\\)?",
+      "promptLabel": "Does norm multiplicativity alone prove unique factorization in the Gaussian integers?",
+      "choices": [
+        {
+          "text": "No. It supports the unit calculation; unique factorization needs further divisibility arguments.",
+          "correct": true,
+          "feedback": "Correct. Euclidean division and Bézout supply the stronger machinery later."
+        },
+        {
+          "text": "Yes. Every ring with a multiplicative norm has unique factorization.",
+          "correct": false,
+          "feedback": "A multiplicative norm alone does not guarantee prime-divisor cancellation or Bézout identities."
+        },
+        {
+          "text": "No Gaussian integer can have an integral inverse.",
+          "correct": false,
+          "feedback": "The four norm-one Gaussian integers have integral inverses, given by conjugation."
+        }
+      ]
+    }
+  },
+  "N01": {
+    "intuition": "Primality controls divisibility of a product; irreducibility controls a factorization of one element. Domain cancellation turns the first property into the second.",
+    "strategy": "Apply prime divisibility to a proposed factorization and cancel the nonzero prime element to produce a unit.",
+    "hypotheses": [
+      "The ring is a commutative integral domain with identity and \\(1\\ne0\\).",
+      "The prime element is nonzero and is not a unit.",
+      "Cancellation relies on the domain having no nonzero zero divisors."
+    ],
+    "proofSteps": [
+      {
+        "label": "Cancel to produce a unit",
+        "reason": "Prime divisibility places the element inside one factor. Substitution then leaves a nonzero common factor, and domain cancellation proves the other factor has an inverse."
+      }
+    ],
+    "check": {
+      "prompt": "Which property makes the cancellation in prime-implies-irreducible valid?",
+      "choices": [
+        {
+          "text": "The coefficient ring is an integral domain and the prime element is nonzero.",
+          "correct": true,
+          "feedback": "Correct. A nonzero factor is cancellable in a domain."
+        },
+        {
+          "text": "The element has a positive integer label.",
+          "correct": false,
+          "feedback": "Primality is a property in a named ring, not of a label or sign. Cancellation depends on that ring’s multiplication."
+        },
+        {
+          "text": "Every nonunit is already irreducible.",
+          "correct": false,
+          "feedback": "Nonunits may factor into nonunits. The proof must use prime divisibility to rule that out."
+        }
+      ]
+    }
+  },
+  "N02": {
+    "intuition": "A homomorphism cannot distinguish elements that differ by an element of its kernel. Every attained value therefore has a translated copy of the same kernel as its fiber.",
+    "strategy": "Identify fibers with kernel cosets and count the resulting finite partition.",
+    "hypotheses": [
+      "\\(f:G\\to K\\) is a group homomorphism.",
+      "The groups are finite for the cardinality formulas.",
+      "A power map is guaranteed to be a homomorphism when the group is abelian."
+    ],
+    "proofSteps": [
+      {
+        "label": "Identify each attained fiber",
+        "reason": "The homomorphism law allows cancelling a chosen preimage inside the image. This converts the fiber condition into membership in the kernel coset."
+      },
+      {
+        "label": "Count the equal-sized partition",
+        "reason": "Group translation is bijective, so every coset has the same size. Counting fibers proves the image formula; counting cosets of an arbitrary subgroup proves divisibility."
+      }
+    ],
+    "check": {
+      "prompt": "When can equal fibers be justified by the kernel-coset argument?",
+      "choices": [
+        {
+          "text": "For any group homomorphism, whether or not its group is abelian.",
+          "correct": true,
+          "feedback": "Correct. The argument uses the homomorphism law, not commutativity."
+        },
+        {
+          "text": "For every function between finite groups.",
+          "correct": false,
+          "feedback": "An arbitrary function need not have equal fibers or a group-theoretic kernel. Operation preservation is essential."
+        },
+        {
+          "text": "For every power map on every nonabelian group.",
+          "correct": false,
+          "feedback": "A power map need not preserve multiplication there. Verify that it is a homomorphism before applying the argument."
+        }
+      ]
+    }
+  },
+  "N03": {
+    "intuition": "A nonzero integer ideal is determined by its smallest positive element. Division by that element leaves a remainder still in the ideal, so minimality forces every remainder to vanish. The zero ideal is generated by zero and is handled separately.",
+    "strategy": "Use least-positive-element division for classification, then interpret sums as combinations and intersections as common multiples.",
+    "hypotheses": [
+      "The ideals are ideals of \\(\\mathbb Z\\).",
+      "The zero ideal is handled separately.",
+      "Ideal generators are normalized to be nonnegative; zero gcd/lcm conventions are explicit."
+    ],
+    "proofSteps": [
+      {
+        "label": "Find the normalized generator",
+        "reason": "Ideal closure keeps the Euclidean remainder inside the ideal. Minimality forces it to zero, proving containment in the generated ideal; closure gives the reverse containment."
+      },
+      {
+        "label": "Interpret sums and intersections",
+        "reason": "Bézout identifies all combinations, while divisibility identifies all common multiples. The zero cases must retain these set descriptions rather than a positive-generator formula."
+      }
+    ],
+    "check": {
+      "prompt": "Which object is the kernel of reduction modulo \\(8\\)?",
+      "promptLabel": "Which object is the kernel of reduction modulo eight?",
+      "choices": [
+        {
+          "text": "The ideal \\(8\\mathbb Z\\), containing all integers that reduce to zero.",
+          "correct": true,
+          "feedback": "Correct. The kernel is a whole subset of the source ring.",
+          "label": "The ideal eight times the integers, containing all integers that reduce to zero."
+        },
+        {
+          "text": "The single quotient element \\([8]_8\\).",
+          "correct": false,
+          "feedback": "That element equals the zero class in the target. The kernel consists of source elements, not one target element.",
+          "label": "The single quotient element represented by eight modulo eight."
+        },
+        {
+          "text": "The ideal \\(\\mathbb Z\\).",
+          "correct": false,
+          "feedback": "Not every integer reduces to zero. For example, one does not lie in the kernel.",
+          "label": "The ideal consisting of all integers."
+        }
+      ]
+    }
+  },
+  "N04": {
+    "intuition": "Round a complex quotient to a nearby lattice point. The two coordinate errors bound the remainder norm by half the divisor norm, ensuring Euclid keeps decreasing.",
+    "strategy": "Choose a nearest Gaussian quotient, prove the norm bound, and preserve common divisors through repeated divisions.",
+    "hypotheses": [
+      "\\(\\alpha,\\beta\\in\\mathbb Z[i]\\) and \\(\\beta\\ne0\\).",
+      "Each coordinate is rounded within one half; ties allow multiple choices.",
+      "Nonzero Gaussian norms are positive integers."
+    ],
+    "proofSteps": [
+      {
+        "label": "Bound the remainder norm",
+        "reason": "Coordinate rounding controls the squared distance; norm multiplicativity scales this distance by the divisor norm. Both ingredients are needed for the strict decrease."
+      },
+      {
+        "label": "Run Euclid and trace combinations",
+        "reason": "The division equation preserves common divisors while positive integer norms decrease. Back substitution preserves Gaussian coefficients, giving Bézout and a gcd determined up to a unit."
+      }
+    ],
+    "check": {
+      "prompt": "Do rounding ties invalidate Gaussian Euclid?",
+      "choices": [
+        {
+          "text": "No. Every tied nearest choice still gives a remainder norm at most half the divisor norm.",
+          "correct": true,
+          "feedback": "Correct. The proof needs strict norm decrease, not a unique quotient."
+        },
+        {
+          "text": "Yes. Euclid requires a unique quotient at every step.",
+          "correct": false,
+          "feedback": "Different valid quotients may give associate gcd representatives. Common-divisor preservation and norm decrease suffice."
+        },
+        {
+          "text": "No, because any Gaussian quotient gives norm decrease.",
+          "correct": false,
+          "feedback": "Arbitrary quotient choices can make the remainder large. The coordinate-error bound is essential."
+        }
+      ]
+    }
+  },
+  "N05": {
+    "intuition": "Gaussian Euclid supplies the prime-divisor rule needed for unique factorization. Rational primes then separate into three cases according to which Gaussian norms can divide their squared norms.",
+    "strategy": "Derive irreducible-implies-prime from Bézout, factor by norm induction, and classify rational primes with modular square roots and Gaussian gcds.",
+    "hypotheses": [
+      "The ring is \\(\\mathbb Z[i]\\), where Euclidean gcd and Bézout have been proved.",
+      "Factorization excludes zero and units.",
+      "The rational-prime classification separates \\(2\\) from odd primes."
+    ],
+    "proofSteps": [
+      {
+        "label": "Build unique factorization",
+        "reason": "Bézout turns an irreducible’s coprimality with one factor into prime divisibility of the other. Norm induction supplies existence, and prime matching supplies uniqueness."
+      },
+      {
+        "label": "Handle ramification and inertia",
+        "reason": "The explicit factor at two has prime norm. For the other case, a nontrivial factorization would force norm equal to the rational prime, contradicting the negative-one square obstruction."
+      },
+      {
+        "label": "Construct the split factors",
+        "reason": "A modular root defines a quotient map detecting a nonunit Gaussian gcd. Its proper norm must equal the rational prime, yielding conjugate factors that cannot be associates at an odd prime."
+      }
+    ],
+    "check": {
+      "prompt": "Why does a rational prime \\(p\\equiv3\\pmod4\\) remain prime in \\(\\mathbb Z[i]\\)?",
+      "promptLabel": "Why does a rational prime p congruent to three modulo four remain prime in the Gaussian integers?",
+      "choices": [
+        {
+          "text": "A nontrivial factorization would force a Gaussian factor of norm \\(p\\), which is impossible; Gaussian irreducibles are prime.",
+          "correct": true,
+          "feedback": "Correct. Both the norm obstruction and the previously proved irreducible-to-prime bridge are required.",
+          "label": "A nontrivial factorization would force a Gaussian factor of norm p, which is impossible; Gaussian irreducibles are prime."
+        },
+        {
+          "text": "Its Gaussian norm \\(p^2\\) is a rational prime.",
+          "correct": false,
+          "feedback": "That norm is a prime square. Prime norm is not the reason these elements remain prime.",
+          "label": "Its Gaussian norm, p squared, is a rational prime."
+        },
+        {
+          "text": "Every rational prime remains prime in every larger ring.",
+          "correct": false,
+          "feedback": "The same lesson shows splitting and ramification. Primality depends on the coefficient ring."
+        }
+      ]
+    }
+  },
+  "N06": {
+    "intuition": "The minimal polynomial is the shortest monic rational relation satisfied by an algebraic number. Dividing any other relation by it leaves a shorter relation, which must vanish identically.",
+    "strategy": "Minimize degree, use polynomial division for the divisibility property, and use factor evaluation and monicity for irreducibility and uniqueness.",
+    "hypotheses": [
+      "\\(\\alpha\\) is algebraic over \\(\\mathbb Q\\).",
+      "Polynomial division takes place over the field \\(\\mathbb Q\\).",
+      "The minimal polynomial is monic and has positive degree."
+    ],
+    "proofSteps": [
+      {
+        "label": "Choose the least-degree relation",
+        "reason": "Algebraicity makes the degree set nonempty, while a nonzero constant cannot vanish. A rational leading coefficient can be divided out because the coefficient ring is a field."
+      },
+      {
+        "label": "Divide and test the remainder",
+        "reason": "Evaluating the division identity makes the smaller remainder vanish at the same number. Minimality forces that remainder to be zero; factor evaluation similarly rules out a positive-degree factorization."
+      },
+      {
+        "label": "Use monicity for uniqueness",
+        "reason": "Mutual divisibility makes two least-degree polynomials scalar multiples. Their normalized leading coefficients force the scalar to be one."
+      }
+    ],
+    "check": {
+      "prompt": "Why is \\(X^4-12X^2\\) not the minimal polynomial of \\(2\\sqrt3\\)?",
+      "promptLabel": "Why is capital X to the fourth power minus twelve times capital X squared not the minimal polynomial of two times the square root of three?",
+      "choices": [
+        {
+          "text": "It has the smaller annihilating factor \\(X^2-12\\).",
+          "correct": true,
+          "feedback": "Correct. Vanishing alone is insufficient; the least-degree monic relation is the irreducible quadratic.",
+          "label": "It has the smaller annihilating factor X squared minus twelve."
+        },
+        {
+          "text": "A minimal polynomial may not be monic.",
+          "correct": false,
+          "feedback": "Monicity is the normalization defining the unique minimal polynomial here."
+        },
+        {
+          "text": "An irrational number cannot satisfy a polynomial with integer coefficients.",
+          "correct": false,
+          "feedback": "Algebraic irrational numbers do satisfy such relations. Irrationality only excludes rational linear relations."
+        }
+      ]
+    }
+  },
+  "N07": {
+    "intuition": "Content separates the numerical common factor from the genuine polynomial factorization. Reduction modulo a prime can then expose impossible constant terms in a proposed rational factorization.",
+    "strategy": "Prove primitive products by reduction, clear rational scalars via content, constrain rational roots, and apply Eisenstein to a primitive normalization.",
+    "hypotheses": [
+      "The content lemma concerns nonzero primitive integer polynomials.",
+      "The rational-root test uses a reduced nonzero root \\(r/s\\) with \\(s>0\\).",
+      "Eisenstein requires positive degree, \\(p\\nmid a_n\\), \\(p\\mid a_j\\) for \\(j<n\\), and \\(p^2\\nmid a_0\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Keep primitive products primitive",
+        "reason": "A common prime divisor of all product coefficients would make two nonzero reduced polynomials multiply to zero in a polynomial domain."
+      },
+      {
+        "label": "Remove the rational scalars",
+        "reason": "Primitive coefficients force a reduced scalar’s denominator to divide a gcd of one, and its numerator to have absolute value one. This transfers the positive-degree factorization to integers."
+      },
+      {
+        "label": "Constrain a reduced root",
+        "reason": "Clearing denominator powers produces an integer identity. Coprimality then permits cancellation of those powers in the numerator and denominator divisibility conditions."
+      },
+      {
+        "label": "Contradict the constant valuation",
+        "reason": "First remove content, which is coprime to the Eisenstein prime. Nonvanishing leading terms preserve the factor degrees modulo that prime; both factors would then have constant terms divisible by it, contradicting the permitted constant valuation."
+      }
+    ],
+    "check": {
+      "prompt": "Why does \\(X^2+1\\) remain irreducible over \\(\\mathbb Q\\) despite failing the displayed Eisenstein test?",
+      "promptLabel": "Why does capital X squared plus one remain irreducible over the rational numbers despite failing the displayed Eisenstein test?",
+      "choices": [
+        {
+          "text": "A quadratic can be checked by rational roots, and it has none; Eisenstein is sufficient, not necessary.",
+          "correct": true,
+          "feedback": "Correct. Failure of one sufficient test leaves other arguments available."
+        },
+        {
+          "text": "Failure of Eisenstein proves reducibility.",
+          "correct": false,
+          "feedback": "A sufficient criterion gives a conclusion only when its hypotheses hold. Its failure says nothing by itself."
+        },
+        {
+          "text": "Every monic polynomial is irreducible.",
+          "correct": false,
+          "feedback": "Monicity is only a leading-coefficient condition. For example, \\(X^2-1\\) is monic and reducible."
+        }
+      ]
+    }
+  },
+  "N08": {
+    "intuition": "Integral quadratic numbers have integer trace and norm. In coordinates defined by a squarefree quadratic parameter, those conditions constrain the denominators to at most two and make parity decide the full integer ring.",
+    "strategy": "Use monic polynomial relations and Gauss’s lemma to obtain integer trace and norm, then use squarefreeness and parity to classify the coordinates.",
+    "hypotheses": [
+      "\\(d\\) is squarefree and \\(d\\ne0,1\\).",
+      "Algebraic integrality requires a monic polynomial with integer coefficients.",
+      "Rational elements are separated before the quadratic argument."
+    ],
+    "proofSteps": [
+      {
+        "label": "Exclude rational denominators",
+        "reason": "A monic equation for a reduced rational makes its denominator divide a coprime numerator power. Hence only ordinary integers survive."
+      },
+      {
+        "label": "Control quadratic denominators",
+        "reason": "Gauss’s lemma and monicity make the quadratic minimal polynomial integral. Its discriminant relation limits the coordinate denominator; squarefreeness removes every denominator beyond the factor two."
+      },
+      {
+        "label": "Resolve the parity lattice",
+        "reason": "Integer norm reduces to a congruence modulo four. Its permitted square classes determine either integer coordinates or a common half-integer parity; the same trace and norm conditions prove the converse."
+      }
+    ],
+    "check": {
+      "prompt": "Why is \\((1+\\sqrt5)/2\\) an algebraic integer outside \\(\\mathbb Z[\\sqrt5]\\)?",
+      "promptLabel": "Why is the sum of one and the square root of five, all divided by two, an algebraic integer outside the ring of integer combinations of one and the square root of five?",
+      "choices": [
+        {
+          "text": "It satisfies \\(X^2-X-1\\), but its \\(\\sqrt5\\)-coefficient is not an integer.",
+          "correct": true,
+          "feedback": "Correct. A monic integer relation proves integrality, while the coefficient excludes it from the smaller order.",
+          "label": "It satisfies the polynomial X squared minus X minus one, but its coefficient of the square root of five is not an integer."
+        },
+        {
+          "text": "Every quadratic number is an algebraic integer.",
+          "correct": false,
+          "feedback": "Algebraicity only supplies rational coefficients. A monic relation with integer coefficients is the additional requirement."
+        },
+        {
+          "text": "Every number with a denominator of two is nonintegral.",
+          "correct": false,
+          "feedback": "The quadratic parity lattice allows these half-integer coordinates when the squarefree parameter is one modulo four."
+        }
+      ]
+    }
+  },
+  "N09": {
+    "intuition": "Element norms can prevent factors from splitting yet still allow inequivalent products. A parity ideal captures divisibility structure that one generating element cannot express.",
+    "strategy": "Use norm obstructions for irreducibility, characterize the ideal as a quotient-map kernel, exclude a principal generator, and prove its square by both containments.",
+    "hypotheses": [
+      "The ring is \\(R=\\mathbb Z[t]\\) with \\(t^2=-5\\).",
+      "The norm is \\(a^2+5b^2\\), and the units are \\(\\pm1\\).",
+      "The ideal is \\(I=(2,1+t)\\); ideal equality requires both inclusions."
+    ],
+    "proofSteps": [
+      {
+        "label": "Separate irreducibility from primality",
+        "reason": "The missing small norms rule out all possible nonunit factors of the displayed elements. Their inequivalent product lists then show that irreducibility does not force the prime-divisor rule here."
+      },
+      {
+        "label": "Characterize the parity ideal",
+        "reason": "The quotient map preserves the relation defining the ring. A reverse expression for every element in its kernel proves the ideal description and its properness."
+      },
+      {
+        "label": "Exclude a principal generator",
+        "reason": "Any common generator must have norm dividing both displayed generator norms. The only possibilities are a unit, contradicting properness, or a norm that does not occur."
+      },
+      {
+        "label": "Prove both square containments",
+        "reason": "Divisibility of each product generator gives one inclusion; expressing the integer two as their combination gives the missing reverse inclusion by ideal closure."
+      }
+    ],
+    "check": {
+      "prompt": "Why is showing every generator of \\(I^2\\) divisible by \\(2\\) insufficient for \\(I^2=(2)\\)?",
+      "promptLabel": "Why is showing every generator of the ideal I squared divisible by two insufficient for the ideal I squared to equal the principal ideal generated by two?",
+      "choices": [
+        {
+          "text": "It proves only \\(I^2\\subseteq(2)\\); one must also show \\(2\\in I^2\\).",
+          "correct": true,
+          "feedback": "Correct. Containing two then gives all its multiples by ideal closure.",
+          "label": "It proves only that the product ideal I squared is contained in the principal ideal generated by two; one must also show that the element two belongs to the product ideal I squared."
+        },
+        {
+          "text": "It already proves equality because both sets are ideals.",
+          "correct": false,
+          "feedback": "One ideal can be a proper subideal of another. Ideal structure does not turn containment into equality."
+        },
+        {
+          "text": "It proves that \\(I\\) is principal.",
+          "correct": false,
+          "feedback": "The square of a nonprincipal ideal can be principal. The generator argument applies to \\(I^2\\), not \\(I\\).",
+          "label": "It proves that the ideal I is principal."
+        }
+      ]
+    }
+  },
+  "N10": {
+    "intuition": "A quotient turns membership in an ideal into zero. The quotient’s zero divisors and invertible classes therefore reveal whether the ideal is prime or maximal.",
+    "strategy": "Translate ideal conditions into quotient multiplication and inverses, then prove comaximal CRT using selectors and equality of product and intersection.",
+    "hypotheses": [
+      "\\(R\\) is a commutative ring with identity.",
+      "Prime and maximal ideals are proper.",
+      "The quotient-product formula requires \\(I+J=R\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Read the quotient structure",
+        "reason": "Nonzero quotient classes correspond to elements outside the ideal. A zero product translates exactly to primality, while adjoining one such element to a maximal ideal produces its inverse."
+      },
+      {
+        "label": "Construct comaximal selectors",
+        "reason": "A sum equal to one supplies selectors for requested quotient classes. The same identity converts every intersection element into a sum of ideal products, identifying the kernel with the product ideal."
+      }
+    ],
+    "check": {
+      "prompt": "When may \\(R/(IJ)\\) be identified with \\(R/I\\times R/J\\) by this theorem?",
+      "promptLabel": "When may the quotient of R by the product ideal I times J be identified with the Cartesian product of the quotient of R by I and the quotient of R by J by this theorem?",
+      "choices": [
+        {
+          "text": "When \\(I+J=R\\), giving selectors and \\(I\\cap J=IJ\\).",
+          "correct": true,
+          "feedback": "Correct. Comaximality supplies both surjectivity and the required kernel equality.",
+          "label": "When the sum of the ideals I and J equals the ring R, giving selectors and equality of their intersection with their product ideal."
+        },
+        {
+          "text": "Whenever \\(I\\) and \\(J\\) are distinct.",
+          "correct": false,
+          "feedback": "Distinctness does not make their sum the whole ring. Without comaximality the selectors may not exist.",
+          "label": "Whenever the ideals I and J are distinct."
+        },
+        {
+          "text": "Whenever \\(IJ\\subseteq I\\cap J\\).",
+          "correct": false,
+          "feedback": "That containment always holds here; the theorem needs equality and surjectivity, which use comaximality.",
+          "label": "Whenever the product ideal I J is contained in the intersection of the ideals I and J."
+        }
+      ]
+    }
+  },
+  "N12": {
+    "intuition": "A p-adic integer records mutually consistent residues at every prime-power level. A simple root selects one compatible next digit forever, rather than merely one finite approximation.",
+    "strategy": "Check coordinatewise ring operations and integer injection, then iterate the unique simple-root digit equation.",
+    "hypotheses": [
+      "\\(p\\) is a fixed prime.",
+      "Each residue sequence agrees under every reduction to the preceding level.",
+      "The root-lifting claim requires \\(f\\in\\mathbb Z[X]\\) and \\(f^{\\prime}(a_1)\\not\\equiv0\\pmod p\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Preserve every residue level",
+        "reason": "Reduction respects addition and multiplication, so the ring laws hold in every coordinate. An ordinary integer cannot vanish at all levels unless it is zero, proving the embedding injective."
+      },
+      {
+        "label": "Choose the compatible next digits",
+        "reason": "The derivative stays nonzero under compatible reduction, keeping each digit equation uniquely solvable. Induction establishes the whole infinite sequence and its uniqueness, beyond any displayed prefix."
+      }
+    ],
+    "check": {
+      "prompt": "Does a root at each of several finite levels alone prove the stated unique p-adic lift?",
+      "choices": [
+        {
+          "text": "No. The unique infinite lift here comes from compatibility and the simple-root induction.",
+          "correct": true,
+          "feedback": "Correct. A finite list is evidence for a prefix; the induction controls every future digit."
+        },
+        {
+          "text": "Yes. Any finite list of residues is a p-adic integer.",
+          "correct": false,
+          "feedback": "A p-adic integer requires infinitely many compatible levels. Arbitrary or incompatible prefixes do not meet the definition."
+        },
+        {
+          "text": "Yes. The real partial sums converge whenever the residue levels do.",
+          "correct": false,
+          "feedback": "Real convergence and agreement modulo higher prime powers are different notions. The displayed geometric sums grow in the real metric."
+        }
+      ]
+    }
+  },
+  "R01": {
+    "intuition": "Euclidean division reads a rational number as an integer plus the reciprocal of a smaller remainder problem. Termination gives its finite continued fraction.",
+    "strategy": "Use floor division on signed rationals, follow decreasing positive remainders, and impose the last-digit convention for uniqueness.",
+    "hypotheses": [
+      "The input is rational \\(A/B\\) with \\(B>0\\).",
+      "Later simple continued-fraction entries are positive integers.",
+      "Canonical noninteger expansions end in an entry at least two."
+    ],
+    "proofSteps": [
+      {
+        "label": "Start with signed floor division",
+        "reason": "The positive remainder convention makes the reciprocal tail positive even when the original numerator is negative."
+      },
+      {
+        "label": "Follow decreasing remainders",
+        "reason": "Each nonzero reciprocal corresponds to the next Euclidean division. Positive integer remainders cannot decrease indefinitely, so the expansion ends."
+      },
+      {
+        "label": "Fix the canonical endpoint",
+        "reason": "The last exact quotient exceeds one. Forced floors and reciprocal fractional parts then determine the entire canonical expansion uniquely."
+      },
+      {
+        "label": "Expose the trailing-one ambiguity",
+        "reason": "Splitting the final integer into one less followed by a reciprocal one changes the notation without changing the value. The canonical convention removes this ambiguity."
+      }
+    ],
+    "check": {
+      "prompt": "Why is \\([1;2,1,1]\\) not the canonical expansion of \\(7/5\\)?",
+      "promptLabel": "Why is the finite continued fraction with first entry one and subsequent entries two, one, one not the canonical expansion of seven divided by five?",
+      "choices": [
+        {
+          "text": "It ends in one; combining that final tail gives \\([1;2,2]\\).",
+          "correct": true,
+          "feedback": "Correct. Both values agree, but the canonical endpoint convention selects the latter.",
+          "label": "It ends in one; combining that final tail gives the continued fraction with initial entry one and later entries two and two."
+        },
+        {
+          "text": "It contains a later partial quotient equal to one.",
+          "correct": false,
+          "feedback": "Interior later entries may equal one. Only the final entry is restricted by the canonical convention."
+        },
+        {
+          "text": "It represents an irrational number.",
+          "correct": false,
+          "feedback": "Every finite simple continued fraction represents a rational number."
+        }
+      ]
+    }
+  },
+  "R02": {
+    "intuition": "Each continued-fraction digit contributes one matrix of determinant negative one. Their product records convergents and explains why consecutive fractions are linked by a determinant of absolute value one.",
+    "strategy": "Encode the recurrences by matrix products, evaluate the associated fractional-linear maps, and use the determinant for reducedness and an integer basis.",
+    "hypotheses": [
+      "\\(a_0\\in\\mathbb Z\\) and later entries are positive integers.",
+      "The numerator and denominator sequences use the stated initial values.",
+      "The basis conclusion uses determinant \\(\\pm1\\), not merely a nonzero determinant."
+    ],
+    "proofSteps": [
+      {
+        "label": "Encode the recurrence matrices",
+        "reason": "Right multiplication updates both columns by the same digit rule. This puts the numerator and denominator recurrences into one verifiable identity."
+      },
+      {
+        "label": "Evaluate the nested map",
+        "reason": "The product represents successive reciprocal steps. Its first-column ratio is obtained by a positive-infinity limit, linking the algebraic recurrence to the finite fraction."
+      },
+      {
+        "label": "Multiply the determinant signs",
+        "reason": "Every digit matrix contributes the same determinant sign, so its parity fixes the adjacent cross determinant."
+      },
+      {
+        "label": "Read the integer certificates",
+        "reason": "A common divisor must divide the unit determinant. The adjugate inverse then has integer coefficients, proving every integer vector has a unique integral expression."
+      }
+    ],
+    "check": {
+      "prompt": "What does an adjacent determinant of \\(\\pm1\\) prove?",
+      "promptLabel": "What does an adjacent determinant of plus or minus one prove?",
+      "choices": [
+        {
+          "text": "The convergent is reduced and the two columns form an integer basis.",
+          "correct": true,
+          "feedback": "Correct. The unit determinant proves both coprimality and integral invertibility."
+        },
+        {
+          "text": "Only that the columns are linearly independent over the rationals.",
+          "correct": false,
+          "feedback": "That follows from any nonzero determinant. Absolute value one gives the stronger integer-basis conclusion."
+        },
+        {
+          "text": "The two fractions are equal.",
+          "correct": false,
+          "feedback": "A zero cross determinant would mean equality. A unit determinant instead gives a nonzero exact separation."
+        }
+      ]
+    }
+  },
+  "R03": {
+    "intuition": "Even and odd convergents close in from opposite sides. Their determinant makes each gap small enough to shrink to one real point, while the exact tail formula prevents that point from being rational.",
+    "strategy": "Prove nested convergence from determinant gaps, derive the complete-tail error formula, and contradict a rational lower bound on nonzero differences.",
+    "hypotheses": [
+      "The continued fraction is infinite and simple, with positive later integer entries.",
+      "Real completeness is used for nested interval convergence.",
+      "The denominator sequences are positive and tend to infinity."
+    ],
+    "proofSteps": [
+      {
+        "label": "Establish denominator growth",
+        "reason": "Positive later entries force eventual strict growth; the determinant then fixes the sign and exact size of adjacent convergent gaps."
+      },
+      {
+        "label": "Shrink the nested brackets",
+        "reason": "The same-sign two-step motion makes the parity subsequences monotone. Vanishing adjacent gaps and completeness force a common unique limit."
+      },
+      {
+        "label": "Insert the complete tail",
+        "reason": "The convergence argument applies to each shifted tail. Passing through the finite fractional-linear map relates the full limit to its convergent columns."
+      },
+      {
+        "label": "Obtain the strict error",
+        "reason": "The determinant leaves a nonzero numerator in the error formula. A tail strictly above its first digit makes the denominator larger than the next convergent denominator."
+      },
+      {
+        "label": "Exclude a rational limit",
+        "reason": "Distinct rationals have an integer cross difference of magnitude at least one. A sufficiently large next denominator makes the proved upper bound smaller than that rational lower bound."
+      }
+    ],
+    "check": {
+      "prompt": "Which input is covered by the irrational-limit theorem?",
+      "choices": [
+        {
+          "text": "An infinite simple continued fraction with positive later integer entries.",
+          "correct": true,
+          "feedback": "Correct. Infinitely many valid reciprocal steps yield growing denominators and strict bracketing."
+        },
+        {
+          "text": "A finite simple continued fraction.",
+          "correct": false,
+          "feedback": "A finite continued fraction represents a rational number; it has no infinite denominator growth."
+        },
+        {
+          "text": "Any nested intervals, even without widths tending to zero.",
+          "correct": false,
+          "feedback": "Nestedness alone may leave an entire interval. Shrinking widths are needed for a unique point."
+        }
+      ]
+    }
+  },
+  "X07": {
+    "intuition": "Neighboring fractions leave little room for a smaller-denominator rational because their cross gaps are positive integers. Separately, pigeonhole forces a bounded-denominator approximation to any real number.",
+    "strategy": "Use determinant-one gap identities for Farey interiors, and place fractional parts into finitely many equal boxes for Dirichlet approximation.",
+    "hypotheses": [
+      "The endpoints are reduced, ordered, have positive denominators, and satisfy \\(bc-ad=1\\).",
+      "The interior fraction lies strictly between the endpoints.",
+      "The approximation budget \\(Q\\ge1\\) is an integer."
+    ],
+    "proofSteps": [
+      {
+        "label": "Bound the interior denominator",
+        "reason": "The two strict rational gaps give positive integer cross differences. The determinant-one identity expresses the denominator as their positive weighted sum, while the mediant attains that bound."
+      },
+      {
+        "label": "Find a close fractional pair",
+        "reason": "There are more fractional parts than boxes. Two in one half-open box differ by strictly less than its width; their index difference supplies a positive denominator within budget."
+      }
+    ],
+    "check": {
+      "prompt": "Why must the Farey denominator bound assume \\(bc-ad=1\\)?",
+      "promptLabel": "Why must the Farey denominator bound assume b times c minus a times d equals one?",
+      "choices": [
+        {
+          "text": "The unit determinant gives the exact identity expressing the interior denominator as two weighted integer gaps.",
+          "correct": true,
+          "feedback": "Correct. A general nonzero determinant changes that identity and does not give this bound."
+        },
+        {
+          "text": "Any distinct rational endpoints have this determinant.",
+          "correct": false,
+          "feedback": "Distinctness only makes the cross determinant nonzero. Its magnitude may be larger than one."
+        },
+        {
+          "text": "The determinant condition merely makes the mediant positive.",
+          "correct": false,
+          "feedback": "The theorem does not require positive numerators. It uses positive denominators, strict order, and the exact determinant."
+        }
+      ]
+    }
+  },
+  "R04": {
+    "intuition": "Consecutive convergents form an integer coordinate system. A competing small denominator forces opposite coordinate signs, preventing the cancellation that could improve the second-kind error.",
+    "strategy": "Use an adjacent integer basis for the best-error result, then use the two finite continued-fraction forms of a reduced rational to prove Legendre’s sufficient criterion.",
+    "hypotheses": [
+      "\\(\\xi\\) is irrational.",
+      "The second-kind comparison requires \\(0<b<q_{n+1}\\).",
+      "Legendre’s criterion requires a reduced rational with \\(b>0\\) and strict error below \\(1/(2b^2)\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Compare adjacent signed errors",
+        "reason": "The complete-tail identity links neighboring errors by a positive factor greater than one and opposite signs."
+      },
+      {
+        "label": "Restrict competing basis coefficients",
+        "reason": "The denominator budget excludes same-sign nonzero basis coefficients. Opposite coefficients combine opposite convergent errors with the same sign, making their magnitude strictly worse."
+      },
+      {
+        "label": "Choose the rational-side neighbor",
+        "reason": "The two finite expansions of a reduced rational provide neighbors on opposite sides. The strict error places the irrational between the candidate and the neighbor on its side."
+      },
+      {
+        "label": "Append a valid irrational tail",
+        "reason": "The error bound forces the appended tail above one, giving valid positive later digits and making the rational a convergent. Denominator one needs a direct floor check instead."
+      }
+    ],
+    "check": {
+      "prompt": "Which comparison is guaranteed for the convergent \\(7/5\\) of \\(\\sqrt2\\), whose next denominator is \\(12\\)?",
+      "promptLabel": "Which comparison is guaranteed for the convergent seven divided by five of the square root of two, whose next denominator is twelve?",
+      "choices": [
+        {
+          "text": "It uniquely minimizes \\(|b\\sqrt2-a|\\) among integer pairs with \\(0<b<12\\).",
+          "correct": true,
+          "feedback": "Correct. This is the stated second-kind error and the strict denominator range.",
+          "label": "It uniquely minimizes the absolute value of b times the square root of two minus a among integer pairs a and b with b strictly between zero and twelve."
+        },
+        {
+          "text": "It beats every rational with denominator at most \\(12\\) in ordinary absolute error.",
+          "correct": false,
+          "feedback": "This changes both the error measure and the strict endpoint. The next convergent itself is excluded from the theorem’s range.",
+          "label": "It beats every rational with denominator at most twelve in ordinary absolute error."
+        },
+        {
+          "text": "Every convergent must satisfy the strict Legendre inequality.",
+          "correct": false,
+          "feedback": "The criterion is sufficient for recognizing a convergent, not a necessary condition for every convergent."
+        }
+      ]
+    }
+  },
+  "R05": {
+    "intuition": "Exact quadratic complete quotients eventually enter a bounded region together with their conjugates. Integer state coordinates then have only finitely many possibilities, so deterministic evolution must repeat.",
+    "strategy": "Preserve integral quadratic states, prove eventual conjugate reduction, use finite-state repetition, and distinguish eventual cycles from cycles beginning immediately.",
+    "hypotheses": [
+      "The input is a real quadratic irrational, or an irrational with an eventually periodic simple continued fraction.",
+      "For square-root states, \\(D\\) is a positive nonsquare integer.",
+      "Pure periodicity requires \\(\\xi>1\\) and \\(-1<\\xi^{\\prime}<0\\)."
+    ],
+    "proofSteps": [
+      {
+        "label": "Preserve square-root states",
+        "reason": "The divisibility invariant makes the next denominator integral; floor bounds keep its norm expression positive. Bounded integer coordinates then make repetition possible."
+      },
+      {
+        "label": "Preserve general quadratic states",
+        "reason": "The quadratic discriminant representation extends the same rationalized recurrence beyond square roots. Nonsquareness prevents zero denominators."
+      },
+      {
+        "label": "Reduce the conjugate orbit",
+        "reason": "If the conjugate never separates from the original floor sequence, both numbers would have the same infinite expansion. Distinct conjugates rule this out, forcing eventual entry into the preserved negative interval."
+      },
+      {
+        "label": "Bound the reduced states",
+        "reason": "The real and conjugate inequalities bound both integer coordinates and fix the denominator sign. A deterministic map on this finite state set eventually repeats."
+      },
+      {
+        "label": "Read a periodic fixed point",
+        "reason": "A repeating digit block fixes its tail under an integral fractional-linear transformation. Its nonzero quadratic equation and the irrational hypothesis force degree exactly two."
+      },
+      {
+        "label": "Prove pure periodicity necessary",
+        "reason": "The period matrix has signs and inequalities locating its second fixed point between negative one and zero. That fixed point is the quadratic conjugate."
+      },
+      {
+        "label": "Prove pure periodicity sufficient",
+        "reason": "Reduction is preserved, and the conjugate interval uniquely determines a predecessor digit. This injectivity excludes a transient prefix in the finite orbit."
+      }
+    ],
+    "check": {
+      "prompt": "Why is \\(\\sqrt2=[1;\\overline2]\\) eventually periodic but not purely periodic?",
+      "promptLabel": "Why is the square root of two, equal to the continued fraction with first entry one and repeating subsequent entry two, eventually periodic but not purely periodic?",
+      "choices": [
+        {
+          "text": "Its conjugate is below \\(-1\\), so it fails the reduced-conjugate criterion at the initial state.",
+          "correct": true,
+          "feedback": "Correct. A periodic tail need not start at the first digit.",
+          "label": "Its conjugate is less than negative one, so it fails the reduced-conjugate criterion at the initial state."
+        },
+        {
+          "text": "A quadratic irrational can never be purely periodic.",
+          "correct": false,
+          "feedback": "For example, \\(1+\\sqrt2\\) meets the criterion and has a purely periodic expansion."
+        },
+        {
+          "text": "The number \\(2\\) is not squarefree.",
+          "correct": false,
+          "feedback": "It is squarefree, and squarefreeness is not required for this periodicity theorem. The conjugate interval distinguishes pure periodicity.",
+          "label": "The number two is not squarefree."
+        }
+      ]
+    }
+  },
+  "R06": {
+    "intuition": "The norm of a square-root convergent records its next exact state denominator. Norm one appears precisely at the correct parity of a period return, and approximation makes every positive Pell solution obey that same rule.",
+    "strategy": "Derive the convergent norm identity, locate denominator-one states in the period, and use Legendre’s criterion to prove the first positive candidate is fundamental.",
+    "hypotheses": [
+      "\\(D\\) is a positive nonsquare integer.",
+      "The period \\(L\\) is the least period of the square-root tail, with the stated convergent indexing.",
+      "Positive Pell solutions have both coordinates positive."
+    ],
+    "proofSteps": [
+      {
+        "label": "Derive the exact norm identity",
+        "reason": "The tail identity and adjacent determinant express opposite conjugate factors with a shared denominator. Multiplying them isolates the next state denominator as the convergent norm."
+      },
+      {
+        "label": "Locate a denominator-one state",
+        "reason": "The first complete quotient is reduced, so its period begins immediately. Matching the conjugated return identity forces a denominator-one state at the period boundary."
+      },
+      {
+        "label": "Identify all such returns",
+        "reason": "Reduction makes the integer state with denominator one unique. Deterministic minimal-period cycling therefore places it exactly at positive multiples of the period."
+      },
+      {
+        "label": "Choose the positive norm parity",
+        "reason": "The norm sign depends on the return-index parity. The first even return is one period for even period length and two periods for odd length."
+      },
+      {
+        "label": "Prove fundamental minimality",
+        "reason": "Every positive solution gives a reduced rational satisfying the strict approximation criterion, hence a convergent. Its norm then forces one of the same admissible returns; increasing candidate denominators select the least solution."
+      }
+    ],
+    "check": {
+      "prompt": "When the period length is odd, which convergent gives the fundamental positive Pell solution?",
+      "choices": [
+        {
+          "text": "\\(p_{2L-1}/q_{2L-1}\\)",
+          "correct": true,
+          "feedback": "Correct. The first period return has negative norm; the second has positive norm one.",
+          "label": "The convergent with numerator p subscript two L minus one and denominator q subscript two L minus one."
+        },
+        {
+          "text": "\\(p_{L-1}/q_{L-1}\\)",
+          "correct": false,
+          "feedback": "At an odd period return the norm is negative one. It solves the negative Pell equation instead.",
+          "label": "The convergent with numerator p subscript L minus one and denominator q subscript L minus one."
+        },
+        {
+          "text": "The first point found in a bounded plot.",
+          "correct": false,
+          "feedback": "A plot can omit the fundamental solution entirely. Its existence and minimality follow from the period and approximation proof."
+        }
+      ]
+    }
+  },
+  "R07": {
+    "intuition": "Multiplication preserves norm one, so powers generate solutions. Completeness comes from shrinking any positive solution into the interval below the fundamental unit, where no smaller positive solution is allowed.",
+    "strategy": "Generate powers by norm multiplication, reduce an arbitrary solution by a power of the fundamental unit, then classify signs and reciprocals.",
+    "hypotheses": [
+      "\\(D\\) is a positive nonsquare integer.",
+      "\\(\\varepsilon=x_1+y_1\\sqrt D\\) is the fundamental positive norm-one solution from R06.",
+      "Positive-coordinate solutions are separated from positive-real reciprocals and signed solutions."
+    ],
+    "proofSteps": [
+      {
+        "label": "Generate the positive powers",
+        "reason": "Integral coordinate multiplication and norm multiplicativity preserve the equation; positive coefficients keep both coordinates positive."
+      },
+      {
+        "label": "Reduce below the fundamental unit",
+        "reason": "An integral norm-one inverse allows scaling any solution into the bounded interval. The second coordinate increases with its positive-real value, contradicting fundamental minimality unless the reduced element is one."
+      },
+      {
+        "label": "Recover signs and reciprocals",
+        "reason": "A positive-real norm-one element has positive first coordinate, while comparison with one determines the second coordinate’s sign. Inversion and overall negation exhaust the remaining integer cases."
+      }
+    ],
+    "check": {
+      "prompt": "Which set is the positive-real norm-one subgroup for \\(D=2\\)?",
+      "promptLabel": "Which set is the positive-real norm-one subgroup for D equal to two?",
+      "choices": [
+        {
+          "text": "\\(\\{(3+2\\sqrt2)^k:k\\in\\mathbb Z\\}\\)",
+          "correct": true,
+          "feedback": "Correct. Negative powers remain positive as real numbers, but have negative second coordinate.",
+          "label": "The set of powers of the quantity three plus two times the square root of two, with exponent k ranging over every integer."
+        },
+        {
+          "text": "Only the powers with \\(k\\ge1\\).",
+          "correct": false,
+          "feedback": "Those give positive-coordinate solutions, not a subgroup: the identity and inverses are missing.",
+          "label": "Only the powers with exponent k greater than or equal to one."
+        },
+        {
+          "text": "The powers of \\(1+\\sqrt2\\) with all integer exponents.",
+          "correct": false,
+          "feedback": "Odd powers have norm negative one. They do not lie in the norm-one subgroup.",
+          "label": "The powers of one plus the square root of two with all integer exponents."
+        }
+      ]
+    }
+  },
+  "R08": {
+    "intuition": "Negative Pell solutions can occur only when a denominator-one state return has odd index. That is possible exactly when the square-root period is odd.",
+    "strategy": "Locate denominator-one states, force any negative-norm solution to be a convergent by approximation, and read the period parity from the norm identity.",
+    "hypotheses": [
+      "\\(D\\) is a positive nonsquare integer.",
+      "\\(L\\) is the least square-root period.",
+      "The equation has norm negative one; positive-Pell solvability is a different assertion."
+    ],
+    "proofSteps": [
+      {
+        "label": "Locate the denominator-one returns",
+        "reason": "Reduction makes a denominator-one state unique, and the minimal state period determines exactly when it recurs."
+      },
+      {
+        "label": "Force negative solutions into convergents",
+        "reason": "Absolute values give positive coordinates and the norm gives reducedness. The strict approximation bound then places the ratio among convergents, whose norm identity requires an odd period return."
+      },
+      {
+        "label": "Read the converse parity",
+        "reason": "An odd first return gives an explicit negative-norm solution. An even period has no odd return, so the earlier convergent restriction rules out all integer solutions."
+      }
+    ],
+    "check": {
+      "prompt": "Does a positive solution of \\(x^2-3y^2=1\\) imply a solution of \\(x^2-3y^2=-1\\)?",
+      "promptLabel": "Does a positive solution of x squared minus three times y squared equals one imply a solution of x squared minus three times y squared equals negative one?",
+      "choices": [
+        {
+          "text": "No. The square-root period is even, and the negative equation already fails modulo \\(3\\).",
+          "correct": true,
+          "feedback": "Correct. Positive and negative norm equations have different solvability criteria.",
+          "label": "No. The square-root period is even, and the negative equation already fails modulo three."
+        },
+        {
+          "text": "Yes. Negating both coordinates changes the norm sign.",
+          "correct": false,
+          "feedback": "Both coordinates are squared, so simultaneous negation leaves the norm unchanged."
+        },
+        {
+          "text": "Yes. Every nonsquare parameter has both positive and negative Pell solutions.",
+          "correct": false,
+          "feedback": "Positive Pell is always solvable here; negative Pell requires an odd period."
+        }
+      ]
+    }
+  },
+  "N11": {
+    "intuition": "A quadratic-order unit must multiply its conjugate to an integer unit. Thus the norm is either positive or negative one, and the chosen coefficient lattice determines which units are included.",
+    "strategy": "Use integral norm multiplicativity to characterize units, then compare the integer-coordinate order with the full quadratic integer ring.",
+    "hypotheses": [
+      "\\(d>1\\) is squarefree.",
+      "The chosen order is \\(O=\\mathbb Z[\\sqrt d]\\).",
+      "Norm-one units form a subgroup distinct from all units; the full ring of integers may be larger."
+    ],
+    "proofSteps": [
+      {
+        "label": "Characterize units by their norms",
+        "reason": "An inverse inside the order forces the integer norm to divide one. Conversely, a norm of either sign supplies an integral conjugate inverse."
+      },
+      {
+        "label": "Compare the two norm roles",
+        "reason": "Squaring the displayed negative-norm unit produces a positive-norm unit, but does not prove a general classification in every quadratic ring. R07 applies to its specified integer-coordinate order."
+      }
+    ],
+    "check": {
+      "prompt": "Can the integer-coordinate Pell classification alone list every unit of the full integer ring of \\(\\mathbb Q(\\sqrt5)\\)?",
+      "promptLabel": "Can the integer-coordinate Pell classification alone list every unit of the full integer ring of the rational field adjoining the square root of five?",
+      "choices": [
+        {
+          "text": "No. The full ring also contains the half-integer unit \\((1+\\sqrt5)/2\\).",
+          "correct": true,
+          "feedback": "Correct. The chosen order is smaller, so its coefficient restrictions exclude that unit.",
+          "label": "No. The full ring also contains the half-integer unit one plus the square root of five, all divided by two."
+        },
+        {
+          "text": "Yes. A field has only one possible integer coefficient lattice.",
+          "correct": false,
+          "feedback": "The order and maximal integer ring can differ. Their unit sets must be identified in the stated ring."
+        },
+        {
+          "text": "No. Negative-norm elements can never be units.",
+          "correct": false,
+          "feedback": "Norm negative one also supplies an integral inverse. It excludes an element only from the norm-one subgroup."
+        }
+      ]
+    }
+  },
+  "E01": {
+    "intuition": "In a primitive right triangle, the difference-of-squares factorization produces two coprime positive factors whose product is a square. They must individually be squares, revealing the parameters.",
+    "strategy": "Use parity and coprimality, split the two half-sum factors into squares, prove the converse primitive condition, and normalize arbitrary triples by their gcd.",
+    "hypotheses": [
+      "Triples have positive integer coordinates.",
+      "Primitive means \\(\\gcd(x,y,z)=1\\); legs may be swapped.",
+      "The parameter pair satisfies \\(u>v>0\\), is coprime, and has opposite parity."
+    ],
+    "proofSteps": [
+      {
+        "label": "Fix the primitive parity",
+        "reason": "A shared prime divisor or two odd legs contradicts primitivity or square residues. This fixes one odd leg and one even leg and permits the half-sum construction."
+      },
+      {
+        "label": "Split the coprime square factors",
+        "reason": "Any prime shared by the half-sums would divide the odd leg and hypotenuse. With coprimality established, unique factorization forces both half-sums to be squares."
+      },
+      {
+        "label": "Verify every permitted parameter pair",
+        "reason": "The polynomial identity proves the equation, while coprimality rules out a shared odd prime and opposite parity rules out a shared factor two."
+      },
+      {
+        "label": "Normalize and recover uniqueness",
+        "reason": "Dividing by the common gcd gives one primitive core. The fixed odd-leg convention then recovers the positive parameter squares uniquely from the half-sums."
+      }
+    ],
+    "check": {
+      "prompt": "Why do \\(u=3,v=1\\) fail to give a primitive triple?",
+      "promptLabel": "Why do u equal to three and v equal to one fail to give a primitive triple?",
+      "choices": [
+        {
+          "text": "They have the same parity, so all three output coordinates are even.",
+          "correct": true,
+          "feedback": "Correct. Coprimality alone is insufficient; opposite parity is also required."
+        },
+        {
+          "text": "The resulting coordinates fail the Pythagorean identity.",
+          "correct": false,
+          "feedback": "The identity still holds, giving \\((8,6,10)\\). The failure concerns primitivity."
+        },
+        {
+          "text": "A parameter equal to one is forbidden.",
+          "correct": false,
+          "feedback": "One is an allowed positive smaller parameter. Its parity relative to the other parameter matters."
+        }
+      ]
+    }
+  },
+  "X06": {
+    "intuition": "A hypothetical square-area triangle would force four coprime arithmetic factors to be squares. Their sum-and-difference identities create another square-area triangle with a smaller hypotenuse.",
+    "strategy": "Choose a least counterexample, reduce to primitive parameters, extract coprime square factors, and construct a valid smaller triangle.",
+    "hypotheses": [
+      "All triangle coordinates and the square-area root are positive integers.",
+      "The descent measure is the positive hypotenuse.",
+      "Every new object must retain integrality, positivity, the right-triangle identity, and square area."
+    ],
+    "proofSteps": [
+      {
+        "label": "Reduce the least counterexample",
+        "reason": "Dividing by the common gcd \\(g\\) preserves an integer right triangle. Prime exponents give \\(g\\mid h\\) for the original square-area root \\(h\\), so the new area is the integer square \\((h/g)^2\\). Minimality therefore forces primitivity."
+      },
+      {
+        "label": "Extract the coprime squares",
+        "reason": "Primitive parameters make the four area factors pairwise coprime. A square product then forces each factor to have even prime exponents."
+      },
+      {
+        "label": "Construct the smaller triangle",
+        "reason": "Parity makes the half-sums integral and the new area root integral. The sum-and-difference identities preserve both the Pythagorean equation and square area."
+      },
+      {
+        "label": "Decrease the chosen measure",
+        "reason": "The new hypotenuse is strictly smaller than the original positive hypotenuse. Since every original hypothesis survives, this contradicts the least-counterexample choice."
+      }
+    ],
+    "check": {
+      "prompt": "What completes an infinite descent after a smaller expression has been found?",
+      "choices": [
+        {
+          "text": "Prove it defines another valid positive integer counterexample with a strictly smaller chosen measure.",
+          "correct": true,
+          "feedback": "Correct. Decrease alone does not establish descent unless every defining condition survives."
+        },
+        {
+          "text": "Only compare the two expressions numerically.",
+          "correct": false,
+          "feedback": "A smaller number may fail integrality, positivity, or the original equation. Such an object is not a counterexample."
+        },
+        {
+          "text": "Check a few ordinary triangles have nonsquare area.",
+          "correct": false,
+          "feedback": "A finite sample cannot eliminate every possible counterexample. The valid smaller-counterexample construction does."
+        }
+      ]
+    }
+  }
+}

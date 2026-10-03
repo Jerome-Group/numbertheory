@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { LabHeader } from './GroupLabHeader';
+import { MathText } from './MathText';
 import type {
   ArithmeticFunction,
   DivisorIncidenceStudy,
 } from './math/group-labs';
 import { buildDivisorIncidenceStudy } from './math/group-labs';
-import { MathText } from './MathText';
-import { LabHeader } from './GroupLabHeader';
 import './GroupLabs.css';
 
 const functionLabels: Record<ArithmeticFunction, string> = {
@@ -492,7 +492,9 @@ function DivisorTermsTable({
 }) {
   return (
     <div className="group-lab__table-wrap">
-      <table>
+      <table
+        aria-label={`${inversion ? 'Divisor terms for Möbius inversion' : 'Complementary-divisor summands'} at n equals ${result.n}`}
+      >
         <caption>
           {inversion ? (
             <>
@@ -509,34 +511,40 @@ function DivisorTermsTable({
         <thead>
           {inversion ? (
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Divisor d">
                 <MathText text={'\\(d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Complementary divisor n divided by d">
                 <MathText text={'\\(n/d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Möbius function at d">
                 <MathText text={'\\(\\mu(d)\\)'} />
               </th>
-              <th scope="col">
+              <th
+                scope="col"
+                aria-label="Capital F evaluated at n divided by d"
+              >
                 <MathText text={'\\(F(n/d)\\)'} />
               </th>
-              <th scope="col">
+              <th
+                scope="col"
+                aria-label="Möbius function at d times capital F evaluated at n divided by d"
+              >
                 <MathText text={'\\(\\mu(d)F(n/d)\\)'} />
               </th>
             </tr>
           ) : (
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Divisor d">
                 <MathText text={'\\(d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Complementary divisor n divided by d">
                 <MathText text={'\\(n/d\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="f evaluated at d">
                 <MathText text={'\\(f(d)\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="g evaluated at n divided by d">
                 <MathText text={'\\(g(n/d)\\)'} />
               </th>
               <th scope="col">Product</th>

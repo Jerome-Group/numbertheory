@@ -91,7 +91,7 @@
       "C02",
       "D05"
     ],
-    "summary": "In a prime modulus, inversion pairs every nonzero residue except the self-inverse classes. Those two classes multiply to \\(-1\\), giving Wilson’s congruence. Conversely, any composite modulus has a proper prime divisor that contradicts the same factorial congruence.",
+    "summary": "In an odd prime modulus, inversion pairs every nonzero residue except the two self-inverse classes. Those classes multiply to \\(-1\\), giving Wilson’s congruence. The prime \\(2\\) is checked separately. Conversely, any composite modulus has a proper prime divisor that contradicts the same factorial congruence.",
     "definition": [
       "A nonzero class modulo a prime \\(p\\) has a multiplicative inverse. A class is self-inverse when it equals its own inverse, equivalently when \\(x^2\\equiv1\\pmod p\\).",
       "For an integer \\(n>1\\), the factorial \\((n-1)!\\) is the product \\(1\\cdot2\\cdots(n-1)\\). Wilson’s congruence is the assertion \\((n-1)!\\equiv-1\\pmod n\\)."
@@ -140,8 +140,8 @@
     ],
     "theorem": "For \\(a\\in\\mathbb Z\\), \\(e\\ge0\\), and \\(n\\ge1\\), repeated squaring returns the unique residue \\(r\\) with \\(0\\le r<n\\) and \\(r\\equiv a^e\\pmod n\\). For distinct primes \\(p,q\\), \\(N=pq\\), and positive \\(e,d\\) satisfying \\(ed\\equiv1\\pmod{(p-1)(q-1)}\\), every integer message \\(m\\) satisfies \\((m^e)^d\\equiv m\\pmod N\\).",
     "proof": [
-      "For repeated squaring, after reading a prefix of the binary digits, let \\(s\\) be the integer represented by that prefix and let \\(r\\) be the current residue. Maintain the invariant \\(r\\equiv a^s\\pmod n\\). Initially the prefix is empty, so \\(s=0\\) and \\(r=1\\), and the invariant holds.",
-      "If the next bit is \\(b\\in\\{0,1\\}\\), the new prefix represents \\(2s+b\\). The algorithm replaces \\(r\\) by \\(r^2a^b\\pmod n\\), which is congruent to \\((a^s)^2a^b=a^{2s+b}\\pmod n\\). Thus the invariant is preserved. After the final bit, \\(s=e\\), proving that the returned residue is \\(a^e\\pmod n\\).",
+      "For repeated squaring, after reading a prefix of the binary digits, let \\(s\\) be the integer represented by that prefix and let \\(r\\) be the current canonical residue, with \\(0\\le r<n\\). Maintain the invariant \\(r\\equiv a^s\\pmod n\\). Initially the prefix is empty, so \\(s=0\\); choose \\(r\\) as the canonical residue of \\(1\\pmod n\\). It is \\(1\\) for \\(n>1\\) and \\(0\\) for \\(n=1\\). The invariant holds, including exponent zero.",
+      "If the next bit is \\(b\\in\\{0,1\\}\\), the new prefix represents \\(2s+b\\). Replace \\(r\\) by the canonical residue of \\(r^2a^b\\pmod n\\), which is congruent to \\((a^s)^2a^b=a^{2s+b}\\pmod n\\). Thus both the power invariant and the canonical range are preserved. After the final bit, \\(s=e\\), proving the returned residue is the unique canonical representative of \\(a^e\\pmod n\\). If \\(e=0\\), no update is needed: the initialized residue already gives the answer.",
       "For decryption, write \\(ed=1+t(p-1)(q-1)\\) for an integer \\(t\\ge0\\); the exponent relation follows from the choice of \\(d\\), and \\(ed\\ge1\\). Consider the result modulo \\(p\\). If \\(p\\mid m\\), then both \\(m^{ed}\\) and \\(m\\) are congruent to \\(0\\pmod p\\). If \\(p\\nmid m\\), Fermat’s theorem gives \\(m^{p-1}\\equiv1\\pmod p\\); since \\(p-1\\mid(ed-1)\\), write \\(ed=1+j(p-1)\\) and obtain \\(m^{ed}=m(m^{p-1})^j\\equiv m\\pmod p\\).",
       "The same two-case argument modulo \\(q\\) proves \\(m^{ed}\\equiv m\\pmod q\\). The primes \\(p,q\\) are distinct, hence coprime. A number divisible by both is divisible by \\(pq=N\\), so the two congruences combine to \\(m^{ed}\\equiv m\\pmod N\\). Since \\((m^e)^d=m^{ed}\\), this is the claimed decryption identity."
     ],
@@ -330,7 +330,7 @@
         "Associativity identifies the terms with triples \\((a,b,c)\\) satisfying \\(abc=4\\).",
         "Use the factorizations with one factor \\(4\\) or with two factors \\(2\\)."
       ],
-      "answer": "The value is \\(\\sum_{abc=4}\\mathbf 1(a)\\mathbf 1(b)\\mathbf 1(c)\\). The ordered triples are \\((4,1,1),(1,4,1),(1,1,4),(2,2,1),(2,1,2),(1,2,2)\\). There are six, and every summand equals \\(1\\), so the convolution value is \\(6\\)."
+      "answer": "The value is \\(\\sum_{abc=4}\\mathbf 1(a)\\mathbf 1(b)\\mathbf 1(c)\\). The ordered triples are \\((4,1,1)\\), \\((1,4,1)\\), \\((1,1,4)\\), \\((2,2,1)\\), \\((2,1,2)\\), and \\((1,2,2)\\). There are six, and every summand equals \\(1\\), so the convolution value is \\(6\\)."
     },
     "caution": "The symbol \\(\\ast\\) means a divisor sum here; it is not pointwise multiplication. Also keep \\(\\varepsilon\\) distinct from the constant-one function \\(\\mathbf 1\\).",
     "bridge": "Arithmetic functions form a commutative algebra under pointwise addition and Dirichlet convolution. In this elementary setting every operation is defined by a finite sum; no infinite series or analytic convergence is involved.",

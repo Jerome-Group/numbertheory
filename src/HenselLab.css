@@ -26,6 +26,10 @@
 .hensel-lab p {
   line-height: 1.65;
 }
+.hensel-lab button,
+.hensel-lab summary {
+  scroll-margin-top: 160px;
+}
 .hensel-lab__controls {
   display: flex;
   align-items: end;
@@ -102,8 +106,8 @@
   border: 0;
   min-width: 0;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  overflow-x: auto;
   padding: 8px 0 16px;
 }
 .hensel-lab__level {

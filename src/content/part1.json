@@ -5,7 +5,8 @@
     "cluster": "Divisibility",
     "question": "Why does a prime dividing a product have to divide a factor?",
     "prerequisites": [
-      "D03"
+      "D03",
+      "P02"
     ],
     "summary": "Bézout’s identity gives the prime-divisor rule. That rule makes prime factorizations unique.",
     "definition": [
@@ -48,7 +49,7 @@
     "prerequisites": [
       "D05"
     ],
-    "summary": "Prime exponents turn products into sums, divisibility into inequalities, gcd into minima, and lcm into maxima.",
+    "summary": "For positive integers, prime exponents turn products into sums, divisibility into inequalities, gcd into minima, and lcm into maxima.",
     "definition": [
       "For a prime \\(p\\) and nonzero integer \\(n\\), \\(v_p(n)\\) is the exponent of \\(p\\) in the factorization of \\(|n|\\). It is a finite nonnegative integer.",
       "For positive integers \\(a,b\\), \\(\\gcd(a,b)\\) is their greatest positive common divisor and \\(\\operatorname{lcm}(a,b)\\) their least positive common multiple.",

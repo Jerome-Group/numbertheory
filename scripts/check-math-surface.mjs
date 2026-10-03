@@ -1,5 +1,6 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { validateMathSurface } from './verification/math-surface.mjs';
 
 const errors = [];
 function scan(directory) {
@@ -8,15 +9,7 @@ function scan(directory) {
     if (entry.isDirectory()) scan(file);
     else if (file.endsWith('.tsx')) {
       const source = readFileSync(file, 'utf8');
-      for (const [pattern, reason] of [
-        [/(?<!\\)\\[([]/g, 'single-escaped LaTeX delimiter in TSX'],
-        [/[²³√≤≥≡∑∈∣±∞]/g, 'raw math glyph in TSX'],
-      ]) {
-        for (const match of source.matchAll(pattern)) {
-          const line = source.slice(0, match.index).split('\n').length;
-          errors.push(`${file}:${line}: ${reason}`);
-        }
-      }
+      errors.push(...validateMathSurface(source, file));
     }
   }
 }
@@ -26,5 +19,5 @@ if (errors.length) {
   process.exitCode = 1;
 } else
   console.log(
-    'TSX math surface valid: no dropped delimiters or raw math glyphs.',
+    'TSX math source valid: delimiters, glyphs and spoken labels on named math surfaces.',
   );

@@ -94,7 +94,7 @@
     "summary": "For primes congruent to three modulo four, Euler’s criterion turns a nonzero square into an explicit root. Composite moduli require local roots and CRT.",
     "definition": [
       "Let \\(p\\) be prime with \\(p\\equiv3\\pmod4\\). Then \\((p+1)/4\\) is a positive integer, so \\(a^{(p+1)/4}\\) is an integer power.",
-      "A root of \\(a\\pmod n\\) is a class \\([x]_n\\) satisfying \\(x^2\\equiv a\\pmod n\\). A nonzero square modulo a prime has exactly two roots; zero has only the root zero."
+      "A root of \\(a\\pmod n\\) is a class \\([x]_n\\) satisfying \\(x^2\\equiv a\\pmod n\\). A nonzero square modulo an odd prime has exactly two roots; zero has only the root zero."
     ],
     "theorem": "If \\(p\\equiv3\\pmod4\\) is prime and \\(a\\) is a nonzero quadratic residue modulo \\(p\\), then \\(r\\equiv a^{(p+1)/4}\\pmod p\\) is a root of \\(a\\). Its negative \\(-r\\) is the only other root modulo \\(p\\). If \\(p\\mid a\\), the sole root is \\(0\\).",
     "proof": [
@@ -119,7 +119,7 @@
       ],
       "answer": "Modulo \\(9\\), the roots of \\(x^2\\equiv1\\) are \\(1,8\\); modulo \\(5\\), they are \\(1,4\\). CRT gives one class modulo \\(45\\) for each of the four pairs: \\(1,19,26,44\\). Their squares are congruent to \\(1\\pmod{45}\\); for instance \\(19^2=361\\equiv1\\) and \\(26^2=676\\equiv1\\). There are no others because the local root lists are complete and CRT is bijective."
     },
-    "caution": "The exponent formula requires both \\(p\\equiv3\\pmod4\\) and a nonzero square modulo the prime \\(p\\). For a nonsquare its proposed value is not a root.",
+    "caution": "The stated formula applies to squares modulo a prime \\(p\\equiv3\\pmod4\\), including zero: if \\(p\\mid a\\), the same power gives the sole root \\(0\\). For a nonzero nonsquare its proposed value is not a root.",
     "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H08 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "A field-level formula supplies local roots; lifting and CRT address prime powers and composite moduli."
   },

@@ -3,7 +3,6 @@ import {
   buildCancellationMap,
   type CancellationMap,
 } from './math/cancellation';
-import { lessonPath, routeFromLocation, viewPath } from './routes';
 import {
   buildPellOrbit,
   buildRationalContinuedFraction,
@@ -13,13 +12,13 @@ import {
   type SqrtContinuedFraction,
 } from './math/continued-fraction';
 import { type CrtResult, solveCrt } from './math/crt';
-import { divideGaussian, type GaussianDivision } from './math/gaussian';
 import { type EuclidResult, extendedEuclid } from './math/euclid';
+import { divideGaussian, type GaussianDivision } from './math/gaussian';
 import {
+  type ArithmeticFunction,
   buildDivisorIncidenceStudy,
   buildReciprocityLattice,
   buildUnitOrderSpectrum,
-  type ArithmeticFunction,
   type DivisorIncidenceStudy,
   type ReciprocityLattice,
   type UnitOrderSpectrum,
@@ -27,8 +26,8 @@ import {
 import { buildHenselTree, type HenselTree } from './math/hensel';
 import { type LinearResult, solveLinear } from './math/linear';
 import {
-  solveLocalSquares,
   type LocalSquareResult,
+  solveLocalSquares,
 } from './math/local-squares';
 import {
   buildQuadraticResidueMap,
@@ -37,6 +36,7 @@ import {
   type ResidueClockResult,
   type ResidueOperation,
 } from './math/residue';
+import { lessonPath, routeFromLocation, viewPath } from './routes';
 
 export type AtlasView =
   | 'lesson'
@@ -292,6 +292,7 @@ function fromUrl(): StudyState {
 }
 let state: StudyState = fromUrl();
 let revision = 0;
+let navigationRevision = 0;
 function emit() {
   revision++;
   for (const listener of listeners) listener();
@@ -358,12 +359,16 @@ export const studyStore = {
   getSnapshot() {
     return state;
   },
+  getNavigationRevision() {
+    return navigationRevision;
+  },
   getRevision() {
     return revision;
   },
   openLesson(lessonId: string) {
     if (!lessons.some((x) => x.id === lessonId))
       throw new Error('Unknown lesson ID.');
+    navigationRevision++;
     state = { ...state, lessonId, view: 'lesson' };
     saveUrl();
     emit();
@@ -382,6 +387,7 @@ export const studyStore = {
       ].includes(view)
     )
       throw new Error('Unknown atlas view.');
+    navigationRevision++;
     state = { ...state, view };
     saveUrl();
     emit();
@@ -619,7 +625,12 @@ export const studyStore = {
     return state;
   },
 };
+window.addEventListener('hashchange', () => {
+  navigationRevision++;
+  emit();
+});
 window.addEventListener('popstate', () => {
+  navigationRevision++;
   state = fromUrl();
   emit();
 });

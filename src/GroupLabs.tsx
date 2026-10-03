@@ -1,6 +1,6 @@
-export { DivisorIncidenceLab } from './DivisorIncidenceLab';
 export type { DivisorLabInputs } from './DivisorIncidenceLab';
-export { PrimitiveRootCycleLab } from './PrimitiveRootCycleLab';
+export { DivisorIncidenceLab } from './DivisorIncidenceLab';
 export type { UnitOrderLabInputs } from './PrimitiveRootCycleLab';
-export { ReciprocityLatticeLab } from './ReciprocityLatticeLab';
+export { PrimitiveRootCycleLab } from './PrimitiveRootCycleLab';
 export type { ReciprocityLabInputs } from './ReciprocityLatticeLab';
+export { ReciprocityLatticeLab } from './ReciprocityLatticeLab';

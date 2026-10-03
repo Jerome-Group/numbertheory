@@ -129,7 +129,8 @@
     "question": "How often does a prime occur across all factors of a factorial?",
     "prerequisites": [
       "B01",
-      "D06"
+      "D06",
+      "P03"
     ],
     "summary": "Count each prime-power contribution separately. The resulting finite floor sum computes factorial and binomial valuations exactly.",
     "definition": [

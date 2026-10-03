@@ -1,6 +1,7 @@
 import { useState, useSyncExternalStore } from 'react';
-import { lessons } from './content/lessons';
 import type { Claim, Exercise } from './content/lesson-v2';
+import { lessons } from './content/lessons';
+import { lessonsForPath, pathDetails, selectedPath } from './content/paths';
 import { MathText } from './MathText';
 import { progressStore } from './progress';
 
@@ -8,10 +9,12 @@ export function Practice({
   lessonId,
   claim,
   exercise,
+  embedded = false,
 }: {
   lessonId: string;
   claim: Claim;
   exercise: Exercise;
+  embedded?: boolean;
 }) {
   const [level, setLevel] = useState(0);
   const [recalled, setRecalled] = useState(false);
@@ -20,7 +23,10 @@ export function Practice({
     progressStore.getSnapshot,
   );
   return (
-    <section id="practice" className="content-section practice">
+    <section
+      id={embedded ? `practice-${lessonId}` : 'practice'}
+      className="content-section practice"
+    >
       <span className="callout-label">YOUR TURN</span>
       <h2>Test the idea</h2>
       <div className="retrieval-prompt">
@@ -92,11 +98,13 @@ export function Practice({
           </button>
         )}
         <span role="status">
-          {progress[lessonId] === 'complete'
-            ? 'Marked understood on this device.'
-            : progress[lessonId] === 'review'
-              ? 'Added to review on this device.'
-              : 'Progress stays in this browser.'}
+          {progressStore.getStorageStatus() === 'session'
+            ? 'Storage unavailable: marks last for this session. Export a backup to keep them.'
+            : progress[lessonId] === 'complete'
+              ? 'Marked understood on this device.'
+              : progress[lessonId] === 'review'
+                ? 'Added to review on this device.'
+                : 'Progress stays in this browser.'}
         </span>
       </fieldset>
     </section>
@@ -109,16 +117,43 @@ export function NextLesson({
   id: string;
   onSelect: (id: string) => void;
 }) {
-  const index = lessons.findIndex((x) => x.id === id),
-    next = lessons[index + 1];
-  return next ? (
-    <button
-      type="button"
-      className="next-lesson"
-      onClick={() => onSelect(next.id)}
-    >
-      <span>CONTINUE READING</span>
-      <strong>{next.title} →</strong>
-    </button>
-  ) : null;
+  const path = selectedPath();
+  const route = path === 'all' ? lessons : lessonsForPath(path);
+  const inPath = route.some((lesson) => lesson.id === id);
+  const sequence = inPath ? route : lessons;
+  const index = sequence.findIndex((x) => x.id === id);
+  const next = sequence[index + 1],
+    previous = sequence[index - 1];
+  return (
+    <div className="lesson-pagination">
+      {previous && (
+        <button
+          type="button"
+          className="previous-lesson"
+          onClick={() => onSelect(previous.id)}
+        >
+          ← {previous.title}
+        </button>
+      )}
+      {next ? (
+        <button
+          type="button"
+          className="next-lesson"
+          onClick={() => onSelect(next.id)}
+        >
+          <span>
+            {inPath && path !== 'all'
+              ? `CONTINUE ${pathDetails[path].title}`
+              : 'CONTINUE READING'}
+          </span>
+          <strong>{next.title} →</strong>
+        </button>
+      ) : (
+        <p className="path-finish">
+          You reached the end of this route. Revisit your reasoning and marked
+          lessons in Practice.
+        </p>
+      )}
+    </div>
+  );
 }

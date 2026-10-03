@@ -6,34 +6,50 @@ const prompts = [
   {
     question:
       'A pattern holds for the first \\(100\\) integers. What proves it for every integer?',
+    spokenQuestion:
+      'A pattern holds for the first one hundred integers. What proves it for every integer?',
     choices: [
-      'More examples',
       'A valid universal argument',
+      'More examples',
       'A larger diagram',
     ],
-    correct: 1,
+    correct: 0,
     next: 'P00',
   },
   {
     question:
       'When may \\(c\\) be cancelled from \\(ac\\equiv bc\\pmod n\\) without changing the modulus?',
+    spokenQuestion:
+      'When may c be cancelled from a times c congruent to b times c modulo n without changing the modulus?',
     choices: [
       'Whenever \\(c\\ne0\\)',
-      'When \\(\\gcd(c,n)=1\\)',
       'Whenever \\(n>1\\)',
+      'When \\(\\gcd(c,n)=1\\)',
     ],
-    correct: 1,
+    correct: 2,
+    spokenChoices: [
+      'Whenever c is not zero',
+      'Whenever n is greater than one',
+      'When the gcd of c and n equals one',
+    ],
     next: 'C02',
   },
   {
     question:
       'For Gaussian integers \\(\\alpha,\\beta\\), which norm identity is valid?',
+    spokenQuestion:
+      'For Gaussian integers alpha and beta, which norm identity is valid?',
     choices: [
       '\\(N(\\alpha\\beta)=N(\\alpha)+N(\\beta)\\)',
       '\\(N(\\alpha\\beta)=N(\\alpha)N(\\beta)\\)',
       '\\(N(\\alpha\\beta)=0\\)',
     ],
     correct: 1,
+    spokenChoices: [
+      'The norm of alpha times beta equals the norm of alpha plus the norm of beta',
+      'The norm of alpha times beta equals the norm of alpha times the norm of beta',
+      'The norm of alpha times beta equals zero',
+    ],
     next: 'N04',
   },
 ] as const;
@@ -54,7 +70,7 @@ export function Diagnostic({ open }: { open: (id: string) => void }) {
       <h2 id="diagnostic-title">Find your next proof</h2>
       <p>Three checks suggest a place to begin. Answers stay on this page.</p>
       {prompts.map((prompt, index) => (
-        <fieldset key={prompt.next}>
+        <fieldset key={prompt.next} aria-label={prompt.spokenQuestion}>
           <legend>
             <MathText text={prompt.question} />
           </legend>
@@ -62,6 +78,11 @@ export function Diagnostic({ open }: { open: (id: string) => void }) {
             <label key={choice}>
               <input
                 type="radio"
+                aria-label={
+                  'spokenChoices' in prompt
+                    ? prompt.spokenChoices[choiceIndex]
+                    : choice
+                }
                 name={`diagnostic-${index}`}
                 checked={answers[index] === choiceIndex}
                 onChange={() => {

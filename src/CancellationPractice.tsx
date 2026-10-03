@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { MathText } from './MathText';
 import experiences from './content/experiences.json';
+import { MathText } from './MathText';
 
 const content = experiences.C02;
 const stages = content.stages;

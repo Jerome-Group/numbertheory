@@ -124,9 +124,58 @@ export const pathDetails: Record<
   },
 };
 export const pathIds = Object.keys(pathDetails) as PathId[];
+export const pathTargets = Object.fromEntries(
+  pathIds.map((id) => [id, [...pathDetails[id].ids]]),
+) as Record<PathId, string[]>;
+
+export function closePrerequisites(ids: string[]) {
+  const byId = new Map(lessons.map((lesson) => [lesson.id, lesson]));
+  const needed = new Set<string>();
+  function visit(id: string, trail: string[]) {
+    if (trail.includes(id))
+      throw new Error(`Prerequisite cycle: ${[...trail, id].join(' → ')}`);
+    const lesson = byId.get(id);
+    if (!lesson) throw new Error(`Unknown path lesson ${id}`);
+    if (needed.has(id)) return;
+    for (const prerequisite of lesson.prerequisites)
+      visit(prerequisite, [...trail, id]);
+    needed.add(id);
+  }
+  for (const id of ids) visit(id, []);
+  return lessons
+    .filter((lesson) => needed.has(lesson.id))
+    .map((lesson) => lesson.id);
+}
+for (const id of pathIds)
+  pathDetails[id].ids = closePrerequisites(pathTargets[id]);
+
+let sessionPath: PathId | 'all' | undefined;
+export function selectedPath(): PathId | 'all' {
+  if (sessionPath !== undefined) return sessionPath;
+  try {
+    const value = localStorage.getItem('numbertheory.path.v1');
+    sessionPath =
+      value && pathIds.includes(value as PathId) ? (value as PathId) : 'all';
+    return sessionPath;
+  } catch {
+    return 'all';
+  }
+}
+export function selectLearningPath(id: PathId | 'all') {
+  if (id !== 'all' && !pathIds.includes(id))
+    throw new Error(`Unknown learning path ${id}`);
+  sessionPath = id;
+  try {
+    localStorage.setItem('numbertheory.path.v1', id);
+  } catch {
+    /* The selected route remains available in this session. */
+  }
+}
 export function lessonsForPath(id: PathId) {
   const byId = new Map(lessons.map((lesson) => [lesson.id, lesson]));
-  return pathDetails[id].ids
-    .map((lessonId) => byId.get(lessonId))
-    .filter((lesson): lesson is (typeof lessons)[number] => Boolean(lesson));
+  return pathDetails[id].ids.map((lessonId) => {
+    const lesson = byId.get(lessonId);
+    if (!lesson) throw new Error(`Unknown path lesson ${id}:${lessonId}`);
+    return lesson;
+  });
 }
