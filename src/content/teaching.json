@@ -468,7 +468,7 @@
       }
     ],
     "check": {
-      "prompt": "When must the valuation of a sum equal the smaller input valuation?",
+      "prompt": "Which condition guarantees that the valuation of a sum equals the smaller input valuation?",
       "choices": [
         {
           "text": "When the two input valuations differ.",

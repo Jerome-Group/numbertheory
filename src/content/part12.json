@@ -9,7 +9,7 @@
       "C02",
       "D05"
     ],
-    "summary": "A unit, an irreducible, and a prime element play distinct roles; cancellation and factorization require a domain.",
+    "summary": "A unit, an irreducible, and a prime element play distinct roles. Integral domains allow cancellation of nonzero factors and provide the setting for the factorization results that follow.",
     "definition": [
       "A commutative ring with identity is a set with an abelian-group addition and an associative, commutative multiplication that distributes over addition and has an identity \\(1\\). A unit \\(u\\) has an inverse \\(v\\) in the ring with \\(uv=1\\). An integral domain is such a ring with \\(1\\ne0\\) and no nonzero zero divisors. A field is such a ring with \\(1\\ne0\\) in which every nonzero element is a unit. The zero ring is therefore neither a field nor an integral domain under these conventions.",
       "In an integral domain \\(R\\), a nonzero nonunit \\(r\\) is irreducible if \\(r=ab\\) forces \\(a\\) or \\(b\\) to be a unit. It is prime if \\(r\\mid ab\\) forces \\(r\\mid a\\) or \\(r\\mid b\\). Elements differing by a unit are associates."

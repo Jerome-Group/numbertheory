@@ -94,7 +94,7 @@
     "theorem": "For a prime \\(p\\), the rational valuation is independent of the chosen fraction representation. For nonzero rationals \\(x,y\\), \\(v_p(xy)=v_p(x)+v_p(y)\\). For rationals \\(x,y\\), \\(v_p(x+y)\\ge\\min(v_p(x),v_p(y))\\), with equality when the two valuations differ.",
     "proof": [
       "If \\(a/b=c/d\\ne0\\), then \\(ad=bc\\). Unique prime factorization of nonzero integers gives \\(v_p(a)+v_p(d)=v_p(b)+v_p(c)\\), hence \\(v_p(a)-v_p(b)=v_p(c)-v_p(d)\\). The same exponent addition proves the product rule.",
-      "For the sum, multiply \\(x,y\\) by a common denominator and factor out the smaller power of \\(p\\). If \\(v_p(x)=r\\le s=v_p(y)\\), write \\(x=p^r u\\), \\(y=p^r v\\), where \\(u,v\\) are rationals with nonnegative valuations and \\(v_p(u)=0\\). Then \\(x+y=p^r(u+v)\\), and a common denominator prime to \\(p\\) shows \\(v_p(u+v)\\ge0\\). If \\(r<s\\), then \\(v_p(v)>0\\), so reduction modulo \\(p\\) of the coprime-denominator numerators shows \\(u+v\\) is a unit and \\(v_p(u+v)=0\\). The cases with zero follow from \\(+\\infty\\). \\(\\square\\)"
+      "For nonzero \\(x,y\\), assume \\(v_p(x)=r\\le s=v_p(y)\\) and write \\(x=p^r u\\), \\(y=p^r v\\). Then \\(v_p(u)=0\\) and \\(v_p(v)=s-r\\ge0\\). In lowest terms, write \\(u=A/B\\) and \\(v=C/D\\). Their nonnegative valuations force \\(p\\nmid BD\\), while \\(v_p(u)=0\\) forces \\(p\\nmid A\\). Now \\(x+y=p^r(AD+BC)/(BD)\\). If \\(AD+BC=0\\), the sum has valuation \\(+\\infty\\); otherwise its integer numerator has nonnegative valuation, so \\(v_p(x+y)\\ge r\\). If \\(r<s\\), then \\(p\\mid C\\), whereas \\(p\\nmid AD\\). Thus \\(p\\nmid AD+BC\\), giving equality. If one input is zero, the sum equals the other input; if both are zero, both sides of the inequality are \\(+\\infty\\). \\(\\square\\)"
     ],
     "example": {
       "prompt": "Compare \\(v_3(18)\\), \\(v_3(1/9)\\), and \\(v_3(9+18)\\).",
@@ -113,7 +113,7 @@
       ],
       "answer": "Both summands have valuation \\(-3\\), so the unequal rule does not apply. Their sum is \\(3/40+5/40=1/5\\), with \\(v_2(1/5)=0\\). This is another strict increase."
     },
-    "caution": "The equality case in the sum rule requires unequal valuations. Zero is assigned \\(+\\infty\\), not a finite exponent, and fraction representation cannot change a valuation.",
+    "caution": "Unequal valuations guarantee equality in the sum rule. Equal valuations can also give equality: for example, \\(v_3(1+1)=v_3(1)=0\\). Zero is assigned \\(+\\infty\\), not a finite exponent, and fraction representation cannot change a valuation.",
     "bridge": "Valuation ledgers clarify lifting arguments and classify roots modulo prime powers by their divisibility depth.",
     "sourceNote": "Original exposition and proof authored for this site. Independent extension; no exact MH3210 handout locator asserted."
   },

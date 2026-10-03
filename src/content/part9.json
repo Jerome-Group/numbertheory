@@ -37,7 +37,7 @@
       ],
       "answer": "The rule gives \\(S(4)=\\chi(2)S(1)=-2\\). Directly, the argument residues are \\(0,2,0,0,3\\), whose character values are \\(0,-1,0,0,-1\\); these sum to \\(-2\\)."
     },
-    "caution": "The signs of \\(S(1)\\) and \\(S(\\ell)\\) depend on the chosen nonresidue and coordinate choices; their squared sum is fixed. The pairing step needs \\(p\\equiv1\\pmod4\\).",
+    "caution": "For fixed \\(p\\), \\(S(1)\\) is fixed by its defining sum; the sign of \\(S(\\ell)\\) can change with the chosen nonresidue. Their squared sum remains \\(4p\\). The pairing step needs \\(p\\equiv1\\pmod4\\).",
     "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H09 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "This identity gives another existence proof for prime sums of two squares; the earlier descent proof remains useful for constructing the representation."
   },
