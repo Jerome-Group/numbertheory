@@ -1,4 +1,4 @@
-import { useState, useSyncExternalStore } from 'react';
+import { useRef, useState, useSyncExternalStore } from 'react';
 import type { Claim, Exercise } from './content/lesson-v2';
 import { lessons } from './content/lessons';
 import { lessonsForPath, pathDetails, selectedPath } from './content/paths';
@@ -18,6 +18,7 @@ export function Practice({
 }) {
   const [level, setLevel] = useState(0);
   const [recalled, setRecalled] = useState(false);
+  const answerButton = useRef<HTMLButtonElement>(null);
   const progress = useSyncExternalStore(
     progressStore.subscribe,
     progressStore.getSnapshot,
@@ -52,11 +53,23 @@ export function Practice({
       </p>
       <div className="practice-actions">
         {level < exercise.hints.length && (
-          <button type="button" onClick={() => setLevel(level + 1)}>
+          <button
+            type="button"
+            onClick={(event) => {
+              if (
+                level + 1 === exercise.hints.length &&
+                document.activeElement === event.currentTarget
+              ) {
+                answerButton.current?.focus({ preventScroll: true });
+              }
+              setLevel(level + 1);
+            }}
+          >
             Show hint {level + 1}
           </button>
         )}
         <button
+          ref={answerButton}
           type="button"
           onClick={() => setLevel(exercise.hints.length + 1)}
         >
