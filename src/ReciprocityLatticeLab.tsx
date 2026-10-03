@@ -336,7 +336,7 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
   return (
     <div className="group-lab__spectrum-grid">
       <div className="group-lab__table-wrap">
-        <table>
+        <table aria-label="Below-line count S subscript p of q, one column per x">
           <caption>
             Below-line count <MathText text={'\\(S_p(q)\\)'} />, one column per
             x
@@ -371,7 +371,7 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
         </table>
       </div>
       <div className="group-lab__table-wrap">
-        <table>
+        <table aria-label="Above-line count S subscript q of p, one row per y">
           <caption>
             Above-line count <MathText text={'\\(S_q(p)\\)'} />, one row per y
           </caption>
@@ -411,7 +411,7 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
 function LatticePointTable({ result }: { result: ReciprocityLattice }) {
   return (
     <div className="group-lab__table-wrap group-lab__point-table">
-      <table>
+      <table aria-label="Every lattice point and its strict side of p times y equals q times x">
         <caption>
           Every lattice point and its strict side of{' '}
           <MathText text={'\\(py=qx\\)'} />

@@ -64,6 +64,34 @@ test('mathematical choices require a readable control label', () => {
   assert.deepEqual(run([lesson], { A: copy }), []);
 });
 
+test('mathematical question headings require complete spoken prompt labels', () => {
+  const copy = structuredClone(record);
+  copy.check.prompt = 'Why does \\(d\\mid a,b\\) imply \\(d\\mid xa+yb\\)?';
+  for (const label of [
+    undefined,
+    null,
+    '',
+    '   ',
+    '\\(d\\mid a\\)',
+    'd = a',
+    'x²',
+  ]) {
+    copy.check.promptLabel = label;
+    assert.ok(
+      run([lesson], { A: copy }).some((error) =>
+        /spoken prompt label/.test(error),
+      ),
+    );
+  }
+  copy.check.promptLabel =
+    'Why does d dividing both a and b imply that d divides x times a plus y times b?';
+  assert.deepEqual(run([lesson], { A: copy }), []);
+  assert.deepEqual(run([lesson], { A: record }), []);
+  copy.check.prompt = 'Why?';
+  copy.check.promptLabel = '';
+  assert.ok(run([lesson], { A: copy }).length);
+});
+
 test('figure header names cannot disappear or drift from their table dimensions', () => {
   const figure = {
     title: 'Powers',
@@ -95,10 +123,13 @@ test('figure header names cannot disappear or drift from their table dimensions'
   }
 });
 
-test('math-only headings require spoken labels; source checks do not stand in for native AX', () => {
+test('named math surfaces require spoken labels; source checks do not stand in for native AX', () => {
   for (const attributes of [
     '',
     'aria-label=""',
+    'aria-label="   "',
+    'aria-label="x^2 = 1"',
+    'aria-label="x ≠ y"',
     'aria-label={""}',
     'aria-label={"\\\\(p^k\\\\)"}',
     'aria-label={name}',
@@ -107,17 +138,38 @@ test('math-only headings require spoken labels; source checks do not stand in fo
       '<h3 ' + attributes + '><MathText text={"\\\\(p^k\\\\)"} /></h3>';
     assert.ok(
       validateMathSurface(source).some((error) =>
-        error.includes('MathText-only heading'),
+        error.includes('MathText-bearing named surface'),
       ),
     );
   }
   for (const source of [
-    '<h3>Local modulus <MathText text={"\\\\(p^k\\\\)"} /></h3>',
     '<h3 aria-label="Modulo eight"><MathText text={"\\\\(p^k\\\\)"} /></h3>',
     '<h3 aria-label={"Modulo eight"}><MathText text={"\\\\(p^k\\\\)"} /></h3>',
     '<h3 aria-label={\u0060Local modulus \u0024{prime} to the power \u0024{exponent}\u0060}><><MathText text={"\\\\(p^k\\\\)"} /></></h3>',
   ]) {
     assert.deepEqual(validateMathSurface(source), []);
+  }
+  for (const [tag, owner] of [
+    ['h2', null],
+    ['legend', 'fieldset'],
+    ['caption', 'table'],
+    ['figcaption', 'figure'],
+  ]) {
+    const body = 'For <MathText text={"\\\\(x^2\\\\)"} />, what happens?';
+    assert.ok(
+      validateMathSurface('<' + tag + '>' + body + '</' + tag + '>').length,
+    );
+    const labeled = owner
+      ? `<${owner} aria-label="For x squared, what happens?"><${tag}>${body}</${tag}></${owner}>`
+      : `<${tag} aria-label="For x squared, what happens?">${body}</${tag}>`;
+    assert.deepEqual(validateMathSurface(labeled), []);
+    if (owner) {
+      assert.ok(
+        validateMathSurface(
+          `<${owner}><${tag} aria-label="For x squared, what happens?">${body}</${tag}></${owner}>`,
+        ).length,
+      );
+    }
   }
   for (const source of [
     '<h3><MathText text={prompt} /></h3>',

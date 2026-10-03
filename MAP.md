@@ -22,7 +22,7 @@ Start here: `README.md`, then `AGENTS.md`.
 | Agent interface | Feature-detected WebMCP tools over study commands | `src/webmcp/` |
 | Public assets | Original logo and favicon | `public/` |
 | Verification | Shared local/CI CLI, exact coverage map, evidence integrity and negative checks | `scripts/verification/verify.mjs`, `docs/verification.md` |
-| Math source guards | Escaped notation and spoken labels for math-only headings; native accessibility remains a browser check | `scripts/verification/math-surface.mjs` |
+| Math source guards | Escaped notation and spoken labels for mathematical headings, legends, captions and reasoning prompts; native accessibility remains a browser check | `scripts/verification/math-surface.mjs`, `scripts/verification/learning-content.mjs` |
 | Site binding | ChatGPT Sites project identity and static directory | `.openai/hosting.json` |
 | Redesign evidence | Migration inventory, source status, verification and release results | `docs/lesson-migration-ledger.md`, `docs/source-status.md`, `docs/redesign-verification.md`, `docs/research/learning-design.md` |
 

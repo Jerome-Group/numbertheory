@@ -19,5 +19,5 @@ if (errors.length) {
   process.exitCode = 1;
 } else
   console.log(
-    'TSX math source valid: delimiters, glyphs and MathText-only heading labels.',
+    'TSX math source valid: delimiters, glyphs and spoken labels on named math surfaces.',
   );

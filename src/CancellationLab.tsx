@@ -161,7 +161,9 @@ export function CancellationLab() {
             )}
             <details className="fiber-table">
               <summary>Show the complete exact map</summary>
-              <table>
+              <table
+                aria-label={`Multiplication by ${map.factor} modulo ${map.modulus}`}
+              >
                 <caption>
                   <MathText
                     text={`Multiplication by \\(${map.factor}\\) modulo \\(${map.modulus}\\)`}

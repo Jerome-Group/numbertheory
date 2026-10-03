@@ -6,6 +6,8 @@ const prompts = [
   {
     question:
       'A pattern holds for the first \\(100\\) integers. What proves it for every integer?',
+    spokenQuestion:
+      'A pattern holds for the first one hundred integers. What proves it for every integer?',
     choices: [
       'A valid universal argument',
       'More examples',
@@ -17,6 +19,8 @@ const prompts = [
   {
     question:
       'When may \\(c\\) be cancelled from \\(ac\\equiv bc\\pmod n\\) without changing the modulus?',
+    spokenQuestion:
+      'When may c be cancelled from a times c congruent to b times c modulo n without changing the modulus?',
     choices: [
       'Whenever \\(c\\ne0\\)',
       'Whenever \\(n>1\\)',
@@ -33,6 +37,8 @@ const prompts = [
   {
     question:
       'For Gaussian integers \\(\\alpha,\\beta\\), which norm identity is valid?',
+    spokenQuestion:
+      'For Gaussian integers alpha and beta, which norm identity is valid?',
     choices: [
       '\\(N(\\alpha\\beta)=N(\\alpha)+N(\\beta)\\)',
       '\\(N(\\alpha\\beta)=N(\\alpha)N(\\beta)\\)',
@@ -64,7 +70,7 @@ export function Diagnostic({ open }: { open: (id: string) => void }) {
       <h2 id="diagnostic-title">Find your next proof</h2>
       <p>Three checks suggest a place to begin. Answers stay on this page.</p>
       {prompts.map((prompt, index) => (
-        <fieldset key={prompt.next}>
+        <fieldset key={prompt.next} aria-label={prompt.spokenQuestion}>
           <legend>
             <MathText text={prompt.question} />
           </legend>

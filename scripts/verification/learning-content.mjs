@@ -68,6 +68,18 @@ export function validateLearningContent(
         text(step.reason, `${lesson.id}.reason.${index}`);
       });
     text(record.check?.prompt, `${lesson.id}.check`);
+    const prompt = record.check?.prompt;
+    const promptLabel = record.check?.promptLabel;
+    if (
+      ((typeof prompt === 'string' && /\\[([]/.test(prompt)) ||
+        promptLabel !== undefined) &&
+      (typeof promptLabel !== 'string' ||
+        !promptLabel.trim() ||
+        /[\\=<>∈∣≤≥±√∑^²³≡≠∞×÷]/.test(promptLabel))
+    )
+      errors.push(
+        `${lesson.id}.check: mathematical question headings need a plain spoken prompt label`,
+      );
     const choices = record.check?.choices;
     if (
       !Array.isArray(choices) ||

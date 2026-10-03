@@ -56,6 +56,7 @@
     ],
     "check": {
       "prompt": "What negates \\(\\exists x\\in D, P(x)\\)?",
+      "promptLabel": "What negates: there exists an x in the domain D such that P of x holds?",
       "choices": [
         {
           "text": "\\(\\forall x\\in D,\\neg P(x)\\).",
@@ -174,6 +175,7 @@
     ],
     "check": {
       "prompt": "Why does \\(d\\mid a,b\\) imply \\(d\\mid xa+yb\\)?",
+      "promptLabel": "Why does d dividing both a and b imply that d divides x times a plus y times b?",
       "choices": [
         {
           "text": "The new quotient is an integer combination of the old quotients.",
@@ -217,6 +219,7 @@
     ],
     "check": {
       "prompt": "Why is \\(-17=5(-3)-2\\) not standard division with remainder?",
+      "promptLabel": "Why is the equation negative seventeen equals five times negative three minus two not standard division with remainder?",
       "choices": [
         {
           "text": "Its remainder is negative.",
@@ -422,6 +425,7 @@
     ],
     "check": {
       "prompt": "For positive \\(a,b\\), which exponent belongs to their lcm?",
+      "promptLabel": "For positive a and b, which exponent belongs to their least common multiple?",
       "choices": [
         {
           "text": "\\(\\max(v_p(a),v_p(b))\\).",
@@ -508,6 +512,7 @@
     ],
     "check": {
       "prompt": "For \\(ax+by=c\\) with integer coefficients \\((a,b)\\ne(0,0)\\), what decides existence of an integer solution?",
+      "promptLabel": "For a times x plus b times y equals c, with integer coefficients a and b not both zero, what decides existence of an integer solution?",
       "choices": [
         {
           "text": "The gcd of the coefficients divides the target.",
@@ -670,6 +675,7 @@
     ],
     "check": {
       "prompt": "After cancelling \\(c\\) from \\(ac\\equiv bc\\pmod n\\), what modulus is justified?",
+      "promptLabel": "After cancelling c from a times c congruent to b times c modulo n, what modulus is justified?",
       "choices": [
         {
           "text": "\\(n/\\gcd(|c|,n)\\).",
@@ -1519,6 +1525,7 @@
     ],
     "check": {
       "prompt": "If \\(N/2<p\\le N\\), why does the prime \\(p\\) occur exactly once in \\(N!\\)?",
+      "promptLabel": "If N divided by two is less than p and p is at most N, why does the prime p occur exactly once in N factorial?",
       "choices": [
         {
           "text": "Its second multiple already exceeds the bound.",
@@ -1819,6 +1826,7 @@
     ],
     "check": {
       "prompt": "Which denominator permits the pure decimal period to be obtained directly as \\(\\operatorname{ord}_q(10)\\)?",
+      "promptLabel": "Which denominator permits the pure decimal period to be obtained directly as the multiplicative order of ten modulo q?",
       "choices": [
         {
           "text": "\\(q=7\\)",
@@ -1873,6 +1881,7 @@
     ],
     "check": {
       "prompt": "Why does the proof force an element whose order contains each prime-power factor of \\(p-1\\)?",
+      "promptLabel": "Why does the proof force an element whose order contains each prime-power factor of p minus one?",
       "choices": [
         {
           "text": "Otherwise a polynomial of degree below \\(p-1\\) would have all \\(p-1\\) nonzero classes as roots.",
@@ -1923,6 +1932,7 @@
     ],
     "check": {
       "prompt": "What must be checked before concluding that a chosen primitive representative modulo \\(p\\) generates modulo every \\(p^k\\)?",
+      "promptLabel": "What must be checked before concluding that a chosen primitive representative modulo p generates modulo every p to the power k?",
       "choices": [
         {
           "text": "\\(a^{p-1}\\not\\equiv1\\pmod{p^2}\\)",
@@ -1977,6 +1987,7 @@
     ],
     "check": {
       "prompt": "Why does \\(U(12)\\) fail to be cyclic?",
+      "promptLabel": "Why does the unit group modulo twelve fail to be cyclic?",
       "choices": [
         {
           "text": "CRT gives four distinct square roots of one from the sign choices modulo \\(4\\) and \\(3\\).",
@@ -2030,6 +2041,7 @@
     ],
     "check": {
       "prompt": "Can \\(\\gcd(2,4)=2\\) count the solutions of \\(x^2=1\\) in \\(U(8)\\)?",
+      "promptLabel": "Can the greatest common divisor of two and four, equal to two, count the solutions of x squared equals one in the unit group modulo eight?",
       "choices": [
         {
           "text": "No: \\(U(8)\\) is not cyclic, and all four of its units square to one.",
@@ -2157,6 +2169,7 @@
     ],
     "check": {
       "prompt": "Which assumption permits cancellation of \\(a\\) in the permutation argument?",
+      "promptLabel": "Which assumption permits cancellation of a in the permutation argument?",
       "choices": [
         {
           "text": "\\(p\\nmid a\\), so \\(a\\) is a unit modulo the prime \\(p\\).",
@@ -2253,6 +2266,7 @@
     ],
     "check": {
       "prompt": "When computing \\(\\chi_{11}(-2)\\), which factors must be retained?",
+      "promptLabel": "When computing the Legendre symbol with numerator negative two and prime denominator eleven, which factors must be retained?",
       "choices": [
         {
           "text": "Both \\(\\chi_{11}(-1)\\) and \\(\\chi_{11}(2)\\).",
@@ -2303,6 +2317,7 @@
     ],
     "check": {
       "prompt": "What does \\(J(2,15)=1\\) prove about \\(x^2\\equiv2\\pmod{15}\\)?",
+      "promptLabel": "What does the Jacobi symbol with numerator two and denominator fifteen, equal to one, prove about x squared congruent to two modulo fifteen?",
       "choices": [
         {
           "text": "It gives the product of local signs; the root problem still fails modulo \\(3\\).",
@@ -2348,6 +2363,7 @@
     ],
     "check": {
       "prompt": "Which input allows the formula \\(a^{(p+1)/4}\\) to produce a nonzero root?",
+      "promptLabel": "Which input allows a raised to the exponent obtained by adding one to p and dividing that sum by four to produce a nonzero root?",
       "choices": [
         {
           "text": "\\(p=11,a=5\\), since \\(5\\) is a nonzero square modulo \\(11\\).",
@@ -2394,6 +2410,7 @@
     ],
     "check": {
       "prompt": "For \\(x^2\\equiv9\\pmod{27}\\), does multiplying just the representatives of \\(y^2\\equiv1\\pmod3\\) by \\(3\\) give all roots?",
+      "promptLabel": "For x squared congruent to nine modulo twenty-seven, does multiplying just the representatives of y squared congruent to one modulo three by three give all roots?",
       "choices": [
         {
           "text": "No. Each unit root modulo \\(3\\) has three free extensions for \\(y\\) modulo \\(9\\).",
@@ -2498,6 +2515,7 @@
     ],
     "check": {
       "prompt": "Why must \\(a=b\\) be separated from \\(a\\ne b\\)?",
+      "promptLabel": "Why must a equals b be separated from a not equal to b?",
       "choices": [
         {
           "text": "The normalization divides by \\(b-a\\), which is zero on the diagonal.",
@@ -2550,6 +2568,7 @@
     ],
     "check": {
       "prompt": "Under the hypothesis \\(p\\equiv1\\pmod4\\), why do opposite-index contributions to \\(S(m)\\) agree?",
+      "promptLabel": "Under the hypothesis p congruent to one modulo four, why do opposite-index contributions to S of m agree?",
       "choices": [
         {
           "text": "It gives \\(\\chi_p(-1)=1\\), so opposite-index contributions agree.",
@@ -2594,6 +2613,7 @@
     ],
     "check": {
       "prompt": "Why is \\(21=3\\cdot7\\) not a sum of two integer squares?",
+      "promptLabel": "Why is twenty-one, equal to three times seven, not a sum of two integer squares?",
       "choices": [
         {
           "text": "Its primes congruent to three modulo four have odd exponents.",
@@ -2637,6 +2657,7 @@
     ],
     "check": {
       "prompt": "Does norm multiplicativity alone prove unique factorization in \\(\\mathbb Z[i]\\)?",
+      "promptLabel": "Does norm multiplicativity alone prove unique factorization in the Gaussian integers?",
       "choices": [
         {
           "text": "No. It supports the unit calculation; unique factorization needs further divisibility arguments.",
@@ -2750,6 +2771,7 @@
     ],
     "check": {
       "prompt": "Which object is the kernel of reduction modulo \\(8\\)?",
+      "promptLabel": "Which object is the kernel of reduction modulo eight?",
       "choices": [
         {
           "text": "The ideal \\(8\\mathbb Z\\), containing all integers that reduce to zero.",
@@ -2835,6 +2857,7 @@
     ],
     "check": {
       "prompt": "Why does a rational prime \\(p\\equiv3\\pmod4\\) remain prime in \\(\\mathbb Z[i]\\)?",
+      "promptLabel": "Why does a rational prime p congruent to three modulo four remain prime in the Gaussian integers?",
       "choices": [
         {
           "text": "A nontrivial factorization would force a Gaussian factor of norm \\(p\\), which is impossible; Gaussian irreducibles are prime.",
@@ -2880,6 +2903,7 @@
     ],
     "check": {
       "prompt": "Why is \\(X^4-12X^2\\) not the minimal polynomial of \\(2\\sqrt3\\)?",
+      "promptLabel": "Why is capital X to the fourth power minus twelve times capital X squared not the minimal polynomial of two times the square root of three?",
       "choices": [
         {
           "text": "It has the smaller annihilating factor \\(X^2-12\\).",
@@ -2928,6 +2952,7 @@
     ],
     "check": {
       "prompt": "Why does \\(X^2+1\\) remain irreducible over \\(\\mathbb Q\\) despite failing the displayed Eisenstein test?",
+      "promptLabel": "Why does capital X squared plus one remain irreducible over the rational numbers despite failing the displayed Eisenstein test?",
       "choices": [
         {
           "text": "A quadratic can be checked by rational roots, and it has none; Eisenstein is sufficient, not necessary.",
@@ -2971,6 +2996,7 @@
     ],
     "check": {
       "prompt": "Why is \\((1+\\sqrt5)/2\\) an algebraic integer outside \\(\\mathbb Z[\\sqrt5]\\)?",
+      "promptLabel": "Why is the sum of one and the square root of five, all divided by two, an algebraic integer outside the ring of integer combinations of one and the square root of five?",
       "choices": [
         {
           "text": "It satisfies \\(X^2-X-1\\), but its \\(\\sqrt5\\)-coefficient is not an integer.",
@@ -3019,6 +3045,7 @@
     ],
     "check": {
       "prompt": "Why is showing every generator of \\(I^2\\) divisible by \\(2\\) insufficient for \\(I^2=(2)\\)?",
+      "promptLabel": "Why is showing every generator of the ideal I squared divisible by two insufficient for the ideal I squared to equal the principal ideal generated by two?",
       "choices": [
         {
           "text": "It proves only \\(I^2\\subseteq(2)\\); one must also show \\(2\\in I^2\\).",
@@ -3060,6 +3087,7 @@
     ],
     "check": {
       "prompt": "When may \\(R/(IJ)\\) be identified with \\(R/I\\times R/J\\) by this theorem?",
+      "promptLabel": "When may the quotient of R by the product ideal I times J be identified with the Cartesian product of the quotient of R by I and the quotient of R by J by this theorem?",
       "choices": [
         {
           "text": "When \\(I+J=R\\), giving selectors and \\(I\\cap J=IJ\\).",
@@ -3149,6 +3177,7 @@
     ],
     "check": {
       "prompt": "Why is \\([1;2,1,1]\\) not the canonical expansion of \\(7/5\\)?",
+      "promptLabel": "Why is the finite continued fraction with first entry one and subsequent entries two, one, one not the canonical expansion of seven divided by five?",
       "choices": [
         {
           "text": "It ends in one; combining that final tail gives \\([1;2,2]\\).",
@@ -3197,6 +3226,7 @@
     ],
     "check": {
       "prompt": "What does an adjacent determinant of \\(\\pm1\\) prove?",
+      "promptLabel": "What does an adjacent determinant of plus or minus one prove?",
       "choices": [
         {
           "text": "The convergent is reduced and the two columns form an integer basis.",
@@ -3287,6 +3317,7 @@
     ],
     "check": {
       "prompt": "Why must the Farey denominator bound assume \\(bc-ad=1\\)?",
+      "promptLabel": "Why must the Farey denominator bound assume b times c minus a times d equals one?",
       "choices": [
         {
           "text": "The unit determinant gives the exact identity expressing the interior denominator as two weighted integer gaps.",
@@ -3334,6 +3365,7 @@
     ],
     "check": {
       "prompt": "Which comparison is guaranteed for the convergent \\(7/5\\) of \\(\\sqrt2\\), whose next denominator is \\(12\\)?",
+      "promptLabel": "Which comparison is guaranteed for the convergent seven divided by five of the square root of two, whose next denominator is twelve?",
       "choices": [
         {
           "text": "It uniquely minimizes \\(|b\\sqrt2-a|\\) among integer pairs with \\(0<b<12\\).",
@@ -3395,6 +3427,7 @@
     ],
     "check": {
       "prompt": "Why is \\(\\sqrt2=[1;\\overline2]\\) eventually periodic but not purely periodic?",
+      "promptLabel": "Why is the square root of two, equal to the continued fraction with first entry one and repeating subsequent entry two, eventually periodic but not purely periodic?",
       "choices": [
         {
           "text": "Its conjugate is below \\(-1\\), so it fails the reduced-conjugate criterion at the initial state.",
@@ -3493,6 +3526,7 @@
     ],
     "check": {
       "prompt": "Which set is the positive-real norm-one subgroup for \\(D=2\\)?",
+      "promptLabel": "Which set is the positive-real norm-one subgroup for D equal to two?",
       "choices": [
         {
           "text": "\\(\\{(3+2\\sqrt2)^k:k\\in\\mathbb Z\\}\\)",
@@ -3539,6 +3573,7 @@
     ],
     "check": {
       "prompt": "Does a positive solution of \\(x^2-3y^2=1\\) imply a solution of \\(x^2-3y^2=-1\\)?",
+      "promptLabel": "Does a positive solution of x squared minus three times y squared equals one imply a solution of x squared minus three times y squared equals negative one?",
       "choices": [
         {
           "text": "No. The square-root period is even, and the negative equation already fails modulo \\(3\\).",
@@ -3579,6 +3614,7 @@
     ],
     "check": {
       "prompt": "Can the integer-coordinate Pell classification alone list every unit of the full integer ring of \\(\\mathbb Q(\\sqrt5)\\)?",
+      "promptLabel": "Can the integer-coordinate Pell classification alone list every unit of the full integer ring of the rational field adjoining the square root of five?",
       "choices": [
         {
           "text": "No. The full ring also contains the half-integer unit \\((1+\\sqrt5)/2\\).",
@@ -3627,6 +3663,7 @@
     ],
     "check": {
       "prompt": "Why do \\(u=3,v=1\\) fail to give a primitive triple?",
+      "promptLabel": "Why do u equal to three and v equal to one fail to give a primitive triple?",
       "choices": [
         {
           "text": "They have the same parity, so all three output coordinates are even.",

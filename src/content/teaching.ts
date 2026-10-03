@@ -7,6 +7,7 @@ export type Teaching = {
   proofSteps: { label: string; reason: string }[];
   check: {
     prompt: string;
+    promptLabel?: string;
     choices: {
       text: string;
       label?: string;

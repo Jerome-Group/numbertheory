@@ -47,7 +47,10 @@ function PellOrbitPlot({ orbit }: { orbit: PellOrbit }) {
     )
     .join('; ');
   return (
-    <figure className="pell-lab__plot-figure">
+    <figure
+      className="pell-lab__plot-figure"
+      aria-label={`Positive Pell orbit: x squared minus ${orbit.radicand} times y squared equals one, plotted on base-ten logarithmic axes`}
+    >
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"

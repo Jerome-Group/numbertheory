@@ -1,6 +1,6 @@
 import ts from '@typescript/typescript6';
 
-function mathOnlyText(node) {
+function staticMathText(node) {
   const element = ts.isJsxElement(node) ? node.openingElement : node;
   if (!ts.isJsxSelfClosingElement(element) && !ts.isJsxOpeningElement(element))
     return false;
@@ -9,25 +9,16 @@ function mathOnlyText(node) {
     (item) => ts.isJsxAttribute(item) && item.name.getText() === 'text',
   );
   const text = fixedLabelText(attribute?.initializer);
-  return (
-    text.trim() !== '' &&
-    text.replace(/\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\]/g, '').trim() === ''
-  );
+  return /\\[([]/.test(text);
 }
 
-function onlyMath(children) {
-  const meaningful = children.filter(
-    (node) =>
-      !(ts.isJsxText(node) && !node.text.trim()) &&
-      !(ts.isJsxExpression(node) && !node.expression),
-  );
-  return (
-    meaningful.length > 0 &&
-    meaningful.every((node) => {
-      if (ts.isJsxFragment(node)) return onlyMath(node.children);
-      return mathOnlyText(node);
-    })
-  );
+function containsStaticMath(node) {
+  if (staticMathText(node)) return true;
+  let found = false;
+  ts.forEachChild(node, (child) => {
+    if (containsStaticMath(child)) found = true;
+  });
+  return found;
 }
 
 function fixedLabelText(initializer) {
@@ -45,7 +36,7 @@ function fixedLabelText(initializer) {
   return '';
 }
 
-// Source guard for MathText-only headings; dynamic native AX still needs review.
+// Static named surfaces need spoken math; dynamic content and native AX need review.
 export function validateMathSurface(source, file = 'source.tsx') {
   const errors = [];
   for (const [pattern, reason] of [
@@ -77,16 +68,30 @@ export function validateMathSurface(source, file = 'source.tsx') {
   function visit(node) {
     if (
       ts.isJsxElement(node) &&
-      /^h[1-6]$/.test(node.openingElement.tagName.getText(tree)) &&
-      onlyMath(node.children)
+      /^(h[1-6]|legend|caption|figcaption)$/.test(
+        node.openingElement.tagName.getText(tree),
+      ) &&
+      node.children.some(containsStaticMath)
     ) {
-      const label = node.openingElement.attributes.properties.find(
+      const tag = node.openingElement.tagName.getText(tree);
+      const ownerTag = {
+        legend: 'fieldset',
+        caption: 'table',
+        figcaption: 'figure',
+      }[tag];
+      const owner = ownerTag ? node.parent : node;
+      const element =
+        ts.isJsxElement(owner) &&
+        (!ownerTag || owner.openingElement.tagName.getText(tree) === ownerTag)
+          ? owner.openingElement
+          : undefined;
+      const label = element?.attributes.properties.find(
         (attribute) =>
           ts.isJsxAttribute(attribute) &&
           attribute.name.getText(tree) === 'aria-label',
       );
       const text = fixedLabelText(label?.initializer);
-      if (!text.trim() || text.includes('\\')) {
+      if (!text.trim() || /[\\=<>∈∣≤≥±√∑^²³≡≠∞×÷]/.test(text)) {
         const line = tree.getLineAndCharacterOfPosition(
           node.getStart(tree),
         ).line;
@@ -94,7 +99,7 @@ export function validateMathSurface(source, file = 'source.tsx') {
           file +
             ':' +
             (line + 1) +
-            ': MathText-only heading requires a plain spoken aria-label with nonempty literal or template text',
+            ': MathText-bearing named surface requires a plain spoken aria-label with nonempty literal or template text',
         );
       }
     }

@@ -15,7 +15,7 @@ export function ReasoningCheck({ id }: { id: string }) {
   return (
     <section className="reasoning-check" aria-labelledby={`reasoning-${id}`}>
       <span className="callout-label">CHECK THE REASONING</span>
-      <h3 id={`reasoning-${id}`}>
+      <h3 id={`reasoning-${id}`} aria-label={check.promptLabel ?? check.prompt}>
         <MathText text={check.prompt} />
       </h3>
       <fieldset>

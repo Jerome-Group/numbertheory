@@ -492,7 +492,9 @@ function DivisorTermsTable({
 }) {
   return (
     <div className="group-lab__table-wrap">
-      <table>
+      <table
+        aria-label={`${inversion ? 'Divisor terms for Möbius inversion' : 'Complementary-divisor summands'} at n equals ${result.n}`}
+      >
         <caption>
           {inversion ? (
             <>

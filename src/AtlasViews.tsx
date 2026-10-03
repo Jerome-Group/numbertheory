@@ -63,7 +63,10 @@ function HomeFiberPreview({ open }: { open: (id: string) => void }) {
   return (
     <section className="home-fiber" aria-labelledby="home-fiber-title">
       <span className="instrument-kicker">A QUESTION YOU CAN TEST</span>
-      <h2 id="home-fiber-title">
+      <h2
+        id="home-fiber-title"
+        aria-label="What survives multiplication modulo twelve?"
+      >
         <MathText text={'What survives multiplication modulo \\(12\\)?'} />
       </h2>
       <fieldset className="home-fiber-controls">
