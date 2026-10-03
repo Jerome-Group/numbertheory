@@ -330,7 +330,7 @@
         "Associativity identifies the terms with triples \\((a,b,c)\\) satisfying \\(abc=4\\).",
         "Use the factorizations with one factor \\(4\\) or with two factors \\(2\\)."
       ],
-      "answer": "The value is \\(\\sum_{abc=4}\\mathbf 1(a)\\mathbf 1(b)\\mathbf 1(c)\\). The ordered triples are \\((4,1,1),(1,4,1),(1,1,4),(2,2,1),(2,1,2),(1,2,2)\\). There are six, and every summand equals \\(1\\), so the convolution value is \\(6\\)."
+      "answer": "The value is \\(\\sum_{abc=4}\\mathbf 1(a)\\mathbf 1(b)\\mathbf 1(c)\\). The ordered triples are \\((4,1,1)\\), \\((1,4,1)\\), \\((1,1,4)\\), \\((2,2,1)\\), \\((2,1,2)\\), and \\((1,2,2)\\). There are six, and every summand equals \\(1\\), so the convolution value is \\(6\\)."
     },
     "caution": "The symbol \\(\\ast\\) means a divisor sum here; it is not pointwise multiplication. Also keep \\(\\varepsilon\\) distinct from the constant-one function \\(\\mathbf 1\\).",
     "bridge": "Arithmetic functions form a commutative algebra under pointwise addition and Dirichlet convolution. In this elementary setting every operation is defined by a finite sum; no infinite series or analytic convergence is involved.",
