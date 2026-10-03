@@ -94,8 +94,10 @@ button {
   letter-spacing: 0.035em;
   line-height: 1.4;
 }
-.lesson-nav .chapter-heading button:hover {
+.lesson-nav .chapter-heading button:hover,
+.lesson-nav .chapter-heading button:focus-visible {
   background: #e4e9f5;
+  color: var(--ink);
 }
 .lesson-nav .chapter-count,
 .lesson-nav .chapter-chevron {
