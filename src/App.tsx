@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { AtlasViews } from './AtlasViews';
 import { lessons } from './content/lessons';
 import { LessonPage } from './LessonPage';
@@ -18,7 +24,12 @@ export function App() {
   const lesson = lessons.find((x) => x.id === state.lessonId) ?? lessons[0];
   const [drawer, setDrawer] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const restoreMenuFocus = useRef(false);
   const pendingSection = useRef<string | null>(null);
+  const closeDrawer = useCallback(() => {
+    restoreMenuFocus.current = true;
+    setDrawer(false);
+  }, []);
   useEffect(() => registerStudyTools(), []);
   useEffect(() => {
     setDrawer(false);
@@ -106,8 +117,8 @@ export function App() {
     sidebar.querySelector<HTMLInputElement>('#lesson-search')?.focus();
     function handleKey(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setDrawer(false);
-        menuButton.current?.focus();
+        event.preventDefault();
+        closeDrawer();
       }
       if (event.key !== 'Tab' || !sidebar) return;
       const focusable = [
@@ -131,8 +142,12 @@ export function App() {
       main.inert = false;
       document.body.style.overflow = '';
       document.removeEventListener('keydown', handleKey);
+      if (restoreMenuFocus.current) {
+        restoreMenuFocus.current = false;
+        menuButton.current?.focus();
+      }
     };
-  }, [drawer]);
+  }, [drawer, closeDrawer]);
   useEffect(() => {
     document.title =
       state.view === 'lesson'
@@ -140,13 +155,10 @@ export function App() {
         : `${state.view[0].toUpperCase()}${state.view.slice(1)} · Number Theory`;
   }, [lesson, state.view]);
   function select(id: string, section?: string) {
+    restoreMenuFocus.current = false;
     pendingSection.current = section ?? null;
     studyStore.openLesson(id);
     setDrawer(false);
-  }
-  function closeDrawer() {
-    setDrawer(false);
-    menuButton.current?.focus();
   }
   return (
     <div className="app-shell">
