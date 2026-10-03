@@ -94,7 +94,7 @@
     "summary": "For primes congruent to three modulo four, Euler’s criterion turns a nonzero square into an explicit root. Composite moduli require local roots and CRT.",
     "definition": [
       "Let \\(p\\) be prime with \\(p\\equiv3\\pmod4\\). Then \\((p+1)/4\\) is a positive integer, so \\(a^{(p+1)/4}\\) is an integer power.",
-      "A root of \\(a\\pmod n\\) is a class \\([x]_n\\) satisfying \\(x^2\\equiv a\\pmod n\\). A nonzero square modulo a prime has exactly two roots; zero has only the root zero."
+      "A root of \\(a\\pmod n\\) is a class \\([x]_n\\) satisfying \\(x^2\\equiv a\\pmod n\\). A nonzero square modulo an odd prime has exactly two roots; zero has only the root zero."
     ],
     "theorem": "If \\(p\\equiv3\\pmod4\\) is prime and \\(a\\) is a nonzero quadratic residue modulo \\(p\\), then \\(r\\equiv a^{(p+1)/4}\\pmod p\\) is a root of \\(a\\). Its negative \\(-r\\) is the only other root modulo \\(p\\). If \\(p\\mid a\\), the sole root is \\(0\\).",
     "proof": [

@@ -1915,7 +1915,7 @@
     "proofSteps": [
       {
         "label": "Raise the valuation once",
-        "reason": "The leading binomial term has one fewer factor of \\(p\\) than every later term. Oddness of \\(p\\) ensures the final term cannot cancel that leading contribution."
+        "reason": "The leading binomial term has at least one fewer factor of \\(p\\) than every later term. Oddness of \\(p\\) ensures the final term cannot cancel that leading contribution."
       },
       {
         "label": "Separate coprime exponents",
