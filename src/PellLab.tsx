@@ -341,8 +341,8 @@ export function PellHyperbolaOrbitLab({
         <details className="pell-lab__prompt">
           <summary>Predict before advancing the orbit</summary>
           <p>
-            Square the current unit and predict the next pair. The cross term
-            comes from{' '}
+            Multiply the current unit by the fundamental unit and predict the
+            next pair. The cross term comes from{' '}
             <MathText text={'\\((x+y\\sqrt D)(x_1+y_1\\sqrt D)\\)'} />; verify
             that the norm remains 1 after the multiplication.
           </p>
