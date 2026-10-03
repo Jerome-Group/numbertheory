@@ -907,6 +907,40 @@ button {
 .overview-shell .chapter {
   scroll-margin-top: 140px;
 }
+.progress-management button,
+.progress-management input[type="file"]::file-selector-button {
+  min-height: 44px;
+  max-width: 100%;
+  border: 1px solid #506e64;
+  border-radius: 6px;
+  padding: 0.5rem 0.8rem;
+  background: white;
+  color: #173d38;
+  font: inherit;
+  font-weight: 650;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.progress-management button:hover,
+.progress-management input[type="file"]::file-selector-button:hover {
+  background: var(--blue-wash);
+}
+.progress-management-actions > button:first-child {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
+}
+.progress-management-actions > button:first-child:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.progress-management input[type="file"]::file-selector-button {
+  margin-right: 8px;
+}
+.progress-text-backup > button {
+  justify-self: start;
+}
 .progress-text-backup {
   display: grid;
   gap: 18px;
