@@ -136,7 +136,7 @@ export function HenselRootTreeLab({ id = 'lab' }: { id?: string }) {
             . At each parent, the digit test is{' '}
             <MathText text={'\\(f(a)/p^k+t f\\prime(a)\\equiv0\\pmod p\\)'} />.
           </p>
-          <fieldset className="hensel-lab__levels" tabIndex={0}>
+          <fieldset className="hensel-lab__levels">
             <legend>Root sets by modulus</legend>
             {tree.levels.map((level) => (
               <div className="hensel-lab__level" key={level.level}>
