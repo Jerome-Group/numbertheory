@@ -1,9 +1,9 @@
 import { lazy, Suspense, useSyncExternalStore } from 'react';
 import { CancellationLab } from './CancellationLab';
-import { LessonCore } from './LessonCore';
 import { lessons } from './content/lessons';
 import { lessonV2 } from './content/registries';
 import type { Lesson } from './content/types';
+import { LessonCore } from './LessonCore';
 import { MathText } from './MathText';
 import { studyStore } from './state';
 
@@ -80,10 +80,32 @@ export function LessonPage({
   const model = lessonV2.find((item) => item.id === lesson.id);
   if (!model) throw new Error(`Missing lesson model ${lesson.id}`);
   return (
-    <div className="reading-shell">
+    <div className="reading-shell" data-lesson-id={lesson.id}>
       <div className="breadcrumb">
         ATLAS <span>/</span> {lesson.cluster.toUpperCase()} <span>/</span>{' '}
         {lesson.id}
+      </div>
+      <nav className="lesson-sections" aria-label="Read this lesson">
+        <a href="#intuition">Idea</a>
+        <a href="#definition">Definitions</a>
+        <a href="#theorem">Claim & conditions</a>
+        <a href="#proof">Argument</a>
+        <a href="#example">Example</a>
+        {lesson.lab && <a href="#lab">Experiment</a>}
+        <a href="#practice">Your turn</a>
+        <a href="#boundary">Boundary</a>
+      </nav>
+      <div className="lesson-preparation">
+        <span>BUILDING ON</span>
+        {lesson.prerequisites.length ? (
+          lesson.prerequisites.map((id) => (
+            <button type="button" key={id} onClick={() => select(id)}>
+              {id} · {lessons.find((x) => x.id === id)?.title}
+            </button>
+          ))
+        ) : (
+          <span>No prior lessons needed</span>
+        )}
       </div>
       <div
         className={`lesson-head ${lesson.lab === 'euclid' || lesson.lab === 'crt' ? 'with-instrument' : ''}`}

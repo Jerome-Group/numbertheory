@@ -93,6 +93,7 @@ export function CancellationLab() {
           <label>
             Modulus <MathText text={'\\(n\\)'} />
             <input
+              aria-label="Modulus n"
               value={modulus}
               onChange={(event) => setModulus(event.target.value)}
               inputMode="numeric"
@@ -101,6 +102,7 @@ export function CancellationLab() {
           <label>
             Factor <MathText text={'\\(c\\)'} />
             <input
+              aria-label="Factor c"
               value={factor}
               onChange={(event) => setFactor(event.target.value)}
               inputMode="numeric"
@@ -114,6 +116,7 @@ export function CancellationLab() {
             <button
               type="button"
               key={`${preset.modulus}-${preset.factor}`}
+              aria-label={`Multiply by ${preset.factor} modulo ${preset.modulus}`}
               onClick={() => run(preset.modulus, preset.factor)}
             >
               <MathText text={preset.label} />
@@ -141,6 +144,7 @@ export function CancellationLab() {
                 <button
                   type="button"
                   key={fiber.output}
+                  aria-label={`Show inputs mapping to ${fiber.output} modulo ${map.modulus}`}
                   aria-pressed={selected?.output === fiber.output}
                   onClick={() => setSelectedOutput(fiber.output)}
                 >
@@ -157,7 +161,9 @@ export function CancellationLab() {
             )}
             <details className="fiber-table">
               <summary>Show the complete exact map</summary>
-              <table>
+              <table
+                aria-label={`Multiplication by ${map.factor} modulo ${map.modulus}`}
+              >
                 <caption>
                   <MathText
                     text={`Multiplication by \\(${map.factor}\\) modulo \\(${map.modulus}\\)`}

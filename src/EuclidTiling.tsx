@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { EuclidResult } from './math/euclid';
 import { MathText } from './MathText';
+import type { EuclidResult } from './math/euclid';
 
 export function EuclidTiling({ result }: { result: EuclidResult }) {
   const [index, setIndex] = useState(0);

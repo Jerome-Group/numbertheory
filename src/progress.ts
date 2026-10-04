@@ -1,23 +1,37 @@
 import { lessons } from './content/lessons';
-import { parseProgressExport, type ProgressState } from './progress-schema';
+import { type ProgressState, parseProgressExport } from './progress-schema';
 
 export type { ProgressState } from './progress-schema';
+
 const storageKey = 'numbertheory.progress.v1';
 const validIds = new Set(lessons.map((lesson) => lesson.id));
 const listeners = new Set<() => void>();
+let storageStatus: 'persistent' | 'session' | 'recovered' = 'persistent';
 
 function load(): ProgressState {
+  let raw: string | null;
   try {
-    const raw = localStorage.getItem(storageKey);
-    const value: unknown = raw ? JSON.parse(raw) : {};
-    if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
-    return Object.fromEntries(
-      Object.entries(value).filter(
-        ([id, status]) =>
-          validIds.has(id) && (status === 'complete' || status === 'review'),
-      ),
-    );
+    raw = localStorage.getItem(storageKey);
   } catch {
+    storageStatus = 'session';
+    return {};
+  }
+  if (!raw) return {};
+  try {
+    const value: unknown = JSON.parse(raw);
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+      storageStatus = 'recovered';
+      return {};
+    }
+    const entries = Object.entries(value);
+    const valid = entries.filter(
+      ([id, status]) =>
+        validIds.has(id) && (status === 'complete' || status === 'review'),
+    );
+    if (valid.length !== entries.length) storageStatus = 'recovered';
+    return Object.fromEntries(valid);
+  } catch {
+    storageStatus = 'recovered';
     return {};
   }
 }
@@ -27,8 +41,9 @@ function persist(next: ProgressState) {
   snapshot = next;
   try {
     localStorage.setItem(storageKey, JSON.stringify(next));
+    storageStatus = 'persistent';
   } catch {
-    /* Progress remains usable for this browser session. */
+    storageStatus = 'session';
   }
   for (const listener of listeners) listener();
 }
@@ -42,6 +57,9 @@ export const progressStore = {
   },
   getSnapshot() {
     return snapshot;
+  },
+  getStorageStatus() {
+    return storageStatus;
   },
   set(id: string, status: ProgressState[string] | null) {
     if (!validIds.has(id)) throw new Error('Unknown lesson ID.');

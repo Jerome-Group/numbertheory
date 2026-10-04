@@ -43,23 +43,12 @@ jobs:
           node-version: '24'
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Verify the application
+        run: npm run --silent verify > "$RUNNER_TEMP/numbertheory-verification.json"
 
-      - name: Validate content and types
-        run: npm run check:content && npm run check
-
-      - name: Check formatting and lint
-        run: npm run format:check && npm run lint
-
-      - name: Test exact arithmetic
-        run: npm test
-
-      - name: Build site
-        run: npm run build
-
-      - name: Scan public source and output
-        run: npm run check:public
+      - name: Summarize verification
+        if: always()
+        run: node scripts/verification/summary.mjs "$RUNNER_TEMP/numbertheory-verification.json" >> "$GITHUB_STEP_SUMMARY"
 
       # This repository's real checks go below, as further jobs in this file. What they owe —
       # what CI must prove, how the checks grow, and why none of them gets a path filter — is

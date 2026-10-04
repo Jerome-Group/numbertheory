@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from 'react';
+import { type FormEvent, useId, useState } from 'react';
 import { MathText } from './MathText';
 import {
   buildRationalContinuedFraction,
@@ -288,6 +288,7 @@ export function ContinuedFractionStaircaseLab({
               Numerator, <MathText text={'\\(-999\\) to \\(999\\)'} />
             </label>
             <input
+              aria-label="Numerator, from negative nine hundred ninety-nine to nine hundred ninety-nine"
               id={`${localId}-numerator`}
               type="number"
               min="-999"
@@ -300,6 +301,7 @@ export function ContinuedFractionStaircaseLab({
               Positive denominator, <MathText text={'\\(1\\) to \\(999\\)'} />
             </label>
             <input
+              aria-label="Positive denominator, from one to nine hundred ninety-nine"
               id={`${localId}-denominator`}
               type="number"
               min="1"
@@ -315,6 +317,7 @@ export function ContinuedFractionStaircaseLab({
               Nonsquare <MathText text={'\\(D\\), \\(2\\) to \\(9999\\)'} />
             </label>
             <input
+              aria-label="Nonsquare D, from two to nine thousand nine hundred ninety-nine"
               id={`${localId}-radicand`}
               type="number"
               min="2"
@@ -329,10 +332,18 @@ export function ContinuedFractionStaircaseLab({
       </form>
       <fieldset className="cf-lab__presets">
         <legend>Worked examples</legend>
-        <button type="button" onClick={chooseRational}>
+        <button
+          type="button"
+          aria-label="43 divided by 19, finite continued fraction"
+          onClick={chooseRational}
+        >
           <MathText text={'\\(43/19\\) · finite'} />
         </button>
-        <button type="button" onClick={chooseRootTwo}>
+        <button
+          type="button"
+          aria-label="Square root of 2, periodic continued fraction"
+          onClick={chooseRootTwo}
+        >
           <MathText text={'\\(\\sqrt2\\) · periodic'} />
         </button>
       </fieldset>
@@ -428,7 +439,7 @@ function RationalReadout({
                 <th scope="col">k</th>
                 <th scope="col">Dividend</th>
                 <th scope="col">Divisor</th>
-                <th scope="col">
+                <th scope="col" aria-label="Partial quotient a subscript k">
                   <MathText text={'\\(a_k\\)'} />
                 </th>
                 <th scope="col">Remainder</th>
@@ -453,13 +464,22 @@ function RationalReadout({
             <thead>
               <tr>
                 <th scope="col">k</th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="Convergent p subscript k divided by q subscript k"
+                >
                   <MathText text={'\\(p_k/q_k\\)'} />
                 </th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="Adjacent determinant: p subscript k times q with index k minus one, minus p with index k minus one times q subscript k"
+                >
                   <MathText text={'\\(p_kq_{k-1}-p_{k-1}q_k\\)'} />
                 </th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="Input minus the convergent p subscript k divided by q subscript k"
+                >
                   Input − <MathText text={'\\(p_k/q_k\\)'} />
                 </th>
                 <th scope="col">Position</th>
@@ -575,13 +595,13 @@ function SqrtReadout({
             <thead>
               <tr>
                 <th scope="col">n</th>
-                <th scope="col">
+                <th scope="col" aria-label="State shift m subscript n">
                   <MathText text={'\\(m_n\\)'} />
                 </th>
-                <th scope="col">
+                <th scope="col" aria-label="State denominator d subscript n">
                   <MathText text={'\\(d_n\\)'} />
                 </th>
-                <th scope="col">
+                <th scope="col" aria-label="Partial quotient a subscript n">
                   <MathText text={'\\(a_n\\)'} />
                 </th>
                 <th scope="col">State check</th>
@@ -614,15 +634,24 @@ function SqrtReadout({
             <thead>
               <tr>
                 <th scope="col">k</th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="Convergent p subscript k divided by q subscript k"
+                >
                   <MathText text={'\\(p_k/q_k\\)'} />
                 </th>
                 <th scope="col">Determinant</th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="D times the square of q subscript k, minus the square of p subscript k"
+                >
                   <MathText text={'\\(Dq_k^2-p_k^2\\)'} />
                 </th>
                 <th scope="col">Position</th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="Next convergent denominator q with index k plus one"
+                >
                   <MathText text={'\\(q_{k+1}\\)'} />
                 </th>
                 <th scope="col">Error bound</th>
@@ -741,5 +770,5 @@ function positionLabel(position: 'below' | 'above' | 'exact') {
       : 'above input';
 }
 
-export { PellHyperbolaOrbitLab } from './PellLab';
 export type { PellHyperbolaOrbitLabProps } from './PellLab';
+export { PellHyperbolaOrbitLab } from './PellLab';

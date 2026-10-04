@@ -2027,6 +2027,9 @@ a {
 .chapter-checkpoint {
   margin-top: 1.5rem;
 }
+.chapter-checkpoint > button + p {
+  margin-top: 1rem;
+}
 .chapter-checkpoint > div {
   display: flex;
   flex-wrap: wrap;

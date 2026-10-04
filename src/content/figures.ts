@@ -1,0 +1,153 @@
+export type Figure = {
+  title: string;
+  headers: string[];
+  headerLabels: string[];
+  rows: string[][];
+  rowLabels: string[];
+  caption: string;
+};
+export const figures: Record<string, Figure> = {
+  D01: {
+    title: 'A witness travels through the calculation',
+    headers: ['First multiple', 'Second multiple', 'Integer combination'],
+    headerLabels: ['First multiple', 'Second multiple', 'Integer combination'],
+    rowLabels: ['Two hundred fifty-two equals seven times thirty-six'],
+    rows: [
+      [
+        '\\(252=7\\cdot36\\)',
+        '\\(105=7\\cdot15\\)',
+        '\\(252-2\\cdot105=7(36-2\\cdot15)=42\\)',
+      ],
+    ],
+    caption:
+      'The new witness is an integer because the coefficients and old witnesses are integers. This proves divisibility, without dividing by the common divisor.',
+  },
+  D02: {
+    title: 'Place the integer inside one block',
+    headers: ['Left endpoint', 'Dividend', 'Next endpoint'],
+    headerLabels: ['Left endpoint', 'Dividend', 'Next endpoint'],
+    rowLabels: ['Negative twenty equals five times negative four'],
+    rows: [['\\(-20=5(-4)\\)', '\\(-17=-20+3\\)', '\\(-15=5(-3)\\)']],
+    caption:
+      'The dividend sits in the half-open block from minus twenty to minus fifteen. Its offset from the left endpoint is the standard remainder, three. Truncation toward zero chooses the wrong block.',
+  },
+  D06: {
+    title: 'Read gcd and lcm one prime at a time',
+    headers: ['Integer', '\\(v_2\\)', '\\(v_3\\)', '\\(v_5\\)'],
+    headerLabels: [
+      'Integer',
+      'Exponent of prime two',
+      'Exponent of prime three',
+      'Exponent of prime five',
+    ],
+    rowLabels: [
+      'Seventy-two',
+      'One hundred twenty',
+      'gcd: take minima',
+      'lcm: take maxima',
+    ],
+    rows: [
+      ['\\(72\\)', '\\(3\\)', '\\(2\\)', '\\(0\\)'],
+      ['\\(120\\)', '\\(3\\)', '\\(1\\)', '\\(1\\)'],
+      ['gcd: take minima', '\\(3\\)', '\\(1\\)', '\\(0\\)'],
+      ['lcm: take maxima', '\\(3\\)', '\\(2\\)', '\\(1\\)'],
+    ],
+    caption:
+      'A common divisor cannot use more copies of a prime than either input. A common multiple needs enough copies for both. The rows give gcd twenty-four and lcm three hundred sixty.',
+  },
+  C08: {
+    title: 'Pair the units; leave the fixed classes',
+    headers: ['Pair modulo seven', 'Product modulo seven', 'Role'],
+    headerLabels: ['Pair modulo seven', 'Product modulo seven', 'Role'],
+    rowLabels: [
+      'Two and four form an inverse pair modulo seven',
+      'Three and five form an inverse pair modulo seven',
+      'One is self-inverse modulo seven',
+      'Six is self-inverse modulo seven',
+    ],
+    rows: [
+      ['\\(2\\leftrightarrow4\\)', '\\(1\\)', 'Distinct inverse pair'],
+      ['\\(3\\leftrightarrow5\\)', '\\(1\\)', 'Distinct inverse pair'],
+      ['\\(1\\leftrightarrow1\\)', '\\(1\\)', 'Self-inverse'],
+      ['\\(6\\leftrightarrow6\\)', '\\(1\\)', 'Self-inverse'],
+    ],
+    caption:
+      'Each distinct pair contributes one. The two fixed classes each occur only once in the factorial, so their remaining product is minus one modulo seven. A fixed class must never be counted twice.',
+  },
+  A05: {
+    title: 'Primes alone do not determine the function',
+    headers: ['Input, for prime \\(p\\)', '\\(\\tau\\)', '\\(2^{\\omega}\\)'],
+    headerLabels: [
+      'Input, for prime p',
+      'Divisor-count function tau',
+      'Two raised to the number of distinct prime divisors',
+    ],
+    rowLabels: ['Prime p', 'Prime p squared', 'Prime p cubed'],
+    rows: [
+      ['\\(p\\)', '\\(2\\)', '\\(2\\)'],
+      ['\\(p^2\\)', '\\(3\\)', '\\(2\\)'],
+      ['\\(p^3\\)', '\\(4\\)', '\\(2\\)'],
+    ],
+    caption:
+      'The functions agree at every prime and are both multiplicative, yet disagree at prime squares. A proof by prime powers must cover every exponent, including the identity input.',
+  },
+  N08: {
+    title: 'The basis closes under multiplication',
+    headers: [
+      'Quadratic ring for \\(d=5\\)',
+      'Reduce a square',
+      'Stay in the basis',
+    ],
+    headerLabels: [
+      'Quadratic ring for d equal to five',
+      'Reduce a square',
+      'Stay in the basis',
+    ],
+    rowLabels: [
+      'Theta equals the quantity one plus the square root of five, divided by two',
+    ],
+    rows: [
+      [
+        '\\(\\theta=(1+\\sqrt5)/2\\)',
+        '\\(\\theta^2=\\theta+1\\)',
+        '\\(a+b\\theta\\), with \\(a,b\\in\\mathbb Z\\)',
+      ],
+    ],
+    caption:
+      'Multiply two integer combinations of the basis. The only new term is the square of theta; replacing it by theta plus one leaves integer coefficients. This explains closure rather than assuming it from the name “ring.”',
+  },
+  N09: {
+    title: 'The same element, incompatible factor lists',
+    headers: [
+      'Factorization in \\(\\mathbb Z[\\sqrt{-5}]\\)',
+      'Norms of the factors',
+    ],
+    headerLabels: [
+      'Factorization in the integer ring generated by the square root of negative five',
+      'Norms of the factors',
+    ],
+    rowLabels: [
+      'Six equals two times three',
+      'Six equals the product of one plus the square root of negative five and one minus the square root of negative five',
+    ],
+    rows: [
+      ['\\(6=2\\cdot3\\)', '\\(4,9\\)'],
+      ['\\(6=(1+\\sqrt{-5})(1-\\sqrt{-5})\\)', '\\(6,6\\)'],
+    ],
+    caption:
+      'Both norm products are thirty-six, as multiplicativity demands. Associates have equal norms, so the two irreducible factor lists cannot match even after reordering and multiplying by units. The proof below establishes irreducibility.',
+  },
+  N12: {
+    title: 'A carry must agree at every precision',
+    headers: ['Precision', 'First integer', 'Second integer', 'Their sum'],
+    headerLabels: ['Precision', 'First integer', 'Second integer', 'Their sum'],
+    rowLabels: ['Modulo three', 'Modulo nine', 'Modulo twenty-seven'],
+    rows: [
+      ['modulo \\(3\\)', '\\(2\\)', '\\(2\\)', '\\(1\\)'],
+      ['modulo \\(9\\)', '\\(2\\)', '\\(2\\)', '\\(4\\)'],
+      ['modulo \\(27\\)', '\\(2\\)', '\\(2\\)', '\\(4\\)'],
+    ],
+    caption:
+      'Four reduces to one modulo three, so the sum is compatible. In base three the carried result has units digit one and next digit one. This finite table illustrates a prefix; a p-adic integer requires compatibility at every level.',
+  },
+};

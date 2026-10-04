@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { LabHeader } from './GroupLabHeader';
+import { MathText } from './MathText';
 import type { ReciprocityLattice } from './math/group-labs';
 import { buildReciprocityLattice } from './math/group-labs';
-import { MathText } from './MathText';
-import { LabHeader } from './GroupLabHeader';
 import './GroupLabs.css';
 
 export type ReciprocityLabInputs = { p: string; q: string };
@@ -88,6 +88,7 @@ export function ReciprocityLatticeLab({
         <label>
           Odd prime <MathText text={'\\(p\\)'} />, 3–31
           <input
+            aria-label="Odd prime p, from three to thirty-one"
             inputMode="numeric"
             value={p}
             onChange={(event) => setP(event.target.value)}
@@ -96,6 +97,7 @@ export function ReciprocityLatticeLab({
         <label>
           Distinct odd prime <MathText text={'\\(q\\)'} />, 3–31
           <input
+            aria-label="Distinct odd prime q, from three to thirty-one"
             inputMode="numeric"
             value={q}
             onChange={(event) => setQ(event.target.value)}
@@ -334,17 +336,17 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
   return (
     <div className="group-lab__spectrum-grid">
       <div className="group-lab__table-wrap">
-        <table>
+        <table aria-label="Below-line count S subscript p of q, one column per x">
           <caption>
             Below-line count <MathText text={'\\(S_p(q)\\)'} />, one column per
             x
           </caption>
           <thead>
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Column coordinate x">
                 <MathText text={'\\(x\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Floor of q times x divided by p">
                 <MathText text={'\\(\\lfloor qx/p\\rfloor\\)'} />
               </th>
               <th scope="col">Points below</th>
@@ -369,16 +371,16 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
         </table>
       </div>
       <div className="group-lab__table-wrap">
-        <table>
+        <table aria-label="Above-line count S subscript q of p, one row per y">
           <caption>
             Above-line count <MathText text={'\\(S_q(p)\\)'} />, one row per y
           </caption>
           <thead>
             <tr>
-              <th scope="col">
+              <th scope="col" aria-label="Row coordinate y">
                 <MathText text={'\\(y\\)'} />
               </th>
-              <th scope="col">
+              <th scope="col" aria-label="Floor of p times y divided by q">
                 <MathText text={'\\(\\lfloor py/q\\rfloor\\)'} />
               </th>
               <th scope="col">Points above</th>
@@ -409,7 +411,7 @@ function FloorSumTables({ result }: { result: ReciprocityLattice }) {
 function LatticePointTable({ result }: { result: ReciprocityLattice }) {
   return (
     <div className="group-lab__table-wrap group-lab__point-table">
-      <table>
+      <table aria-label="Every lattice point and its strict side of p times y equals q times x">
         <caption>
           Every lattice point and its strict side of{' '}
           <MathText text={'\\(py=qx\\)'} />

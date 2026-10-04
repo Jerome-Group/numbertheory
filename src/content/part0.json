@@ -4,7 +4,9 @@
     "title": "Proof grammar: quantifiers and counterexamples",
     "cluster": "Foundations",
     "question": "How do we know exactly what a proof must establish?",
-    "prerequisites": ["P00"],
+    "prerequisites": [
+      "P00"
+    ],
     "summary": "Quantifiers and implications specify a claim's burden. A counterexample refutes a universal statement; separate arguments establish existence and uniqueness.",
     "definition": [
       "For a domain \\(D\\), \\(\\forall x\\in D, P(x)\\) means every allowed \\(x\\) has property \\(P\\), while \\(\\exists x\\in D, P(x)\\) asks for at least one witness. The domain is part of the statement.",
@@ -41,7 +43,10 @@
     "title": "Strong induction and infinite descent",
     "cluster": "Foundations",
     "question": "Why can no counterexample keep producing a smaller one?",
-    "prerequisites": ["P01", "D02"],
+    "prerequisites": [
+      "P01",
+      "D02"
+    ],
     "summary": "Strong induction proves each case from all earlier cases. Infinite descent proves a claim by forcing a strictly smaller counterexample in a well-ordered domain.",
     "definition": [
       "Strong induction on \\(\\mathbb Z_{\\ge0}\\) assumes that, for each \\(n\\), the truth of \\(P(0),\\ldots,P(n-1)\\) implies \\(P(n)\\). The empty list of predecessors at \\(n=0\\) supplies the base case.",
@@ -78,7 +83,9 @@
     "title": "Counting tools for arithmetic",
     "cluster": "Foundations",
     "question": "When do two different counts describe the same finite set?",
-    "prerequisites": ["P01"],
+    "prerequisites": [
+      "P01"
+    ],
     "summary": "Bijections and double counting turn finite arithmetic structure into identities; pigeonhole and inclusion-exclusion control overlaps.",
     "definition": [
       "A bijection between finite sets \\(A\\) and \\(B\\) pairs each element of \\(A\\) with exactly one element of \\(B\\), and conversely. Thus \\(|A|=|B|\\). A finite sum may be reindexed only after such a correspondence or an equivalent partition is specified.",
@@ -115,7 +122,9 @@
     "title": "Real intervals and integer determinants",
     "cluster": "Foundations",
     "question": "Which outside tools do continued fractions need, and where?",
-    "prerequisites": ["P01"],
+    "prerequisites": [
+      "P01"
+    ],
     "summary": "Short primers isolate real completeness, determinant-one integer bases, and the first step of the irrational continued-fraction algorithm.",
     "definition": [
       "A nested closed-interval sequence has \\([a_{j+1},b_{j+1}]\\subseteq[a_j,b_j]\\) for every \\(j\\). The real completeness property says a bounded nonempty set of reals has a supremum; this is an axiom of the real system used here, not a conclusion from a diagram.",

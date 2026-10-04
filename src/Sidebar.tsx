@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { lessons } from './content/lessons';
 import { lessonMatches } from './content/search';
-import { studyStore } from './state';
 import { lessonPath } from './routes';
+import { studyStore } from './state';
 
 const clusters = [...new Set(lessons.map((lesson) => lesson.cluster))];
 const preferenceKey = 'numbertheory.navigation.v1';

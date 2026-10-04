@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
-import katex from 'katex';
 import ts from '@typescript/typescript6';
+import katex from 'katex';
 
 let source = readFileSync('src/content/lessons.ts', 'utf8');
 source = source.replace(

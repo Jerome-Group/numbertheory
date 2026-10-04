@@ -1,5 +1,6 @@
-import type { Lesson } from './types';
 import objectives from './objectives.json' with { type: 'json' };
+import { teachingFor } from './teaching.ts';
+import type { Lesson } from './types';
 
 export type LessonArchetype =
   | 'discovery'
@@ -177,7 +178,7 @@ export function adaptLessonV1(lesson: Lesson): {
         id: claimId,
         lessonId: lesson.id,
         title: lesson.title,
-        hypotheses: [],
+        hypotheses: teachingFor(lesson.id).hypotheses,
         statement: lesson.theorem,
         dependencies: lesson.prerequisites,
         proof: lesson.proof,

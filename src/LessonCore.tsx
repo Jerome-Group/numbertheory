@@ -1,14 +1,17 @@
 import type { ReactNode } from 'react';
+import { AnnotatedProof } from './AnnotatedProof';
+import { CancellationPractice } from './CancellationPractice';
+import { ChoiceCheck } from './ChoiceCheck';
+import { ConceptFigure } from './ConceptFigure';
 import type { LessonV2 } from './content/lesson-v2';
 import {
   claimRegistry,
   exampleRegistry,
   exerciseRegistry,
 } from './content/registries';
+import { teachingFor } from './content/teaching';
 import type { Lesson } from './content/types';
 import { MathText } from './MathText';
-import { CancellationPractice } from './CancellationPractice';
-import { ChoiceCheck } from './ChoiceCheck';
 import { NextLesson, Practice } from './StudyPanels';
 
 export function LessonCore({
@@ -27,6 +30,13 @@ export function LessonCore({
   );
   return (
     <>
+      <section id="intuition" className="content-section intuition-section">
+        <span className="callout-label">THE IDEA TO HOLD ON TO</span>
+        <p>
+          <MathText text={teachingFor(lesson.id).intuition} />
+        </p>
+        <ConceptFigure id={lesson.id} />
+      </section>
       {model.blocks.map((block, index) => {
         switch (block.kind) {
           case 'question':
@@ -60,6 +70,16 @@ export function LessonCore({
                     <MathText text={claim.statement} />
                   </p>
                 </div>
+                <div className="hypotheses">
+                  <h3>Keep these conditions in view</h3>
+                  <ul>
+                    {claim.hypotheses.map((text) => (
+                      <li key={text}>
+                        <MathText text={text} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </section>
             );
           }
@@ -70,14 +90,7 @@ export function LessonCore({
               <div key={`${block.id}.proof`}>
                 {lesson.id === 'P00' && <ChoiceCheck id="P00" />}
                 {lesson.id === 'Q04' && <ChoiceCheck id="Q04" />}
-                <section id="proof" className="content-section">
-                  <h2>Why it is true</h2>
-                  {claim.proof.map((text, step) => (
-                    <p key={`${block.id}.${step}`}>
-                      <MathText text={text} />
-                    </p>
-                  ))}
-                </section>
+                <AnnotatedProof claim={claim} />
               </div>
             );
           }

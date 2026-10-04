@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from 'react';
+import { type FormEvent, useId, useState } from 'react';
 import { MathText } from './MathText';
 import { buildPellOrbit, type PellOrbit } from './math/continued-fraction';
 import './ContinuedFractionLabs.css';
@@ -47,7 +47,10 @@ function PellOrbitPlot({ orbit }: { orbit: PellOrbit }) {
     )
     .join('; ');
   return (
-    <figure className="pell-lab__plot-figure">
+    <figure
+      className="pell-lab__plot-figure"
+      aria-label={`Positive Pell orbit: x squared minus ${orbit.radicand} times y squared equals one, plotted on base-ten logarithmic axes`}
+    >
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"
@@ -318,7 +321,10 @@ export function PellHyperbolaOrbitLab({
                 <th scope="col">Power n</th>
                 <th scope="col">x</th>
                 <th scope="col">y</th>
-                <th scope="col">
+                <th
+                  scope="col"
+                  aria-label="Norm: x squared minus D times y squared"
+                >
                   <MathText text={'\\(x^2-Dy^2\\)'} />
                 </th>
               </tr>
@@ -338,8 +344,8 @@ export function PellHyperbolaOrbitLab({
         <details className="pell-lab__prompt">
           <summary>Predict before advancing the orbit</summary>
           <p>
-            Square the current unit and predict the next pair. The cross term
-            comes from{' '}
+            Multiply the current unit by the fundamental unit and predict the
+            next pair. The cross term comes from{' '}
             <MathText text={'\\((x+y\\sqrt D)(x_1+y_1\\sqrt D)\\)'} />; verify
             that the norm remains 1 after the multiplication.
           </p>

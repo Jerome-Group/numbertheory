@@ -37,7 +37,7 @@
       ],
       "answer": "The rule gives \\(S(4)=\\chi(2)S(1)=-2\\). Directly, the argument residues are \\(0,2,0,0,3\\), whose character values are \\(0,-1,0,0,-1\\); these sum to \\(-2\\)."
     },
-    "caution": "The signs of \\(S(1)\\) and \\(S(\\ell)\\) depend on the chosen nonresidue and coordinate choices; their squared sum is fixed. The pairing step needs \\(p\\equiv1\\pmod4\\).",
+    "caution": "For fixed \\(p\\), \\(S(1)\\) is fixed by its defining sum; the sign of \\(S(\\ell)\\) can change with the chosen nonresidue. Their squared sum remains \\(4p\\). The pairing step needs \\(p\\equiv1\\pmod4\\).",
     "sourceNote": "Original proof, example, and practice authored for this site. Course overview topic alignment; MH-H09 is a historical same-course handout, not a verified current issue. Topic mapping reviewed 2026-09-23; exact theorem/page locator remains provisional.",
     "bridge": "This identity gives another existence proof for prime sums of two squares; the earlier descent proof remains useful for constructing the representation."
   },
@@ -45,12 +45,12 @@
     "id": "S04",
     "title": "Which integers are sums of two squares?",
     "cluster": "Sums of squares",
-    "question": "Which prime exponents prevent an integer from being a sum of two squares?",
+    "question": "Which prime exponents prevent a positive integer from being a sum of two squares?",
     "prerequisites": [
       "S01",
       "D05"
     ],
-    "summary": "The obstruction is exactly an odd exponent at a prime congruent to three modulo four.",
+    "summary": "For a positive integer, the obstruction is exactly an odd exponent at a prime congruent to three modulo four. Zero is representable separately as a sum of two zero squares.",
     "definition": [
       "A nonnegative integer \\(n\\) is representable if \\(n=x^2+y^2\\) for integers \\(x,y\\). For positive \\(n\\), write its prime factorization as \\(n=2^a\\prod_i p_i^{e_i}\\prod_j q_j^{f_j}\\), where \\(p_i\\equiv1\\pmod4\\) and \\(q_j\\equiv3\\pmod4\\)."
     ],
@@ -136,7 +136,7 @@
     "proof": [
       "Write \\(x=A/B\\) with integers \\(A,B\\) and \\(B>0\\). Euclidean division, including for negative \\(A\\), gives unique integers \\(a_0,r_1\\) with \\(A=a_0B+r_1\\) and \\(0\\le r_1<B\\). If \\(r_1=0\\), then \\(x=a_0\\). Otherwise \\(x=a_0+1/(B/r_1)\\), where \\(B/r_1>1\\).",
       "Apply Euclidean division to \\(B/r_1\\), then to each following reciprocal of a nonzero fractional part. Equivalently, with consecutive positive remainders \\(r_{j-1},r_j\\), write \\(r_{j-1}=a_jr_j+r_{j+1}\\) and \\(0\\le r_{j+1}<r_j\\). The positive remainders strictly decrease, so some remainder is zero. Reversing the substitutions gives \\(x=[a_0;a_1,\\ldots,a_r]\\), with every \\(a_j>0\\) for \\(j\\ge1\\).",
-      "At the final nonintegral division, the preceding positive remainder is strictly larger than the final positive remainder, and their quotient is the integer \\(a_r\\). Hence \\(a_r\\ge2\\), so the expansion is canonical. At each stage \\(a_j\\) is the floor of the current rational value, and the next value is the reciprocal of its fractional part. These operations are forced. Induction through the terminating stages proves uniqueness among canonical expansions.",
+      "At the final division for a noninteger input, the preceding positive remainder is strictly larger than the final positive remainder, and their quotient is the integer \\(a_r\\). Hence \\(a_r\\ge2\\), so the expansion is canonical. At each stage \\(a_j\\) is the floor of the current rational value, and the next value is the reciprocal of its fractional part. These operations are forced. Induction through the terminating stages proves uniqueness among canonical expansions.",
       "Without the final-entry convention there is one immediate ambiguity: if \\(a_r\\ge2\\), then \\([a_0;\\ldots,a_r]=[a_0;\\ldots,a_r-1,1]\\), since \\(a_r-1+1/1=a_r\\)."
     ],
     "example": {
