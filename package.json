@@ -20,7 +20,7 @@
     "test:verification": "node --test scripts/verification/verify.test.mjs scripts/verification/runner-boundaries.test.mjs scripts/verification/learning-content.test.mjs scripts/verification/evidence.test.mjs"
   },
   "dependencies": {
-    "katex": "^0.18.7",
+    "katex": "^0.19.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
