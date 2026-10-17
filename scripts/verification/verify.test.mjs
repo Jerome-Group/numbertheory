@@ -260,6 +260,28 @@ test('source hash detects tracked working-tree edits; build hash detects changed
     assert.notEqual(fingerprint(root).sourceHash, first.sourceHash);
     assert.equal(fingerprint(root).files, 3);
     assert.throws(() => buildFingerprint(root), /Stale build source identity/);
+    mkdirSync(join(root, '.openai'));
+    writeFileSync(join(root, '.openai/hosting.json'), '{"d1":"DB"}');
+    assert.throws(() => buildFingerprint(root), /Missing dist\/server/);
+    mkdirSync(join(root, 'dist/server'));
+    mkdirSync(join(root, 'dist/client'));
+    writeFileSync(join(root, 'dist/server/index.js'), 'export default {};');
+    writeFileSync(join(root, 'dist/client/app.js'), 'console.log("fixture");');
+    const manifest = { main: 'index.js', assets: { directory: '../client' } };
+    const manifestPath = join(root, 'dist/server/wrangler.json');
+    writeFileSync(manifestPath, JSON.stringify(manifest));
+    writeFileSync(
+      join(root, 'dist/source-identity.json'),
+      JSON.stringify({ schemaVersion: 1, ...fingerprint(root) }),
+    );
+    assert.doesNotThrow(() => buildFingerprint(root));
+    for (const directory of ['../../../', '/tmp', '../absent']) {
+      writeFileSync(
+        manifestPath,
+        JSON.stringify({ ...manifest, assets: { directory } }),
+      );
+      assert.throws(() => buildFingerprint(root), /unsafe Worker assets/);
+    }
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
