@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { profiles, runCase, visible } from './browser.mjs';
 
 export async function teaching(suite) {
-  for (const profile of Object.keys(profiles)) {
+  for (const profile of suite.profiles) {
     const size = `${profiles[profile].width}x${profiles[profile].height}`;
     for (const lesson of suite.data.map.lessons) {
       await runCase(
@@ -101,6 +101,23 @@ export async function teaching(suite) {
                   .getByRole('button', { name: 'Hide claim', exact: true })
                   .getAttribute('aria-expanded'),
                 'true',
+              );
+              const recalled = practice.locator('.retrieval-prompt > p').last();
+              await visible(recalled);
+              const statement = await page
+                .locator('#theorem .theorem > p')
+                .textContent();
+              assert(
+                statement.trim(),
+                'The visible theorem must contain its statement',
+              );
+              assert.equal(await recalled.textContent(), statement);
+              await practice
+                .getByRole('button', { name: 'Hide claim', exact: true })
+                .click();
+              assert.equal(
+                await practice.locator('.retrieval-prompt > p').count(),
+                1,
               );
               const authored = data.lessons.find(
                 (item) => item.id === lesson.id,

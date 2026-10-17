@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { readFile, mkdir, realpath, stat, writeFile } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,7 +28,7 @@ import { urls } from './urls.mjs';
 const root = fileURLToPath(new URL('../../../../', import.meta.url));
 const features = { discovery, teaching, practice, labs, urls };
 const usage =
-  'node .agents/skills/verify/scripts/drive.mjs (--feature all|discovery|teaching|practice|labs|urls|--launch-only|--doctor|--cleanup) --output /absolute/directory [--channel chrome]';
+  'node .agents/skills/verify/scripts/drive.mjs (--feature all|discovery|teaching|practice|labs|urls|--launch-only|--doctor|--cleanup) --output /absolute/directory; --feature also accepts [--profile phone|tablet|desktop] [--channel chrome]';
 
 function parse(argv) {
   if (argv.length === 1 && argv[0] === '--help') return { help: true };
@@ -39,6 +40,7 @@ function parse(argv) {
         '--feature',
         '--output',
         '--channel',
+        '--profile',
         '--launch-only',
         '--doctor',
         '--cleanup',
@@ -70,14 +72,18 @@ function parse(argv) {
       options.feature === 'all' || Object.hasOwn(features, options.feature),
       'Unknown feature',
     );
+  if (options.profile) {
+    assert(options.feature, 'Profile applies only to a feature drive');
+    assert(Object.hasOwn(profiles, options.profile), 'Unknown profile');
+  }
   if (options.channel)
     assert.equal(
       options.channel,
       'chrome',
       'Only explicit chrome channel is supported',
     );
-  if (options.doctor || options.cleanup)
-    assert(!options.channel, 'Channel does not apply to doctor or cleanup');
+  if (!options.feature)
+    assert(!options.channel, 'Channel applies only to a feature drive');
   return options;
 }
 
@@ -166,7 +172,8 @@ async function main() {
     return {
       usage,
       effects: {
-        launch: 'owns fresh loopback preview and Chromium process groups',
+        launch:
+          'owns a fresh loopback server process group; does not launch a browser',
         doctor:
           'read-only receipt, process, source, lock, build and served asset checks',
         drive: 'fresh browser contexts; no inherited instance',
@@ -177,6 +184,11 @@ async function main() {
     };
   if (options.doctor) return doctor(options.output);
   if (options.cleanup) return cleanup(options.output);
+  assert(process.platform !== 'win32', 'POSIX process groups required');
+  execFileSync('ps', ['-p', String(process.pid), '-o', 'pid='], {
+    stdio: 'ignore',
+  });
+  execFileSync('lsof', ['-v'], { stdio: 'ignore' });
   const packages = await installedPackages();
   assert.equal(
     packages.playwright,
@@ -215,7 +227,9 @@ async function main() {
     identity,
     packages,
     requested: options.feature ?? 'launch-only',
-    profiles,
+    profiles: options.profile
+      ? { [options.profile]: profiles[options.profile] }
+      : profiles,
     cases: [],
     nativeWebMCP: {
       status: 'not-evaluated',
@@ -248,7 +262,7 @@ async function main() {
     report.doctor = await doctor(output);
     if (options['launch-only']) {
       process.stdout.write(
-        `${JSON.stringify({ status: 'ready', output, ...report.doctor })}\n`,
+        `${JSON.stringify({ ...report.doctor, status: 'ready', output })}\n`,
       );
       await new Promise((resolve) => {
         if (abort.signal.aborted) resolve();
@@ -268,13 +282,13 @@ async function main() {
         family: 'Chromium',
         version: browser.version(),
         channel: options.channel ?? 'playwright-chromium',
-        executable: options.channel
-          ? 'system Chrome explicitly selected'
-          : chromium.executablePath(),
+        executable: browserServer.process().spawnfile,
+        arguments: browserServer.process().spawnargs.slice(1),
         nativeIAB: false,
       };
       const suite = {
         browser,
+        profiles: options.profile ? [options.profile] : Object.keys(profiles),
         origin: runtime.instance.origin,
         output,
         data,

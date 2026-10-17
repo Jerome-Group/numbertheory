@@ -1,14 +1,8 @@
 import assert from 'node:assert/strict';
-import {
-  focused,
-  profiles,
-  runCase,
-  textIncludes,
-  visible,
-} from './browser.mjs';
+import { focused, runCase, textIncludes, visible } from './browser.mjs';
 
 export async function practice(suite) {
-  for (const profile of Object.keys(profiles)) {
+  for (const profile of suite.profiles) {
     await runCase(
       suite,
       profile,
@@ -23,7 +17,7 @@ export async function practice(suite) {
         'journey:progress-transfer-reset',
         'journey:returning-learner-review-queue',
       ],
-      async ({ page, go, step, data }) => {
+      async ({ page, context, go, step, data }) => {
         const [first, second] = data.map.lessons;
         await go(first.route);
         await step(
@@ -55,6 +49,7 @@ export async function practice(suite) {
         const controls = page.locator('.progress-management');
         let backup;
         await step('Copy and inspect transferable schema1 backup', async () => {
+          await context.grantPermissions(['clipboard-read', 'clipboard-write']);
           await controls
             .getByRole('button', { name: 'Copy JSON backup', exact: true })
             .click();
@@ -65,7 +60,41 @@ export async function practice(suite) {
             schemaVersion: 1,
             lessons: { [first.id]: 'review' },
           });
-          await textIncludes(controls.locator('[role="status"]'), 'backup');
+          assert.deepEqual(
+            JSON.parse(
+              await page.evaluate(() => navigator.clipboard.readText()),
+            ),
+            JSON.parse(backup),
+          );
+          await textIncludes(controls.locator('[role="status"]'), 'copied');
+          const cdp = await context.newCDPSession(page);
+          const { targetInfo } = await cdp.send('Target.getTargetInfo');
+          await cdp.send('Browser.setPermission', {
+            permission: { name: 'clipboard-write' },
+            setting: 'denied',
+            origin: suite.origin,
+            browserContextId: targetInfo.browserContextId,
+          });
+          await controls
+            .getByRole('button', { name: 'Copy JSON backup', exact: true })
+            .click();
+          await textIncludes(
+            controls.locator('[role="status"]'),
+            'Select and copy',
+          );
+          const fallback = controls.getByRole('textbox', {
+            name: 'Progress backup',
+            exact: true,
+          });
+          await focused(fallback);
+          assert.deepEqual(
+            await fallback.evaluate((element) => [
+              element.selectionStart,
+              element.selectionEnd,
+            ]),
+            [0, backup.length],
+          );
+          await cdp.detach();
         });
         const snapshot = async () =>
           JSON.parse(

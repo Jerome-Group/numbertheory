@@ -46,7 +46,7 @@ Run one domain or all five. The allowed feature values are `all`, `discovery`, `
 node .agents/skills/verify/scripts/drive.mjs --feature all --output /absolute/external/full-run
 ```
 
-Use actual buttons, labels, links, keyboard actions, and browser history. No React substitute, internal store setter, DOM substitute, or product test endpoint is allowed. Keep failures and unmet prerequisites visible. The driver checks phone `390x844`, tablet `768x1024`, and desktop `1440x900`. Read the matching recipe for each entry point and expected result. `teaching` enumerates all lessons and canonical and legacy entries. `labs` enumerates every Studio entry and refuses an unmapped lab type.
+Use actual buttons, labels, links, keyboard actions, and browser history. No React substitute, internal store setter, DOM substitute, or product test endpoint is allowed. Keep failures and unmet prerequisites visible. The driver checks phone `390x844`, tablet `768x1024`, and desktop `1440x900`. Add `--profile phone`, `--profile tablet`, or `--profile desktop` to narrow a feature drive; omitted profiles remain not-evaluated. `--profile` and `--channel` apply only to feature drives, never server-only launch, doctor or cleanup. Read the matching recipe for each entry point and expected result. `teaching` enumerates all lessons and canonical and legacy entries. `labs` enumerates every Studio entry and refuses an unmapped lab type.
 
 ## Evidence
 

@@ -87,7 +87,7 @@ test('help and catalog work with no deps, build, or Git reads', (t) => {
     assert.equal(report.status, 'passed');
     assert.equal(
       report.commands.drive.syntax,
-      'drive --feature all|discovery|teaching|practice|labs|urls --output DIR [--channel chrome]',
+      'drive --feature all|discovery|teaching|practice|labs|urls --output DIR [--profile phone|tablet|desktop] [--channel chrome]',
     );
     assert.ok(report.commands.drive.reads.length);
     assert.ok(report.commands.drive.writes.length);
@@ -124,6 +124,9 @@ test('real CLI rejects unknown, duplicate, missing, surplus, and irrelevant argu
     ['drive', '--feature', 'all', '--output', '--channel', 'chrome'],
     ['drive', '--feature', 'all', '--output', output, '--output', output],
     ['launch', '--output', output, '--channel', 'chromium'],
+    ['launch', '--output', output, '--channel', 'chrome'],
+    ['launch', '--output', output, '--profile', 'phone'],
+    ['drive', '--feature', 'all', '--output', output, '--profile', 'invalid'],
     [
       'launch',
       '--output',
@@ -185,6 +188,29 @@ test('lifecycle commands pass literal argument arrays and preserve helper failur
     [
       ['drive', '--feature', 'labs', '--output', output, '--channel', 'chrome'],
       ['--feature', 'labs', '--output', output, '--channel', 'chrome'],
+    ],
+    [
+      [
+        'drive',
+        '--feature',
+        'urls',
+        '--output',
+        output,
+        '--profile',
+        'phone',
+        '--channel',
+        'chrome',
+      ],
+      [
+        '--feature',
+        'urls',
+        '--output',
+        output,
+        '--channel',
+        'chrome',
+        '--profile',
+        'phone',
+      ],
     ],
     [
       ['launch', '--output', output],

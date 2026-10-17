@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { profiles, runCase, textIncludes, visible } from './browser.mjs';
+import { runCase, textIncludes, visible } from './browser.mjs';
 
 async function fill(lab, fields) {
   for (const [label, value] of fields)
@@ -358,7 +358,7 @@ export async function labs(suite) {
     Object.keys(cases).sort(),
     'Lab driver and source kinds drifted',
   );
-  for (const profile of Object.keys(profiles)) {
+  for (const profile of suite.profiles) {
     for (const lesson of entries) {
       await runCase(
         suite,

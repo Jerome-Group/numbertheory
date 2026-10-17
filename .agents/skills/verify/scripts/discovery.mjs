@@ -3,7 +3,7 @@ import { profiles, runCase, textIncludes, visible } from './browser.mjs';
 
 export async function discovery(suite) {
   const { map, pathDetails, chapterCheckpoints } = suite.data;
-  for (const profile of Object.keys(profiles)) {
+  for (const profile of suite.profiles) {
     const size = `${profiles[profile].width}x${profiles[profile].height}`;
     await runCase(
       suite,
@@ -107,6 +107,40 @@ export async function discovery(suite) {
                 .inputValue(),
               suite.data.lessons[0].cluster,
             );
+            const chapter = suite.data.lessons[0].cluster;
+            const expected = suite.data.lessons
+              .filter(
+                (lesson) =>
+                  lesson.cluster === chapter &&
+                  (path !== '/studio' || lesson.lab),
+              )
+              .map((lesson) => lesson.id);
+            const selector =
+              path === '/practice'
+                ? '.practice-item-head > span'
+                : path === '/studio'
+                  ? '.studio-card > span'
+                  : '.reference-list article > span';
+            await page.waitForFunction(
+              ({ selector, expected }) =>
+                JSON.stringify(
+                  [...document.querySelectorAll(selector)].map(
+                    (element) => element.textContent.trim().split(' · ')[0],
+                  ),
+                ) === JSON.stringify(expected),
+              { selector, expected },
+            );
+            assert.deepEqual(
+              (await page.locator(selector).allTextContents()).map(
+                (text) => text.trim().split(' · ')[0],
+              ),
+              expected,
+            );
+            if (!expected.length)
+              await textIncludes(
+                page.locator('#main-content [role="status"]'),
+                'No experiments',
+              );
           });
         }
         await go('/reference');

@@ -1,11 +1,5 @@
 import assert from 'node:assert/strict';
-import {
-  focused,
-  profiles,
-  runCase,
-  textIncludes,
-  visible,
-} from './browser.mjs';
+import { focused, runCase, textIncludes, visible } from './browser.mjs';
 
 const invalidParameter = {
   euclid: 'a',
@@ -55,7 +49,7 @@ async function drawerClosed(page, target) {
 }
 
 export async function urls(suite) {
-  for (const profile of Object.keys(profiles)) {
+  for (const profile of suite.profiles) {
     await runCase(
       suite,
       profile,
@@ -70,6 +64,47 @@ export async function urls(suite) {
       ],
       async ({ page, go, step, data }) => {
         const euclid = data.map.lessons.find((lesson) => lesson.id === 'D04');
+        await go('/explore');
+        await step(
+          'Search for Euclid, follow a prerequisite, then return to its experiment',
+          async () => {
+            await page.locator('#atlas-filter').fill('D04');
+            await page
+              .locator('.atlas-card')
+              .filter({ hasText: 'D04' })
+              .click();
+            await visible(page.locator('[data-lesson-id="D04"]'));
+            await page
+              .locator('.lesson-preparation')
+              .getByRole('button')
+              .filter({ hasText: 'D03' })
+              .click();
+            await visible(page.locator('[data-lesson-id="D03"]'));
+            await page.goBack();
+            await visible(page.locator('[data-lesson-id="D04"]'));
+            await page
+              .locator('.lesson-sections')
+              .getByRole('link', { name: 'Experiment', exact: true })
+              .click();
+            await focused(page.locator('#lab h2'));
+            await page
+              .locator('#lab')
+              .getByLabel('First integer', { exact: true })
+              .fill('391');
+            await page
+              .locator('#lab')
+              .getByLabel('Second integer', { exact: true })
+              .fill('299');
+            await page
+              .locator('#lab')
+              .getByRole('button', { name: 'Run Euclid', exact: true })
+              .click();
+            const shared = page.url();
+            await page.reload();
+            assert.equal(page.url(), shared);
+            await textIncludes(page.locator('#lab .answer-strip strong'), '23');
+          },
+        );
         await go(`${euclid.legacyRoute}&a=240&b=46`);
         await step(
           'Restore legacy lab inputs, change them, reload, and traverse history',

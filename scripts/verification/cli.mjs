@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const output = { value: 'DIR', required: true };
 const channel = { value: 'CHANNEL', choices: ['chrome'] };
+const profile = { value: 'PROFILE', choices: ['phone', 'tablet', 'desktop'] };
 const repository = [{ name: 'REPO', required: false }];
 const automatedWrites = [
   'node_modules via npm ci',
@@ -19,6 +20,7 @@ const automatedWrites = [
 ];
 const browserPrerequisites = [
   'Node24',
+  'POSIX with ps and lsof on PATH',
   'installed locked dependencies and Playwright browser',
   'current built application',
   'skill-owned browser helper',
@@ -124,10 +126,21 @@ export const commands = Object.freeze({
   },
   launch: {
     positionals: [],
-    options: { output, channel },
-    prerequisites: browserPrerequisites,
+    options: { output },
+    prerequisites: [
+      'Node24',
+      'POSIX with ps and lsof on PATH',
+      'installed locked dependencies',
+      'current built application',
+      'skill-owned browser helper',
+    ],
     reads: ['built application', 'repo identity', 'browser helper'],
-    writes: browserWrites,
+    writes: [
+      'owned loopback server',
+      'output directory and receipts',
+      'stdout',
+      'stderr diagnostics',
+    ],
     purpose:
       'Foreground owned application launch; no browser or release proof.',
     execute: ({ options }) => driveHelper(options, ['--launch-only']),
@@ -141,6 +154,7 @@ export const commands = Object.freeze({
         choices: ['all', 'discovery', 'teaching', 'practice', 'labs', 'urls'],
       },
       output,
+      profile,
       channel,
     },
     prerequisites: browserPrerequisites,
@@ -300,6 +314,7 @@ async function driveHelper(options, mode) {
     existingDirectory(destination);
   const args = [helper, ...mode, '--output', destination];
   if (options.channel) args.push('--channel', options.channel);
+  if (options.profile) args.push('--profile', options.profile);
   return new Promise((fulfill, reject) => {
     const child = spawn(process.execPath, args, {
       cwd: selectedRoot,
@@ -357,6 +372,13 @@ function doctor({ buildFingerprint }) {
     return process.version;
   });
   check('npm', () => executable('npm', ['--version']));
+  check('process ownership tools', () => {
+    if (process.platform === 'win32')
+      throw new Error('POSIX process groups required.');
+    executable('ps', ['-p', String(process.pid), '-o', 'pid=']);
+    executable('lsof', ['-v']);
+    return 'POSIX, ps and lsof available.';
+  });
   check('git', () => {
     const location = executable('git', ['rev-parse', '--show-toplevel']);
     if (realpathSync(location) !== selectedRoot)
