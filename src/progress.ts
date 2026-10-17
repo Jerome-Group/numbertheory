@@ -80,6 +80,18 @@ function clearSession() {
   publish({ kind: 'anonymous' }, {});
 }
 
+function clearChangedAccount() {
+  generation++;
+  confirmedAccount = null;
+  publish(
+    {
+      kind: 'unavailable',
+      message: 'Your account changed. Reload progress before saving.',
+    },
+    {},
+  );
+}
+
 async function reload() {
   if (writing) return;
   const requestGeneration = ++generation;
@@ -141,7 +153,10 @@ async function write(
       method,
       credentials: 'same-origin',
       cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Numbertheory-Account': accountId,
+      },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(15_000),
     });
@@ -151,6 +166,19 @@ async function write(
       return false;
     }
     if (response.status === 409) {
+      const error: unknown = await response.json();
+      if (requestGeneration !== generation) return false;
+      if (
+        !error ||
+        typeof error !== 'object' ||
+        !('code' in error) ||
+        (error.code !== 'account_changed' && error.code !== 'conflict')
+      )
+        throw new Error('Unknown progress conflict.');
+      if (error.code === 'account_changed') {
+        clearChangedAccount();
+        return false;
+      }
       publish({
         kind: 'conflict',
         ...account,
@@ -172,15 +200,7 @@ async function write(
     const document = parseDocument(await response.json());
     if (requestGeneration !== generation) return false;
     if (document.accountId !== accountId) {
-      generation++;
-      confirmedAccount = null;
-      publish(
-        {
-          kind: 'unavailable',
-          message: 'Your account changed. Reload progress before saving.',
-        },
-        {},
-      );
+      clearChangedAccount();
       return false;
     }
     if (document.revision <= account.revision)

@@ -117,6 +117,10 @@ test('shows only acknowledged marks and admits one local write', async () => {
   await b.store.reload();
   assert.equal(b.requests.length, 2);
   assert.equal(b.requests[1].init.method, 'PATCH');
+  assert.equal(
+    new Headers(b.requests[1].init.headers).get('X-Numbertheory-Account'),
+    accountId,
+  );
   assert.deepEqual(b.body(), { lessonId: 'P00', status: 'complete' });
   b.requests[1].resolve(
     Response.json(document('account-alpha', 1, { P00: 'complete' })),
@@ -156,6 +160,10 @@ test('bulk conflicts preserve confirmed marks and require reload', async () => {
     document('account-alpha', 4, { P00: 'review' }),
   );
   const clearing = b.store.reset(accountId);
+  assert.equal(
+    new Headers(b.requests[1].init.headers).get('X-Numbertheory-Account'),
+    accountId,
+  );
   assert.deepEqual(b.body(), { revision: 4, lessons: {} });
   b.requests[1].resolve(
     Response.json({ code: 'conflict', message: 'Conflict.' }, { status: 409 }),
@@ -165,6 +173,38 @@ test('bulk conflicts preserve confirmed marks and require reload', async () => {
   assert.equal(b.store.getSnapshot().P00, 'review');
   assert.equal(await b.store.reset(accountId), false);
   assert.equal(b.requests.length, 2);
+});
+
+test('account precondition refusal clears previous private marks without replay', async () => {
+  const b = boundary();
+  const accountId = await b.load(
+    document('account-alpha', 4, { P00: 'complete' }),
+  );
+  const saving = b.store.set({ accountId, lessonId: 'C02', status: 'review' });
+  assert.equal(
+    new Headers(b.requests[1].init.headers).get('X-Numbertheory-Account'),
+    'account-alpha',
+  );
+  b.requests[1].resolve(
+    Response.json(
+      { code: 'account_changed', message: 'The active account changed.' },
+      { status: 409 },
+    ),
+  );
+  assert.equal(await saving, false);
+  const status = b.store.getStatusSnapshot();
+  assert.equal(status.kind, 'unavailable');
+  assert.ok('message' in status);
+  assert.match(status.message, /account changed/);
+  assert.equal('accountId' in status, false);
+  assert.equal(Object.keys(b.store.getSnapshot()).length, 0);
+  assert.equal(await b.store.reset(accountId), false);
+  assert.equal(b.requests.length, 2);
+  await b.load(document('account-beta', 1, { C02: 'complete' }));
+  assert.equal(b.store.getSnapshot().P00, undefined);
+  assert.equal(b.store.getSnapshot().C02, 'complete');
+  assert.equal(await b.store.reset(accountId), false);
+  assert.equal(b.requests.length, 3);
 });
 
 test('sign-out immediately clears private marks and fences a late write reply', async () => {
@@ -248,6 +288,7 @@ for (const reply of [
   () => Response.json(document('account-alpha', 0)),
   () => Response.json({ ...document(), lessons: { X99: 'complete' } }),
   () => new Response('unreadable'),
+  () => Response.json({ code: 'unexpected' }, { status: 409 }),
   () =>
     Response.json(
       { code: 'unavailable', message: 'Unavailable.' },
