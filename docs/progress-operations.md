@@ -10,7 +10,13 @@ In Practice, **Check this device for older marks** previews old local data. **Im
 
 Use Node24, `npm ci`, `npm run build`, then the project verification skill. Its owned Worker uses an isolated local D1 database, applies the committed migration and retains artifacts outside the repository. Its named fictional identities exercise owner isolation and recovery; they do not establish native ChatGPT authentication. `npm test` includes actual local D1 concurrency and API boundary checks.
 
-For development, `npm run dev` uses the official Sites local identity mock. `npm start` runs the built Worker locally with state under ignored `.wrangler/state`. Keep these local databases, browser sessions and identity fixtures out of Git and published archives.
+For development, `npm run dev` uses the official Sites local identity mock. `npm start` runs the built Worker locally with state under ignored `.wrangler/state`. Before either preview, build once and apply each pending SQL migration in order, once per local database:
+
+```sh
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_minor_ben_parker.sql
+```
+
+Do not replay an applied migration. Local preview state and the verification skill's disposable D1 are separate. Keep local databases, browser sessions and identity fixtures out of Git and published archives.
 
 ## Publish and roll back
 
