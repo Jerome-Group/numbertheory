@@ -36,7 +36,7 @@ The driver runs a read-only doctor before the first browser action and after eac
 node .agents/skills/verify/scripts/drive.mjs --doctor --output /absolute/external/running-session
 ```
 
-Require matching PID, process group, start time, command, source hash, lock hash, build hash, served index, and entry JavaScript. A stopped, changed, or ambiguous instance fails. This establishes instance identity. It does not replace `npm run build` or mathematical review.
+Require matching PID, process group, start time, command, source hash, lock hash, build hash, served index, and entry JavaScript. The build's source receipt must match current source and lock bytes. A stopped, changed, stale, or ambiguous instance fails. This establishes instance identity. It does not replace `npm run build` or mathematical review.
 
 ## Drive
 

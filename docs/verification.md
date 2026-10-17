@@ -1,16 +1,25 @@
 # Verification contract
 
-Start with `npm run verify:help`. JSON output lists commands, prerequisites, reads, writes and boundaries. Requires Node24, npm, Git and registry access. No deployment or browser automation occurs in this CLI.
+Start with `npm run --silent agent -- help`. JSON output lists strict command syntax, prerequisites, reads, writes and boundaries. The project [verification skill](../.agents/skills/verify/SKILL.md) owns the source-derived feature map and real-browser recipes. Requires Node24 or later, npm and Git; installation needs registry access. Commands never deploy.
 
 | Command | Purpose | Effects |
 | --- | --- | --- |
 | `npm run --silent verify:help` | Discover commands and stages | stdout only; no dependencies needed |
 | `npm run --silent verify:map` | Current83 lessons, routes, dependencies, paths, figures, tools, features and journeys | Reads source/locked installed compiler; JSON stdout |
 | `npm run --silent verify:identity` | Source, lock, build and scope digests | Reads source and existing dist; fails if build missing |
+| `npm run --silent agent -- doctor` | Read-only prerequisite report | Reads tools, source, installed browser and build; presence is not browser-launch proof |
+| `npm run --silent agent -- launch --output /absolute/fresh-dir` | Foreground built app | Starts an owned loopback server; stop with Ctrl-C; retains its ownership receipt |
+| `npm run --silent agent -- drive --feature all --output /absolute/fresh-dir` | Serial real-browser regression journeys | Starts and stops its server/browser; writes traces, screenshots and scoped report |
+| `npm run --silent agent -- evidence --output /absolute/existing-dir` | Validate a scoped browser report | Reads current identity and actual artifact digests; creates no observation |
+| `npm run --silent agent -- cleanup --output /absolute/existing-dir` | Recover an interrupted owned run | Stops only processes whose recorded ownership still matches; retains evidence |
 | `npm run --silent verify` | Same executable loop as CI | npmci replaces node_modules, uses npmcache/network; checks source; tests temporary fixtures; rebuilds dist; structured JSON stdout |
 | `npm run --silent verify:release -- /absolute/browser.json /absolute/semantic.json` | Automated gates plus current external manual evidence | Same build/check effects; reads evidence/artifacts; never publishes |
 
-Redirect JSON output outside the repository. Plain `npm run` adds npm's banner; `--silent` makes stdout parseable JSON. Nonzero exit means failure. The report retains stage command, timestamps, stdout/stderr and exit status. Failed automation cannot become release-ready. Automated success explicitly reports browser/semantic gates as not evaluated. CI uses this loop and writes a compact job summary; its green check alone does not attest mathematical correctness, accessibility or learning effectiveness.
+Redirect JSON output outside the repository. Plain `npm run` adds npm's banner; `--silent` makes stdout parseable JSON. Nonzero exit means failure. Unknown, duplicate, missing or irrelevant arguments fail before effects. Run `help COMMAND` for exact syntax. `drive` accepts a single feature domain or `all`; `--channel chrome` selects an installed Chrome instead of the locked Playwright Chromium. `doctor --output DIR` checks a running receipt and HTTP readiness without changing it. Fresh output directories prevent overwriting failed evidence. Builds record source and lock identity only after a successful build with unchanged inputs; stale or missing receipts fail the doctor and evidence commands.
+
+The automated report retains stage commands, timestamps, stdout/stderr and exit status. CI runs the shared gates and the scoped browser driver, retaining browser artifacts even after failure. Automated success reports browser/semantic release gates as not evaluated. A scoped Playwright report has its own lane and source/lock/build/scope identity; it cannot satisfy the exhaustive in-app-browser or independent mathematical review contracts below. No finite check guarantees all future behavior.
+
+Keep exact mathematics, protocol and integrity tests. Prefer visible browser journeys over simulated React/DOM harnesses. Delete a redundant harness only after its replacement catches a known bad implementation and passes the repair. Test-first development is optional; fixing a failure still requires a retained failing observation and a verified repair.
 
 ## What the generated map requires
 
@@ -40,4 +49,4 @@ Freeze source and build before final observation/review. Generate identity and c
 
 Issue first, attributed branch/commits, independent Standards and Spec review, open/attach PR. Required checks must pass on its exact current head; respect protections and dependency policy. A reviewed merge is not a deployment. Publish that merged source through the existing Sites binding, then verify production assets, routes, interactions and journeys. Preserve audience/domain/access.
 
-Before deployment retain the preceding Sites version, source commit and progress schema. The Oct3 baseline source is `5247fc839b0a4d2dcbd20ac74025fdea390f2e96`, local tag `rollback/pre-learning-redesign-2026-10-03`; preceding deployed Sites version is4. Roll back by redeploying version4 on the same project/domain, then check production. Source rollback uses a reviewed revert PR; never reset main or bypass protections. Local progress remains schema1/key `numbertheory.progress.v1`; copy a JSON backup before clearing/importing a browser's marks.
+Before each deployment retain its actual preceding Sites version, source commit and progress schema outside this public tree. The verified predecessor on Oct18 is version5, source `85afcb0a7376976cb8ddbca1e0093febe11fae0b`. Roll back by redeploying that retained version on the same project/domain, then check production. Source rollback uses a reviewed revert PR; never reset main or bypass protections. Local progress remains schema1/key `numbertheory.progress.v1`; copy a JSON backup before clearing/importing a browser's marks.

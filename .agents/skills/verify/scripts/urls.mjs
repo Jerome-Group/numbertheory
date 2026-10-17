@@ -352,7 +352,7 @@ export async function urls(suite) {
           },
         );
         await step(
-          'Browser Back to an argument closes open drawer and focuses that section',
+          'Back and Forward close the drawer and focus their destinations',
           async () => {
             await go(`${first.route}#proof`);
             await focused(page.locator('#proof h2'));
@@ -364,6 +364,10 @@ export async function urls(suite) {
             await page.goBack({ waitUntil: 'load' });
             await drawerClosed(page, page.locator('#proof h2'));
             assert.equal(new URL(page.url()).hash, '#proof');
+            await drawerOpen(page);
+            await page.goForward({ waitUntil: 'load' });
+            await drawerClosed(page, page.locator('#main-content h1'));
+            assert.equal(new URL(page.url()).pathname, '/explore');
           },
         );
       },

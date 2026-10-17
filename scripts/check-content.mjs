@@ -1,24 +1,10 @@
 import { readFileSync } from 'node:fs';
-import ts from '@typescript/typescript6';
 import katex from 'katex';
+import { loadRepositoryModule } from './verification/repo-loader.mjs';
 
-let source = readFileSync('src/content/lessons.ts', 'utf8');
-source = source.replace(
-  /import (\w+) from '\.\/(.+\.json)';/g,
-  (_, variable, file) => {
-    const contents = readFileSync(`src/content/${file}`, 'utf8');
-    JSON.parse(contents);
-    return `const ${variable} = ${contents};`;
-  },
-);
-const compiled = ts.transpileModule(source, {
-  compilerOptions: {
-    module: ts.ModuleKind.ESNext,
-    target: ts.ScriptTarget.ES2022,
-  },
-}).outputText;
-const { lessons } = await import(
-  `data:text/javascript;base64,${Buffer.from(compiled).toString('base64')}`
+const { lessons } = await loadRepositoryModule(
+  process.cwd(),
+  'src/content/lessons.ts',
 );
 const errors = [];
 const ids = new Set();
@@ -182,17 +168,9 @@ for (const row of courseMap) {
       errors.push(`${row.id}: historical handout needs visible source status`);
   }
 }
-const checkpointSource = ts.transpileModule(
-  readFileSync('src/content/checkpoints.ts', 'utf8'),
-  {
-    compilerOptions: {
-      module: ts.ModuleKind.ESNext,
-      target: ts.ScriptTarget.ES2022,
-    },
-  },
-).outputText;
-const { chapterCheckpoints } = await import(
-  `data:text/javascript;base64,${Buffer.from(checkpointSource).toString('base64')}`
+const { chapterCheckpoints } = await loadRepositoryModule(
+  process.cwd(),
+  'src/content/checkpoints.ts',
 );
 for (const cluster of new Set(lessons.map((lesson) => lesson.cluster)))
   if (!chapterCheckpoints[cluster])

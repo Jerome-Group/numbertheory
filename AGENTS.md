@@ -14,7 +14,12 @@ third-party material outside its tree and history.
 
 ## Getting it running
 
-The application is React/Vite/TypeScript. Run `npm ci`, then `npm run dev` for local development. Run `npm run check:content`, `npm run check`, `npm run format:check`, `npm run lint`, `npm test`, `npm run build`, and `npm run check:public` before a pull request. The static build is published through the configured Sites project.
+The application is React/Vite/TypeScript. Start with `npm run agent -- help`.
+Run `npm ci`, then `npm run dev` for development. Before a pull request, run
+`npm run --silent agent -- verify` and the affected journeys in
+[the project verification skill](.agents/skills/verify/SKILL.md). The shared gate includes content,
+types, format, lint, mathematics, contracts, build, public-source, and verifier checks. The static
+build is published through the configured Sites project.
 
 ## Conventions
 
@@ -92,4 +97,7 @@ skeleton CI has not earned that.
 
 ## Repository notes
 
-*(Anything with no natural home above. May be empty.)*
+Use pstack workflows for nontrivial implementation and refactoring. The project verification
+skill and its feature map describe real user journeys. Keep them current with behavior changes.
+Keep exact mathematics and boundary tests. Prefer real browser proof for interface behavior.
+Replace simulated implementation tests only after their observable behavior is covered.

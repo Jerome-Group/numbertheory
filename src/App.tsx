@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -31,7 +32,7 @@ export function App() {
     setDrawer(false);
   }, []);
   useEffect(() => registerStudyTools(), []);
-  useEffect(() => {
+  useLayoutEffect(() => {
     setDrawer(false);
     const readingRoot =
       state.view === 'lesson'
@@ -107,7 +108,7 @@ export function App() {
         ?.focus();
     });
   }, [state.view, state.lessonId, navigationRevision, lesson.lab]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!drawer) return;
     const main = document.getElementById('main-content');
     const sidebar = document.getElementById('lesson-sidebar');

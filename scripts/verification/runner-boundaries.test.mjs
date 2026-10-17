@@ -14,7 +14,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { catalog, verify } from './verify.mjs';
+import { catalog, fingerprint, verify } from './verify.mjs';
 
 const source =
   process.env.NUMBERTHEORY_REPO ??
@@ -47,6 +47,10 @@ function fixture(t, built = true) {
     writeFileSync(
       join(root, 'dist/index.html'),
       '<html>isolated build fixture</html>',
+    );
+    writeFileSync(
+      join(root, 'dist/source-identity.json'),
+      JSON.stringify({ schemaVersion: 1, ...fingerprint(root) }),
     );
   }
   return root;

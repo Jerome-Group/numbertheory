@@ -105,6 +105,10 @@ strict KaTeX parsing. Exact arithmetic lives in `src/math/` with adjacent `*.tes
 Keep mathematical state transitions in `src/state.ts`; the WebMCP adapter calls the same
 algorithms as the visible labs. Index keys are allowed for immutable traces and examples with
 no row-local state. CSS media overrides may descend in specificity intentionally.
+Use the project verification skill for real interface journeys. Keep exact mathematical and
+boundary tests. Prefer browser checks over simulated React or DOM implementations. A test-first
+sequence is optional unless the task requests it. Delete redundant tests only after equivalent
+observable behavior has been proved.
 
 ## 7. Evolution — what is rigid, what moves
 

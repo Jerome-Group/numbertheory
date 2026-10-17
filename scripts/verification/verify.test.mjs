@@ -247,6 +247,11 @@ test('source hash detects tracked working-tree edits; build hash detects changed
     assert.notEqual(fingerprint(root).sourceHash, first.sourceHash);
     mkdirSync(join(root, 'dist'));
     writeFileSync(join(root, 'dist/index.html'), 'old');
+    assert.throws(() => buildFingerprint(root), /build source identity/);
+    writeFileSync(
+      join(root, 'dist/source-identity.json'),
+      JSON.stringify({ schemaVersion: 1, ...fingerprint(root) }),
+    );
     const old = buildFingerprint(root);
     writeFileSync(join(root, 'dist/index.html'), 'new');
     assert.notEqual(buildFingerprint(root).buildHash, old.buildHash);
@@ -254,6 +259,7 @@ test('source hash detects tracked working-tree edits; build hash detects changed
     writeFileSync(join(root, 'new.ts'), 'new source');
     assert.notEqual(fingerprint(root).sourceHash, first.sourceHash);
     assert.equal(fingerprint(root).files, 3);
+    assert.throws(() => buildFingerprint(root), /Stale build source identity/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

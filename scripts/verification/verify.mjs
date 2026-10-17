@@ -106,12 +106,26 @@ export function buildFingerprint(root) {
   const dist = join(root, 'dist');
   if (!existsSync(join(dist, 'index.html')))
     throw new Error('Missing dist/index.html; fresh build required.');
+  const receiptPath = join(dist, 'source-identity.json');
+  if (!existsSync(receiptPath) || !lstatSync(receiptPath).isFile())
+    throw new Error('Missing regular build source identity; rebuild required.');
+  const receipt = JSON.parse(readFileSync(receiptPath, 'utf8'));
+  const current = fingerprint(root);
+  if (
+    receipt.schemaVersion !== 1 ||
+    receipt.sourceHash !== current.sourceHash ||
+    receipt.lockHash !== current.lockHash
+  )
+    throw new Error('Stale build source identity; rebuild required.');
   const files = [];
   function walk(dir) {
     for (const name of readdirSync(dir).sort()) {
       const file = join(dir, name);
-      if (lstatSync(file).isDirectory()) walk(file);
-      else files.push([file.slice(dist.length + 1), hash(readFileSync(file))]);
+      const stat = lstatSync(file);
+      if (stat.isDirectory()) walk(file);
+      else if (stat.isFile())
+        files.push([file.slice(dist.length + 1), hash(readFileSync(file))]);
+      else throw new Error(`Build output must contain regular files: ${file}`);
     }
   }
   walk(dist);

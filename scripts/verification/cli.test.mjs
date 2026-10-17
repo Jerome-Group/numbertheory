@@ -303,9 +303,15 @@ test('evidence checks current identity and real artifact bytes without creating 
   };
   const identity = {
     ...fingerprint(f.root),
+  };
+  writeFileSync(
+    join(f.root, 'dist/source-identity.json'),
+    JSON.stringify({ schemaVersion: 1, ...identity }),
+  );
+  Object.assign(identity, {
     ...buildFingerprint(f.root),
     scopeHash: (await scopeMap(f.root)).scopeHash,
-  };
+  });
   const report = {
     schemaVersion: 1,
     status: 'passed',

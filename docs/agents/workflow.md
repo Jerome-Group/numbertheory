@@ -32,9 +32,11 @@ one context window's worth of implementation. When it is not, go from the grilli
 `/implement` in the same window — a spec for work that fits in one session is ceremony that buys
 nothing.
 
-`/implement` drives `/tdd` at the agreed seams and closes by running `/code-review` before
-anything is committed, so the review the Owner reads is a conclusion rather than a promise. The
-pull request that follows is not optional: **How work flows** in `AGENTS.md` is the rule.
+Implementation uses the applicable pstack workflow and the project
+[verification skill](../../.agents/skills/verify/SKILL.md). Use exact unit tests for mathematics
+and boundary contracts, and real browser journeys for interface behavior. Test-first work is a
+choice at a useful seam. Keep a reproduced failure before fixing a bug. Independent review runs
+before opening the pull request. **How work flows** in `AGENTS.md` requires that pull request.
 
 ## From a cleared map, `/to-spec` is mandatory
 
