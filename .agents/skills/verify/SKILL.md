@@ -22,6 +22,8 @@ Replace the output path with a new directory whose parent exists, outside the pu
 
 Public journeys use fresh anonymous browser contexts. Marking and account cases explicitly attach invented Sites identity headers to local contexts. Each case has unique fixture accounts; sibling contexts share an account only when the case requests it. These simulate a trusted local dispatcher. They do not establish hosted identity. No production account, database, or service is used.
 
+Supplemental account fences dispatch explicitly synthetic lifecycle events and hold actual backend responses. They establish event handling and response ordering. Native BFcache and hosted account changes require separate browser evidence.
+
 For an interactive browser session, run the following foreground command. Its ready JSON gives the owned origin and exact identity. Keep the process alive while driving it, then send SIGINT or SIGTERM.
 
 ```sh
@@ -70,6 +72,6 @@ Recovery refuses a live or reused owner PID and any changed process identity. Re
 
 ## Helpers
 
-`scripts/drive.mjs --help` exposes the strict command contract and effects. `--feature`, `--launch-only`, `--doctor`, and `--cleanup` are mutually exclusive. The script and its imports live inside this skill. `runtime.mjs` owns migrations, process identity, doctor, and teardown. `browser.mjs` owns anonymous and fixture-account context evidence and acknowledged mark actions. Five domain modules implement the five recipes; `practice.mjs` includes `account-journeys.mjs`.
+`scripts/drive.mjs --help` exposes the strict command contract and effects. `--feature`, `--launch-only`, `--doctor`, and `--cleanup` are mutually exclusive. The script and its imports live inside this skill. `runtime.mjs` owns migrations, process identity, doctor, and teardown. `browser.mjs` owns context evidence, acknowledged marks, and visible/authored content assertions. Five domain modules implement the five recipes; `practice.mjs` includes `account-journeys.mjs` and `account-lifecycle.mjs`.
 
 Maintain this directory with `pstack:maintain-verification-skill` when user paths change. Repair helpers here without adding test-only product controls. Reuse `scripts/verification/repo-loader.mjs` and `verify.mjs` for authored data and identity. Preserve exact math and evidence-contract checks.

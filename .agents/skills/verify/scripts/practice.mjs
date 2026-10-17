@@ -8,6 +8,7 @@ import {
   visible,
 } from './browser.mjs';
 import { accountJourneys } from './account-journeys.mjs';
+import { accountLifecycle } from './account-lifecycle.mjs';
 
 export async function practice(suite) {
   for (const profile of suite.profiles) {
@@ -49,6 +50,45 @@ export async function practice(suite) {
               })
               .click();
             await visible(worksheet.locator('.answer'));
+          },
+        );
+        await step(
+          'Save and clear embedded worksheet marks with queue updates',
+          async () => {
+            const worksheet = page.locator(`#practice-${first.id}`);
+            const document = await acknowledged(page, 'PATCH', () =>
+              worksheet
+                .getByRole('button', { name: 'Mark understood', exact: true })
+                .click(),
+            );
+            assert.equal(document.lessons[first.id], 'complete');
+            assert.equal(await page.locator('.practice-item').count(), 0);
+            await page
+              .getByRole('button', { name: 'All problems', exact: true })
+              .click();
+            await page
+              .locator('.practice-item')
+              .filter({ has: worksheet })
+              .locator('summary')
+              .click();
+            await markLesson(page, first.id, 'Clear mark', null, worksheet);
+            assert.equal(
+              await worksheet
+                .getByRole('button', { name: 'Mark understood', exact: true })
+                .getAttribute('aria-pressed'),
+              'false',
+            );
+            await markLesson(
+              page,
+              first.id,
+              'Review later',
+              'review',
+              worksheet,
+            );
+            await page
+              .getByRole('button', { name: 'Review later (1)', exact: true })
+              .click();
+            assert.equal(await page.locator('.practice-item').count(), 1);
           },
         );
         const controls = page.locator('.progress-management');
@@ -234,4 +274,5 @@ export async function practice(suite) {
     );
   }
   await accountJourneys(suite);
+  await accountLifecycle(suite);
 }

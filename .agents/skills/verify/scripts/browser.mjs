@@ -33,6 +33,33 @@ export async function textIncludes(locator, expected) {
   );
 }
 
+export async function renderedMath(locator) {
+  return locator
+    .locator('.katex:visible')
+    .locator('annotation[encoding="application/x-tex"]')
+    .allTextContents();
+}
+
+export async function authoredText(locator, expected) {
+  await visible(locator);
+  const actual = await locator.evaluate((element) => {
+    const copy = element.cloneNode(true);
+    for (const math of copy.querySelectorAll('.math-inline, .math-block')) {
+      const tex = math.querySelector(
+        'annotation[encoding="application/x-tex"]',
+      );
+      if (!tex) throw new Error('Authored mathematics has no TeX annotation');
+      const delimiters = math.classList.contains('math-block')
+        ? ['\\[', '\\]']
+        : ['\\(', '\\)'];
+      math.replaceWith(`${delimiters[0]}${tex.textContent}${delimiters[1]}`);
+    }
+    return copy.textContent;
+  });
+  const compact = (text) => text.replace(/\s+/g, ' ').trim();
+  assert.equal(compact(actual), compact(expected), 'Authored content differs');
+}
+
 export async function checkPage(page) {
   await visible(page.locator('#main-content h1'));
   assert.equal(
@@ -164,23 +191,21 @@ export async function runCase(
     const accountId = account
       ? `local-fixture-${hash(`${suite.output}:${profile}:${id}:${account}`).slice(0, 24)}`
       : null;
+    const headers = accountId
+      ? {
+          'oai-authenticated-user-id': accountId,
+          'oai-authenticated-user-email': `${accountId}@example.test`,
+          'oai-authenticated-user-full-name': encodeURIComponent(
+            `Local verifier ${account}`,
+          ),
+          'oai-authenticated-user-full-name-encoding': 'percent-encoded-utf-8',
+        }
+      : {};
     const context = await suite.browser.newContext({
       viewport: profiles[profile],
       reducedMotion: 'reduce',
       permissions,
-      ...(accountId
-        ? {
-            extraHTTPHeaders: {
-              'oai-authenticated-user-id': accountId,
-              'oai-authenticated-user-email': `${accountId}@example.test`,
-              'oai-authenticated-user-full-name': encodeURIComponent(
-                `Local verifier ${account}`,
-              ),
-              'oai-authenticated-user-full-name-encoding':
-                'percent-encoded-utf-8',
-            },
-          }
-        : {}),
+      extraHTTPHeaders: headers,
     });
     await context.tracing.start({
       screenshots: true,
@@ -239,6 +264,7 @@ export async function runCase(
       page,
       context,
       accountId,
+      headers,
       step: (action, callback) => stepFor(page, action, callback),
       go: (path) =>
         stepFor(page, `Open ${path}`, async () => {

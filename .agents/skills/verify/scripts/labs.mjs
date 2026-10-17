@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { runCase, textIncludes, visible } from './browser.mjs';
+import { renderedMath, runCase, textIncludes, visible } from './browser.mjs';
 
 async function fill(lab, fields) {
   for (const [label, value] of fields)
@@ -8,15 +8,34 @@ async function fill(lab, fields) {
       .fill(value);
 }
 
+async function openDetails(lab, text) {
+  const summary = lab.locator('summary').filter({ hasText: text });
+  const details = summary.locator('..');
+  if ((await details.getAttribute('open')) === null) await summary.click();
+  assert.notEqual(await details.getAttribute('open'), null);
+}
+
 async function math(lab, expected) {
-  const values = await lab
-    .locator('annotation[encoding="application/x-tex"]')
-    .allTextContents();
+  const values = await renderedMath(lab);
   const compact = (value) => value.replace(/\s/g, '');
   assert(
     values.some((value) => compact(value) === compact(expected)),
     `Missing exact rendered result ${expected}. Observed ${JSON.stringify(values.slice(-18))}`,
   );
+}
+
+async function resultMath(lab) {
+  return lab
+    .locator('.katex:visible')
+    .evaluateAll((elements) =>
+      elements
+        .filter((element) => !element.closest('form'))
+        .map(
+          (element) =>
+            element.querySelector('annotation[encoding="application/x-tex"]')
+              ?.textContent,
+        ),
+    );
 }
 
 const cases = {
@@ -73,9 +92,7 @@ const cases = {
         })
         .click();
       await math(lab, '0,3,6,9');
-      await lab
-        .getByText('Show the complete exact map', { exact: true })
-        .click();
+      await openDetails(lab, 'Show the complete exact map');
       assert.equal(
         await lab.getByRole('table').locator('tbody tr').count(),
         12,
@@ -200,6 +217,22 @@ const cases = {
         .click();
       await math(lab, '3^{1}\\equiv3\\pmod{7}');
       await lab
+        .getByRole('button', {
+          name: 'Open order tables and proof readout',
+          exact: true,
+        })
+        .click();
+      const table = lab.getByRole('table', {
+        name: 'Order of each power of 3 modulo 7',
+        exact: true,
+      });
+      await visible(table);
+      assert.equal(await table.locator('tbody tr').count(), 6);
+      assert.deepEqual(
+        await table.locator('tbody tr').last().locator('td').allTextContents(),
+        ['5', '1', '6', '6'],
+      );
+      await lab
         .getByRole('button', { name: 'Short cycle modulo 7', exact: true })
         .click();
       await math(lab, '\\operatorname{ord}_{7}(2)=3');
@@ -276,9 +309,7 @@ const cases = {
     verify: async (lab) => {
       await math(lab, 'q=2+0i,\\quad r=1+1i');
       await math(lab, 'N(r)=2<N(\\beta)=13');
-      await lab
-        .getByText('Read the exact certificate', { exact: true })
-        .click();
+      await openDetails(lab, 'Read the exact certificate');
     },
     invalid: [
       ['Real part of divisor', '0'],
@@ -301,15 +332,37 @@ const cases = {
     },
     verify: async (lab, lesson) => {
       if (lesson.id === 'R05') {
-        await lab
-          .getByText('Reveal the full periodic expansion', { exact: true })
-          .click();
+        await openDetails(lab, 'Reveal the full periodic expansion');
         await math(lab, '\\sqrt{2}=[1;\\overline{2}]');
       } else {
         const slider = lab.getByRole('slider');
         await slider.focus();
         await slider.press('End');
+        assert.equal(await slider.inputValue(), '4');
+        await textIncludes(
+          lab.locator('.cf-lab__depth output'),
+          '4 of 4 entries',
+        );
+        const rows = lab
+          .getByRole('table', {
+            name: 'Truncations, determinants, and exact errors',
+            exact: true,
+          })
+          .locator('tbody tr');
+        assert.equal(await rows.count(), 4);
+        await math(rows.last(), '43/19');
         await math(lab, '[2;3,1,4]');
+        await slider.press('Home');
+        assert.equal(await slider.inputValue(), '1');
+        await textIncludes(
+          lab.locator('.cf-lab__depth output'),
+          '1 of 4 entries',
+        );
+        assert.equal(await rows.count(), 1);
+        assert(
+          !(await renderedMath(lab)).includes('[2;3,1,4]'),
+          'Hidden canonical expansion satisfied a visible prefix check',
+        );
       }
     },
     prepareInvalid: async (lab) => {
@@ -411,6 +464,10 @@ export async function labs(suite) {
             'Reject invalid input without changing the shareable result',
             async () => {
               const before = page.url();
+              const beforeMath = await resultMath(lab);
+              const beforeRows = await lab
+                .locator('table:visible tbody')
+                .allTextContents();
               await fixture.prepareInvalid?.(lab);
               await fill(lab, fixture.invalid ?? []);
               await lab
@@ -426,6 +483,23 @@ export async function labs(suite) {
                 before,
                 'Invalid submission changed URL state',
               );
+              assert.deepEqual(
+                await resultMath(lab),
+                beforeMath,
+                'Invalid input changed visible formulas',
+              );
+              assert.deepEqual(
+                await lab.locator('table:visible tbody').allTextContents(),
+                beforeRows,
+                'Invalid input changed visible result rows',
+              );
+              await fixture.prepare?.(lab, lesson);
+              await fill(lab, fixture.fields);
+              await lab
+                .getByRole('button', { name: fixture.submit, exact: true })
+                .click();
+              assert.equal(await lab.getByRole('alert').count(), 0);
+              await fixture.verify(lab, lesson);
             },
           );
         },
