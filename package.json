@@ -4,10 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "agent": "node scripts/verification/verify.mjs",
-    "dev": "vite --host 0.0.0.0",
+    "dev": "node --import ./scripts/sites-env.mjs ./node_modules/vite/bin/vite.js dev --host 127.0.0.1",
     "build": "npm run check:content && npm run check && npm run build:bundle",
-    "build:bundle": "node scripts/build.mjs",
     "check": "tsc --noEmit",
     "format:check": "biome format .",
     "lint": "biome lint .",
@@ -19,22 +17,45 @@
     "verify:help": "node scripts/verification/verify.mjs help",
     "verify:map": "node scripts/verification/verify.mjs map .",
     "verify:identity": "node scripts/verification/verify.mjs fingerprint .",
-    "test:verification": "node --test scripts/verification/verify.test.mjs scripts/verification/runner-boundaries.test.mjs scripts/verification/learning-content.test.mjs scripts/verification/evidence.test.mjs scripts/verification/cli.test.mjs"
+    "test:verification": "node --test scripts/verification/verify.test.mjs scripts/verification/runner-boundaries.test.mjs scripts/verification/learning-content.test.mjs scripts/verification/evidence.test.mjs scripts/verification/cli.test.mjs",
+    "build:bundle": "node scripts/build.mjs",
+    "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
+    "db:generate": "drizzle-kit generate",
+    "agent": "node scripts/verification/verify.mjs",
+    "test:progress": "node --test scripts/progress-d1.test.mjs"
   },
   "dependencies": {
+    "drizzle-orm": "0.45.2",
     "katex": "^0.19.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15",
+    "@cloudflare/vite-plugin": "1.64.0",
+    "@cloudflare/workers-types": "5.20261016.1",
     "@types/katex": "^0.16.7",
     "@types/node": "^26.6.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@typescript/typescript6": "^6.0.2",
-    "playwright": "1.64.1",
+    "@vitejs/plugin-react": "6.0.2",
+    "@vitejs/plugin-rsc": "0.5.38",
+    "drizzle-kit": "0.31.11",
+    "esbuild": "0.28.2",
+    "miniflare": "5.20261012.1-beta",
+    "react-server-dom-webpack": "19.3.1",
     "typescript": "^7.0.2",
-    "vite": "^8.3.4"
+    "vinext": "1.2.1",
+    "vite": "^8.3.4",
+    "wrangler": "4.151.1",
+    "playwright": "1.64.1"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.28.2"
+    },
+    "fflate": "0.8.3"
   }
 }
