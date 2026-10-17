@@ -164,6 +164,15 @@ export function buildFingerprint(root) {
   walk(dist);
   return { buildHash: hash(JSON.stringify(files)), assets: files.length };
 }
+function frozenBuildStage(root, frozenBuild, stage) {
+  try {
+    if (buildFingerprint(root).buildHash !== frozenBuild.buildHash)
+      throw new Error('Frozen build changed during release verification.');
+    return { stage, status: 'passed', ...frozenBuild };
+  } catch (error) {
+    return { stage, status: 'failed', error: error.message };
+  }
+}
 export async function scopeMap(root) {
   const { lessons } = await loadRepositoryModule(
     root,
@@ -423,6 +432,30 @@ export async function verify(
 ) {
   const source = fingerprint(root),
     stages = [];
+  const boundary = {
+    scope: release ? 'release' : 'automated',
+    releaseReady: false,
+    manualGates: [
+      { stage: 'browser', status: 'not-evaluated', requiredFor: 'release' },
+      { stage: 'semantic', status: 'not-evaluated', requiredFor: 'release' },
+    ],
+  };
+  let frozenBuild;
+  if (release) {
+    try {
+      frozenBuild = buildFingerprint(root);
+    } catch (error) {
+      return {
+        schemaVersion: 1,
+        status: 'failed',
+        ...boundary,
+        identity: source,
+        stages: [
+          { stage: 'frozen-build', status: 'failed', error: error.message },
+        ],
+      };
+    }
+  }
   const install = runStage('install', root, runner);
   stages.push(install);
   let map;
@@ -441,17 +474,13 @@ export async function verify(
       ],
     };
   }
-  const boundary = {
-    scope: release ? 'release' : 'automated',
-    releaseReady: false,
-    manualGates: [
-      { stage: 'browser', status: 'not-evaluated', requiredFor: 'release' },
-      { stage: 'semantic', status: 'not-evaluated', requiredFor: 'release' },
-    ],
-  };
   for (const stage of Object.keys(catalog).filter(
     (name) => name !== 'install',
   )) {
+    if (release && stage === 'build') {
+      stages.push(frozenBuildStage(root, frozenBuild, 'frozen-build'));
+      continue;
+    }
     let result;
     try {
       result = runStage(stage, root, runner);
@@ -460,15 +489,17 @@ export async function verify(
     }
     stages.push(result);
   }
-  let build = {};
-  try {
-    build = buildFingerprint(root);
-  } catch (error) {
-    stages.push({
-      stage: 'build-identity',
-      status: 'failed',
-      error: error.message,
-    });
+  let build = frozenBuild ?? {};
+  if (!release) {
+    try {
+      build = buildFingerprint(root);
+    } catch (error) {
+      stages.push({
+        stage: 'build-identity',
+        status: 'failed',
+        error: error.message,
+      });
+    }
   }
   const identity = { ...source, ...build, scopeHash: map.scopeHash };
   if (release) {
@@ -493,12 +524,17 @@ export async function verify(
     );
   }
   const current = fingerprint(root);
-  if (current.sourceHash !== source.sourceHash)
+  if (
+    current.sourceHash !== source.sourceHash ||
+    current.lockHash !== source.lockHash
+  )
     stages.push({
       stage: 'source-stability',
       status: 'failed',
       error: 'Source changed during verification.',
     });
+  if (release)
+    stages.push(frozenBuildStage(root, frozenBuild, 'build-stability'));
   const status = stages.every((s) => s.status === 'passed')
     ? 'passed'
     : 'failed';

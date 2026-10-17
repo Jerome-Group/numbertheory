@@ -11,10 +11,9 @@ const output = { value: 'DIR', required: true };
 const channel = { value: 'CHANNEL', choices: ['chrome'] };
 const profile = { value: 'PROFILE', choices: ['phone', 'tablet', 'desktop'] };
 const repository = [{ name: 'REPO', required: false }];
-const automatedWrites = [
+const verificationWrites = [
   'node_modules via npm ci',
   'npm cache',
-  'dist via npm run build:bundle',
   'temporary test fixtures',
   'stdout',
 ];
@@ -80,7 +79,7 @@ export const commands = Object.freeze({
     options: {},
     prerequisites: ['Node24/npm on PATH', 'Git', 'registry access for npm ci'],
     reads: ['repo source', 'node_modules'],
-    writes: automatedWrites,
+    writes: [...verificationWrites, 'dist via npm run build:bundle'],
     purpose: 'All automated gates only; no release or manual-pass claim.',
     execute: ({ positionals, api }) => api.verify(checkout(positionals[0])),
   },
@@ -93,13 +92,19 @@ export const commands = Object.freeze({
     options: {},
     prerequisites: [
       'verify prerequisites',
+      'current frozen build with source-identity receipt',
       'actual current CUA browser evidence',
       'independent semantic evidence',
     ],
-    reads: ['repo source', 'node_modules', 'evidence JSON and artifact files'],
-    writes: automatedWrites,
+    reads: [
+      'repo source',
+      'node_modules',
+      'frozen dist',
+      'evidence JSON and artifact files',
+    ],
+    writes: verificationWrites,
     purpose:
-      'Automated checks plus exact fresh manual evidence; no deployment.',
+      'Recheck automated gates and exact manual evidence without rebuilding; no deployment.',
     execute: ({ positionals, api }) =>
       api.verify(
         checkout(positionals[0]),

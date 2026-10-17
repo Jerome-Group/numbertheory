@@ -117,6 +117,13 @@ test('catalog exposes automated and release boundaries without repository reads'
       'actual current CUA browser evidence',
     ),
   );
+  assert.ok(commands['verify:release'].reads.includes('frozen dist'));
+  assert.ok(
+    commands['verify:release'].writes.every(
+      (write) => !write.startsWith('dist '),
+    ),
+  );
+  assert.match(commands['verify:release'].purpose, /without rebuilding/);
 });
 test('missing evidence fails closed', () =>
   assert.throws(
