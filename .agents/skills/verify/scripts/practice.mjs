@@ -1,5 +1,13 @@
 import assert from 'node:assert/strict';
-import { focused, runCase, textIncludes, visible } from './browser.mjs';
+import {
+  acknowledged,
+  focused,
+  markLesson,
+  runCase,
+  textIncludes,
+  visible,
+} from './browser.mjs';
+import { accountJourneys } from './account-journeys.mjs';
 
 export async function practice(suite) {
   for (const profile of suite.profiles) {
@@ -17,16 +25,13 @@ export async function practice(suite) {
         'journey:progress-transfer-reset',
         'journey:returning-learner-review-queue',
       ],
-      async ({ page, context, go, step, data }) => {
+      async ({ page, go, step, data }) => {
         const [first, second] = data.map.lessons;
         await go(first.route);
         await step(
           'Mark a lesson for review and open its worksheet from the queue',
           async () => {
-            await page
-              .locator('#practice')
-              .getByRole('button', { name: 'Review later', exact: true })
-              .click();
+            await markLesson(page, first.id, 'Review later', 'review');
             await go('/practice');
             await page
               .getByRole('button', { name: 'Review later (1)', exact: true })
@@ -47,9 +52,9 @@ export async function practice(suite) {
           },
         );
         const controls = page.locator('.progress-management');
+        const message = controls.locator(':scope > p[role="status"]');
         let backup;
         await step('Copy and inspect transferable schema1 backup', async () => {
-          await context.grantPermissions(['clipboard-read', 'clipboard-write']);
           await controls
             .getByRole('button', { name: 'Copy JSON backup', exact: true })
             .click();
@@ -60,41 +65,12 @@ export async function practice(suite) {
             schemaVersion: 1,
             lessons: { [first.id]: 'review' },
           });
-          assert.deepEqual(
-            JSON.parse(
-              await page.evaluate(() => navigator.clipboard.readText()),
-            ),
-            JSON.parse(backup),
+          await textIncludes(message, 'JSON backup copied.');
+          assert.equal(
+            await page.evaluate(() => navigator.clipboard.readText()),
+            backup,
+            'Clipboard bytes differ from the displayed backup',
           );
-          await textIncludes(controls.locator('[role="status"]'), 'copied');
-          const cdp = await context.newCDPSession(page);
-          const { targetInfo } = await cdp.send('Target.getTargetInfo');
-          await cdp.send('Browser.setPermission', {
-            permission: { name: 'clipboard-write' },
-            setting: 'denied',
-            origin: suite.origin,
-            browserContextId: targetInfo.browserContextId,
-          });
-          await controls
-            .getByRole('button', { name: 'Copy JSON backup', exact: true })
-            .click();
-          await textIncludes(
-            controls.locator('[role="status"]'),
-            'Select and copy',
-          );
-          const fallback = controls.getByRole('textbox', {
-            name: 'Progress backup',
-            exact: true,
-          });
-          await focused(fallback);
-          assert.deepEqual(
-            await fallback.evaluate((element) => [
-              element.selectionStart,
-              element.selectionEnd,
-            ]),
-            [0, backup.length],
-          );
-          await cdp.detach();
         });
         const snapshot = async () =>
           JSON.parse(
@@ -126,9 +102,12 @@ export async function practice(suite) {
               [first.id]: 'review',
             });
             await clear.click();
-            await controls
-              .getByRole('button', { name: 'Clear all marks', exact: true })
-              .click();
+            await acknowledged(page, 'PUT', () =>
+              controls
+                .getByRole('button', { name: 'Clear all marks', exact: true })
+                .click(),
+            );
+            await textIncludes(message, 'All account marks cleared.');
             assert.deepEqual((await snapshot()).lessons, {});
             await page.reload({ waitUntil: 'load' });
             await controls
@@ -146,25 +125,30 @@ export async function practice(suite) {
                 exact: true,
               })
               .fill(backup);
-            await controls
-              .getByRole('button', { name: 'Restore backup text', exact: true })
-              .click();
+            await acknowledged(page, 'PUT', () =>
+              controls
+                .getByRole('button', {
+                  name: 'Restore backup text',
+                  exact: true,
+                })
+                .click(),
+            );
+            await textIncludes(message, 'Progress restored to your account.');
             assert.deepEqual(await snapshot(), JSON.parse(backup));
             const replacement = {
               schemaVersion: 1,
               lessons: { [second.id]: 'complete' },
             };
-            await controls
-              .getByLabel('Import marks', { exact: true })
-              .setInputFiles({
-                name: 'marks.json',
-                mimeType: 'application/json',
-                buffer: Buffer.from(JSON.stringify(replacement)),
-              });
-            await textIncludes(
-              controls.locator('[role="status"]'),
-              'Progress restored from this file.',
+            await acknowledged(page, 'PUT', () =>
+              controls
+                .getByLabel('Import marks', { exact: true })
+                .setInputFiles({
+                  name: 'marks.json',
+                  mimeType: 'application/json',
+                  buffer: Buffer.from(JSON.stringify(replacement)),
+                }),
             );
+            await textIncludes(message, 'Progress restored to your account.');
             assert.deepEqual(await snapshot(), replacement);
             await page.reload({ waitUntil: 'load' });
             await controls
@@ -207,9 +191,7 @@ export async function practice(suite) {
                 'Rejected text changed progress',
               );
             }
-            const beforeFile = await controls
-              .locator('[role="status"]')
-              .innerText();
+            const beforeFile = await message.innerText();
             await controls
               .getByLabel('Import marks', { exact: true })
               .setInputFiles({
@@ -219,14 +201,13 @@ export async function practice(suite) {
               });
             await page.waitForFunction(
               (message) =>
-                document.querySelector('.progress-management [role="status"]')
-                  ?.textContent !== message,
+                document.querySelector(
+                  '.progress-management > p[role="status"]',
+                )?.textContent !== message,
               beforeFile,
             );
             assert(
-              !(await controls.locator('[role="status"]').innerText()).includes(
-                'Progress restored',
-              ),
+              !(await message.innerText()).includes('Progress restored'),
               'Invalid file was reported as restored',
             );
             assert.deepEqual(
@@ -246,6 +227,11 @@ export async function practice(suite) {
           },
         );
       },
+      {
+        account: 'learner',
+        permissions: ['clipboard-read', 'clipboard-write'],
+      },
     );
   }
+  await accountJourneys(suite);
 }

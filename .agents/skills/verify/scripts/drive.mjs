@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
-import { readFile, mkdir, realpath, stat, writeFile } from 'node:fs/promises';
+import {
+  readFile,
+  mkdir,
+  readdir,
+  realpath,
+  stat,
+  writeFile,
+} from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -17,6 +23,7 @@ import {
   hash,
   launch,
   registerBrowser,
+  runtimePrerequisites,
   save,
 } from './runtime.mjs';
 import { discovery } from './discovery.mjs';
@@ -173,22 +180,19 @@ async function main() {
       usage,
       effects: {
         launch:
-          'owns a fresh loopback server process group; does not launch a browser',
+          'owns fresh built Worker, real local D1 migrations and Chromium groups',
         doctor:
           'read-only receipt, process, source, lock, build and served asset checks',
         drive: 'fresh browser contexts; no inherited instance',
-        evidence: 'writes only a fresh external output directory',
+        evidence:
+          'writes a fresh external directory including disposable local D1',
         cleanup:
           'signals only verified owned process groups; retains all artifacts',
       },
     };
   if (options.doctor) return doctor(options.output);
   if (options.cleanup) return cleanup(options.output);
-  assert(process.platform !== 'win32', 'POSIX process groups required');
-  execFileSync('ps', ['-p', String(process.pid), '-o', 'pid='], {
-    stdio: 'ignore',
-  });
-  execFileSync('lsof', ['-v'], { stdio: 'ignore' });
+  const prerequisites = runtimePrerequisites();
   const packages = await installedPackages();
   assert.equal(
     packages.playwright,
@@ -198,14 +202,15 @@ async function main() {
   const { chromium } = await import('playwright');
   if (options.feature && !options.channel)
     await stat(chromium.executablePath());
-  await stat(join(root, 'dist/index.html'));
-  const output = await freshOutput(options.output);
+  await stat(join(root, 'dist/server/wrangler.json'));
+  await stat(join(root, 'dist/server/index.js'));
   const map = await scopeMap(root);
   const identity = {
     ...fingerprint(root),
     ...buildFingerprint(root),
     scopeHash: map.scopeHash,
   };
+  const output = await freshOutput(options.output);
   const data = {
     map,
     ...(await loadRepositoryModule(root, 'src/content/lessons.ts')),
@@ -222,10 +227,11 @@ async function main() {
     schemaVersion: 1,
     status: 'running',
     lane: 'playwright',
-    proofLane: 'local-playwright-built-vite',
+    proofLane: 'local-playwright-built-worker-d1',
     releaseReady: false,
     identity,
     packages,
+    prerequisites,
     requested: options.feature ?? 'launch-only',
     profiles: options.profile
       ? { [options.profile]: profiles[options.profile] }
@@ -238,6 +244,11 @@ async function main() {
     },
     semanticReview: { status: 'not-evaluated' },
     production: { status: 'not-evaluated' },
+    hostedAuthentication: {
+      status: 'not-evaluated',
+      reason:
+        'Built local Wrangler has no Sites authentication dispatcher; invented identity headers are local fixtures only',
+    },
     startedAt: new Date().toISOString(),
   };
   await save(join(output, 'report.json'), report);
@@ -258,7 +269,7 @@ async function main() {
   process.on('SIGTERM', onTerm);
   process.on('SIGHUP', onHup);
   try {
-    runtime = await launch(root, output, identity);
+    runtime = await launch(root, output, identity, abort.signal);
     report.doctor = await doctor(output);
     if (options['launch-only']) {
       process.stdout.write(
@@ -319,6 +330,7 @@ async function main() {
   } catch (error) {
     report.status = interrupted ? 'interrupted' : 'failed';
     report.error = error.stack ?? String(error);
+    if (error.cleanup) report.cleanup = error.cleanup;
     process.stderr.write(`${error.message}\n`);
   } finally {
     try {
@@ -363,9 +375,9 @@ async function main() {
     report.artifacts = [];
     for (const file of [
       ...report.cases.flatMap((item) => item.artifacts),
-      ...(runtime
-        ? [join(output, 'instance.json'), join(output, 'server.log')]
-        : []),
+      ...(await readdir(output))
+        .filter((name) => name === 'instance.json' || name.endsWith('.log'))
+        .map((name) => join(output, name)),
     ]) {
       const bytes = await readFile(file);
       report.artifacts.push({

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { profiles, runCase, visible } from './browser.mjs';
+import { markLesson, profiles, runCase, visible } from './browser.mjs';
 
 export async function teaching(suite) {
   for (const profile of suite.profiles) {
@@ -11,6 +11,7 @@ export async function teaching(suite) {
         `teaching-${lesson.id}`,
         [
           `route:${lesson.id}`,
+          'feature:account-mark-complete-review-clear',
           `lesson-layout:${lesson.id}:${size}`,
           ...(lesson.figure ? [`figure:${lesson.id}`] : []),
           ...[
@@ -145,9 +146,13 @@ export async function teaching(suite) {
                 })
                 .click();
               await visible(practice.locator('.answer'));
-              await practice
-                .getByRole('button', { name: 'Mark understood', exact: true })
-                .click();
+              await markLesson(
+                page,
+                lesson.id,
+                'Mark understood',
+                'complete',
+                practice,
+              );
               assert.equal(
                 await practice
                   .getByRole('button', { name: 'Mark understood', exact: true })
@@ -155,24 +160,31 @@ export async function teaching(suite) {
                 'true',
               );
               await page.reload({ waitUntil: 'load' });
+              await visible(
+                practice
+                  .getByRole('button', { name: 'Mark understood', exact: true })
+                  .and(page.locator('[aria-pressed="true"]')),
+              );
               assert.equal(
                 await practice
                   .getByRole('button', { name: 'Mark understood', exact: true })
                   .getAttribute('aria-pressed'),
                 'true',
               );
-              await practice
-                .getByRole('button', { name: 'Review later', exact: true })
-                .click();
+              await markLesson(
+                page,
+                lesson.id,
+                'Review later',
+                'review',
+                practice,
+              );
               assert.equal(
                 await practice
                   .getByRole('button', { name: 'Review later', exact: true })
                   .getAttribute('aria-pressed'),
                 'true',
               );
-              await practice
-                .getByRole('button', { name: 'Clear mark', exact: true })
-                .click();
+              await markLesson(page, lesson.id, 'Clear mark', null, practice);
               assert.equal(
                 await practice
                   .getByRole('button', { name: 'Review later', exact: true })
@@ -195,6 +207,7 @@ export async function teaching(suite) {
             },
           );
         },
+        { account: 'learner' },
       );
     }
     await runCase(
