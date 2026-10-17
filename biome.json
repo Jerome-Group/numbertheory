@@ -16,7 +16,8 @@
       "tsconfig.json",
       "index.html",
       "public/favicon.svg",
-      ".openai/hosting.json"
+      ".openai/hosting.json",
+      ".agents/skills/verify/scripts/**/*.mjs"
     ]
   },
   "formatter": {

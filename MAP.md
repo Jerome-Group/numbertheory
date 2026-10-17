@@ -12,6 +12,7 @@ Start here: `README.md`, then `AGENTS.md`.
 | Domain language | The glossary — this repository's ubiquitous language | `CONTEXT.md` |
 | Decisions | Architecture decision records | `docs/adr/` |
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
+| App verification | Launch, doctor, real browser journeys, feature map, retained proof, and owned cleanup | `.agents/skills/verify/SKILL.md` |
 | Automation | The workflows that run on a pull request or on a new issue, and dependency updates | `.github/` |
 | Application | React reading interface, diagnostic, Studio, labs, and shared study state | `src/App.tsx`, `src/AtlasViews.tsx` |
 | Local progress | Validated export/import/reset of lesson marks | `src/progress.ts`, `src/progress-schema.ts` |
