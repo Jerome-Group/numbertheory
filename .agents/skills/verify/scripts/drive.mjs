@@ -180,7 +180,7 @@ async function main() {
       usage,
       effects: {
         launch:
-          'owns fresh built Worker, real local D1 migrations and Chromium groups',
+          'owns fresh built Worker and local D1 migration groups; does not launch a browser',
         doctor:
           'read-only receipt, process, source, lock, build and served asset checks',
         drive: 'fresh browser contexts; no inherited instance',

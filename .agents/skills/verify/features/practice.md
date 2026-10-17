@@ -41,7 +41,7 @@ Run `node .agents/skills/verify/scripts/drive.mjs --feature practice --output /a
 - Seed clearly invented older localStorage bytes. Require no automatic merge. Save an account conflict, check older marks without writing, then explicitly import. Require the account mark to win, non-conflicting older marks to appear, and exact original local bytes after reload.
 - Intercept a real PATCH with Playwright `route.fetch()`, require successful backend commit, then abort only the browser acknowledgement. Require last confirmed GUI marks, **Save unconfirmed**, and disabled write controls. Explicitly reload, recover the committed mark, and require the next fresh intent to increment the revision once.
 - In an anonymous context, require public reading, disabled marks, and progress API 401. Inspect reserved sign-in and sign-out anchor paths and `_top` targets. Actual hosted roundtrips remain unverified locally.
-- Click the real sign-out anchor. Hold its reserved top-level navigation, require cleared and disabled client marks while durable D1 marks remain, then abort that local navigation. This proves client clearing before navigation. It does not prove hosted logout.
+- Click the real sign-out anchor. Read cleared and disabled client marks in a bubbling click observer after React's handler. Allow the reserved top-level request, then abort it locally. Require durable D1 marks unchanged. This proves client clearing before navigation. It does not prove hosted logout.
 
 ## Gotchas
 

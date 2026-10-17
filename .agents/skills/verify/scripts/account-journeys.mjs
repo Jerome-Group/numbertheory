@@ -525,45 +525,92 @@ export async function accountJourneys(suite) {
         const [first] = a.data.map.lessons;
         await a.go(`${first.route}#practice`);
         await markLesson(a.page, first.id, 'Mark understood', 'complete');
-        let release;
+        let observedClick;
+        const observed = new Promise((resolve) => {
+          observedClick = resolve;
+        });
+        await a.page.exposeBinding('observeSignOutClick', (_, snapshot) =>
+          observedClick(snapshot),
+        );
+        await a.page.evaluate(() => {
+          window.addEventListener(
+            'click',
+            (event) => {
+              const anchor = event.target.closest('a');
+              if (
+                !anchor ||
+                new URL(anchor.href).pathname !== '/signout-with-chatgpt'
+              )
+                return;
+              const account = document.querySelector(
+                'nav[aria-label="Progress account"]',
+              );
+              const signIn = [...account.querySelectorAll('a')].find(
+                (link) => link.textContent.trim() === 'Sign in with ChatGPT',
+              );
+              const mark = [
+                ...document.querySelectorAll(
+                  '#practice .progress-actions button',
+                ),
+              ].find(
+                (button) => button.textContent.trim() === 'Mark understood',
+              );
+              void window.observeSignOutClick({
+                signInVisible: Boolean(signIn?.getBoundingClientRect().width),
+                markPressed: mark?.getAttribute('aria-pressed'),
+                markDisabled: mark?.disabled,
+                defaultPrevented: event.defaultPrevented,
+                url: location.href,
+              });
+            },
+            { once: true },
+          );
+        });
         let received;
-        let finished;
-        let navigation;
-        const held = new Promise((resolve) => {
+        let rejected;
+        let timer;
+        const aborted = new Promise((resolve, reject) => {
           received = resolve;
+          rejected = reject;
         });
-        const proceed = new Promise((resolve) => {
-          release = resolve;
-        });
-        const aborted = new Promise((resolve) => {
-          finished = resolve;
-        });
+        aborted.catch(() => {});
         const pattern = '**/signout-with-chatgpt?*';
         const handler = async (route) => {
-          const request = route.request();
-          navigation = {
-            url: request.url(),
-            isNavigation: request.isNavigationRequest(),
-            topLevel: request.frame() === a.page.mainFrame(),
-          };
-          received();
-          await proceed;
           try {
+            const request = route.request();
+            const receipt = {
+              url: request.url(),
+              isNavigation: request.isNavigationRequest(),
+              topLevel: request.frame() === a.page.mainFrame(),
+            };
             await route.abort('aborted');
-          } finally {
-            finished();
+            received(receipt);
+          } catch (error) {
+            rejected(error);
           }
         };
         await a.page.route(pattern, handler, { times: 1 });
         try {
           await a.step(
-            'Click real sign-out, hold its reserved top-level navigation, and observe private UI cleared before leaving',
+            'Observe cleared private UI in the real sign-out click, then abort its reserved top-level navigation',
             async () => {
               const signOut = a.page
                 .getByRole('navigation', { name: 'Progress account' })
                 .getByRole('link', { name: 'Sign out', exact: true });
               assert.equal(await signOut.getAttribute('target'), '_top');
-              await Promise.all([held, signOut.click({ noWaitAfter: true })]);
+              const [snapshot, navigation] = await Promise.race([
+                Promise.all([
+                  observed,
+                  aborted,
+                  signOut.click({ noWaitAfter: true }),
+                ]),
+                new Promise((_, reject) => {
+                  timer = setTimeout(
+                    () => reject(new Error('Sign-out observation deadline')),
+                    8000,
+                  );
+                }),
+              ]);
               assert(navigation.isNavigation && navigation.topLevel);
               const path = new URL(navigation.url);
               assert.equal(path.origin, suite.origin);
@@ -571,6 +618,18 @@ export async function accountJourneys(suite) {
               assert.equal(
                 path.searchParams.get('return_to'),
                 `${first.route}#practice`,
+              );
+              assert.equal(snapshot.signInVisible, true);
+              assert.equal(snapshot.markPressed, 'false');
+              assert.equal(snapshot.markDisabled, true);
+              assert.equal(
+                snapshot.defaultPrevented,
+                false,
+                'Observation prevented real navigation',
+              );
+              assert.equal(
+                snapshot.url,
+                `${suite.origin}${first.route}#practice`,
               );
               await visible(
                 a.page
@@ -580,11 +639,6 @@ export async function accountJourneys(suite) {
                     exact: true,
                   }),
               );
-              const mark = a.page
-                .locator('#practice')
-                .getByRole('button', { name: 'Mark understood', exact: true });
-              assert.equal(await mark.getAttribute('aria-pressed'), 'false');
-              assert.equal(await mark.isEnabled(), false);
               assert.deepEqual(
                 (await documentFor(a, suite.origin)).lessons,
                 { [first.id]: 'complete' },
@@ -592,6 +646,7 @@ export async function accountJourneys(suite) {
               );
               return {
                 navigation,
+                observed: snapshot,
                 privateUiCleared: true,
                 hostedAuthentication:
                   'not-evaluated; reserved navigation aborted after the client observation',
@@ -599,8 +654,7 @@ export async function accountJourneys(suite) {
             },
           );
         } finally {
-          release();
-          if (navigation) await aborted;
+          clearTimeout(timer);
           await a.page.unroute(pattern, handler);
         }
       },
