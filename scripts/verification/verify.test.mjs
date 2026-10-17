@@ -5,6 +5,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { loadRepositoryModule } from './repo-loader.mjs';
 import {
   buildFingerprint,
   commands,
@@ -25,6 +27,22 @@ const map = {
   requiredCoverage: ['route:P00', 'tool:compute_euclid'],
   lessons: [{ id: 'P00' }],
 };
+test('contract failures identify their source without dumping encoded modules', async () => {
+  const root = fileURLToPath(new URL('../../', import.meta.url));
+  const { extendedEuclid } = await loadRepositoryModule(
+    root,
+    'src/math/euclid.ts',
+  );
+  assert.throws(
+    () => extendedEuclid('invalid', '1'),
+    (error) => {
+      assert.match(error.stack, /src\/math\/euclid\.ts/);
+      assert.doesNotMatch(error.stack, /data:text\/javascript|base64/);
+      assert(error.stack.length < 4000);
+      return true;
+    },
+  );
+});
 const artifactRoot = mkdtempSync(join(tmpdir(), 'numbertheory-evidence-'));
 const artifactPath = join(artifactRoot, 'observation.txt');
 writeFileSync(artifactPath, 'fixture observation');

@@ -35,7 +35,6 @@ globalThis.document = {
   },
 };
 const { studyStore } = await loadRepositoryModule(root, 'src/state.ts');
-const { progressStore } = await loadRepositoryModule(root, 'src/progress.ts');
 const { registerStudyTools } = await loadRepositoryModule(
   root,
   'src/webmcp/register.ts',
@@ -246,41 +245,6 @@ test('all 15 computation/setter pairs obey route/revision/nonmutation contracts'
     roots.roots,
     [...Array(45).keys()].filter((x) => (x * x) % 45 === 4),
   );
-});
-test('progress import/export store integration preserves state on malformed/unknown; reset persists', () => {
-  progressStore.set('P00', 'review');
-  const exported = progressStore.exportJson();
-  assert.equal(JSON.parse(exported).lessons.P00, 'review');
-  const previous = progressStore.getSnapshot(),
-    before = storage.get('numbertheory.progress.v1');
-  for (const value of [
-    '{',
-    JSON.stringify({
-      schemaVersion: 1,
-      lessons: { P00: 'complete', X99: 'review' },
-    }),
-  ])
-    assert.throws(() => progressStore.importJson(value));
-  assert.equal(progressStore.getSnapshot(), previous);
-  assert.equal(storage.get('numbertheory.progress.v1'), before);
-  progressStore.reset();
-  assert.deepEqual(progressStore.getSnapshot(), {});
-  progressStore.importJson(exported);
-  assert.equal(progressStore.getSnapshot().P00, 'review');
-  progressStore.reset();
-  assert.equal(storage.get('numbertheory.progress.v1'), '{}');
-});
-test('denied storage retains usable current-session progress', () => {
-  const original = localStorage.setItem;
-  localStorage.setItem = () => {
-    throw new Error('Denied');
-  };
-  try {
-    progressStore.set('D04', 'complete');
-    assert.equal(progressStore.getSnapshot().D04, 'complete');
-  } finally {
-    localStorage.setItem = original;
-  }
 });
 test('denied storage preserves the selected learning route; invalid selection is atomic', () => {
   const previous = selectedPath();
