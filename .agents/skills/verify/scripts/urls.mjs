@@ -293,16 +293,17 @@ export async function urls(suite) {
           const key = invalidParameter[lesson.lab];
           assert(key, `Missing malformed URL case for ${lesson.lab}`);
           const inputs = async () => {
-            await visible(page.locator('#lab form'));
-            return page
-              .locator('#lab form input, #lab form select')
-              .evaluateAll((fields) =>
-                fields.map((field) => ({
-                  tag: field.tagName,
-                  type: field.type,
-                  value: field.value,
-                })),
-              );
+            const fields = page.locator(
+              '#lab input:visible, #lab select:visible',
+            );
+            await visible(fields.first());
+            return fields.evaluateAll((elements) =>
+              elements.map((field) => ({
+                tag: field.tagName,
+                type: field.type,
+                value: field.value,
+              })),
+            );
           };
           await go(`${lesson.route}#lab`);
           const defaults = await inputs();

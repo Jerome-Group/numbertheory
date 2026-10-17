@@ -33,7 +33,7 @@ Run `node .agents/skills/verify/scripts/drive.mjs --feature urls --output /absol
 - Activate **Skip to content** with Enter and require main-content focus. Follow a chapter-map hash and require its heading focus.
 - Reload the lesson's `#proof` URL and require focus on its argument heading. Reveal a practice answer with native WebMCP absent.
 - Open each unknown route form and choose **Return to the atlas**. Require the Learn hero.
-- Open every lab entry with a source-related malformed query parameter. Require the recovery notice, form values equal to the clean route defaults, a usable lesson, and a working **Learn** button. Empty body or script errors fail.
+- Open every lab entry with a source-related malformed query parameter. Require the recovery notice, visible input/select values equal to the clean route defaults, a usable lesson, and a working **Learn** button. Empty body or script errors fail.
 - At R01 with `cfterms=4`, focus **Reveal convergents through entry**. Press ArrowLeft twice and require `4`, `3`, `2`, persistent focus, matching URL, reload, and Back restoration.
 - In Learn and Lesson, open the drawer and close it by each method. Require removed inert state, restored **Open lessons** focus, unlocked scrolling, and untrapped subsequent Tab.
 - Select the current lesson and a different lesson from the drawer. Require the right heading focus. Wrap Tab and Shift+Tab across visible controls. Open the drawer in Explore and use Back to a lesson argument; require focus on that argument.
