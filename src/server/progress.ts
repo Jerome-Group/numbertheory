@@ -24,6 +24,15 @@ export async function handleProgress(
         'Sign in to save account progress.',
       );
     const command = await parseProgressRequest(request);
+    if (
+      command.kind !== 'read' &&
+      request.headers.get('x-numbertheory-account') !== account.accountId
+    )
+      throw new ProgressRequestError(
+        409,
+        'account_changed',
+        'Account changed. Reload progress before trying again.',
+      );
     const database = getDatabase();
     const document =
       command.kind === 'read'

@@ -96,6 +96,7 @@ export default {
       body,
       headers = {},
       rawBody,
+      expectedAccount = account['oai-authenticated-user-id'],
     } = {}) {
       return worker.dispatchFetch(endpoint, {
         method,
@@ -104,6 +105,10 @@ export default {
           ...(method === 'GET'
             ? {}
             : { origin, 'content-type': 'application/json' }),
+          ...((method === 'PATCH' || method === 'PUT') &&
+          expectedAccount !== null
+            ? { 'x-numbertheory-account': expectedAccount ?? '' }
+            : {}),
           ...headers,
         },
         body:
@@ -479,6 +484,44 @@ export default {
         assert.doesNotMatch(
           JSON.stringify(rows.results),
           /example\.test|First Learner/,
+        );
+      },
+    );
+    await t.test(
+      'stale account intents cannot mutate another signed-in account',
+      async () => {
+        const beforeA = await json(await request());
+        const beforeB = await json(await request({ account: accountB }));
+        for (const method of ['PATCH', 'PUT']) {
+          const body =
+            method === 'PATCH'
+              ? { lessonId: 'P00', status: 'review' }
+              : { revision: beforeB.revision, lessons: {} };
+          for (const expectedAccount of [
+            accountA['oai-authenticated-user-id'],
+            null,
+          ]) {
+            await error(
+              { method, account: accountB, expectedAccount, body },
+              409,
+              'account_changed',
+            );
+          }
+        }
+        assert.deepEqual(await json(await request()), beforeA);
+        assert.deepEqual(
+          await json(await request({ account: accountB })),
+          beforeB,
+        );
+        assert.deepEqual(
+          await json(
+            await request({
+              headers: {
+                'x-numbertheory-account': accountB['oai-authenticated-user-id'],
+              },
+            }),
+          ),
+          beforeA,
         );
       },
     );
