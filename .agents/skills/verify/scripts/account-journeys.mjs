@@ -9,7 +9,7 @@ import {
   visible,
 } from './browser.mjs';
 
-async function documentFor(session, origin) {
+export async function documentFor(session, origin) {
   const response = await session.context.request.get(`${origin}/api/progress`);
   assert.equal(response.status(), 200);
   assert.match(response.headers()['cache-control'], /no-store/);
@@ -18,7 +18,7 @@ async function documentFor(session, origin) {
   return document;
 }
 
-async function backup(page) {
+export async function backup(page) {
   const controls = page.locator('.progress-management');
   const field = controls.getByRole('textbox', {
     name: 'Progress backup',

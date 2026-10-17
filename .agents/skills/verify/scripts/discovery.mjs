@@ -1,5 +1,13 @@
 import assert from 'node:assert/strict';
-import { profiles, runCase, textIncludes, visible } from './browser.mjs';
+import {
+  accountReady,
+  markLesson,
+  profiles,
+  renderedMath,
+  runCase,
+  textIncludes,
+  visible,
+} from './browser.mjs';
 
 export async function discovery(suite) {
   const { map, pathDetails, chapterCheckpoints } = suite.data;
@@ -26,7 +34,21 @@ export async function discovery(suite) {
               await page.locator('.primary-nav [aria-current="page"]').count(),
               1,
             );
+            const name =
+              path === '/'
+                ? 'Learn'
+                : path === '/course'
+                  ? 'MH3210'
+                  : path[1].toUpperCase() + path.slice(2);
+            assert.equal(
+              await page
+                .locator('.primary-nav [aria-current="page"]')
+                .innerText(),
+              name,
+            );
             assert((await page.locator('#main-content h1').innerText()).trim());
+            if (path === '/')
+              assert((await renderedMath(page.locator('main'))).length > 0);
           });
         }
         await go('/explore');
@@ -35,8 +57,10 @@ export async function discovery(suite) {
           async () => {
             const search = page.locator('#atlas-filter');
             await search.fill('Euclid');
-            assert(
-              (await page.locator('.chapter-grid .atlas-card').count()) > 0,
+            await visible(
+              page
+                .locator('.chapter-grid .atlas-card')
+                .filter({ hasText: 'D04' }),
             );
             await search.fill('verification_no_matching_concept');
             await textIncludes(
@@ -176,6 +200,7 @@ export async function discovery(suite) {
         ...Object.keys(map.checkpoints).map((name) => `checkpoint:${name}`),
       ],
       async ({ page, go, step }) => {
+        const completed = new Set();
         await go('/');
         for (const [id, path] of Object.entries(pathDetails)) {
           await step(
@@ -186,6 +211,7 @@ export async function discovery(suite) {
                 .getByRole('button', { name: path.title, exact: true })
                 .click();
               await page.reload({ waitUntil: 'load' });
+              await accountReady(page);
               assert.equal(
                 await page
                   .locator('.path-selector')
@@ -194,8 +220,26 @@ export async function discovery(suite) {
                 'true',
               );
               await page.locator('.continue-panel button').click();
-              await visible(
-                page.locator(`[data-lesson-id="${map.paths[id][0]}"]`),
+              const pending = map.paths[id].find(
+                (lessonId) => !completed.has(lessonId),
+              );
+              await visible(page.locator(`[data-lesson-id="${pending}"]`));
+              await markLesson(page, pending, 'Mark understood', 'complete');
+              completed.add(pending);
+              await go('/');
+              await page.locator('.continue-panel button').click();
+              const next = map.paths[id].find(
+                (lessonId) => !completed.has(lessonId),
+              );
+              await visible(page.locator(`[data-lesson-id="${next}"]`));
+              await go('/explore');
+              const ids = await page
+                .locator('.chapter-grid .atlas-card > span')
+                .allTextContents();
+              assert.deepEqual(
+                ids.map((text) => text.match(/^([A-Z]\d{2}) ·/)[1]).sort(),
+                [...map.paths[id]].sort(),
+                'Explore membership differs from the selected source path',
               );
               await go('/');
             },
@@ -246,6 +290,7 @@ export async function discovery(suite) {
           );
         }
       },
+      { account: 'path-learner' },
     );
     await runCase(
       suite,

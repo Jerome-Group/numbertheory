@@ -27,11 +27,12 @@ Preconditions:
 Run `node .agents/skills/verify/scripts/drive.mjs --feature labs --output /absolute/external/new-labs`.
 
 - For every Studio entry in each viewport, open its card and require the corresponding lesson ID and `#lab`.
-- Run the lab's labeled fields and actual submit button. Check exact rendered outputs, tables, reveal controls, and the negative fixture where applicable.
+- Run the lab's labeled fields and actual submit button. Check exact outputs only within visible KaTeX, plus tables, reveal controls, and the negative fixture where applicable. Closed disclosure content cannot satisfy a result assertion.
 - Fixtures include Euclid `240,46` with gcd `2` and coefficients `-9,47`; CRT `2 mod 6` and `8 mod 9` with `8 mod 18`; Hensel `x²=2 mod 49` with roots `10,39`; Gaussian `(7+5i)/(3+2i)` with quotient `2` and remainder `1+i`; and Pell `D=2` with pairs `(3,2)`, `(17,12)`, `(99,70)`.
 - Require both convolution and inversion entries, both order entries, both Hensel entries, finite and periodic continued fractions, and both Pell entries. Do not substitute one entry for its sibling.
-- Submit invalid bounds, composite prime, equal primes, square radicand, or zero divisor as applicable. Require a visible explanation and unchanged URL state.
+- In both order entries, open the order tables and require the six power-order rows for candidate 3 modulo 7. In finite continued fractions, press End and require depth 4 of 4, four convergent rows, and terminal 43/19. Press Home and require depth 1 of 4 and one row; the hidden full expansion must not satisfy the visible prefix check.
+- Submit invalid bounds, composite prime, equal primes, square radicand, or zero divisor as applicable. Require a visible explanation, unchanged URL, visible result formulas, and table rows. Resubmit valid inputs, require the error to disappear, and recheck the fixture.
 
 ## Gotchas
 
-Rendered exact outputs prove browser integration. Existing exact-math tests supply broader arithmetic checks and remain required. Formula annotations supplement visible screenshots and ARIA; they do not replace semantic review. Native number inputs may reject text before submission. Malformed URL recovery belongs to the URL domain. A baseline defect remains a failure, even when the arithmetic tests pass.
+Rendered exact outputs prove browser integration. Existing exact-math tests supply broader arithmetic checks and remain required. Annotations inside visible formulas supplement screenshots and ARIA; they do not replace semantic review. Native number inputs may reject text before submission. Malformed URL recovery belongs to the URL domain. A baseline defect remains a failure, even when the arithmetic tests pass.

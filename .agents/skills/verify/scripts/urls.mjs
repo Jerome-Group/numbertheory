@@ -66,6 +66,23 @@ export async function urls(suite) {
         const euclid = data.map.lessons.find((lesson) => lesson.id === 'D04');
         await go('/explore');
         await step(
+          'Activate the skip link and a chapter hash with heading focus',
+          async () => {
+            const skip = page.getByRole('link', {
+              name: 'Skip to content',
+              exact: true,
+            });
+            await skip.focus();
+            await skip.press('Enter');
+            await focused(page.locator('#main-content'));
+            const chapter = page.locator('.journey-map a').first();
+            const hash = await chapter.getAttribute('href');
+            await chapter.click();
+            assert.equal(new URL(page.url()).hash, hash);
+            await focused(page.locator(`${hash} > h2`));
+          },
+        );
+        await step(
           'Search for Euclid, follow a prerequisite, then return to its experiment',
           async () => {
             await page.locator('#atlas-filter').fill('D04');
@@ -117,8 +134,8 @@ export async function urls(suite) {
               '240',
             );
             await textIncludes(lab.locator('.answer-strip strong'), '2');
-            await lab.getByLabel('First integer', { exact: true }).fill('252');
-            await lab.getByLabel('Second integer', { exact: true }).fill('105');
+            await lab.getByLabel('First integer', { exact: true }).fill('391');
+            await lab.getByLabel('Second integer', { exact: true }).fill('299');
             await lab
               .getByRole('button', { name: 'Run Euclid', exact: true })
               .click();
@@ -129,8 +146,15 @@ export async function urls(suite) {
               await lab
                 .getByLabel('First integer', { exact: true })
                 .inputValue(),
-              '252',
+              '391',
             );
+            assert.equal(
+              await lab
+                .getByLabel('Second integer', { exact: true })
+                .inputValue(),
+              '299',
+            );
+            await textIncludes(lab.locator('.answer-strip strong'), '23');
             await page
               .getByRole('navigation', { name: 'Main navigation', exact: true })
               .getByRole('button', { name: 'Explore', exact: true })
@@ -141,8 +165,16 @@ export async function urls(suite) {
               await lab
                 .getByLabel('Second integer', { exact: true })
                 .inputValue(),
-              '105',
+              '299',
             );
+            assert.equal(
+              await lab
+                .getByLabel('First integer', { exact: true })
+                .inputValue(),
+              '391',
+            );
+            await textIncludes(lab.locator('.answer-strip strong'), '23');
+            assert.equal(new URL(page.url()).pathname, euclid.route);
             await page.goForward({ waitUntil: 'load' });
             await visible(
               page.getByRole('heading', {
@@ -171,6 +203,14 @@ export async function urls(suite) {
             .getByRole('button', { name: 'Show justified answer', exact: true })
             .click();
           await visible(page.locator('#practice .answer'));
+          return {
+            nativeWebMCP: {
+              status: 'verified-unreachable',
+              route: page.url(),
+              prerequisite:
+                'Native document.modelContext and an IAB WebMCP host are absent in this Playwright context',
+            },
+          };
         });
         for (const path of [
           '/lessons/z99',
@@ -252,12 +292,38 @@ export async function urls(suite) {
         async ({ page, go, step }) => {
           const key = invalidParameter[lesson.lab];
           assert(key, `Missing malformed URL case for ${lesson.lab}`);
+          const inputs = async () => {
+            const fields = page.locator(
+              '#lab input:visible, #lab select:visible',
+            );
+            await visible(fields.first());
+            return fields.evaluateAll((elements) =>
+              elements.map((field) => ({
+                tag: field.tagName,
+                type: field.type,
+                value: field.value,
+              })),
+            );
+          };
+          await go(`${lesson.route}#lab`);
+          const defaults = await inputs();
           await go(`${lesson.route}?${key}=garbage#lab`);
           await step(
             'Malformed URL leaves lesson and navigation usable',
             async () => {
               await visible(
                 page.locator(`[data-lesson-id="${lesson.id}"] #lab`),
+              );
+              await visible(
+                page.getByRole('status').filter({
+                  hasText:
+                    'Invalid experiment inputs in this URL. Restored default examples',
+                }),
+              );
+              assert.deepEqual(
+                await inputs(),
+                defaults,
+                'Malformed URL did not restore the clean route inputs',
               );
               await page
                 .getByRole('navigation', {
