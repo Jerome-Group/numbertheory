@@ -6,6 +6,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
+import { AccountControls } from './AccountControls';
 import { AtlasViews } from './AtlasViews';
 import { lessons } from './content/lessons';
 import { LessonPage } from './LessonPage';
@@ -219,6 +220,7 @@ export function App() {
               </button>
             ))}
           </nav>
+          <AccountControls />
         </header>
         {state.urlIssue && (
           <p className="progress-reset-confirmation" role="status">

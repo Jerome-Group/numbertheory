@@ -10,7 +10,15 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
-    "types": ["vite/client"]
+    "types": ["vite/client", "node", "@cloudflare/workers-types"]
   },
-  "include": ["src", "vite.config.ts"]
+  "include": [
+    "cloudflare-env.d.ts",
+    "src",
+    "app",
+    "build",
+    "db",
+    "drizzle.config.ts",
+    "vite.config.ts"
+  ]
 }

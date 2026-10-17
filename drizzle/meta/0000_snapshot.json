@@ -1,0 +1,58 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "76dbed76-3c2b-4952-8241-e6a23c2960e4",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "account_progress": {
+      "name": "account_progress",
+      "columns": {
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "revision": {
+          "name": "revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "lessons_json": {
+          "name": "lessons_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "account_progress_revision": {
+          "name": "account_progress_revision",
+          "value": "\"account_progress\".\"revision\" >= 1 AND \"account_progress\".\"revision\" <= 9007199254740991"
+        },
+        "account_progress_lessons_json": {
+          "name": "account_progress_lessons_json",
+          "value": "json_valid(\"account_progress\".\"lessons_json\") AND json_type(\"account_progress\".\"lessons_json\") = 'object'"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

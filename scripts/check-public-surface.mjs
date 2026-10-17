@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { buildFingerprint } from './verification/verify.mjs';
 
 const sourcePaths = execFileSync(
   'git',
@@ -32,10 +33,11 @@ const forbiddenText = [
   /https?:\/\/drive\.google\.com\/(?:file|open|drive\/u)/i,
 ];
 const problems = [];
-if (!existsSync('dist/index.html'))
-  problems.push(
-    'Missing dist/index.html: run npm run build before scanning public output.',
-  );
+try {
+  buildFingerprint(process.cwd());
+} catch (error) {
+  problems.push(error.message);
+}
 for (const path of publicPaths) {
   if (forbiddenPaths.some((rule) => rule.test(path))) {
     problems.push(`${path}: forbidden public file type or name`);

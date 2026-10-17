@@ -27,3 +27,9 @@
 /.sites-runtime/
 /.sites-checkout/
 *.tar.gz
+
+# Local Worker tools and private D1 state
+/.wrangler/
+/.vinext/
+/.next/
+/next-env.d.ts

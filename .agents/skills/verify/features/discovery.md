@@ -27,7 +27,7 @@ Run `node .agents/skills/verify/scripts/drive.mjs --feature discovery --output /
 
 - Open all six routes and require one usable heading and current navigation item, rendered math, and no document overflow.
 - Fill **Find a concept** with `Euclid`, then an absent phrase. Require matching cards and the explicit empty result. Search sidebar `D04`, open it, and use **Clear search** after an absent phrase.
-- In Practice, Studio, and Reference, search `D04`, require exactly one entry, test the empty state, clear, and change **Chapter**.
+- In Practice, Studio, and Reference, search `D04`, require exactly one entry, test the empty state, clear, and change **Chapter**. Require exactly the source-derived visible IDs for that chapter. A Studio chapter without labs must show its empty state.
 - Select each source-derived learning path, reload, require its pressed button, and choose **Continue**. Require its first pending lesson.
 - Choose **All lessons** in Explore. For every checkpoint, choose **Compare your reasoning**, require the expanded comparison, then follow its source-derived linked ID.
 - Switch the home preview to **Multiply by 5** and require changed fibers. Follow **Investigate every fiber**. Complete the diagnostic with all correct answers and then a missed first answer. Open the N05 and P00 suggestions.

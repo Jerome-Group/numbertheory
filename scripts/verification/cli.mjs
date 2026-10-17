@@ -68,7 +68,7 @@ export const commands = Object.freeze({
       'Node24',
       'Git',
       'installed locked dependencies',
-      'dist/index.html',
+      'current static or Worker build with source-identity receipt',
     ],
     reads: ['tracked and nonignored source', 'lockfile', 'dist', 'scope'],
     writes: ['stdout'],

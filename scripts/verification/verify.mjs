@@ -13,7 +13,7 @@ import {
   readFileSync,
   readlinkSync,
 } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const verificationDirectory = fileURLToPath(new URL('.', import.meta.url));
@@ -104,8 +104,41 @@ export function fingerprint(root) {
 }
 export function buildFingerprint(root) {
   const dist = join(root, 'dist');
-  if (!existsSync(join(dist, 'index.html')))
-    throw new Error('Missing dist/index.html; fresh build required.');
+  const hostingPath = join(root, '.openai/hosting.json');
+  const worker =
+    existsSync(hostingPath) &&
+    !JSON.parse(readFileSync(hostingPath, 'utf8')).static;
+  const entry = worker ? 'server/wrangler.json' : 'index.html';
+  if (!existsSync(join(dist, entry)))
+    throw new Error(`Missing dist/${entry}; fresh build required.`);
+  if (worker) {
+    const manifest = JSON.parse(readFileSync(join(dist, entry), 'utf8'));
+    if (
+      typeof manifest.main !== 'string' ||
+      typeof manifest.assets?.directory !== 'string'
+    )
+      throw new Error('Worker build requires an entry and asset directory.');
+    for (const [name, target, directory] of [
+      ['entry', manifest.main, false],
+      ['assets', manifest.assets.directory, true],
+    ]) {
+      const path = resolve(dist, 'server', target);
+      const within = relative(dist, path);
+      if (
+        isAbsolute(target) ||
+        isAbsolute(within) ||
+        !within ||
+        within === '..' ||
+        within.startsWith('../') ||
+        within.startsWith('..\\') ||
+        !existsSync(path) ||
+        (directory ? !lstatSync(path).isDirectory() : !lstatSync(path).isFile())
+      )
+        throw new Error(`Missing or unsafe Worker ${name}.`);
+      if (directory && !readdirSync(path).length)
+        throw new Error('Worker assets must not be empty.');
+    }
+  }
   const receiptPath = join(dist, 'source-identity.json');
   if (!existsSync(receiptPath) || !lstatSync(receiptPath).isFile())
     throw new Error('Missing regular build source identity; rebuild required.');
@@ -196,13 +229,20 @@ export async function scopeMap(root) {
     'lesson-prerequisite-next-links',
     'claim-recall',
     'practice-hints-answer',
-    'local-mark-complete-review-clear',
+    'account-mark-complete-review-clear',
     'practice-review-queue',
     'progress-export-copy-backup',
     'progress-import-roundtrip',
     'progress-reset-reload',
     'progress-invalid-atomic',
-    'storage-denied-corrupt',
+    'legacy-device-storage-denied-corrupt',
+    'account-public-reading-sign-in',
+    'account-progress-persistence-isolation',
+    'account-origin-identity-rejection',
+    'account-stale-bulk-conflict',
+    'account-uncertain-save-reload',
+    'legacy-device-import-account-wins',
+    'account-signout-clear',
     'mobile-drawer-focus-escape',
     'skip-link-keyboard',
     'print-proof-math',
@@ -226,6 +266,8 @@ export async function scopeMap(root) {
     'progress-transfer-reset',
     'agent-compute-set-visible-parity',
     'mobile-keyboard-reading',
+    'account-save-fresh-session',
+    'account-conflict-recovery',
   ];
   const map = {
     schemaVersion: 1,

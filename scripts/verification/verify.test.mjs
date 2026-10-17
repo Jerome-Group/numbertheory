@@ -5,6 +5,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+import { loadRepositoryModule } from './repo-loader.mjs';
 import {
   buildFingerprint,
   commands,
@@ -25,6 +27,22 @@ const map = {
   requiredCoverage: ['route:P00', 'tool:compute_euclid'],
   lessons: [{ id: 'P00' }],
 };
+test('contract failures identify their source without dumping encoded modules', async () => {
+  const root = fileURLToPath(new URL('../../', import.meta.url));
+  const { extendedEuclid } = await loadRepositoryModule(
+    root,
+    'src/math/euclid.ts',
+  );
+  assert.throws(
+    () => extendedEuclid('invalid', '1'),
+    (error) => {
+      assert.match(error.stack, /src\/math\/euclid\.ts/);
+      assert.doesNotMatch(error.stack, /data:text\/javascript|base64/);
+      assert(error.stack.length < 4000);
+      return true;
+    },
+  );
+});
 const artifactRoot = mkdtempSync(join(tmpdir(), 'numbertheory-evidence-'));
 const artifactPath = join(artifactRoot, 'observation.txt');
 writeFileSync(artifactPath, 'fixture observation');
@@ -260,6 +278,28 @@ test('source hash detects tracked working-tree edits; build hash detects changed
     assert.notEqual(fingerprint(root).sourceHash, first.sourceHash);
     assert.equal(fingerprint(root).files, 3);
     assert.throws(() => buildFingerprint(root), /Stale build source identity/);
+    mkdirSync(join(root, '.openai'));
+    writeFileSync(join(root, '.openai/hosting.json'), '{"d1":"DB"}');
+    assert.throws(() => buildFingerprint(root), /Missing dist\/server/);
+    mkdirSync(join(root, 'dist/server'));
+    mkdirSync(join(root, 'dist/client'));
+    writeFileSync(join(root, 'dist/server/index.js'), 'export default {};');
+    writeFileSync(join(root, 'dist/client/app.js'), 'console.log("fixture");');
+    const manifest = { main: 'index.js', assets: { directory: '../client' } };
+    const manifestPath = join(root, 'dist/server/wrangler.json');
+    writeFileSync(manifestPath, JSON.stringify(manifest));
+    writeFileSync(
+      join(root, 'dist/source-identity.json'),
+      JSON.stringify({ schemaVersion: 1, ...fingerprint(root) }),
+    );
+    assert.doesNotThrow(() => buildFingerprint(root));
+    for (const directory of ['../../../', '/tmp', '../absent']) {
+      writeFileSync(
+        manifestPath,
+        JSON.stringify({ ...manifest, assets: { directory } }),
+      );
+      assert.throws(() => buildFingerprint(root), /unsafe Worker assets/);
+    }
   } finally {
     rmSync(root, { recursive: true, force: true });
   }

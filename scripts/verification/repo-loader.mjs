@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 // Node module contract testing only: no browser, DOM rendering, host compatibility claim.
 export async function loadRepositoryModule(root, entry) {
@@ -43,6 +44,7 @@ export async function loadRepositoryModule(root, entry) {
         .replaceAll(`"${specifier}"`, `"${await uri(dependency)}"`);
     }
     code = code.replace(/\s+with\s*\{\s*type:\s*['"]json['"]\s*\}/g, '');
+    code += `\n//# sourceURL=${pathToFileURL(file).href}`;
     const value = `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
     uris.set(file, value);
     return value;

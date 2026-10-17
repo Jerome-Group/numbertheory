@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { doctor, save } from './runtime.mjs';
+import { doctor, hash, save } from './runtime.mjs';
 
 export const profiles = {
   phone: { width: 390, height: 844 },
@@ -46,47 +46,78 @@ export async function checkPage(page) {
   assert(!overflow, 'Document overflows the viewport');
 }
 
-export async function runCase(suite, profile, id, coverage, drive) {
+export async function accountReady(page) {
+  const account = page.getByRole('navigation', { name: 'Progress account' });
+  await visible(account.getByRole('link', { name: 'Sign out', exact: true }));
+  await account
+    .getByText('Saving progress…', { exact: true })
+    .waitFor({ state: 'hidden' });
+}
+
+export async function acknowledged(page, method, action) {
+  const [response] = await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname === '/api/progress' &&
+        response.request().method() === method,
+    ),
+    action(),
+  ]);
+  assert.equal(response.status(), 200, `${method} was not acknowledged`);
+  assert.match(response.headers()['cache-control'], /no-store/);
+  const document = await response.json();
+  await accountReady(page);
+  return document;
+}
+
+export async function markLesson(
+  page,
+  lessonId,
+  name,
+  status,
+  practice = page.locator('#practice'),
+) {
+  const button = practice.getByRole('button', { name, exact: true });
+  const document = await acknowledged(page, 'PATCH', () => button.click());
+  if (status === null) {
+    assert(!Object.hasOwn(document.lessons, lessonId));
+    await button.waitFor({ state: 'hidden' });
+  } else {
+    assert.equal(document.lessons[lessonId], status);
+    await visible(button.and(page.locator('[aria-pressed="true"]')));
+  }
+  return document;
+}
+
+export async function runCase(
+  suite,
+  profile,
+  id,
+  coverage,
+  drive,
+  options = {},
+) {
   suite.signal.throwIfAborted();
   const directory = join(
     suite.output,
     `${profile}-${id.replace(/[^a-z0-9-]/gi, '-')}`,
   );
   await mkdir(directory);
-  const context = await suite.browser.newContext({
-    viewport: profiles[profile],
-    reducedMotion: 'reduce',
-  });
-  await context.tracing.start({
-    screenshots: true,
-    snapshots: true,
-    sources: false,
-  });
-  const page = await context.newPage();
-  page.setDefaultTimeout(8000);
+  assert.equal(
+    new URL(suite.origin).hostname,
+    '127.0.0.1',
+    'Fixtures require an owned local Worker',
+  );
+  const sessions = [];
   const events = [];
   const errors = [];
-  page.on('pageerror', (error) =>
-    errors.push({ kind: 'pageerror', message: error.message }),
-  );
-  page.on('console', (message) => {
-    if (message.type() === 'error')
-      errors.push({ kind: 'console', message: message.text() });
-  });
-  page.on('requestfailed', (request) => {
-    if (request.failure()?.errorText !== 'net::ERR_ABORTED')
-      errors.push({
-        kind: 'network',
-        url: request.url(),
-        message: request.failure()?.errorText,
-      });
-  });
-  const step = async (action, callback) => {
+  const stepFor = async (page, action, callback) => {
     const event = { action, at: new Date().toISOString(), before: page.url() };
     events.push(event);
     try {
       const result = await callback();
       event.status = 'passed';
+      if (result !== undefined) event.value = result;
       return result;
     } catch (error) {
       event.status = 'failed';
@@ -125,11 +156,104 @@ export async function runCase(suite, profile, id, coverage, drive) {
       }
     }
   };
-  const go = (path) =>
-    step(`Open ${path}`, async () => {
-      await page.goto(`${suite.origin}${path}`, { waitUntil: 'load' });
-      await checkPage(page);
+  const session = async ({ label, account, permissions = [] } = {}) => {
+    assert(
+      label && !sessions.some((item) => item.label === label),
+      'Session labels must be unique',
+    );
+    const accountId = account
+      ? `local-fixture-${hash(`${suite.output}:${profile}:${id}:${account}`).slice(0, 24)}`
+      : null;
+    const context = await suite.browser.newContext({
+      viewport: profiles[profile],
+      reducedMotion: 'reduce',
+      permissions,
+      ...(accountId
+        ? {
+            extraHTTPHeaders: {
+              'oai-authenticated-user-id': accountId,
+              'oai-authenticated-user-email': `${accountId}@example.test`,
+              'oai-authenticated-user-full-name': encodeURIComponent(
+                `Local verifier ${account}`,
+              ),
+              'oai-authenticated-user-full-name-encoding':
+                'percent-encoded-utf-8',
+            },
+          }
+        : {}),
     });
+    await context.tracing.start({
+      screenshots: true,
+      snapshots: true,
+      sources: false,
+    });
+    const page = await context.newPage();
+    page.setDefaultTimeout(8000);
+    const expectedErrors = new Set(accountId ? [] : [401]);
+    const lostResponses = new Set();
+    page.on('pageerror', (error) =>
+      errors.push({
+        session: label,
+        kind: 'pageerror',
+        message: error.message,
+      }),
+    );
+    page.on('console', (message) => {
+      if (message.type() !== 'error') return;
+      const text = message.text();
+      const progress =
+        new URL(message.location().url || suite.origin).pathname ===
+        '/api/progress';
+      if (
+        progress &&
+        ([...expectedErrors].some((code) =>
+          text.includes(`status of ${code}`),
+        ) ||
+          (lostResponses.size &&
+            text === 'Failed to load resource: net::ERR_FAILED'))
+      )
+        return;
+      errors.push({ session: label, kind: 'console', message: text });
+    });
+    page.on('requestfailed', (request) => {
+      const message = request.failure()?.errorText;
+      if (lostResponses.has(request) || message === 'net::ERR_ABORTED') return;
+      errors.push({
+        session: label,
+        kind: 'network',
+        url: request.url(),
+        message,
+      });
+    });
+    page.on('response', (response) => {
+      if (new URL(response.url()).pathname === '/api/progress')
+        events.push({
+          session: label,
+          action: `${response.request().method()} local progress`,
+          status: response.status(),
+          at: new Date().toISOString(),
+        });
+    });
+    const entry = {
+      label,
+      page,
+      context,
+      accountId,
+      step: (action, callback) => stepFor(page, action, callback),
+      go: (path) =>
+        stepFor(page, `Open ${path}`, async () => {
+          await page.goto(`${suite.origin}${path}`, { waitUntil: 'load' });
+          await checkPage(page);
+          if (accountId) await accountReady(page);
+        }),
+      expectProgressError: (code) => expectedErrors.add(code),
+      expectResponseLoss: (request) => lostResponses.add(request),
+    };
+    sessions.push(entry);
+    return entry;
+  };
+  const primary = await session({ label: 'main', ...options });
+  const { page } = primary;
   const record = {
     id,
     profile,
@@ -139,7 +263,7 @@ export async function runCase(suite, profile, id, coverage, drive) {
     startedAt: new Date().toISOString(),
   };
   try {
-    await drive({ page, context, go, step, data: suite.data, profile });
+    await drive({ ...primary, session, data: suite.data, profile });
     await checkPage(page);
     assert.deepEqual(errors, [], 'Browser console, script, or network errors');
   } catch (error) {
@@ -162,21 +286,31 @@ export async function runCase(suite, profile, id, coverage, drive) {
         record.status = 'failed';
       }
     };
-    await capture('screen.png', async (file) => {
-      await page.evaluate(() => document.fonts.ready);
-      await page.screenshot({ path: file, timeout: 8000 });
-    });
-    await capture('dom.html', async (file) =>
-      writeFile(file, await page.content()),
-    );
-    await capture('aria.txt', async (file) =>
-      writeFile(file, await page.locator('body').ariaSnapshot()),
-    );
+    record.sessions = sessions.map(({ label, accountId }) => ({
+      label,
+      accountId,
+      identity: accountId ? 'invented local dispatcher fixture' : 'anonymous',
+    }));
+    for (const { label, page, context } of sessions) {
+      const prefix = label === 'main' ? '' : `${label}-`;
+      await capture(`${prefix}screen.png`, async (file) => {
+        await page.evaluate(() => document.fonts.ready);
+        await page.screenshot({ path: file, timeout: 8000 });
+      });
+      await capture(`${prefix}dom.html`, async (file) =>
+        writeFile(file, await page.content()),
+      );
+      await capture(`${prefix}aria.txt`, async (file) =>
+        writeFile(file, await page.locator('body').ariaSnapshot()),
+      );
+      await capture(`${prefix}trace.zip`, (file) =>
+        context.tracing.stop({ path: file }),
+      );
+      await context.close();
+    }
     await capture('actions.json', (file) =>
       save(file, { events, errors, url: page.url() }),
     );
-    await capture('trace.zip', (file) => context.tracing.stop({ path: file }));
-    await context.close();
   }
   record.finishedAt = new Date().toISOString();
   suite.report.cases.push(record);

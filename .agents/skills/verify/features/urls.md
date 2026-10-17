@@ -4,6 +4,7 @@ A learner can reopen a shared result, traverse browser history, recover from bad
 
 ## Sub-features
 
+- Search opens Euclid, a prerequisite leads back to its experiment, and the resulting shared inputs survive reload.
 - Legacy input links normalize after a real submission and survive reload, Back, and Forward.
 - Section hashes restore argument focus, including same-lesson reload.
 - Every lab entry receives malformed query input and must leave reading and navigation usable.
@@ -27,6 +28,7 @@ Preconditions:
 
 Run `node .agents/skills/verify/scripts/drive.mjs --feature urls --output /absolute/external/new-urls`.
 
+- Search Explore for `D04`, open its lesson card, follow prerequisite `D03`, and use Back. Choose **Experiment**, submit `391,299`, reload the exact shared URL, and require gcd `23`.
 - Restore D04 through its legacy URL with inputs `240,46`, submit `252,105`, reload, and traverse Explore, Back, and Forward. Require the corresponding visible inputs and routes.
 - Reload the lesson's `#proof` URL and require focus on its argument heading. Reveal a practice answer with native WebMCP absent.
 - Open each unknown route form and choose **Return to the atlas**. Require the Learn hero.

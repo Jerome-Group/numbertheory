@@ -14,9 +14,14 @@
       "vite.config.ts",
       "package.json",
       "tsconfig.json",
-      "index.html",
       "public/favicon.svg",
       ".openai/hosting.json",
+      "app/**/*.ts",
+      "app/**/*.tsx",
+      "build/**/*.ts",
+      "db/**/*.ts",
+      "cloudflare-env.d.ts",
+      "drizzle.config.ts",
       ".agents/skills/verify/scripts/**/*.mjs"
     ]
   },

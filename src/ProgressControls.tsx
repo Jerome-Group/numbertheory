@@ -1,20 +1,49 @@
 import { useRef, useState, useSyncExternalStore } from 'react';
-import { progressStore } from './progress';
+import { ProgressNotice } from './AccountControls';
+import {
+  canSaveProgress,
+  type LegacyProgress,
+  type ProgressStatus,
+  progressStore,
+} from './progress';
 
 export function ProgressControls() {
+  const status = useSyncExternalStore(
+    progressStore.subscribe,
+    progressStore.getStatusSnapshot,
+  );
+  return (
+    <section className="progress-management" aria-labelledby="progress-title">
+      <h2 id="progress-title">Your account progress</h2>
+      <p>Keep a backup, restore saved marks, or clear your account's marks.</p>
+      <ProgressNotice status={status} />
+      {'accountId' in status && (
+        <AccountProgressControls key={status.accountId} status={status} />
+      )}
+    </section>
+  );
+}
+
+function AccountProgressControls({
+  status,
+}: {
+  status: Extract<ProgressStatus, { accountId: unknown }>;
+}) {
   const progress = useSyncExternalStore(
     progressStore.subscribe,
     progressStore.getSnapshot,
   );
   const [backup, setBackup] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [legacy, setLegacy] = useState<LegacyProgress | null>(null);
   const backupText = useRef<HTMLTextAreaElement>(null);
   const clearButton = useRef<HTMLButtonElement>(null);
   const cancelButton = useRef<HTMLButtonElement>(null);
   const [restore, setRestore] = useState('');
-  const [message, setMessage] = useState(
-    'Only this browser stores your marks.',
-  );
+  const [message, setMessage] = useState('');
+  const canSave = canSaveProgress(status);
+  const accountId = status.accountId;
+
   function closeReset() {
     setConfirmReset(false);
     requestAnimationFrame(() => clearButton.current?.focus());
@@ -32,6 +61,17 @@ export function ProgressControls() {
       });
     }
   }
+  async function restoreProgress(text: string) {
+    setMessage('');
+    try {
+      if (await progressStore.importJson({ text, accountId }))
+        setMessage('Progress restored to your account.');
+    } catch (error) {
+      setMessage(
+        error instanceof Error ? error.message : 'Invalid progress backup.',
+      );
+    }
+  }
   async function importProgress(file: File | undefined) {
     if (!file) return;
     if (file.size > 1_000_000) {
@@ -39,18 +79,13 @@ export function ProgressControls() {
       return;
     }
     try {
-      progressStore.importJson(await file.text());
-      setMessage('Progress restored from this file.');
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : 'Invalid progress file.',
-      );
+      await restoreProgress(await file.text());
+    } catch {
+      setMessage('Progress file could not be read.');
     }
   }
   return (
-    <section className="progress-management" aria-labelledby="progress-title">
-      <h2 id="progress-title">Your local progress</h2>
-      <p>Save a copy, restore it on this device, or clear every local mark.</p>
+    <>
       <div className="progress-management-actions">
         <button type="button" onClick={() => void copyProgress()}>
           Copy JSON backup
@@ -60,6 +95,7 @@ export function ProgressControls() {
           <input
             type="file"
             accept="application/json,.json"
+            disabled={!canSave}
             onChange={(event) => {
               void importProgress(event.target.files?.[0]);
               event.target.value = '';
@@ -69,6 +105,7 @@ export function ProgressControls() {
         <button
           type="button"
           ref={clearButton}
+          disabled={!canSave}
           aria-expanded={confirmReset}
           aria-controls="progress-reset-confirmation"
           onClick={() => {
@@ -99,7 +136,7 @@ export function ProgressControls() {
         >
           <legend>Confirm clearing marks</legend>
           <p id="progress-reset-question">
-            Clear every local lesson mark on this device? Keep a JSON backup
+            Clear every lesson mark saved to this account? Keep a JSON backup
             first.
           </p>
           <button
@@ -112,30 +149,66 @@ export function ProgressControls() {
           </button>
           <button
             type="button"
+            disabled={!canSave}
             aria-describedby="progress-reset-question"
-            onClick={() => {
-              progressStore.reset();
-              closeReset();
-              setMessage('All local marks cleared.');
+            onClick={async () => {
+              setMessage('');
+              if (await progressStore.reset(accountId)) {
+                closeReset();
+                setMessage('All account marks cleared.');
+              }
             }}
           >
             Clear all marks
           </button>
         </fieldset>
       )}
+      <div className="legacy-progress">
+        <button
+          type="button"
+          disabled={!canSave}
+          onClick={() => setLegacy(progressStore.readLegacy())}
+        >
+          Check this device for older marks
+        </button>
+        {legacy?.kind === 'available' && (
+          <>
+            <p>
+              Found {Object.keys(legacy.lessons).length} older device marks.
+              Import keeps your account's existing marks. Device data stays
+              unchanged.
+              {legacy.ignored > 0 &&
+                ` ${legacy.ignored} unreadable entries were skipped.`}
+            </p>
+            <button
+              type="button"
+              disabled={!canSave}
+              onClick={async () => {
+                setMessage('');
+                if (
+                  await progressStore.importLegacy({
+                    accountId,
+                    lessons: legacy.lessons,
+                  })
+                ) {
+                  setLegacy(null);
+                  setMessage('Older device marks imported to your account.');
+                }
+              }}
+            >
+              Import older device marks
+            </button>
+          </>
+        )}
+        {legacy?.kind === 'empty' && <p>No older device marks found.</p>}
+        {legacy?.kind === 'unavailable' && (
+          <p>Browser storage is unavailable. You can restore a JSON backup.</p>
+        )}
+        {legacy?.kind === 'invalid' && (
+          <p>Older device data is unreadable. The original data was kept.</p>
+        )}
+      </div>
       <p role="status">{message}</p>
-      {progressStore.getStorageStatus() === 'recovered' && (
-        <p role="alert">
-          Some saved marks were unreadable. Valid marks were kept; restore a
-          backup if needed.
-        </p>
-      )}
-      {progressStore.getStorageStatus() === 'session' && (
-        <p role="alert">
-          Storage unavailable: marks last for this session. Keep a backup before
-          closing.
-        </p>
-      )}
       {backup && (
         <div className="progress-text-backup">
           <label>
@@ -159,23 +232,13 @@ export function ProgressControls() {
           </label>
           <button
             type="button"
-            onClick={() => {
-              try {
-                progressStore.importJson(restore);
-                setMessage('Progress restored from backup text.');
-              } catch (error) {
-                setMessage(
-                  error instanceof Error
-                    ? error.message
-                    : 'Invalid progress backup.',
-                );
-              }
-            }}
+            disabled={!canSave}
+            onClick={() => void restoreProgress(restore)}
           >
             Restore backup text
           </button>
         </div>
       )}
-    </section>
+    </>
   );
 }

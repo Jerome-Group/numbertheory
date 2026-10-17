@@ -42,3 +42,15 @@ _Avoid_: proof, calculator-only view
 **Sites version**:
 A saved build tied to an exact source commit; deployment and custom-domain publication are separate operations.
 _Avoid_: GitHub merge
+
+**Account progress**:
+Private lesson marks owned by the authenticated Sites user and acknowledged by the progress API. A revision guards whole-document replacement.
+_Avoid_: device progress, optimistic save
+
+**Older device marks**:
+The previous local schema1 marks, read only when the learner explicitly checks the device. Import preserves existing account marks and the original device data.
+_Avoid_: automatic migration, account cache
+
+**Uncertain save**:
+A write whose acknowledgement was lost. The server may have committed it; reload progress before another write.
+_Avoid_: failed save, pending retry

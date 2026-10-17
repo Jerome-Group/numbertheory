@@ -1,9 +1,10 @@
 import { useRef, useState, useSyncExternalStore } from 'react';
+import { ProgressNotice } from './AccountControls';
 import type { Claim, Exercise } from './content/lesson-v2';
 import { lessons } from './content/lessons';
 import { lessonsForPath, pathDetails, selectedPath } from './content/paths';
 import { MathText } from './MathText';
-import { progressStore } from './progress';
+import { canSaveProgress, progressStore } from './progress';
 
 export function Practice({
   lessonId,
@@ -23,6 +24,19 @@ export function Practice({
     progressStore.subscribe,
     progressStore.getSnapshot,
   );
+  const progressStatus = useSyncExternalStore(
+    progressStore.subscribe,
+    progressStore.getStatusSnapshot,
+  );
+  const canSave = canSaveProgress(progressStatus);
+  function save(mark: 'complete' | 'review' | null) {
+    if ('accountId' in progressStatus)
+      void progressStore.set({
+        accountId: progressStatus.accountId,
+        lessonId,
+        status: mark,
+      });
+  }
   return (
     <section
       id={embedded ? `practice-${lessonId}` : 'practice'}
@@ -87,38 +101,36 @@ export function Practice({
         </p>
       )}
       <fieldset className="progress-actions">
-        <legend>Local lesson progress</legend>
+        <legend>Account lesson progress</legend>
         <button
           type="button"
+          disabled={!canSave}
           aria-pressed={progress[lessonId] === 'complete'}
-          onClick={() => progressStore.set(lessonId, 'complete')}
+          onClick={() => save('complete')}
         >
           Mark understood
         </button>
         <button
           type="button"
+          disabled={!canSave}
           aria-pressed={progress[lessonId] === 'review'}
-          onClick={() => progressStore.set(lessonId, 'review')}
+          onClick={() => save('review')}
         >
           Review later
         </button>
         {progress[lessonId] && (
-          <button
-            type="button"
-            onClick={() => progressStore.set(lessonId, null)}
-          >
+          <button type="button" disabled={!canSave} onClick={() => save(null)}>
             Clear mark
           </button>
         )}
-        <span role="status">
-          {progressStore.getStorageStatus() === 'session'
-            ? 'Storage unavailable: marks last for this session. Export a backup to keep them.'
-            : progress[lessonId] === 'complete'
-              ? 'Marked understood on this device.'
-              : progress[lessonId] === 'review'
-                ? 'Added to review on this device.'
-                : 'Progress stays in this browser.'}
-        </span>
+        {progress[lessonId] && (
+          <span>
+            {progress[lessonId] === 'complete'
+              ? 'Marked understood in your account.'
+              : 'Saved for review in your account.'}
+          </span>
+        )}
+        <ProgressNotice status={progressStatus} />
       </fieldset>
     </section>
   );
