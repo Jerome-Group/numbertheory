@@ -2,6 +2,7 @@ import { validateEvidence } from './evidence.mjs';
 import { loadRepositoryModule } from './repo-loader.mjs';
 
 export { validateEvidence } from './evidence.mjs';
+export { commands } from './cli.mjs';
 
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -16,66 +17,6 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const verificationDirectory = fileURLToPath(new URL('.', import.meta.url));
-export const commands = Object.freeze({
-  help: {
-    prerequisites: [],
-    reads: [],
-    writes: ['stdout'],
-    purpose: 'Discover commands, effects, and boundaries.',
-  },
-  catalog: {
-    prerequisites: [],
-    reads: [],
-    writes: ['stdout'],
-    purpose: 'Machine-readable command catalog.',
-  },
-  map: {
-    prerequisites: ['Node24', 'installed locked repo dependencies'],
-    reads: ['repo source', 'lesson-inventory.json'],
-    writes: ['stdout'],
-    purpose: 'Exhaustive content, routes, interaction and prerequisite map.',
-  },
-  fingerprint: {
-    prerequisites: [
-      'Node24',
-      'Git',
-      'installed locked dependencies',
-      'dist/index.html',
-    ],
-    reads: ['tracked and nonignored source', 'lockfile', 'dist'],
-    writes: ['stdout'],
-    purpose: 'Exact source/build/scope identity.',
-  },
-  verify: {
-    prerequisites: ['Node24/npm on PATH', 'Git', 'registry access for npm ci'],
-    reads: ['repo source', 'node_modules'],
-    writes: [
-      'node_modules via npm ci',
-      'npm cache',
-      'dist via npm build',
-      'temporary test fixtures',
-      'stdout',
-    ],
-    purpose: 'All automated gates only; no release or manual-pass claim.',
-  },
-  'verify:release': {
-    prerequisites: [
-      'verify prerequisites',
-      'actual current CUA browser evidence',
-      'independent semantic evidence',
-    ],
-    reads: ['repo source', 'node_modules', 'evidence JSON and artifact files'],
-    writes: [
-      'node_modules via npm ci',
-      'npm cache',
-      'dist via npm build',
-      'temporary test fixtures',
-      'stdout',
-    ],
-    purpose:
-      'Automated checks plus exact fresh manual evidence; no deployment.',
-  },
-});
 
 export const catalog = Object.freeze({
   install: ['npm', ['ci']],
@@ -88,7 +29,7 @@ export const catalog = Object.freeze({
     process.execPath,
     ['--test', join(verificationDirectory, 'contracts.test.mjs')],
   ],
-  build: ['npm', ['run', 'build']],
+  build: ['npm', ['run', 'build:bundle']],
   public: ['npm', ['run', 'check:public']],
   'verification-tests': ['npm', ['run', 'test:verification']],
 });
@@ -519,54 +460,11 @@ if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
-  try {
-    const [command, repo, browser, semantic] = process.argv.slice(2);
-    if (!command || ['help', '--help', 'catalog'].includes(command)) {
-      process.stdout.write(
-        `${JSON.stringify(
-          {
-            usage:
-              'node verify.mjs map|fingerprint|verify|verify:release REPO [BROWSER_JSON SEMANTIC_JSON]',
-            commands,
-            catalog,
-          },
-          null,
-          2,
-        )}\n`,
-      );
-    } else {
-      if (
-        !repo ||
-        !['map', 'fingerprint', 'verify', 'verify:release'].includes(command)
-      )
-        throw new Error('Unknown command. Run node verify.mjs help.');
-      const root = resolve(repo);
-      const report =
-        command === 'map'
-          ? await scopeMap(root)
-          : command === 'fingerprint'
-            ? {
-                ...fingerprint(root),
-                ...buildFingerprint(root),
-                scopeHash: (await scopeMap(root)).scopeHash,
-              }
-            : await verify(
-                root,
-                browser,
-                semantic,
-                command === 'verify:release',
-              );
-      process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
-      if (report.status === 'failed') process.exitCode = 1;
-    }
-  } catch (error) {
-    process.stdout.write(
-      `${JSON.stringify({
-        schemaVersion: 1,
-        status: 'failed',
-        error: error.message,
-      })}\n`,
-    );
-    process.exitCode = 1;
-  }
+  const { runCli } = await import('./cli.mjs');
+  process.exitCode = await runCli(process.argv.slice(2), {
+    fingerprint,
+    buildFingerprint,
+    scopeMap,
+    verify,
+  });
 }
