@@ -152,6 +152,54 @@ button {
   color: #152e8d;
   border-color: var(--blue);
 }
+.account-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-left: auto;
+  min-width: 0;
+  font-size: 12px;
+}
+.account-controls span {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.account-controls a,
+.account-controls button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--blue);
+  font-weight: 650;
+}
+.account-controls button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+}
+.progress-notice {
+  flex-basis: 100%;
+  margin: 8px 0 16px;
+}
+.progress-notice p {
+  margin: 0 0 8px;
+}
+.legacy-progress {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 20px;
+}
+.progress-actions button:disabled,
+.progress-management button:disabled,
+.progress-management input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .reading-shell,
 .overview-shell {
   max-width: 1320px;
@@ -991,6 +1039,12 @@ button {
     display: block;
     font-weight: 700;
   }
+  .account-controls {
+    order: 2;
+  }
+  .account-controls span:not([role="status"]) {
+    display: none;
+  }
   .reading-shell,
   .overview-shell {
     padding: 24px;
@@ -1019,6 +1073,9 @@ button {
   }
   .topbar {
     padding: 0 12px;
+  }
+  .topbar-name {
+    font-size: 14px;
   }
   .primary-nav {
     display: grid;
