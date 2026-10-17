@@ -114,7 +114,6 @@ test('shows only acknowledged marks and admits one local write', async () => {
     await b.store.set({ accountId, lessonId: 'C02', status: 'review' }),
     false,
   );
-  await b.store.reload();
   assert.equal(b.requests.length, 2);
   assert.equal(b.requests[1].init.method, 'PATCH');
   assert.equal(
@@ -128,6 +127,61 @@ test('shows only acknowledged marks and admits one local write', async () => {
   assert.equal(await saving, true);
   assert.equal(b.store.getSnapshot().P00, 'complete');
   assert.deepEqual(states, ['saving', 'ready']);
+});
+
+test('a restored page refreshes the current account after an outstanding write settles', async () => {
+  const b = boundary();
+  const accountId = await b.load(
+    document('account-alpha', 1, { P00: 'complete' }),
+  );
+  const saving = b.store.set({ accountId, lessonId: 'C02', status: 'review' });
+  b.store.clearSession();
+  await b.store.reload();
+  await b.store.reload();
+  assert.equal(b.requests.length, 2);
+  const refreshed = new Promise<void>((resolve) => {
+    const unsubscribe = b.store.subscribe(() => {
+      if (b.store.getStatusSnapshot().kind === 'ready') {
+        unsubscribe();
+        resolve();
+      }
+    });
+  });
+  b.requests[1].resolve(
+    Response.json(
+      document('account-alpha', 2, { P00: 'complete', C02: 'review' }),
+    ),
+  );
+  assert.equal(await saving, false);
+  assert.equal(b.requests.length, 3);
+  assert.equal(b.requests[2].init.method, undefined);
+  assert.equal(b.requests[2].init.body, undefined);
+  b.requests[2].resolve(
+    Response.json(document('account-beta', 5, { P00: 'review' })),
+  );
+  await refreshed;
+  assert.equal(b.accountId(), 'account-beta');
+  assert.equal(b.store.getSnapshot().P00, 'review');
+  assert.equal(b.store.getSnapshot().C02, undefined);
+});
+
+test('sign-out cancels a refresh requested before private state was cleared', async () => {
+  const b = boundary();
+  const accountId = await b.load(
+    document('account-alpha', 1, { P00: 'complete' }),
+  );
+  const saving = b.store.set({ accountId, lessonId: 'C02', status: 'review' });
+  await b.store.reload();
+  b.store.clearSession();
+  b.requests[1].resolve(
+    Response.json(
+      document('account-alpha', 2, { P00: 'complete', C02: 'review' }),
+    ),
+  );
+  assert.equal(await saving, false);
+  assert.equal(b.requests.length, 2);
+  assert.equal(b.store.getStatusSnapshot().kind, 'anonymous');
+  assert.equal(Object.keys(b.store.getSnapshot()).length, 0);
 });
 
 test('lost write confirmation blocks new intent until an explicit read without replay', async () => {

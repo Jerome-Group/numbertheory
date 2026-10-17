@@ -29,6 +29,7 @@ let status: ProgressStatus = { kind: 'unknown' };
 let confirmedAccount: AccountProgress | null = null;
 let generation = 0;
 let writing = false;
+let reloadRequested = false;
 
 function publish(next: ProgressStatus, marks = snapshot) {
   status = next;
@@ -76,6 +77,7 @@ export function canSaveProgress(current: ProgressStatus) {
 
 function clearSession() {
   generation++;
+  reloadRequested = false;
   confirmedAccount = null;
   publish({ kind: 'anonymous' }, {});
 }
@@ -93,7 +95,11 @@ function clearChangedAccount() {
 }
 
 async function reload() {
-  if (writing) return;
+  if (writing) {
+    reloadRequested = true;
+    return;
+  }
+  reloadRequested = false;
   const requestGeneration = ++generation;
   const previous = confirmedAccount;
   publish({ kind: 'loading' }, {});
@@ -220,6 +226,7 @@ async function write(
     return false;
   } finally {
     writing = false;
+    if (reloadRequested) void reload();
   }
 }
 
