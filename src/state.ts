@@ -50,6 +50,7 @@ export type AtlasView =
 export type StudyState = {
   view: AtlasView;
   lessonId: string;
+  urlIssue: string | null;
   a: string;
   b: string;
   result: EuclidResult | null;
@@ -156,138 +157,163 @@ const defaults = {
 const listeners = new Set<() => void>();
 function fromUrl(): StudyState {
   const p = new URLSearchParams(location.search);
-  const values = Object.fromEntries(
-    Object.keys(defaults).map((key) => [
-      key,
-      p.get(key === 'lessonId' ? 'lesson' : key) ??
-        defaults[key as keyof typeof defaults],
-    ]),
-  ) as typeof defaults;
   const route = routeFromLocation(location.pathname, location.search);
   const lessonId =
     route.lessonId && lessons.some((x) => x.id === route.lessonId)
       ? route.lessonId
       : defaults.lessonId;
   const view = route.view as AtlasView;
-  let result: EuclidResult | null = null,
-    crt: CrtResult | null = null,
-    linear: LinearResult | null = null,
-    residue: ResidueClockResult | null = null,
-    quadratic: QuadraticResidueResult | null = null,
-    hensel: HenselTree | null = null,
-    continuedFraction:
-      | RationalContinuedFraction
-      | SqrtContinuedFraction
-      | null = null,
-    pell: PellOrbit | null = null,
-    divisorStudy: DivisorIncidenceStudy | null = null,
-    orderStudy: UnitOrderSpectrum | null = null,
-    lattice: ReciprocityLattice | null = null,
-    fiberMap: CancellationMap | null = null,
-    gaussian: GaussianDivision | null = null,
-    squareResult: LocalSquareResult | null = null;
-  try {
-    result = extendedEuclid(values.a, values.b);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    crt = solveCrt(values.ca, values.cm, values.cb, values.cn);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    linear = solveLinear(values.la, values.lb, values.ln);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    residue = buildResidueClock(
-      values.rm,
-      values.rf,
-      values.rs,
-      values.ro,
-      values.rr0,
-      values.rr1,
-    );
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    quadratic = buildQuadraticResidueMap(values.qp, values.qt);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    hensel = buildHenselTree(values.hp, values.hc, values.hl);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    continuedFraction =
-      values.cftype === 'sqrt'
-        ? buildSqrtContinuedFraction(values.cfD, values.cfterms)
-        : buildRationalContinuedFraction(values.cfn, values.cfd);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    pell = buildPellOrbit(values.pellD, values.pellCount);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    divisorStudy = buildDivisorIncidenceStudy(
-      values.divisorN,
-      values.divisorF,
-      values.divisorG,
-    );
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    orderStudy = buildUnitOrderSpectrum(values.orderP, values.orderG);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    lattice = buildReciprocityLattice(values.latticeP, values.latticeQ);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    fiberMap = buildCancellationMap(values.fiberN, values.fiberC);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    gaussian = divideGaussian(values.ga, values.gb, values.gc, values.gd);
-  } catch {
-    /* The visible lab accepts corrected values. */
-  }
-  try {
-    squareResult = solveLocalSquares(values.squareM, values.squareA);
-  } catch {
-    /* The visible lab accepts corrected values. */
+  const recovered: string[] = [];
+  function hydrate<T>(
+    name: string,
+    build: (read: (key: keyof typeof defaults) => string) => T,
+  ): T {
+    try {
+      return build((key) => p.get(key) ?? defaults[key]);
+    } catch {
+      recovered.push(name);
+      return build((key) => defaults[key]);
+    }
   }
   return {
-    ...values,
     view,
     lessonId,
-    result,
-    crt,
-    linear,
-    residue,
-    quadratic,
-    hensel,
-    continuedFraction,
-    pell,
-    divisorStudy,
-    orderStudy,
-    lattice,
-    fiberMap,
-    gaussian,
-    squareResult,
+    ...hydrate('Euclidean algorithm', (read) => {
+      const a = read('a'),
+        b = read('b');
+      return { a, b, result: extendedEuclid(a, b) };
+    }),
+    ...hydrate('Chinese remainder theorem', (read) => {
+      const ca = read('ca'),
+        cm = read('cm'),
+        cb = read('cb'),
+        cn = read('cn');
+      return { ca, cm, cb, cn, crt: solveCrt(ca, cm, cb, cn) };
+    }),
+    ...hydrate('linear congruences', (read) => {
+      const la = read('la'),
+        lb = read('lb'),
+        ln = read('ln');
+      return { la, lb, ln, linear: solveLinear(la, lb, ln) };
+    }),
+    ...hydrate('residue clock', (read) => {
+      const rm = read('rm'),
+        rf = read('rf'),
+        rs = read('rs'),
+        ro = read('ro'),
+        rr0 = read('rr0'),
+        rr1 = read('rr1');
+      if (ro !== 'add' && ro !== 'multiply')
+        throw new Error('Choose addition or multiplication.');
+      return {
+        rm,
+        rf,
+        rs,
+        ro,
+        rr0,
+        rr1,
+        residue: buildResidueClock(rm, rf, rs, ro, rr0, rr1),
+      };
+    }),
+    ...hydrate('quadratic residues', (read) => {
+      const qp = read('qp'),
+        qt = read('qt');
+      return { qp, qt, quadratic: buildQuadraticResidueMap(qp, qt) };
+    }),
+    ...hydrate('Hensel tree', (read) => {
+      const hp = read('hp'),
+        hc = read('hc'),
+        hl = read('hl');
+      return { hp, hc, hl, hensel: buildHenselTree(hp, hc, hl) };
+    }),
+    ...hydrate('continued fractions', (read) => {
+      const cftype = read('cftype'),
+        cfn = read('cfn'),
+        cfd = read('cfd'),
+        cfD = read('cfD'),
+        cfterms = read('cfterms');
+      if (cftype !== 'rational' && cftype !== 'sqrt')
+        throw new Error('Choose a rational or square-root input.');
+      const rational = buildRationalContinuedFraction(cfn, cfd);
+      const sqrt = buildSqrtContinuedFraction(cfD, cfterms);
+      return {
+        cftype,
+        cfn,
+        cfd,
+        cfD,
+        cfterms,
+        continuedFraction: cftype === 'sqrt' ? sqrt : rational,
+      };
+    }),
+    ...hydrate('Pell orbit', (read) => {
+      const pellD = read('pellD'),
+        pellCount = read('pellCount');
+      return { pellD, pellCount, pell: buildPellOrbit(pellD, pellCount) };
+    }),
+    ...hydrate('divisor incidence', (read) => {
+      const divisorN = read('divisorN'),
+        divisorF = read('divisorF'),
+        divisorG = read('divisorG');
+      if (
+        (divisorF !== 'one' &&
+          divisorF !== 'identity' &&
+          divisorF !== 'mobius' &&
+          divisorF !== 'totient') ||
+        (divisorG !== 'one' &&
+          divisorG !== 'identity' &&
+          divisorG !== 'mobius' &&
+          divisorG !== 'totient')
+      )
+        throw new Error('Choose supported arithmetic functions.');
+      return {
+        divisorN,
+        divisorF,
+        divisorG,
+        divisorStudy: buildDivisorIncidenceStudy(divisorN, divisorF, divisorG),
+      };
+    }),
+    ...hydrate('unit orders', (read) => {
+      const orderP = read('orderP'),
+        orderG = read('orderG');
+      return {
+        orderP,
+        orderG,
+        orderStudy: buildUnitOrderSpectrum(orderP, orderG),
+      };
+    }),
+    ...hydrate('reciprocity lattice', (read) => {
+      const latticeP = read('latticeP'),
+        latticeQ = read('latticeQ');
+      return {
+        latticeP,
+        latticeQ,
+        lattice: buildReciprocityLattice(latticeP, latticeQ),
+      };
+    }),
+    ...hydrate('cancellation map', (read) => {
+      const fiberN = read('fiberN'),
+        fiberC = read('fiberC');
+      return { fiberN, fiberC, fiberMap: buildCancellationMap(fiberN, fiberC) };
+    }),
+    ...hydrate('Gaussian division', (read) => {
+      const ga = read('ga'),
+        gb = read('gb'),
+        gc = read('gc'),
+        gd = read('gd');
+      return { ga, gb, gc, gd, gaussian: divideGaussian(ga, gb, gc, gd) };
+    }),
+    ...hydrate('local square roots', (read) => {
+      const squareM = read('squareM'),
+        squareA = read('squareA');
+      return {
+        squareM,
+        squareA,
+        squareResult: solveLocalSquares(squareM, squareA),
+      };
+    }),
+    urlIssue: recovered.length
+      ? `Invalid experiment inputs in this URL. Restored default examples for ${recovered.join(', ')}.`
+      : null,
   };
 }
 let state: StudyState = fromUrl();
@@ -298,6 +324,7 @@ function emit() {
   for (const listener of listeners) listener();
 }
 function saveUrl() {
+  state = { ...state, urlIssue: null };
   const p = new URLSearchParams();
   for (const key of [
     'a',

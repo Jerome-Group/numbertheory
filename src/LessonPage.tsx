@@ -256,7 +256,7 @@ export function LessonPage({
                   )}
                   {lesson.lab === 'continued-fraction' && (
                     <ContinuedFractionStaircaseLab
-                      key={`${lesson.id}-${state.cfn}-${state.cfd}-${state.cfD}-${state.cfterms}`}
+                      key={`${lesson.id}-${state.cfn}-${state.cfd}-${state.cfD}`}
                       id="lab"
                       initialInput={
                         lesson.id === 'R05'

@@ -165,6 +165,17 @@ export function ContinuedFractionStaircaseLab({
   );
   const [visible, setVisible] = useState(setup.visible);
   const [error, setError] = useState(setup.error);
+  const [previousDepth, setPreviousDepth] = useState(depth);
+  if (depth !== previousDepth) {
+    const next = runContinuedFraction(activeInput, depth);
+    setPreviousDepth(depth);
+    setResult(next);
+    setVisible(
+      next.kind === 'rational'
+        ? Math.min(depth, next.coefficients.length)
+        : depth,
+    );
+  }
   const entries =
     result.kind === 'rational'
       ? result.coefficients.slice(0, visible).map((coefficient, index) => ({

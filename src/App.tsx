@@ -219,6 +219,11 @@ export function App() {
             ))}
           </nav>
         </header>
+        {state.urlIssue && (
+          <p className="progress-reset-confirmation" role="status">
+            {state.urlIssue}
+          </p>
+        )}
         {state.view === 'not-found' ? (
           <div className="reading-shell">
             <h1>Page not found</h1>
