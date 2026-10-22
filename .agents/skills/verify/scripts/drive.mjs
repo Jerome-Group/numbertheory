@@ -283,6 +283,7 @@ async function main() {
   let browserServer;
   let browser;
   let interrupted;
+  const featureCases = new Map();
   const abort = new AbortController();
   const signal = (name) => {
     interrupted = name;
@@ -336,8 +337,14 @@ async function main() {
       };
       for (const [name, drive] of Object.entries(features)) {
         if (interrupted) break;
-        if (options.feature === 'all' || options.feature === name)
-          await drive(suite);
+        if (options.feature === 'all' || options.feature === name) {
+          const firstCase = report.cases.length;
+          try {
+            await drive(suite);
+          } finally {
+            featureCases.set(name, report.cases.slice(firstCase));
+          }
+        }
       }
     }
     assert.equal(
@@ -383,9 +390,7 @@ async function main() {
     report.features = Object.keys(features)
       .filter((name) => options.feature === 'all' || options.feature === name)
       .map((name) => {
-        const records = report.cases.filter((item) =>
-          item.id.startsWith(`${name}-`),
-        );
+        const records = featureCases.get(name) ?? [];
         return {
           feature: name,
           status: !records.length
