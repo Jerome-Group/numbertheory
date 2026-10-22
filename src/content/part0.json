@@ -10,6 +10,7 @@
     "summary": "Quantifiers and implications specify a claim's burden. A counterexample refutes a universal statement; separate arguments establish existence and uniqueness.",
     "definition": [
       "For a domain \\(D\\), \\(\\forall x\\in D, P(x)\\) means every allowed \\(x\\) has property \\(P\\), while \\(\\exists x\\in D, P(x)\\) asks for at least one witness. The domain is part of the statement.",
+      "In \\(\\forall n\\in\\mathbb Z,\\exists m\\in\\mathbb Z, P(n,m)\\), the witness \\(m\\) may depend on the previously chosen \\(n\\). In \\(\\exists m\\in\\mathbb Z,\\forall n\\in\\mathbb Z, P(n,m)\\), one fixed \\(m\\) must work for every \\(n\\). Changing the order can change the truth of the claim.",
       "An implication \\(P\\Rightarrow Q\\) says \\(P\\) is sufficient for \\(Q\\), and \\(Q\\) is necessary for \\(P\\). Its converse \\(Q\\Rightarrow P\\) is a separate claim. Existence of an object and uniqueness of that object are also separate claims."
     ],
     "theorem": "For any domain \\(D\\) and predicate \\(P\\), the negation of \\(\\forall x\\in D, P(x)\\) is \\(\\exists x\\in D, \\neg P(x)\\). The negation of \\(\\exists x\\in D, P(x)\\) is \\(\\forall x\\in D, \\neg P(x)\\).",
@@ -18,21 +19,25 @@
       "To refute the assertion that some allowed \\(x\\) has \\(P(x)\\), one must show that each allowed \\(x\\) fails \\(P(x)\\). Conversely, if all fail, no witness exists. This gives the second equivalence. \\(\\square\\)"
     ],
     "example": {
-      "prompt": "Negate the claim that every integer has an integer square root, and decide it.",
+      "prompt": "Negate the claim that every integer has an integer square root, and decide it. Then compare the two quantifier orders in the claim that every integer has a larger integer.",
       "steps": [
         "The original statement is \\(\\forall n\\in\\mathbb Z,\\exists m\\in\\mathbb Z, m^2=n\\).",
         "Its negation is \\(\\exists n\\in\\mathbb Z,\\forall m\\in\\mathbb Z, m^2\\ne n\\).",
-        "Choose \\(n=-1\\). Every integer square is nonnegative, so no integer \\(m\\) satisfies \\(m^2=-1\\)."
+        "Choose \\(n=-1\\). Every integer square is nonnegative, so no integer \\(m\\) satisfies \\(m^2=-1\\).",
+        "The claim \\(\\forall n\\in\\mathbb Z,\\exists m\\in\\mathbb Z, m>n\\) is true. Given any \\(n\\), choose \\(m=n+1\\); then \\(m-n=1>0\\).",
+        "The reversed claim \\(\\exists m\\in\\mathbb Z,\\forall n\\in\\mathbb Z, m>n\\) is false. For any proposed \\(m\\), take \\(n=m\\); the required inequality becomes \\(m>m\\), which is false.",
+        "The choice \\(m=n+1\\) depends on \\(n\\). It gives a witness for each input, not one integer that works for all inputs."
       ],
-      "conclusion": "The original universal claim is false; \\(-1\\) is a counterexample with its failed condition proved."
+      "conclusion": "The original universal claim is false; \\(-1\\) is a counterexample with its failed condition proved. Quantifier order distinguishes a witness chosen for each input from one witness required to work for every input."
     },
     "practice": {
-      "prompt": "A proposed proof says, ‘If \\(n\\) is divisible by \\(4\\), it is even. Therefore every even integer is divisible by \\(4\\).’ Name the error, give a counterexample, and write the correct implication.",
+      "prompt": "A proposed proof says, ‘If \\(n\\) is divisible by \\(4\\), it is even. Therefore every even integer is divisible by \\(4\\).’ Name the error, give a counterexample, and write the correct implication. Separately, a learner chooses \\(m=n+1\\) and claims this proves \\(\\exists m\\in\\mathbb Z,\\forall n\\in\\mathbb Z, m>n\\). Explain the quantifier error and refute the claim.",
       "hints": [
         "Compare the direction of the two implications.",
-        "Find an even integer that has no integer quotient on division by \\(4\\)."
+        "Find an even integer that has no integer quotient on division by \\(4\\).",
+        "For the second argument, ask whether \\(m\\) was fixed before \\(n\\). Test a proposed fixed witness against \\(n=m\\)."
       ],
-      "answer": "The argument assumes the converse. The correct implication is \\(4\\mid n\\Rightarrow 2\\mid n\\), since \\(n=4k=2(2k)\\). The converse fails at \\(n=2\\): \\(2\\mid2\\), but \\(4\\nmid2\\)."
+      "answer": "The argument assumes the converse. The correct implication is \\(4\\mid n\\Rightarrow 2\\mid n\\), since \\(n=4k=2(2k)\\). The converse fails at \\(n=2\\): \\(2\\mid2\\), but \\(4\\nmid2\\). The second argument proves \\(\\forall n\\in\\mathbb Z,\\exists m\\in\\mathbb Z, m>n\\), because its witness depends on \\(n\\). It does not prove the reversed order. For every proposed fixed \\(m\\), the integer \\(n=m\\) refutes \\(m>n\\)."
     },
     "caution": "A finite list of supporting cases cannot establish a universal theorem. A counterexample must satisfy the stated domain and every hypothesis before it can refute a conclusion.",
     "bridge": "In a cancellation proof, identify the exact hypothesis that makes the multiplier invertible before reversing an implication.",
