@@ -44,6 +44,7 @@ jobs:
         run: node scripts/verification/summary.mjs "$RUNNER_TEMP/numbertheory-verification.json" >> "$GITHUB_STEP_SUMMARY"
 
   browser:
+    name: browser (${{ matrix.feature }}${{ matrix.profile && format(', {0}', matrix.profile) || '' }}${{ matrix.partition && format(', {0}', matrix.partition) || '' }})
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
@@ -51,13 +52,18 @@ jobs:
       matrix:
         include:
           - { feature: discovery, profile: '' }
-          - { feature: teaching, profile: phone, partition: 1 }
-          - { feature: teaching, profile: phone, partition: 2 }
-          - { feature: teaching, profile: tablet, partition: 1 }
-          - { feature: teaching, profile: tablet, partition: 2 }
-          - { feature: teaching, profile: desktop, partition: 1 }
-          - { feature: teaching, profile: desktop, partition: 2 }
-          - { feature: practice, profile: '' }
+          - { feature: teaching, profile: phone, partition: 1, total: 2 }
+          - { feature: teaching, profile: phone, partition: 2, total: 2 }
+          - { feature: teaching, profile: tablet, partition: 1, total: 2 }
+          - { feature: teaching, profile: tablet, partition: 2, total: 2 }
+          - { feature: teaching, profile: desktop, partition: 1, total: 2 }
+          - { feature: teaching, profile: desktop, partition: 2, total: 2 }
+          - { feature: practice, profile: phone }
+          - { feature: practice, profile: tablet }
+          - { feature: practice, profile: desktop, partition: 1, total: 4 }
+          - { feature: practice, profile: desktop, partition: 2, total: 4 }
+          - { feature: practice, profile: desktop, partition: 3, total: 4 }
+          - { feature: practice, profile: desktop, partition: 4, total: 4 }
           - { feature: labs, profile: '' }
           - { feature: urls, profile: '' }
     steps:
@@ -79,20 +85,21 @@ jobs:
           FEATURE: ${{ matrix.feature }}
           PROFILE: ${{ matrix.profile }}
           PARTITION: ${{ matrix.partition || '' }}
+          PARTITIONS: ${{ matrix.total || '' }}
         run: |
           args=(drive --feature "$FEATURE" --output "$RUNNER_TEMP/numbertheory-browser")
           if [ -n "$PROFILE" ]; then
             args+=(--profile "$PROFILE")
           fi
           if [ -n "$PARTITION" ]; then
-            args+=(--shard "$PARTITION/2")
+            args+=(--shard "$PARTITION/$PARTITIONS")
           fi
           npm run --silent agent -- "${args[@]}"
       - name: Retain browser evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: numbertheory-browser-${{ matrix.feature }}-${{ matrix.profile || 'all' }}${{ matrix.partition && format('-{0}-of-2', matrix.partition) || '' }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: numbertheory-browser-${{ matrix.feature }}-${{ matrix.profile || 'all' }}${{ matrix.partition && format('-{0}-of-{1}', matrix.partition, matrix.total) || '' }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/numbertheory-browser
           if-no-files-found: ignore
           retention-days: 14
@@ -159,9 +166,46 @@ jobs:
       PROFILE: desktop
     steps: *teaching_profile_steps
 
+  practice:
+    name: browser (practice)
+    needs: browser
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Require every browser actor
+        env:
+          BROWSER: ${{ needs.browser.result }}
+        run: test "$BROWSER" = success
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install the locked source loader
+        run: npm ci
+      - name: Download this attempt's Practice actors
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          ATTEMPT: ${{ github.run_attempt }}
+          BUNDLE: ${{ runner.temp }}/numbertheory-practice-union
+        run: |
+          for actor in phone tablet desktop-1-of-4 desktop-2-of-4 desktop-3-of-4 desktop-4-of-4; do
+            gh run download "$RUN_ID" \
+              --name "numbertheory-browser-practice-$actor-$RUN_ID-$ATTEMPT" \
+              --dir "$BUNDLE/$actor"
+          done
+      - name: Require the complete source-derived Practice union
+        run: npm run --silent agent -- practice-union --output "$RUNNER_TEMP/numbertheory-practice-union"
+
   # Renaming this job renames the check context named by the Required checks ruleset.
   checks:
-    needs: [automated, browser, teaching-phone, teaching-tablet, teaching-desktop]
+    needs: [automated, browser, teaching-phone, teaching-tablet, teaching-desktop, practice]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -173,4 +217,5 @@ jobs:
           PHONE: ${{ needs.teaching-phone.result }}
           TABLET: ${{ needs.teaching-tablet.result }}
           DESKTOP: ${{ needs.teaching-desktop.result }}
-        run: test "$AUTOMATED" = success && test "$BROWSER" = success && test "$PHONE" = success && test "$TABLET" = success && test "$DESKTOP" = success
+          PRACTICE: ${{ needs.practice.result }}
+        run: test "$AUTOMATED" = success && test "$BROWSER" = success && test "$PHONE" = success && test "$TABLET" = success && test "$DESKTOP" = success && test "$PRACTICE" = success

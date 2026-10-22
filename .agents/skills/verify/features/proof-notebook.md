@@ -31,6 +31,26 @@ Require lesson selection to keep focus in the picker. Native popup keyboard beha
 
 After direct loading and repeated lesson changes, require exactly one cue panel, workspace, and claim, one of each source cue control, and closed disclosure, export, and reset controls while each lesson retains its writing, captures, and reflections.
 
+### Bounded CI source inventory
+
+Practice CI uses complete phone and tablet actors plus four desktop partitions. Run each actor in a fresh external directory:
+
+```sh
+npm run --silent agent -- drive --feature practice --profile phone --output /absolute/external/phone
+npm run --silent agent -- drive --feature practice --profile tablet --output /absolute/external/tablet
+npm run --silent agent -- drive --feature practice --profile desktop --shard 1/4 --output /absolute/external/desktop-1
+```
+
+Run desktop `2/4`, `3/4` and `4/4` separately. The source-derived plan distributes all 83 desktop sources as 21, 21, 21 and 20 exact comparisons. It also distributes the ten other Practice journeys once per profile. Each desktop actor retains its own inventory case. Complete Practice therefore has 36 cases in this CI shape; an unsharded run retains 33 cases with the same source and journey coverage.
+
+Download the six artifacts from one workflow attempt into six sibling directories, each containing its original report and files. With clean matching source and locked dependencies installed, run:
+
+```sh
+npm run --silent agent -- practice-union --output /absolute/external/downloaded-practice
+```
+
+Require a passed `complete-practice-profiles` result. The read-only validator recomputes plans and scope from current authored source. It requires every detailed/account journey once per profile, exact source inventories and completed source-read events, passed cases, correct identity, artifact digests and stopped ownership receipts. Missing, duplicate, stale, interrupted or tampered actors fail. Different valid Worker build hashes remain distinct. Partial reports leave unselected obligations not evaluated. This union does not establish hosted authentication or release readiness.
+
 ## Gotchas
 
 `go()` reloads the document and clears tab memory. Use visible in-app controls for retention checks. Selectable export is the fallback when a host browser does not save a download. Passing Chromium download checks does not prove a native in-app browser saves files. Source checks establish authored equality; they do not establish that the learner's proof is correct or that the authored proof has received independent mathematical review. Hosted, native accessibility, and production observations remain separate.

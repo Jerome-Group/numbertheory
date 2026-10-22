@@ -20,12 +20,12 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { buildFingerprint, fingerprint, scopeMap } from './verify.mjs';
 import {
   parseShard,
   planTeaching,
   validateTeachingProfile,
 } from './teaching-shards.mjs';
+import { buildFingerprint, fingerprint, scopeMap } from './verify.mjs';
 
 const source = fileURLToPath(new URL('../../', import.meta.url));
 const files = [
@@ -35,6 +35,8 @@ const files = [
   'repo-loader.mjs',
   'lesson-inventory.json',
   'teaching-shards.mjs',
+  'practice-partitions.mjs',
+  'browser-artifacts.mjs',
 ];
 
 function fixture(t) {
@@ -77,7 +79,12 @@ process.exitCode = Number(process.env.CLI_HELPER_EXIT ?? 0);
       env: { ...process.env, CLI_PROBE: marker },
       ...options,
     });
-  return { root, marker, bin, run };
+  const enableScope = () => {
+    cpSync(join(source, 'src'), join(root, 'src'), { recursive: true });
+    copyFileSync(join(source, 'package.json'), join(root, 'package.json'));
+    symlinkSync(join(source, 'node_modules'), join(root, 'node_modules'));
+  };
+  return { root, marker, bin, run, enableScope };
 }
 
 test('help and catalog work with no deps, build, or Git reads', (t) => {
@@ -174,6 +181,8 @@ test('real CLI rejects unknown, duplicate, missing, surplus, and irrelevant argu
     ],
     ['teaching-profile', '--profile', 'phone'],
     ['teaching-profile', '--output', output],
+    ['practice-union'],
+    ['practice-union', '--profile', 'phone', '--output', output],
     [
       'launch',
       '--output',
@@ -289,6 +298,78 @@ test('both real CLI boundaries reject malformed, irrelevant and empty shards bef
     assert.equal(existsSync(output), false);
   }
   assert.equal(parseShard({ feature: 'teaching' }), undefined);
+});
+
+test('Practice CLI validates bounded shards before helper effects and forwards valid shards', (t) => {
+  const f = fixture(t);
+  f.enableScope();
+  const output = join(f.root, 'must-not-exist');
+  for (const [profile, shard, error] of [
+    ['desktop', '84/84', /nonempty source partition/],
+    ['phone', '5/5', /nonempty source partition/],
+    ['desktop', '0/4', /positive integers/],
+    ['desktop', '5/4', /within its safe integer total/],
+    ['desktop', '1/9007199254740992', /safe integer/],
+    ['desktop', '1.5/4', /positive integers/],
+  ]) {
+    const args = [
+      '--feature',
+      'practice',
+      '--profile',
+      profile,
+      '--shard',
+      shard,
+      '--output',
+      output,
+    ];
+    for (const result of [
+      f.run(['drive', ...args]),
+      spawnSync(
+        process.execPath,
+        [join(source, '.agents/skills/verify/scripts/drive.mjs'), ...args],
+        { encoding: 'utf8' },
+      ),
+    ]) {
+      assert.equal(result.status, 2, result.stderr);
+      assert.match(result.stderr, error);
+      assert.equal(existsSync(f.marker), false);
+      assert.equal(existsSync(output), false);
+    }
+  }
+  const missingProfile = f.run([
+    'drive',
+    '--feature',
+    'practice',
+    '--shard',
+    '1/4',
+    '--output',
+    output,
+  ]);
+  assert.equal(missingProfile.status, 2);
+  assert.match(missingProfile.stderr, /explicit profile/);
+  assert.equal(existsSync(f.marker), false);
+  const result = f.run([
+    'drive',
+    '--feature',
+    'practice',
+    '--profile',
+    'desktop',
+    '--shard',
+    '1/4',
+    '--output',
+    output,
+  ]);
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(JSON.parse(result.stdout).args, [
+    '--feature',
+    'practice',
+    '--output',
+    output,
+    '--profile',
+    'desktop',
+    '--shard',
+    '1/4',
+  ]);
 });
 
 function teachingBundle(t) {

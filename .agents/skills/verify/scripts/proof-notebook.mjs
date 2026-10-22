@@ -553,23 +553,12 @@ export async function proofNotebook(suite) {
         );
       },
     );
-    const sourceLessons =
-      profile === 'desktop'
-        ? suite.data.map.lessons
-        : [
-            ...new Map(
-              [
-                suite.data.map.lessons[0],
-                [...suite.data.map.lessons].sort(
-                  (a, b) => a.proofStepCount - b.proofStepCount,
-                )[0],
-                [...suite.data.map.lessons].sort(
-                  (a, b) => b.proofStepCount - a.proofStepCount,
-                )[0],
-                suite.data.map.lessons.find((lesson) => lesson.id === 'Q04'),
-              ].map((lesson) => [lesson.id, lesson]),
-            ).values(),
-          ];
+    const lessonsById = new Map(
+      suite.data.map.lessons.map((lesson) => [lesson.id, lesson]),
+    );
+    const sourceLessons = suite.practicePlans[profile].sourceLessonIds.map(
+      (id) => lessonsById.get(id),
+    );
     await runCase(
       suite,
       profile,
@@ -603,6 +592,7 @@ export async function proofNotebook(suite) {
                 data.teaching[mapped.id],
               );
               await checkPage(page);
+              return { lessonId: mapped.id };
             },
           );
         }

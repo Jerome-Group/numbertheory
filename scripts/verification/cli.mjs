@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { constants } from 'node:os';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { planPractice, validatePracticeUnion } from './practice-partitions.mjs';
 import {
   parseShard,
   planTeaching,
@@ -178,10 +179,16 @@ export const commands = Object.freeze({
     writes: browserWrites,
     purpose:
       'Scoped Playwright automation; no native, semantic, release, or deployment claim.',
-    execute: ({ options }) => {
+    execute: async ({ options, api }) => {
       try {
         const shard = parseShard(options);
-        if (shard)
+        if (shard && options.feature === 'practice')
+          planPractice(
+            (await api.scopeMap(checkout())).lessons,
+            options.profile,
+            shard,
+          );
+        else if (shard)
           planTeaching(
             JSON.parse(
               readFileSync(join(checkout(), 'src/content/order.json'), 'utf8'),
@@ -193,6 +200,30 @@ export const commands = Object.freeze({
       }
       return driveHelper(options, ['--feature', options.feature]);
     },
+  },
+  'practice-union': {
+    positionals: [],
+    options: { output },
+    prerequisites: [
+      'Git',
+      'current clean source and lockfile',
+      'installed locked repo dependencies for the authoritative scope map',
+      'downloaded complete Practice profile artifacts',
+    ],
+    reads: [
+      'repo scope map',
+      'current source identity',
+      'Practice reports and artifact bytes',
+    ],
+    writes: ['stdout', 'stderr diagnostics'],
+    purpose:
+      'Complete source-bound local Playwright Practice profiles; no native, hosted, release, or deployment proof.',
+    execute: async ({ options, api }) =>
+      validatePracticeUnion(
+        options.output,
+        api.fingerprint(checkout()),
+        await api.scopeMap(checkout()),
+      ),
   },
   'teaching-profile': {
     positionals: [],

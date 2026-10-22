@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { planPractice } from '../../../../scripts/verification/practice-partitions.mjs';
 import { accountJourneys } from './account-journeys.mjs';
 import { accountLifecycle } from './account-lifecycle.mjs';
 import {
@@ -12,6 +13,16 @@ import {
 import { proofNotebook } from './proof-notebook.mjs';
 
 export async function practice(suite) {
+  const practicePlans =
+    suite.practicePlans ??
+    Object.fromEntries(
+      suite.profiles.map((profile) => [
+        profile,
+        planPractice(suite.data.map.lessons, profile),
+      ]),
+    );
+  suite = { ...suite, practicePlans };
+  suite.report.practicePlans = practicePlans;
   await proofNotebook(suite);
   for (const profile of suite.profiles) {
     await runCase(
