@@ -403,6 +403,19 @@ async function main() {
           cases: records.length,
         };
       });
+    const featureTotal = report.features.reduce(
+      (total, feature) => total + feature.cases,
+      0,
+    );
+    if (featureTotal !== report.cases.length) {
+      report.status = 'failed';
+      report.error = [
+        report.error,
+        `Feature summaries account for ${featureTotal} of ${report.cases.length} observed cases`,
+      ]
+        .filter(Boolean)
+        .join('\n');
+    }
     report.finishedAt = new Date().toISOString();
     report.interruptedBy = interrupted ?? null;
     report.artifacts = [];
