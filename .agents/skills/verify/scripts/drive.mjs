@@ -10,6 +10,7 @@ import {
 } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { planPractice } from '../../../../scripts/verification/practice-partitions.mjs';
 import { loadRepositoryModule } from '../../../../scripts/verification/repo-loader.mjs';
 import {
   parseShard,
@@ -40,7 +41,7 @@ import { urls } from './urls.mjs';
 const root = fileURLToPath(new URL('../../../../', import.meta.url));
 const features = { discovery, teaching, practice, labs, urls };
 const usage =
-  'node .agents/skills/verify/scripts/drive.mjs (--feature all|discovery|teaching|practice|labs|urls|--launch-only|--doctor|--cleanup) --output /absolute/directory; --feature also accepts [--profile phone|tablet|desktop] [--channel chrome]; teaching with explicit profile accepts [--shard I/N]';
+  'node .agents/skills/verify/scripts/drive.mjs (--feature all|discovery|teaching|practice|labs|urls|--launch-only|--doctor|--cleanup) --output /absolute/directory; --feature also accepts [--profile phone|tablet|desktop] [--channel chrome]; teaching or practice with explicit profile accepts [--shard I/N]';
 
 function parse(argv) {
   if (argv.length === 1 && argv[0] === '--help') return { help: true };
@@ -198,12 +199,25 @@ async function main() {
     };
   if (options.doctor) return doctor(options.output);
   if (options.cleanup) return cleanup(options.output);
-  const lessonIds = options.shard
-    ? JSON.parse(await readFile(join(root, 'src/content/order.json'), 'utf8'))
-    : null;
-  const teachingCases = options.shard
+  const lessonIds =
+    options.shard && options.feature === 'teaching'
+      ? JSON.parse(await readFile(join(root, 'src/content/order.json'), 'utf8'))
+      : null;
+  const teachingCases = lessonIds
     ? planTeaching(lessonIds, options.shard).map((item) => item.id)
     : null;
+  const map = await scopeMap(root);
+  const practicePlans =
+    options.feature === 'practice'
+      ? Object.fromEntries(
+          (options.profile ? [options.profile] : Object.keys(profiles)).map(
+            (profile) => [
+              profile,
+              planPractice(map.lessons, profile, options.shard),
+            ],
+          ),
+        )
+      : undefined;
   const prerequisites = runtimePrerequisites();
   const packages = await installedPackages();
   assert.equal(
@@ -216,7 +230,6 @@ async function main() {
     await stat(chromium.executablePath());
   await stat(join(root, 'dist/server/wrangler.json'));
   await stat(join(root, 'dist/server/index.js'));
-  const map = await scopeMap(root);
   const identity = {
     ...fingerprint(root),
     ...buildFingerprint(root),
@@ -234,7 +247,7 @@ async function main() {
       await readFile(join(root, 'src/content/experiences.json'), 'utf8'),
     ),
   };
-  if (options.shard)
+  if (lessonIds)
     assert.deepEqual(
       data.map.lessons.map((lesson) => lesson.id),
       lessonIds,
@@ -255,7 +268,8 @@ async function main() {
       ? { [options.profile]: profiles[options.profile] }
       : profiles,
     cases: [],
-    ...(options.shard
+    ...(practicePlans ? { practicePlans } : {}),
+    ...(teachingCases
       ? {
           shard: {
             ...options.shard,
@@ -283,6 +297,7 @@ async function main() {
   let browserServer;
   let browser;
   let interrupted;
+  const featureCases = new Map();
   const abort = new AbortController();
   const signal = (name) => {
     interrupted = name;
@@ -332,12 +347,19 @@ async function main() {
         data,
         report,
         signal: abort.signal,
+        ...(practicePlans ? { practicePlans } : {}),
         ...(teachingCases ? { teachingCaseIds: new Set(teachingCases) } : {}),
       };
       for (const [name, drive] of Object.entries(features)) {
         if (interrupted) break;
-        if (options.feature === 'all' || options.feature === name)
-          await drive(suite);
+        if (options.feature === 'all' || options.feature === name) {
+          const firstCase = report.cases.length;
+          try {
+            await drive(suite);
+          } finally {
+            featureCases.set(name, report.cases.slice(firstCase));
+          }
+        }
       }
     }
     assert.equal(
@@ -383,9 +405,7 @@ async function main() {
     report.features = Object.keys(features)
       .filter((name) => options.feature === 'all' || options.feature === name)
       .map((name) => {
-        const records = report.cases.filter((item) =>
-          item.id.startsWith(`${name}-`),
-        );
+        const records = featureCases.get(name) ?? [];
         return {
           feature: name,
           status: !records.length
@@ -398,6 +418,19 @@ async function main() {
           cases: records.length,
         };
       });
+    const featureTotal = report.features.reduce(
+      (total, feature) => total + feature.cases,
+      0,
+    );
+    if (featureTotal !== report.cases.length) {
+      report.status = 'failed';
+      report.error = [
+        report.error,
+        `Feature summaries account for ${featureTotal} of ${report.cases.length} observed cases`,
+      ]
+        .filter(Boolean)
+        .join('\n');
+    }
     report.finishedAt = new Date().toISOString();
     report.interruptedBy = interrupted ?? null;
     report.artifacts = [];

@@ -1,8 +1,8 @@
 import { validateEvidence } from './evidence.mjs';
 import { loadRepositoryModule } from './repo-loader.mjs';
 
-export { validateEvidence } from './evidence.mjs';
 export { commands } from './cli.mjs';
+export { validateEvidence } from './evidence.mjs';
 
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -240,6 +240,9 @@ export async function scopeMap(root) {
     'practice-hints-answer',
     'account-mark-complete-review-clear',
     'practice-review-queue',
+    'proof-notebook-session',
+    'proof-notebook-source-recovery',
+    'proof-notebook-export-reset',
     'progress-export-copy-backup',
     'progress-import-roundtrip',
     'progress-reset-reload',
@@ -277,6 +280,7 @@ export async function scopeMap(root) {
     'mobile-keyboard-reading',
     'account-save-fresh-session',
     'account-conflict-recovery',
+    'proof-notebook-attempt-compare-revise',
   ];
   const map = {
     schemaVersion: 1,
@@ -292,6 +296,7 @@ export async function scopeMap(root) {
       claimId: `${l.id}.claim`,
       exerciseId: `${l.id}.practice`,
       proofStepCount: teaching[l.id].proofSteps.length,
+      notebookRoute: `/practice?proof=${l.id}#proof-notebook`,
       figure: Boolean(figures[l.id]),
       readingAnchors: [
         'intuition',
@@ -363,6 +368,7 @@ export async function scopeMap(root) {
   };
   map.requiredCoverage = [
     ...map.lessons.map((l) => `route:${l.id}`),
+    ...map.lessons.map((l) => `proof-notebook-source:${l.id}`),
     ...map.views.map((v) => `view:${v}`),
     ...map.views.flatMap((v) =>
       ['390x844', '768x1024', '1440x900'].map(

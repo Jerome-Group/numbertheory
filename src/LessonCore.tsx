@@ -12,6 +12,7 @@ import {
 import { teachingFor } from './content/teaching';
 import type { Lesson } from './content/types';
 import { MathText } from './MathText';
+import { ProofNotebookOpen } from './ProofNotebookSession';
 import { NextLesson, Practice } from './StudyPanels';
 
 export function LessonCore({
@@ -88,6 +89,15 @@ export function LessonCore({
             if (!claim) throw new Error(`Missing proof ${block.id}`);
             return (
               <div key={`${block.id}.proof`}>
+                <div className="notebook-invitation">
+                  <div>
+                    <span className="callout-label">
+                      BEFORE THE COMPLETE PROOF
+                    </span>
+                    <p>Try the whole argument in your own words.</p>
+                  </div>
+                  <ProofNotebookOpen lessonId={lesson.id} />
+                </div>
                 {lesson.id === 'P00' && <ChoiceCheck id="P00" />}
                 {lesson.id === 'Q04' && <ChoiceCheck id="Q04" />}
                 <AnnotatedProof claim={claim} />

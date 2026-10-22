@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { selectPracticeCase } from '../../../../scripts/verification/practice-partitions.mjs';
 import { doctor, hash, save } from './runtime.mjs';
 
 export const profiles = {
@@ -143,6 +144,13 @@ export async function runCase(
   drive,
   options = {},
 ) {
+  if (suite.practicePlans) {
+    assert(
+      suite.practicePlans[profile],
+      `Missing Practice plan for ${profile}`,
+    );
+    if (!selectPracticeCase(suite.practicePlans[profile], id)) return;
+  }
   suite.signal.throwIfAborted();
   const directory = join(
     suite.output,

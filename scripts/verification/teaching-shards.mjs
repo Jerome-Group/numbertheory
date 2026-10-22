@@ -1,30 +1,22 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync, readdirSync, realpathSync } from 'node:fs';
+import { readdirSync, realpathSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import {
-  basename,
-  dirname,
-  isAbsolute,
-  join,
-  relative,
-  resolve,
-} from 'node:path';
+  regularBytes,
+  validateArtifacts,
+  validateStoppedRuntime,
+} from './browser-artifacts.mjs';
 
 const algorithm = 'modulo-source-order-v1';
 const profiles = ['phone', 'tablet', 'desktop'];
 const digest = /^[a-f0-9]{64}$/;
-const identityKeys = [
-  'commit',
-  'sourceHash',
-  'lockHash',
-  'buildHash',
-  'scopeHash',
-  'dirty',
-];
 
 export function parseShard({ shard, feature, profile }) {
   if (shard === undefined) return undefined;
-  assert.equal(feature, 'teaching', 'Shard applies only to teaching');
+  assert(
+    ['teaching', 'practice'].includes(feature),
+    'Shard applies only to teaching or practice',
+  );
   assert(profiles.includes(profile), 'Shard requires one explicit profile');
   assert(
     typeof shard === 'string' && /^[1-9]\d*\/[1-9]\d*$/.test(shard),
@@ -70,92 +62,6 @@ export function planTeaching(lessonIds, shard) {
   return cases.filter(
     (_, ordinal) => ordinal % shard.total === shard.index - 1,
   );
-}
-
-function regularBytes(path) {
-  assert.equal(
-    realpathSync(path),
-    resolve(path),
-    `Symlink in artifact path ${path}`,
-  );
-  const stat = lstatSync(path);
-  assert(
-    stat.isFile() && stat.size > 0,
-    `Expected nonempty regular artifact ${path}`,
-  );
-  return readFileSync(path);
-}
-
-function within(root, path) {
-  const local = relative(root, path);
-  assert(
-    local && local !== '..' && !local.startsWith('../') && !isAbsolute(local),
-    `Artifact outside its bundle ${path}`,
-  );
-  return local;
-}
-
-function validateArtifacts(report, directory) {
-  assert(
-    Array.isArray(report.artifacts) && report.artifacts.length > 0,
-    'Report requires artifacts',
-  );
-  const instances = report.artifacts.filter(
-    (artifact) =>
-      typeof artifact?.path === 'string' &&
-      basename(artifact.path) === 'instance.json',
-  );
-  assert.equal(
-    instances.length,
-    1,
-    'Report requires exactly one instance artifact',
-  );
-  const original = dirname(instances[0].path);
-  assert(isAbsolute(original), 'Original artifact root must be absolute');
-  const artifacts = new Map();
-  const destinations = new Set();
-  for (const artifact of report.artifacts) {
-    assert(
-      typeof artifact?.path === 'string' &&
-        isAbsolute(artifact.path) &&
-        digest.test(artifact.sha256),
-      'Invalid artifact path or digest',
-    );
-    const destination = join(directory, within(original, artifact.path));
-    assert(
-      !artifacts.has(artifact.path) && !destinations.has(destination),
-      'Duplicate artifact path',
-    );
-    const bytes = regularBytes(destination);
-    assert.equal(artifact.bytes, bytes.length, 'Artifact byte count differs');
-    assert.equal(
-      createHash('sha256').update(bytes).digest('hex'),
-      artifact.sha256,
-      'Artifact digest differs',
-    );
-    artifacts.set(artifact.path, destination);
-    destinations.add(destination);
-  }
-  const references = new Set();
-  for (const record of report.cases) {
-    assert(
-      Array.isArray(record.artifacts) && record.artifacts.length > 0,
-      `Case ${record.id} requires artifacts`,
-    );
-    assert(
-      !record.captureErrors?.length,
-      `Case ${record.id} has capture errors`,
-    );
-    for (const path of record.artifacts) {
-      assert(artifacts.has(path), `Case references unknown artifact ${path}`);
-      assert(
-        !references.has(path),
-        `Duplicate case artifact reference ${path}`,
-      );
-      references.add(path);
-    }
-  }
-  return JSON.parse(regularBytes(artifacts.get(instances[0].path)));
 }
 
 function validateReport(report, directory, profile, lessonIds, expected) {
@@ -206,38 +112,8 @@ function validateReport(report, directory, profile, lessonIds, expected) {
   assert.equal(report.identity.dirty, false, 'Dirty teaching source receipt');
   for (const key of ['sourceHash', 'lockHash', 'buildHash', 'scopeHash'])
     assert(digest.test(report.identity[key]), `Invalid teaching ${key}`);
-  assert.equal(
-    report.cleanup?.status,
-    'stopped',
-    'Teaching cleanup did not stop',
-  );
-  assert.deepEqual(
-    report.cleanup.listenerPids,
-    [],
-    'Teaching listener remains',
-  );
-  const instance = validateArtifacts(report, directory);
-  assert(
-    instance.schemaVersion === 1 &&
-      instance.runtime === 'vinext-worker-d1' &&
-      instance.status === 'stopped',
-    'Expected stopped Worker instance',
-  );
-  for (const key of identityKeys)
-    assert.equal(
-      instance.identity?.[key],
-      report.identity[key],
-      `Instance ${key} differs`,
-    );
-  assert.deepEqual(
-    instance.processes,
-    report.cleanup.processes,
-    'Cleanup process ownership differs',
-  );
-  assert(
-    Array.isArray(instance.processes) && instance.processes.length > 0,
-    'Missing owned process receipt',
-  );
+  const { instance } = validateArtifacts(report, directory);
+  validateStoppedRuntime(report, instance, 'Teaching');
   return report;
 }
 

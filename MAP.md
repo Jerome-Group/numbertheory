@@ -15,6 +15,7 @@ Start here: `README.md`, then `AGENTS.md`.
 | App verification | Launch, doctor, real browser journeys, feature map, retained proof, and owned cleanup | `.agents/skills/verify/SKILL.md` |
 | Automation | The workflows that run on a pull request or on a new issue, and dependency updates | `.github/` |
 | Application | React reading interface, diagnostic, Studio, labs, and shared study state | `src/App.tsx`, `src/AtlasViews.tsx` |
+| Proof notebook | Tab session, whole arguments, immutable comparison captures, source adapter and Markdown export | `src/proof-notebook.ts`, `src/ProofNotebookSession.tsx`, `src/ProofNotebook.tsx` |
 | Account progress | Acknowledged marks, account fencing, validated transfer and explicit device import | `src/progress.ts`, `src/progress-schema.ts`, `src/AccountControls.tsx`, `src/ProgressControls.tsx` |
 | Private API | Trusted Sites identity, bounded requests and atomic D1 operations | `app/api/progress/route.ts`, `src/server/` |
 | Server shell | Public catch-all page and client atlas hydration | `app/layout.tsx`, `app/[[...path]]/page.tsx`, `app/learning-app.tsx` |
@@ -27,6 +28,7 @@ Start here: `README.md`, then `AGENTS.md`.
 | Agent interface | Feature-detected WebMCP tools over study commands | `src/webmcp/` |
 | Public assets | Original logo and favicon | `public/` |
 | Verification | Shared local/CI CLI, exact coverage map, evidence integrity and negative checks | `scripts/verification/verify.mjs`, `docs/verification.md` |
+| Browser partitions | Source-derived teaching and Practice plans, complete actor unions and retained artifact checks | `scripts/verification/teaching-shards.mjs`, `scripts/verification/practice-partitions.mjs` |
 | Math source guards | Escaped notation and spoken labels for mathematical headings, legends, captions and reasoning prompts; native accessibility remains a browser check | `scripts/verification/math-surface.mjs`, `scripts/verification/learning-content.mjs` |
 | Site binding | Existing ChatGPT Sites project identity and D1 binding | `.openai/hosting.json`, `docs/progress-operations.md` |
 | Redesign evidence | Migration inventory, source status, verification and release results | `docs/lesson-migration-ledger.md`, `docs/source-status.md`, `docs/redesign-verification.md`, `docs/research/learning-design.md` |

@@ -17,7 +17,7 @@
     "verify:help": "node scripts/verification/verify.mjs help",
     "verify:map": "node scripts/verification/verify.mjs map .",
     "verify:identity": "node scripts/verification/verify.mjs fingerprint .",
-    "test:verification": "node --test scripts/verification/verify.test.mjs scripts/verification/runner-boundaries.test.mjs scripts/verification/learning-content.test.mjs scripts/verification/evidence.test.mjs scripts/verification/cli.test.mjs",
+    "test:verification": "node --test scripts/verification/verify.test.mjs scripts/verification/runner-boundaries.test.mjs scripts/verification/learning-content.test.mjs scripts/verification/proof-notebook.test.mjs scripts/verification/practice-partitions.test.mjs scripts/verification/evidence.test.mjs scripts/verification/cli.test.mjs",
     "build:bundle": "node scripts/build.mjs",
     "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
     "db:generate": "drizzle-kit generate",

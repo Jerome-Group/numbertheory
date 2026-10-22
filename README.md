@@ -12,6 +12,8 @@ Requires Node.js 24 and npm. Run `npm ci`, then `npm run dev`. Run `npm run veri
 
 Lessons and experiments remain public. Sign in with ChatGPT to save private lesson marks across sessions. Practice offers account export, validated restore and reset, plus an explicit import of older device marks. Saves require a server acknowledgement; a lost acknowledgement requires reloading progress. See [progress operations](docs/progress-operations.md) for local D1, identity and deployment boundaries. Publish the merged source as a separate ChatGPT Sites version; a GitHub merge is not a deployment.
 
+Practice also offers a [proof notebook](docs/proof-notebook.md) for every lesson. Write a whole argument, compare an unchanged capture with the authored proof, reflect, and revise. Writing stays in memory through in-app navigation; reload or close clears it. Export Markdown to keep exact attempts, reflections, and source provenance. The notebook needs no account and does not grade or change lesson marks.
+
 Agents start with `npm run --silent agent -- help` and the [project verification skill](.agents/skills/verify/SKILL.md). Install Chromium explicitly with `npx --no-install playwright install chromium`, then run `npm run --silent agent -- drive --feature all --output /absolute/external/new-run`. This owns one built app and serial browser journeys, retaining failed traces and source/build identity. Browser reports remain separate from native WebMCP, mathematical review and production proof.
 
 ## Source boundary
