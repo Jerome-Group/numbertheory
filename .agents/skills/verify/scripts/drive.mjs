@@ -16,6 +16,11 @@ import {
   scopeMap,
 } from '../../../../scripts/verification/verify.mjs';
 import { loadRepositoryModule } from '../../../../scripts/verification/repo-loader.mjs';
+import {
+  parseShard,
+  planTeaching,
+  teachingShardAlgorithm,
+} from '../../../../scripts/verification/teaching-shards.mjs';
 import { profiles } from './browser.mjs';
 import {
   cleanup,
@@ -35,7 +40,7 @@ import { urls } from './urls.mjs';
 const root = fileURLToPath(new URL('../../../../', import.meta.url));
 const features = { discovery, teaching, practice, labs, urls };
 const usage =
-  'node .agents/skills/verify/scripts/drive.mjs (--feature all|discovery|teaching|practice|labs|urls|--launch-only|--doctor|--cleanup) --output /absolute/directory; --feature also accepts [--profile phone|tablet|desktop] [--channel chrome]';
+  'node .agents/skills/verify/scripts/drive.mjs (--feature all|discovery|teaching|practice|labs|urls|--launch-only|--doctor|--cleanup) --output /absolute/directory; --feature also accepts [--profile phone|tablet|desktop] [--channel chrome]; teaching with explicit profile accepts [--shard I/N]';
 
 function parse(argv) {
   if (argv.length === 1 && argv[0] === '--help') return { help: true };
@@ -48,6 +53,7 @@ function parse(argv) {
         '--output',
         '--channel',
         '--profile',
+        '--shard',
         '--launch-only',
         '--doctor',
         '--cleanup',
@@ -91,7 +97,7 @@ function parse(argv) {
     );
   if (!options.feature)
     assert(!options.channel, 'Channel applies only to a feature drive');
-  return options;
+  return { ...options, shard: parseShard(options) };
 }
 
 async function freshOutput(output) {
@@ -192,6 +198,12 @@ async function main() {
     };
   if (options.doctor) return doctor(options.output);
   if (options.cleanup) return cleanup(options.output);
+  const lessonIds = options.shard
+    ? JSON.parse(await readFile(join(root, 'src/content/order.json'), 'utf8'))
+    : null;
+  const teachingCases = options.shard
+    ? planTeaching(lessonIds, options.shard).map((item) => item.id)
+    : null;
   const prerequisites = runtimePrerequisites();
   const packages = await installedPackages();
   assert.equal(
@@ -210,7 +222,6 @@ async function main() {
     ...buildFingerprint(root),
     scopeHash: map.scopeHash,
   };
-  const output = await freshOutput(options.output);
   const data = {
     map,
     ...(await loadRepositoryModule(root, 'src/content/lessons.ts')),
@@ -223,6 +234,13 @@ async function main() {
       await readFile(join(root, 'src/content/experiences.json'), 'utf8'),
     ),
   };
+  if (options.shard)
+    assert.deepEqual(
+      data.map.lessons.map((lesson) => lesson.id),
+      lessonIds,
+      'Teaching map differs from source order',
+    );
+  const output = await freshOutput(options.output);
   const report = {
     schemaVersion: 1,
     status: 'running',
@@ -237,6 +255,15 @@ async function main() {
       ? { [options.profile]: profiles[options.profile] }
       : profiles,
     cases: [],
+    ...(options.shard
+      ? {
+          shard: {
+            ...options.shard,
+            algorithm: teachingShardAlgorithm,
+            expectedCaseIds: teachingCases,
+          },
+        }
+      : {}),
     nativeWebMCP: {
       status: 'not-evaluated',
       reason:
@@ -305,6 +332,7 @@ async function main() {
         data,
         report,
         signal: abort.signal,
+        ...(teachingCases ? { teachingCaseIds: new Set(teachingCases) } : {}),
       };
       for (const [name, drive] of Object.entries(features)) {
         if (interrupted) break;

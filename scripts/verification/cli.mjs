@@ -5,6 +5,11 @@ import { createRequire } from 'node:module';
 import { constants } from 'node:os';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  parseShard,
+  planTeaching,
+  validateTeachingProfile,
+} from './teaching-shards.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const output = { value: 'DIR', required: true };
@@ -161,6 +166,7 @@ export const commands = Object.freeze({
       output,
       profile,
       channel,
+      shard: { value: 'I/N' },
     },
     prerequisites: browserPrerequisites,
     reads: [
@@ -172,8 +178,45 @@ export const commands = Object.freeze({
     writes: browserWrites,
     purpose:
       'Scoped Playwright automation; no native, semantic, release, or deployment claim.',
-    execute: ({ options }) =>
-      driveHelper(options, ['--feature', options.feature]),
+    execute: ({ options }) => {
+      try {
+        const shard = parseShard(options);
+        if (shard)
+          planTeaching(
+            JSON.parse(
+              readFileSync(join(checkout(), 'src/content/order.json'), 'utf8'),
+            ),
+            shard,
+          );
+      } catch (error) {
+        throw new UsageError(error.message);
+      }
+      return driveHelper(options, ['--feature', options.feature]);
+    },
+  },
+  'teaching-profile': {
+    positionals: [],
+    options: { profile: { ...profile, required: true }, output },
+    prerequisites: [
+      'Git',
+      'current source and lockfile',
+      'two downloaded teaching shard artifacts',
+    ],
+    reads: [
+      'source lesson order',
+      'current source identity',
+      'shard reports and artifact bytes',
+    ],
+    writes: ['stdout', 'stderr diagnostics'],
+    purpose:
+      'Complete one local Playwright teaching profile from two source-bound shards; no release or hosted proof.',
+    execute: ({ options, api }) =>
+      validateTeachingProfile(
+        checkout(),
+        options.profile,
+        options.output,
+        api.fingerprint(checkout()),
+      ),
   },
   evidence: {
     positionals: [],
@@ -320,6 +363,7 @@ async function driveHelper(options, mode) {
   const args = [helper, ...mode, '--output', destination];
   if (options.channel) args.push('--channel', options.channel);
   if (options.profile) args.push('--profile', options.profile);
+  if (options.shard) args.push('--shard', options.shard);
   return new Promise((fulfill, reject) => {
     const child = spawn(process.execPath, args, {
       cwd: selectedRoot,

@@ -44,6 +44,7 @@ jobs:
         run: node scripts/verification/summary.mjs "$RUNNER_TEMP/numbertheory-verification.json" >> "$GITHUB_STEP_SUMMARY"
 
   browser:
+    name: ${{ matrix.feature == 'teaching' && format('teaching shard ({0}, {1}/2)', matrix.profile, matrix.partition) || format('browser ({0})', matrix.feature) }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
@@ -51,9 +52,12 @@ jobs:
       matrix:
         include:
           - { feature: discovery, profile: '' }
-          - { feature: teaching, profile: phone }
-          - { feature: teaching, profile: tablet }
-          - { feature: teaching, profile: desktop }
+          - { feature: teaching, profile: phone, partition: 1 }
+          - { feature: teaching, profile: phone, partition: 2 }
+          - { feature: teaching, profile: tablet, partition: 1 }
+          - { feature: teaching, profile: tablet, partition: 2 }
+          - { feature: teaching, profile: desktop, partition: 1 }
+          - { feature: teaching, profile: desktop, partition: 2 }
           - { feature: practice, profile: '' }
           - { feature: labs, profile: '' }
           - { feature: urls, profile: '' }
@@ -75,24 +79,69 @@ jobs:
         env:
           FEATURE: ${{ matrix.feature }}
           PROFILE: ${{ matrix.profile }}
+          PARTITION: ${{ matrix.partition || '' }}
         run: |
           args=(drive --feature "$FEATURE" --output "$RUNNER_TEMP/numbertheory-browser")
           if [ -n "$PROFILE" ]; then
             args+=(--profile "$PROFILE")
+          fi
+          if [ -n "$PARTITION" ]; then
+            args+=(--shard "$PARTITION/2")
           fi
           npm run --silent agent -- "${args[@]}"
       - name: Retain browser evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: numbertheory-browser-${{ matrix.feature }}-${{ matrix.profile || 'all' }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: numbertheory-browser-${{ matrix.feature }}-${{ matrix.profile || 'all' }}${{ matrix.partition && format('-{0}-of-2', matrix.partition) || '' }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/numbertheory-browser
           if-no-files-found: ignore
           retention-days: 14
 
+  teaching-profile:
+    name: browser (teaching, ${{ matrix.profile }})
+    needs: browser
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [phone, tablet, desktop]
+    steps:
+      - name: Require every browser actor
+        env:
+          BROWSER: ${{ needs.browser.result }}
+        run: test "$BROWSER" = success
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Download this attempt's teaching partitions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          ATTEMPT: ${{ github.run_attempt }}
+          PROFILE: ${{ matrix.profile }}
+          BUNDLE: ${{ runner.temp }}/numbertheory-teaching-profile
+        run: |
+          for partition in 1 2; do
+            gh run download "$RUN_ID" \
+              --name "numbertheory-browser-teaching-$PROFILE-$partition-of-2-$RUN_ID-$ATTEMPT" \
+              --dir "$BUNDLE/$partition"
+          done
+      - name: Require the complete source-derived teaching profile
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: npm run --silent agent -- teaching-profile --profile "$PROFILE" --output "$RUNNER_TEMP/numbertheory-teaching-profile"
+
   # Renaming this job renames the check context named by the Required checks ruleset.
   checks:
-    needs: [automated, browser]
+    needs: [automated, browser, teaching-profile]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -101,4 +150,5 @@ jobs:
         env:
           AUTOMATED: ${{ needs.automated.result }}
           BROWSER: ${{ needs.browser.result }}
-        run: test "$AUTOMATED" = success && test "$BROWSER" = success
+          TEACHING: ${{ needs.teaching-profile.result }}
+        run: test "$AUTOMATED" = success && test "$BROWSER" = success && test "$TEACHING" = success

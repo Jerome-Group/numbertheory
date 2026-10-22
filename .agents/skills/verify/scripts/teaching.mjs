@@ -34,6 +34,11 @@ export async function teaching(suite) {
   for (const profile of suite.profiles) {
     const size = `${profiles[profile].width}x${profiles[profile].height}`;
     for (const lesson of suite.data.map.lessons) {
+      if (
+        suite.teachingCaseIds &&
+        !suite.teachingCaseIds.has(`teaching-${lesson.id}`)
+      )
+        continue;
       await runCase(
         suite,
         profile,
@@ -218,6 +223,11 @@ export async function teaching(suite) {
         { account: 'learner' },
       );
     }
+    if (
+      suite.teachingCaseIds &&
+      !suite.teachingCaseIds.has('teaching-special-experiences')
+    )
+      continue;
     await runCase(
       suite,
       profile,

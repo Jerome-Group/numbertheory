@@ -32,6 +32,25 @@ Run `node .agents/skills/verify/scripts/drive.mjs --feature teaching --output /a
 - For P00, Q04, and R07, choose wrong and correct special answers and reveal reasoning. For C02, enter a draft, show a hint, compare reasoning, and continue through every challenge.
 - Follow a source-derived prerequisite and **Continue reading**. Require the exact source-derived next lesson and route. Select the Computational path and check previous/next targets, its first boundary, and its terminal message with no next button.
 
+### Split a teaching profile
+
+Run each partition with a fresh external output directory:
+
+```sh
+npm run --silent agent -- drive --feature teaching --profile tablet --shard 1/2 --output /absolute/external/tablet-1
+npm run --silent agent -- drive --feature teaching --profile tablet --shard 2/2 --output /absolute/external/tablet-2
+```
+
+The source lesson order plus `teaching-special-experiences` determines the partition. Reports declare their shard and selected case IDs; unselected obligations remain not-evaluated. Omitting `--shard` keeps the full profile behavior and assertions.
+
+Download both retained artifacts into two sibling directories under a fresh bundle directory, then validate that bundle:
+
+```sh
+npm run --silent agent -- teaching-profile --profile tablet --output /absolute/external/downloaded-tablet
+```
+
+Require a passed `complete-teaching-profile` result with all 84 cases. The read-only command needs Git and clean current source, with no installation or build. It rejects missing, duplicate, failed, interrupted, wrong-profile or wrong-source evidence and checks stopped instance ownership, artifact bytes and all case references after relocation. Scope hashes establish agreement between the pair, not independent scope recomputation. Separate build hashes remain distinct. The existing `evidence` command retains its exact current-build contract.
+
 ## Gotchas
 
 This proves controls, rendered content presence, and local D1 integration. Injected local identities do not prove hosted sign-in. Mathematical validity, grading, mastery, and course approval need separate evidence. Preserve exact arithmetic and content checks, and obtain independent semantic review. Correct-choice positions rotate by lesson ID, so use source labels rather than a fixed button position.
