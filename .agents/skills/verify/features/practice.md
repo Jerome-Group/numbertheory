@@ -1,9 +1,10 @@
 # Save and transfer account progress
 
-A signed-in learner can mark lessons, use the review queue, restore a backup, clear account marks, and explicitly import older device marks. Public reading works anonymously.
+A learner can use the [proof notebook](proof-notebook.md) anonymously. Its writing stays in the current tab and remains separate from account marks. A signed-in learner can mark lessons, use the review queue, restore a backup, clear account marks, and explicitly import older device marks. Public reading works anonymously.
 
 ## Sub-features
 
+- Whole-proof writing, source cues and complete proof access, immutable captures, reflection, revision, lesson navigation, reset, and exact Markdown export follow the [notebook recipe](proof-notebook.md).
 - Lesson and worksheet controls save complete, review, or no mark after server acknowledgement.
 - Fresh contexts recover the same account's D1 marks. Separate accounts retain separate maps.
 - Review queue opens the marked lesson's real practice worksheet.
@@ -32,6 +33,7 @@ Preconditions:
 
 Run `node .agents/skills/verify/scripts/drive.mjs --feature practice --output /absolute/external/new-practice`.
 
+- The same invocation first runs the anonymous [notebook journeys and source inventory](proof-notebook.md). Desktop checks every source-derived lesson; phone and tablet check representative short, long, and mathematical proofs. Notebook actions must make no account progress writes.
 - Mark the first source-derived lesson for review. Require a successful real PATCH acknowledgement and the pressed GUI state. Open **Practice**, select **Review later (1)**, and require one worksheet. Open it and reveal its claim and justified answer.
 - In that embedded worksheet, mark understood and require acknowledgement plus removal from the review queue. Choose **All problems**, reopen it, clear its mark, then mark for review and require its return to the queue.
 - Grant clipboard permissions, choose **Copy JSON backup**, and read actual clipboard bytes. Require exact equality with **Progress backup**, schema version 1, and the review mark. Separately deny clipboard permission and require fallback guidance, focused textarea, and selection of every backup byte.

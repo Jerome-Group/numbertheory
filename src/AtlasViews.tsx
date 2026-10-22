@@ -17,6 +17,8 @@ import { Diagnostic } from './Diagnostic';
 import { MathText } from './MathText';
 import { buildCancellationMap } from './math/cancellation';
 import { ProgressControls } from './ProgressControls';
+import { ProofNotebook } from './ProofNotebook';
+import { ProofNotebookOpen } from './ProofNotebookSession';
 import { progressStore } from './progress';
 import { Practice } from './StudyPanels';
 import { type AtlasView, studyStore } from './state';
@@ -278,6 +280,22 @@ export function AtlasViews({
             {next ? `Continue: ${next.title} →` : 'Revisit your learning →'}
           </button>
         </section>
+        <section
+          className="home-notebook"
+          aria-labelledby="home-notebook-title"
+        >
+          <div>
+            <span className="eyebrow">MAKE THE REASONING YOURS</span>
+            <h2 id="home-notebook-title">A blank page before the proof</h2>
+            <p>
+              Build a whole argument for any lesson. Compare with the authored
+              proof, reflect, and revise in a notebook private to this tab.
+            </p>
+          </div>
+          <ProofNotebookOpen lessonId={next?.id ?? lessons[0].id}>
+            Open proof notebook
+          </ProofNotebookOpen>
+        </section>
         <section className="path-panel" aria-labelledby="path-heading">
           <p className="eyebrow">FIVE WAYS THROUGH THE IDEAS</p>
           <h2 id="path-heading">Choose a learning path</h2>
@@ -485,6 +503,7 @@ export function AtlasViews({
           title="Practice with purpose"
           lead="Try a problem before revealing the proof. Each answer explains why the method works."
         />
+        <ProofNotebook open={open} />
         {catalogFilter}
         <fieldset className="practice-scope">
           <legend>Practice scope</legend>

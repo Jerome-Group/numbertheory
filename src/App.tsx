@@ -10,6 +10,7 @@ import { AccountControls } from './AccountControls';
 import { AtlasViews } from './AtlasViews';
 import { lessons } from './content/lessons';
 import { LessonPage } from './LessonPage';
+import { ProofNotebookSession } from './ProofNotebookSession';
 import { Sidebar } from './Sidebar';
 import { studyStore } from './state';
 import { registerStudyTools } from './webmcp/register';
@@ -55,6 +56,7 @@ export function App() {
       pendingSection.current ??
       (hash === 'main-content' ||
       (state.view === 'lesson' && sections.includes(hash)) ||
+      (state.view === 'practice' && hash === 'proof-notebook') ||
       (state.view === 'explore' && /^atlas-chapter-\d+$/.test(hash))
         ? hash
         : null);
@@ -162,7 +164,7 @@ export function App() {
     studyStore.openLesson(id);
     setDrawer(false);
   }
-  return (
+  const content = (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
         Skip to content
@@ -242,5 +244,8 @@ export function App() {
         )}
       </main>
     </div>
+  );
+  return (
+    <ProofNotebookSession view={state.view}>{content}</ProofNotebookSession>
   );
 }

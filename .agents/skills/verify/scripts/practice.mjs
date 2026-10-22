@@ -9,8 +9,10 @@ import {
   textIncludes,
   visible,
 } from './browser.mjs';
+import { proofNotebook } from './proof-notebook.mjs';
 
 export async function practice(suite) {
+  await proofNotebook(suite);
   for (const profile of suite.profiles) {
     await runCase(
       suite,
