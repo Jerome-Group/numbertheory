@@ -43,18 +43,37 @@ export async function renderedMath(locator) {
 export async function authoredText(locator, expected) {
   await visible(locator);
   const actual = await locator.evaluate((element) => {
-    const copy = element.cloneNode(true);
-    for (const math of copy.querySelectorAll('.math-inline, .math-block')) {
-      const tex = math.querySelector(
-        'annotation[encoding="application/x-tex"]',
-      );
-      if (!tex) throw new Error('Authored mathematics has no TeX annotation');
-      const delimiters = math.classList.contains('math-block')
-        ? ['\\[', '\\]']
-        : ['\\(', '\\)'];
-      math.replaceWith(`${delimiters[0]}${tex.textContent}${delimiters[1]}`);
+    function read(node) {
+      if (node.nodeType === Node.TEXT_NODE) return node.textContent;
+      if (!(node instanceof Element)) return '';
+      if (
+        !node.checkVisibility({
+          opacityProperty: true,
+          visibilityProperty: true,
+        })
+      )
+        return '';
+      if (node.matches('.math-inline, .math-block')) {
+        const rendered = node.querySelector('.katex-html');
+        if (
+          !rendered?.checkVisibility({
+            opacityProperty: true,
+            visibilityProperty: true,
+          })
+        )
+          throw new Error('Authored mathematics is not visibly rendered');
+        const tex = node.querySelector(
+          'annotation[encoding="application/x-tex"]',
+        );
+        if (!tex) throw new Error('Authored mathematics has no TeX annotation');
+        const delimiters = node.classList.contains('math-block')
+          ? ['\\[', '\\]']
+          : ['\\(', '\\)'];
+        return `${delimiters[0]}${tex.textContent}${delimiters[1]}`;
+      }
+      return [...node.childNodes].map(read).join('');
     }
-    return copy.textContent;
+    return read(element);
   });
   const compact = (text) => text.replace(/\s+/g, ' ').trim();
   assert.equal(compact(actual), compact(expected), 'Authored content differs');

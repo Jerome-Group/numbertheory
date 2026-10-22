@@ -22,6 +22,7 @@ export async function discovery(suite) {
         .concat([
           'feature:explore-search',
           'feature:sidebar-search',
+          'feature:chapter-disclosures',
           'feature:catalog-query-chapter-empty-states',
           'feature:reference-claim-index',
           'feature:course-current-historical',
@@ -52,6 +53,71 @@ export async function discovery(suite) {
           });
         }
         await go('/explore');
+        await step(
+          'Persist expanded and collapsed sidebar chapters across reload',
+          async () => {
+            const chapters = [
+              ...new Set(suite.data.lessons.map((lesson) => lesson.cluster)),
+            ];
+            const sidebar = page.locator('#lesson-sidebar');
+            const headings = sidebar.locator('.chapter-heading button');
+            for (const expanded of [true, false]) {
+              if (profile !== 'desktop')
+                await page
+                  .getByRole('button', { name: 'Open lessons', exact: true })
+                  .click();
+              assert.deepEqual(
+                await headings
+                  .locator(':scope > span:first-child')
+                  .allTextContents(),
+                chapters,
+              );
+              for (let index = 0; index < chapters.length; index++) {
+                const button = headings.nth(index);
+                if (
+                  (await button.getAttribute('aria-expanded')) !==
+                  String(expanded)
+                )
+                  await button.click();
+                assert.equal(
+                  await button.getAttribute('aria-expanded'),
+                  String(expanded),
+                );
+                const panel = sidebar.locator(
+                  `#${await button.getAttribute('aria-controls')}`,
+                );
+                if (expanded) {
+                  await visible(panel);
+                  assert.deepEqual(
+                    await panel
+                      .locator('a > span:first-child')
+                      .allTextContents(),
+                    suite.data.lessons
+                      .filter((lesson) => lesson.cluster === chapters[index])
+                      .map((lesson) => lesson.id),
+                  );
+                } else assert(await panel.isHidden());
+              }
+              await page.reload({ waitUntil: 'load' });
+              if (profile !== 'desktop')
+                await page
+                  .getByRole('button', { name: 'Open lessons', exact: true })
+                  .click();
+              for (let index = 0; index < chapters.length; index++) {
+                const button = headings.nth(index);
+                assert.equal(
+                  await button.getAttribute('aria-expanded'),
+                  String(expanded),
+                );
+                const panel = sidebar.locator(
+                  `#${await button.getAttribute('aria-controls')}`,
+                );
+                assert.equal(await panel.isVisible(), expanded);
+              }
+              if (profile !== 'desktop') await page.keyboard.press('Escape');
+            }
+          },
+        );
         await step(
           'Search atlas for Euclid, then an absent phrase',
           async () => {
@@ -318,9 +384,11 @@ export async function discovery(suite) {
             await visible(page.locator('[data-lesson-id="C02"] #lab'));
           },
         );
-        for (const [correct, expected] of [
-          [true, 'N05'],
-          [false, 'P00'],
+        for (const [answers, expected] of [
+          [[false, false, false], 'P00'],
+          [[true, false, false], 'C02'],
+          [[true, true, false], 'N04'],
+          [[true, true, true], 'N05'],
         ]) {
           await go('/');
           await step(
@@ -337,7 +405,7 @@ export async function discovery(suite) {
               );
               await diagnostic
                 .getByRole('radio', {
-                  name: correct
+                  name: answers[0]
                     ? 'A valid universal argument'
                     : 'More examples',
                   exact: true,
@@ -345,13 +413,17 @@ export async function discovery(suite) {
                 .check();
               await diagnostic
                 .getByRole('radio', {
-                  name: 'When the gcd of c and n equals one',
+                  name: answers[1]
+                    ? 'When the gcd of c and n equals one'
+                    : 'Whenever c is not zero',
                   exact: true,
                 })
                 .check();
               await diagnostic
                 .getByRole('radio', {
-                  name: 'The norm of alpha times beta equals the norm of alpha times the norm of beta',
+                  name: answers[2]
+                    ? 'The norm of alpha times beta equals the norm of alpha times the norm of beta'
+                    : 'The norm of alpha times beta equals the norm of alpha plus the norm of beta',
                   exact: true,
                 })
                 .check();
@@ -362,10 +434,18 @@ export async function discovery(suite) {
                 diagnostic.locator('[role="status"]'),
                 expected,
               );
+              const lesson = map.lessons.find(
+                (lesson) => lesson.id === expected,
+              );
+              await textIncludes(
+                diagnostic.locator('[role="status"]'),
+                lesson.title,
+              );
               await diagnostic
                 .getByRole('button', { name: 'Open this lesson' })
                 .click();
               await visible(page.locator(`[data-lesson-id="${expected}"]`));
+              assert.equal(new URL(page.url()).pathname, lesson.route);
             },
           );
         }

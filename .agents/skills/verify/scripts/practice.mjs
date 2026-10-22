@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { accountJourneys } from './account-journeys.mjs';
+import { accountLifecycle } from './account-lifecycle.mjs';
 import {
   acknowledged,
   focused,
@@ -7,8 +9,6 @@ import {
   textIncludes,
   visible,
 } from './browser.mjs';
-import { accountJourneys } from './account-journeys.mjs';
-import { accountLifecycle } from './account-lifecycle.mjs';
 
 export async function practice(suite) {
   for (const profile of suite.profiles) {
@@ -138,6 +138,7 @@ export async function practice(suite) {
             await controls
               .getByRole('button', { name: 'Cancel', exact: true })
               .click();
+            await focused(clear);
             assert.deepEqual((await snapshot()).lessons, {
               [first.id]: 'review',
             });

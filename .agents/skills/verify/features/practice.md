@@ -13,7 +13,7 @@ A signed-in learner can mark lessons, use the review queue, restore a backup, cl
 - Invalid syntax, version, lesson IDs, and marks leave the prior map unchanged.
 - Stale restore and reset revisions reject atomically and require explicit reload.
 - Older device import is explicit, preserves existing account conflicts, and keeps original device bytes.
-- A lost acknowledgement after a real database commit disables writes until explicit reload.
+- A lost acknowledgement after a real database commit disables writes until a successful fresh account read.
 - Anonymous access disables marks. The server rejects foreign origins and mismatched account preconditions.
 - The real sign-out click clears private client marks before its reserved top-level navigation.
 - Synthetic lifecycle events clear and reload private UI state. A newer real account read fences a delayed older response.

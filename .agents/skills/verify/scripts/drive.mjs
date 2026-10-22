@@ -1,27 +1,30 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import {
-  readFile,
   mkdir,
   readdir,
+  readFile,
   realpath,
   stat,
   writeFile,
 } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {
-  buildFingerprint,
-  fingerprint,
-  scopeMap,
-} from '../../../../scripts/verification/verify.mjs';
 import { loadRepositoryModule } from '../../../../scripts/verification/repo-loader.mjs';
 import {
   parseShard,
   planTeaching,
   teachingShardAlgorithm,
 } from '../../../../scripts/verification/teaching-shards.mjs';
+import {
+  buildFingerprint,
+  fingerprint,
+  scopeMap,
+} from '../../../../scripts/verification/verify.mjs';
 import { profiles } from './browser.mjs';
+import { discovery } from './discovery.mjs';
+import { labs } from './labs.mjs';
+import { practice } from './practice.mjs';
 import {
   cleanup,
   doctor,
@@ -31,10 +34,7 @@ import {
   runtimePrerequisites,
   save,
 } from './runtime.mjs';
-import { discovery } from './discovery.mjs';
 import { teaching } from './teaching.mjs';
-import { practice } from './practice.mjs';
-import { labs } from './labs.mjs';
 import { urls } from './urls.mjs';
 
 const root = fileURLToPath(new URL('../../../../', import.meta.url));

@@ -8,7 +8,7 @@ import {
   visible,
 } from './browser.mjs';
 
-async function lessonStructure(page, lesson) {
+async function lessonStructure(page, lesson, authored, teaching) {
   const body = page.locator(`[data-lesson-id="${lesson.id}"]`);
   assert.equal(await body.locator('#lesson-heading').innerText(), lesson.title);
   for (const anchor of lesson.readingAnchors) {
@@ -22,6 +22,51 @@ async function lessonStructure(page, lesson) {
     await body.locator('.proof-steps > li').count(),
     lesson.proofStepCount,
   );
+  assert.equal(authored.proof.length, lesson.proofStepCount);
+  assert.equal(teaching.proofSteps.length, authored.proof.length);
+  const sections = [
+    ['#intuition > p', [teaching.intuition]],
+    ['#definition > p', authored.definition],
+    ['#theorem .theorem > p', [authored.theorem]],
+    ['#theorem .hypotheses li', teaching.hypotheses],
+    ['#proof .proof-strategy > p', [teaching.strategy]],
+    ['.proof-steps > li > p', authored.proof],
+    ['#example > .section-lead', [authored.example.prompt]],
+    ['#example .worked-steps > li > .step-text', authored.example.steps],
+    ['#example > .result-line', [authored.example.conclusion]],
+    ['#boundary > p', [authored.caution]],
+    ['#bridge > p', authored.bridge ? [authored.bridge] : []],
+    ['.lesson-footer > p:first-of-type', [authored.sourceNote]],
+  ];
+  for (const [selector, expected] of sections) {
+    const items = body.locator(selector);
+    assert.equal(
+      await items.count(),
+      expected.length,
+      `${lesson.id} ${selector} count`,
+    );
+    for (let index = 0; index < expected.length; index++)
+      await authoredText(items.nth(index), expected[index]);
+  }
+  assert.equal(
+    await body.locator('.proof-note').count(),
+    authored.proof.length,
+    `${lesson.id} proof annotation count`,
+  );
+  for (let index = 0; index < authored.proof.length; index++) {
+    const note = body
+      .locator('.proof-steps > li')
+      .nth(index)
+      .locator('.proof-note');
+    assert.equal(await note.count(), 1, `${lesson.id} proof note ${index + 1}`);
+    assert.equal(await note.locator(':scope > p').count(), 1);
+    await note.locator('summary').click();
+    assert.equal(await note.getAttribute('open'), '');
+    await authoredText(
+      note.locator(':scope > p'),
+      teaching.proofSteps[index].reason,
+    );
+  }
   assert((await renderedMath(body)).length > 0, 'Visible mathematics missing');
   assert(
     (await body.locator('.katex:visible math').count()) > 0,
@@ -57,16 +102,18 @@ export async function teaching(suite) {
           ].map((name) => `practice:${lesson.id}:${name}`),
         ],
         async ({ page, go, step, data }) => {
+          const authored = data.lessons.find((item) => item.id === lesson.id);
+          const teaching = data.teaching[lesson.id];
           await go(lesson.route);
           await step(
             'Read complete lesson and unfold every proof annotation',
             async () => {
-              const body = await lessonStructure(page, lesson);
-              for (const note of await body.locator('.proof-note').all()) {
-                await note.locator('summary').click();
-                assert.equal(await note.getAttribute('open'), '');
-                await visible(note.locator('p'));
-              }
+              const body = await lessonStructure(
+                page,
+                lesson,
+                authored,
+                teaching,
+              );
               if (lesson.figure) {
                 assert(
                   (await body.locator('figure, .concept-figure').count()) > 0,
@@ -131,9 +178,6 @@ export async function teaching(suite) {
               assert.equal(
                 await practice.locator('.retrieval-prompt > p').count(),
                 1,
-              );
-              const authored = data.lessons.find(
-                (item) => item.id === lesson.id,
               );
               for (
                 let index = 0;
@@ -216,7 +260,7 @@ export async function teaching(suite) {
           await step(
             'Resolve legacy entry to the same lesson structure',
             async () => {
-              await lessonStructure(page, lesson);
+              await lessonStructure(page, lesson, authored, teaching);
             },
           );
         },
@@ -271,6 +315,10 @@ export async function teaching(suite) {
                   .getAttribute('aria-expanded'),
                 'true',
               );
+              await authoredText(
+                check.locator(':scope > p').last(),
+                content.reveal,
+              );
             },
           );
         }
@@ -282,27 +330,49 @@ export async function teaching(suite) {
             index < data.experiences.C02.stages.length;
             index++
           ) {
+            const content = data.experiences.C02.stages[index];
             assert(
               (await ladder.innerText()).includes(`Stage ${index + 1} of`),
             );
-            await ladder
-              .getByLabel('Work it out before revealing the reasoning', {
+            const draft = ladder.getByLabel(
+              'Work it out before revealing the reasoning',
+              {
                 exact: true,
-              })
-              .fill('A draft about the exact cancellation conditions.');
+              },
+            );
+            assert.equal(await draft.inputValue(), '');
+            assert.equal(
+              await ladder.locator('.hint, .practice-reveal').count(),
+              0,
+            );
+            await draft.fill(
+              'A draft about the exact cancellation conditions.',
+            );
             await ladder
               .getByRole('button', { name: 'Show a hint', exact: true })
               .click();
-            await visible(ladder.locator('.hint'));
+            await authoredText(ladder.locator('.hint'), content.hint);
             await ladder
               .getByRole('button', { name: 'Compare reasoning', exact: true })
               .click();
-            await visible(ladder.locator('.practice-reveal'));
+            await authoredText(
+              ladder.locator('.practice-reveal > p'),
+              content.answer,
+            );
             if (index + 1 < data.experiences.C02.stages.length)
               await ladder
                 .getByRole('button', { name: 'Next challenge' })
                 .click();
           }
+          assert.equal(
+            await ladder
+              .getByRole('button', { name: 'Next challenge' })
+              .count(),
+            0,
+          );
+          await visible(
+            ladder.getByText(data.experiences.C02.outro, { exact: true }),
+          );
         });
         await step('Follow a prerequisite, then continue reading', async () => {
           const lesson = data.map.lessons.find((item) => item.id === 'C02');

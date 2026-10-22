@@ -5,8 +5,8 @@ Every lesson retains its full argument, proof notes, examples, conditions, sourc
 ## Sub-features
 
 - All 83 source-derived canonical and legacy lesson entries render the same durable ID, reading sections, and authored proof-step count.
-- Every reading section, proof step, original figure alternative, and source status is present.
-- Every proof annotation opens. Wrong and correct reasoning choices give distinct feedback.
+- Every authored reading paragraph, proof step, optional bridge, and source note matches the loaded source. Original figures have tabular alternatives.
+- Exactly one proof annotation per source step opens and shows its authored explanation. Wrong and correct reasoning choices give distinct feedback.
 - Every claim recall, hint sequence, and justified answer works. Signed-in complete and review marks require server acknowledgement.
 - P00 proof repair, Q04 reciprocity check, R07 unit classification, and the C02 reasoning ladder preserve their distinct interactions.
 - Prerequisites and next-lesson controls lead to the corresponding lessons.
@@ -20,16 +20,16 @@ Choose a card, sidebar lesson, search result, path continuation, checkpoint, ref
 Preconditions:
 
 - Complete the skill's build and browser setup.
-- Mark cases use fresh invented local accounts and real local D1. Other lesson interactions remain public.
+- Every per-lesson case uses a fresh invented local account and real local D1 throughout reading, practice, marks, and the legacy visit. Special-experience cases are anonymous. Neither establishes hosted sign-in.
 
 Run `node .agents/skills/verify/scripts/drive.mjs --feature teaching --output /absolute/external/new-teaching`.
 
-- For every mapped lesson and viewport, open its canonical route. Require its exact title, reading anchors, authored proof-step count, visible mathematics with MathML, and **Sources and status**. Require the same structural checks through its legacy entry.
-- Open every **Why this step works** disclosure. Require visible annotation text. Where an original figure exists, require its figure and tabular alternative.
+- For every mapped lesson and viewport, open its canonical route. Require its exact title, unique reading anchors, authored proof-step count, visible mathematics with MathML, and **Sources and status**. Compare exact counts and ordered authored text for intuition, definitions, theorem, hypotheses, proof strategy, proof paragraphs, example, boundary, optional bridge, and source note. Repeat through its legacy entry.
+- Require exactly one **Why this step works** disclosure and one reason paragraph per authored proof step. Open each and compare its visible reason with source. Hidden descendant prose cannot satisfy a comparison. TeX metadata counts only when its mathematical display is visible. Where an original figure exists, require its figure and tabular alternative.
 - Select one source-derived wrong explanation and require retry feedback. Select the correct explanation and require affirmative feedback.
-- Choose **Check the claim** and require revealed text equal to the visible theorem statement. Choose **Hide claim** and require the recalled paragraph to disappear. Reveal every authored hint in order, then **Show justified answer**. Compare each hint and answer with its authored source text, preserving the TeX annotations when normalizing a detached DOM copy.
+- Choose **Check the claim** and require revealed text equal to the visible theorem statement. Choose **Hide claim** and require the recalled paragraph to disappear. Reveal every authored hint in order, then **Show justified answer**. Compare each hint and answer with its authored source text, preserving visible mathematics as TeX without changing the page.
 - Choose **Mark understood**, require PATCH acknowledgement and the pressed mark, reload, and require persisted account progress. Choose **Review later**, then **Clear mark**, and require each acknowledgement and GUI state.
-- For P00, Q04, and R07, choose wrong and correct special answers and reveal reasoning. For C02, enter a draft, show a hint, compare reasoning, and continue through every challenge.
+- For P00, Q04, and R07, choose wrong and correct special answers and compare revealed reasoning with source. For every C02 stage, require a cleared draft and hidden hint and answer, enter a draft, and compare the revealed hint and answer with source. Continue through all challenges and require the terminal message without a next button.
 - Follow a source-derived prerequisite and **Continue reading**. Require the exact source-derived next lesson and route. Select the Computational path and check previous/next targets, its first boundary, and its terminal message with no next button.
 
 ### Split a teaching profile
