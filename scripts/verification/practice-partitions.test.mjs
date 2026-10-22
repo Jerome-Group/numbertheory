@@ -421,6 +421,41 @@ test('real practice-union CLI reads serialized current-source receipts without a
   assert.match(stale.stderr, /must be clean/);
 });
 
+test('Practice union distinguishes successful steps from observed HTTP responses', (t) => {
+  const f = bundleFixture(t);
+  f.validate();
+  const actor = f.actors[0];
+  const record = actor.report.cases[0];
+  const path = `${record.id}/actions.json`;
+  const baseline = JSON.parse(readFileSync(join(actor.directory, path)));
+  const responses = [
+    { session: 'main', action: 'GET local progress', status: 401 },
+    { session: 'main', action: 'PATCH local progress', status: 200 },
+    { session: 'main', action: 'PUT local progress', status: 409 },
+  ];
+  const retainEvents = (events) => {
+    actor.retain(path, { ...baseline, events });
+    f.save();
+  };
+  const observations = [...baseline.events, ...responses];
+  retainEvents(observations);
+  assert.equal(f.validate().status, 'passed');
+  for (const response of [
+    { ...responses[0], status: 99 },
+    { ...responses[0], status: 600 },
+    { ...responses[0], status: 200.5 },
+    { ...responses[0], status: '401' },
+    { ...responses[0], session: '' },
+    { ...responses[0], action: 'Read exact notebook source for P00' },
+    { ...baseline.events[0], status: 'failed' },
+  ]) {
+    retainEvents([...observations, response]);
+    assert.throws(f.validate, /action observations/);
+  }
+  retainEvents(responses);
+  assert.throws(f.validate, /action observations/);
+});
+
 test('Practice union rejects incomplete, duplicate, mixed, extra and inconsistent actor families', (t) => {
   const f = bundleFixture(t);
   f.validate();

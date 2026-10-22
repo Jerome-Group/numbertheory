@@ -223,12 +223,18 @@ function validateReport(report, directory, map, expected) {
     const actions = JSON.parse(regularBytes(artifacts.get(actionFiles[0])));
     assert(
       Array.isArray(actions.events) &&
-        actions.events.length > 0 &&
+        actions.events.some((event) => event.status === 'passed') &&
         actions.events.every(
           (event) =>
             typeof event.action === 'string' &&
             event.action.length > 0 &&
-            event.status === 'passed',
+            (event.status === 'passed' ||
+              (Number.isInteger(event.status) &&
+                event.status >= 100 &&
+                event.status <= 599 &&
+                /^[A-Z]+ local progress$/.test(event.action) &&
+                typeof event.session === 'string' &&
+                event.session.length > 0)),
         ),
       `Incomplete Practice action observations ${record.id}`,
     );
