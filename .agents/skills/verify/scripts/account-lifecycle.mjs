@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { accountReady, markLesson, runCase } from './browser.mjs';
 import { backup, documentFor } from './account-journeys.mjs';
+import { accountReady, markLesson, runCase } from './browser.mjs';
 
 export async function accountLifecycle(suite) {
   for (const profile of suite.profiles) {

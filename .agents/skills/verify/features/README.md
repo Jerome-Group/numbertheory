@@ -1,6 +1,6 @@
 # Number Theory verification map
 
-Run the real built Worker and local D1 through [the skill](../SKILL.md). Five domains share one owned instance and use fresh browser contexts. Public journeys are anonymous; marking cases use explicit invented local identities. Evidence goes to a new absolute directory outside the repository. The script derives lesson, path, checkpoint, view, and lab records from the existing verification map and source loader. Do not maintain a second ID inventory here.
+Run the real built Worker and local D1 through [the skill](../SKILL.md). Five domains share one owned instance and use fresh browser contexts. Read-only cases are anonymous. Per-lesson teaching cases use invented local identities throughout, as do marking and account cases. Evidence goes to a new absolute directory outside the repository. The script derives lesson, path, checkpoint, view, and lab records from the existing verification map and source loader. Do not maintain a second ID inventory here.
 
 | Domain | User outcomes | Driver feature |
 | --- | --- | --- |

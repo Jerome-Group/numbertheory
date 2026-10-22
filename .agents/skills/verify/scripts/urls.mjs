@@ -60,6 +60,7 @@ export async function urls(suite) {
         'feature:unknown-route',
         'feature:webmcp-absent-human-flow',
         'feature:section-jump-reload-same-lesson',
+        'feature:skip-link-keyboard',
         'journey:search-prerequisite-lab-share-reload',
       ],
       async ({ page, go, step, data }) => {

@@ -8,6 +8,7 @@ A learner can find a concept, choose a complete path, compare a chapter checkpoi
 - The three-question diagnostic suggests the first missed concept or N05 when all answers are correct.
 - The home multiplication preview changes fibers and opens C02.
 - Sidebar and collection searches handle matches, no matches, clearing, and chapter filters.
+- Sidebar chapter expansion and collapse persist across reload.
 - All five paths persist across reload and continue at the first pending lesson.
 - Every chapter checkpoint reveals reasoning and opens a linked lesson.
 - Reference opens a claim. Course distinguishes current and historical handout alignment.
@@ -27,10 +28,11 @@ Run `node .agents/skills/verify/scripts/drive.mjs --feature discovery --output /
 
 - Open all six routes and require the correct current navigation item, a usable heading, and no document overflow. Require visible home mathematics.
 - Fill **Find a concept** with `Euclid`, then an absent phrase. Require the D04 card and the explicit empty result. Search sidebar `D04`, open it, and use **Clear search** after an absent phrase.
+- On Explore with an empty sidebar search, expand every source-derived chapter and require its exact lesson IDs. Reload and require all chapters expanded. Collapse every chapter, reload, and require all panels hidden. Reopen the responsive drawer after reload when needed.
 - In Practice, Studio, and Reference, search `D04`, require exactly one entry, test the empty state, clear, and change **Chapter**. Require exactly the source-derived visible IDs for that chapter. A Studio chapter without labs must show its empty state.
 - Select each source-derived learning path, reload, require its pressed button, and choose **Continue**. Mark its first pending lesson complete with acknowledgement, return home, and require continuation to skip confirmed complete lessons. In Explore, require exactly that path's source-derived lesson IDs.
 - Choose **All lessons** in Explore. For every checkpoint, choose **Compare your reasoning**, require the expanded comparison, then follow its source-derived linked ID.
-- Switch the home preview to **Multiply by 5** and require changed fibers. Follow **Investigate every fiber**. Complete the diagnostic with all correct answers and then a missed first answer. Open the N05 and P00 suggestions.
+- Switch the home preview to **Multiply by 5** and require changed fibers. Follow **Investigate every fiber**. Complete the diagnostic with the first miss at each question and with all answers correct. Use later wrong answers to check first-missed priority. Require and open P00, C02, N04, and N05 with their exact titles and routes.
 - Open a reference row into `#theorem`. Open a course row after inspecting current MH-H01 and historical MH-H08 labels.
 
 ## Gotchas
