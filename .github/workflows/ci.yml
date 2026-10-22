@@ -67,6 +67,8 @@ jobs:
         run: |
           npm ci
           npm run build
+      - name: Use the Ubuntu HTTPS package mirror
+        run: sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
       - name: Install the locked browser
         run: node node_modules/playwright/cli.js install --with-deps chromium
       - name: Drive the built application
