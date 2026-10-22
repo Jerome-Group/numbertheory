@@ -44,7 +44,6 @@ jobs:
         run: node scripts/verification/summary.mjs "$RUNNER_TEMP/numbertheory-verification.json" >> "$GITHUB_STEP_SUMMARY"
 
   browser:
-    name: ${{ matrix.feature == 'teaching' && format('teaching shard ({0}, {1}/2)', matrix.profile, matrix.partition) || format('browser ({0})', matrix.feature) }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
@@ -98,8 +97,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-  teaching-profile:
-    name: browser (teaching, ${{ matrix.profile }})
+  teaching-phone:
+    name: browser (teaching, phone)
     needs: browser
     if: always()
     runs-on: ubuntu-latest
@@ -107,11 +106,9 @@ jobs:
     permissions:
       contents: read
       actions: read
-    strategy:
-      fail-fast: false
-      matrix:
-        profile: [phone, tablet, desktop]
-    steps:
+    env:
+      PROFILE: phone
+    steps: &teaching_profile_steps
       - name: Require every browser actor
         env:
           BROWSER: ${{ needs.browser.result }}
@@ -126,7 +123,6 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
           ATTEMPT: ${{ github.run_attempt }}
-          PROFILE: ${{ matrix.profile }}
           BUNDLE: ${{ runner.temp }}/numbertheory-teaching-profile
         run: |
           for partition in 1 2; do
@@ -135,13 +131,37 @@ jobs:
               --dir "$BUNDLE/$partition"
           done
       - name: Require the complete source-derived teaching profile
-        env:
-          PROFILE: ${{ matrix.profile }}
         run: npm run --silent agent -- teaching-profile --profile "$PROFILE" --output "$RUNNER_TEMP/numbertheory-teaching-profile"
+
+  teaching-tablet:
+    name: browser (teaching, tablet)
+    needs: browser
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    env:
+      PROFILE: tablet
+    steps: *teaching_profile_steps
+
+  teaching-desktop:
+    name: browser (teaching, desktop)
+    needs: browser
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    env:
+      PROFILE: desktop
+    steps: *teaching_profile_steps
 
   # Renaming this job renames the check context named by the Required checks ruleset.
   checks:
-    needs: [automated, browser, teaching-profile]
+    needs: [automated, browser, teaching-phone, teaching-tablet, teaching-desktop]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -150,5 +170,7 @@ jobs:
         env:
           AUTOMATED: ${{ needs.automated.result }}
           BROWSER: ${{ needs.browser.result }}
-          TEACHING: ${{ needs.teaching-profile.result }}
-        run: test "$AUTOMATED" = success && test "$BROWSER" = success && test "$TEACHING" = success
+          PHONE: ${{ needs.teaching-phone.result }}
+          TABLET: ${{ needs.teaching-tablet.result }}
+          DESKTOP: ${{ needs.teaching-desktop.result }}
+        run: test "$AUTOMATED" = success && test "$BROWSER" = success && test "$PHONE" = success && test "$TABLET" = success && test "$DESKTOP" = success
