@@ -44,7 +44,6 @@ jobs:
         run: node scripts/verification/summary.mjs "$RUNNER_TEMP/numbertheory-verification.json" >> "$GITHUB_STEP_SUMMARY"
 
   browser:
-    name: browser (${{ matrix.feature }}${{ matrix.profile && format(', {0}', matrix.profile) || '' }}${{ matrix.partition && format(', {0}', matrix.partition) || '' }})
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
