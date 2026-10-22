@@ -25,6 +25,8 @@ async function lessonStructure(page, lesson, authored, teaching) {
   assert.equal(authored.proof.length, lesson.proofStepCount);
   assert.equal(teaching.proofSteps.length, authored.proof.length);
   const sections = [
+    ['.question', [authored.question]],
+    ['.summary', [authored.summary]],
     ['#intuition > p', [teaching.intuition]],
     ['#definition > p', authored.definition],
     ['#theorem .theorem > p', [authored.theorem]],
@@ -65,6 +67,10 @@ async function lessonStructure(page, lesson, authored, teaching) {
     await authoredText(
       note.locator(':scope > p'),
       teaching.proofSteps[index].reason,
+    );
+    await authoredText(
+      body.locator('.proof-steps > li').nth(index).locator('h3'),
+      `${String(index + 1).padStart(2, '0')}${teaching.proofSteps[index].label}`,
     );
   }
   assert((await renderedMath(body)).length > 0, 'Visible mathematics missing');
@@ -131,6 +137,7 @@ export async function teaching(suite) {
             async () => {
               const choices = data.teaching[lesson.id].check.choices;
               const check = page.locator('.reasoning-check');
+              await authoredText(check.locator('h3'), teaching.check.prompt);
               const wrong = choices.find((choice) => !choice.correct);
               const right = choices.find((choice) => choice.correct);
               await check
@@ -140,6 +147,10 @@ export async function teaching(suite) {
                 })
                 .click();
               await visible(check.locator('.check-retry'));
+              await authoredText(
+                check.locator('.check-retry'),
+                `Try another explanation. ${wrong.feedback}`,
+              );
               await check
                 .getByRole('button', {
                   name: right.label ?? right.text,
@@ -147,12 +158,20 @@ export async function teaching(suite) {
                 })
                 .click();
               await visible(check.locator('.check-correct'));
+              await authoredText(
+                check.locator('.check-correct'),
+                `Yes. ${right.feedback}`,
+              );
             },
           );
           await step(
             'Recall claim, reveal each hint and justified answer, persist and clear marks',
             async () => {
               const practice = page.locator('#practice');
+              await authoredText(
+                practice.locator(':scope > p').first(),
+                authored.practice.prompt,
+              );
               await practice
                 .getByRole('button', { name: 'Check the claim', exact: true })
                 .click();

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   accountReady,
+  authoredText,
   markLesson,
   profiles,
   renderedMath,
@@ -342,16 +343,22 @@ export async function discovery(suite) {
                   .getAttribute('aria-expanded'),
                 'true',
               );
-              assert((await check.locator('p').count()) >= 2);
-              await check
-                .getByRole('button', {
-                  name: new RegExp(`^${checkpoint.links[0]} `),
-                })
-                .click();
-              await visible(
-                page.locator(`[data-lesson-id="${checkpoint.links[0]}"]`),
+              assert.equal(await check.locator(':scope > p').count(), 2);
+              await authoredText(
+                check.locator(':scope > p').nth(0),
+                checkpoint.prompt,
               );
-              await go('/explore');
+              await authoredText(
+                check.locator(':scope > p').nth(1),
+                checkpoint.answer,
+              );
+              for (const id of checkpoint.links) {
+                await check
+                  .getByRole('button', { name: new RegExp(`^${id} `) })
+                  .click();
+                await visible(page.locator(`[data-lesson-id="${id}"]`));
+                await go('/explore');
+              }
             },
           );
         }
@@ -373,11 +380,28 @@ export async function discovery(suite) {
           'Change the preview multiplier and inspect its fibers',
           async () => {
             const preview = page.locator('.home-fiber');
-            const before = await preview.innerText();
-            await preview
-              .getByRole('button', { name: 'Multiply by 5', exact: true })
-              .click();
-            assert.notEqual(await preview.innerText(), before);
+            for (const [factor, gcd, fibers] of [
+              ['4', '4', ['0,3,6,9', '1,4,7,10', '2,5,8,11']],
+              ['5', '1', ['0', '1', '2']],
+            ]) {
+              await preview
+                .getByRole('button', {
+                  name: `Multiply by ${factor}`,
+                  exact: true,
+                })
+                .click();
+              await authoredText(
+                preview.locator(':scope > p'),
+                `\\(\\gcd(${factor},12)=${gcd}\\): each visible output has \\(${gcd}\\) input${gcd === '1' ? '' : 's'}.`,
+              );
+              const rows = preview.locator('.home-fiber-rows > div');
+              assert.equal(await rows.count(), 3);
+              for (let index = 0; index < fibers.length; index++)
+                await authoredText(
+                  rows.nth(index),
+                  `\\(\\{${fibers[index]}\\}\\mapsto ${index * Number(factor)}\\)`,
+                );
+            }
             await preview
               .getByRole('button', { name: 'Investigate every fiber' })
               .click();

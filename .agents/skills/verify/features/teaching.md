@@ -5,8 +5,8 @@ Every lesson retains its full argument, proof notes, examples, conditions, sourc
 ## Sub-features
 
 - All 83 source-derived canonical and legacy lesson entries render the same durable ID, reading sections, and authored proof-step count.
-- Every authored reading paragraph, proof step, optional bridge, and source note matches the loaded source. Original figures have tabular alternatives.
-- Exactly one proof annotation per source step opens and shows its authored explanation. Wrong and correct reasoning choices give distinct feedback.
+- Authored questions, summaries, reading sections, proof steps, optional bridges, and source notes match the loaded source. Learning-objective text is not compared. Original figures have tabular alternatives.
+- Exactly one proof annotation per source step opens and shows its authored label and explanation. Wrong and correct reasoning choices show their exact authored feedback.
 - Every claim recall, hint sequence, and justified answer works. Signed-in complete and review marks require server acknowledgement.
 - P00 proof repair, Q04 reciprocity check, R07 unit classification, and the C02 reasoning ladder preserve their distinct interactions.
 - Prerequisites and next-lesson controls lead to the corresponding lessons.
