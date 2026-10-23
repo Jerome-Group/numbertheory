@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   accountReady,
   authoredText,
+  focused,
   markLesson,
   profiles,
   renderedMath,
@@ -9,6 +10,82 @@ import {
   textIncludes,
   visible,
 } from './browser.mjs';
+
+async function atlasMembership(page, expected) {
+  const selector = '.chapter-grid .atlas-card > span';
+  const ids = [...expected].sort();
+  await page.waitForFunction(
+    ({ selector, ids }) =>
+      JSON.stringify(
+        [...document.querySelectorAll(selector)]
+          .map((element) => element.textContent.trim().split(' · ')[0])
+          .sort(),
+      ) === JSON.stringify(ids),
+    { selector, ids },
+  );
+  assert.deepEqual(
+    (await page.locator(selector).allTextContents())
+      .map((text) => text.trim().split(' · ')[0])
+      .sort(),
+    ids,
+  );
+}
+
+async function cancellationLanding(page, factor) {
+  const lab = page.locator('[data-lesson-id="C02"] #lab');
+  await focused(lab.locator('#cancellation-title'));
+  assert.equal(new URL(page.url()).hash, '#lab');
+  assert.equal(
+    await lab.getByLabel('Modulus n', { exact: true }).inputValue(),
+    '12',
+  );
+  assert.equal(
+    await lab.getByLabel('Factor c', { exact: true }).inputValue(),
+    factor,
+  );
+  const gcd = factor === '4' ? 4 : 1;
+  const reducedModulus = 12 / gcd;
+  await authoredText(
+    lab.locator('.fiber-summary strong'),
+    `\\(\\gcd(${factor},12)=${gcd}\\)`,
+  );
+  await authoredText(
+    lab.locator('.fiber-summary > span'),
+    `Equality of outputs preserves the input modulo \\(${reducedModulus}\\).`,
+  );
+  const fibers = new Map();
+  const rows = Array.from({ length: 12 }, (_, input) => {
+    const output = (Number(factor) * input) % 12;
+    if (!fibers.has(output)) fibers.set(output, []);
+    fibers.get(output).push(input);
+    return [String(input), String(output)];
+  });
+  assert.equal(await lab.locator('.fiber-buttons button').count(), fibers.size);
+  for (const [output, inputs] of fibers) {
+    await lab
+      .getByRole('button', {
+        name: `Show inputs mapping to ${output} modulo 12`,
+        exact: true,
+      })
+      .click();
+    await authoredText(
+      lab.locator('.fiber-equation'),
+      `Output \\(${output}\\) has inputs \\(${inputs.join(',')}\\). Each pair differs by a multiple of \\(${reducedModulus}\\).`,
+    );
+  }
+  await lab.getByText('Show the complete exact map', { exact: true }).click();
+  const table = lab.getByRole('table', {
+    name: `Multiplication by ${factor} modulo 12`,
+    exact: true,
+  });
+  await visible(table);
+  assert.deepEqual(
+    await Promise.all(
+      (await table.locator('tbody tr').all()).map((row) => renderedMath(row)),
+    ),
+    rows,
+  );
+}
 
 export async function discovery(suite) {
   const { map, pathDetails, chapterCheckpoints } = suite.data;
@@ -377,6 +454,153 @@ export async function discovery(suite) {
     await runCase(
       suite,
       profile,
+      'discovery-home-collections',
+      [
+        'feature:explore-search',
+        'feature:path-selection-persistence',
+        'feature:catalog-query-chapter-empty-states',
+      ],
+      async ({ page, go, step }) => {
+        const navigation = page.getByRole('navigation', {
+          name: 'Main navigation',
+        });
+        const navigate = async (name) => {
+          await navigation.getByRole('button', { name, exact: true }).click();
+          await page.waitForFunction(
+            (name) =>
+              document.querySelector('.primary-nav [aria-current="page"]')
+                ?.textContent === name,
+            name,
+          );
+        };
+        const pathButton = (name) =>
+          page
+            .locator('.path-selector')
+            .getByRole('button', { name, exact: true });
+        const chapter = suite.data.lessons.find(
+          (lesson) => lesson.id === 'D04',
+        ).cluster;
+        await go('/');
+        await pathButton(pathDetails.core.title).click();
+        await step(
+          'Ordinary top navigation preserves path, search, and chapter',
+          async () => {
+            await navigate('Reference');
+            await page
+              .getByLabel('Search this collection', { exact: true })
+              .fill('D04');
+            await page
+              .getByRole('combobox', { name: 'Chapter', exact: true })
+              .selectOption(chapter);
+            await navigate('Learn');
+            await navigate('Explore');
+            assert.equal(
+              await pathButton(pathDetails.core.title).getAttribute(
+                'aria-pressed',
+              ),
+              'true',
+            );
+            assert.equal(
+              await page.locator('#atlas-filter').inputValue(),
+              'D04',
+            );
+            await atlasMembership(page, ['D04']);
+            await navigate('Reference');
+            assert.equal(
+              await page
+                .getByLabel('Search this collection', { exact: true })
+                .inputValue(),
+              'D04',
+            );
+            assert.equal(
+              await page
+                .getByRole('combobox', { name: 'Chapter', exact: true })
+                .inputValue(),
+              chapter,
+            );
+            assert.deepEqual(
+              await page
+                .locator('.reference-list article > span')
+                .allTextContents(),
+              ['D04'],
+            );
+          },
+        );
+        await step(
+          'Home All lessons clears restrictions and opens the full source atlas',
+          async () => {
+            await navigate('Learn');
+            await page
+              .getByRole('button', { name: 'All lessons →', exact: true })
+              .click();
+            await atlasMembership(
+              page,
+              suite.data.lessons.map((lesson) => lesson.id),
+            );
+            assert.equal(
+              await pathButton('All lessons').getAttribute('aria-pressed'),
+              'true',
+            );
+            assert.equal(await page.locator('#atlas-filter').inputValue(), '');
+            await navigate('Reference');
+            assert.equal(
+              await page
+                .getByLabel('Search this collection', { exact: true })
+                .inputValue(),
+              '',
+            );
+            assert.equal(
+              await page
+                .getByRole('combobox', { name: 'Chapter', exact: true })
+                .inputValue(),
+              'all',
+            );
+          },
+        );
+        await step(
+          'Home complete Core route retains Core and clears restrictions',
+          async () => {
+            await navigate('Learn');
+            await pathButton(pathDetails.core.title).click();
+            await navigate('Reference');
+            await page
+              .getByLabel('Search this collection', { exact: true })
+              .fill('verification_no_matching_concept');
+            await page
+              .getByRole('combobox', { name: 'Chapter', exact: true })
+              .selectOption(chapter);
+            await navigate('Learn');
+            await page
+              .getByRole('button', { name: /^See the complete Core route/ })
+              .click();
+            await atlasMembership(page, map.paths.core);
+            assert.equal(
+              await pathButton(pathDetails.core.title).getAttribute(
+                'aria-pressed',
+              ),
+              'true',
+            );
+            assert.equal(await page.locator('#atlas-filter').inputValue(), '');
+            await navigate('Reference');
+            assert.equal(
+              await page
+                .getByRole('combobox', { name: 'Chapter', exact: true })
+                .inputValue(),
+              'all',
+            );
+            assert.equal(
+              await page
+                .getByLabel('Search this collection', { exact: true })
+                .inputValue(),
+              '',
+            );
+          },
+        );
+      },
+    );
+    await runCase(
+      suite,
+      profile,
       'discovery-diagnostic-preview',
       [
         'feature:learn-fiber-preview',
@@ -384,15 +608,26 @@ export async function discovery(suite) {
         'feature:diagnostic-first-missed',
       ],
       async ({ page, go, step }) => {
-        await go('/');
         await step(
-          'Change the preview multiplier and inspect its fibers',
+          'Transfer each displayed preview into the exact lab, history, and restored URL',
           async () => {
             const preview = page.locator('.home-fiber');
             for (const [factor, gcd, fibers] of [
               ['4', '4', ['0,3,6,9', '1,4,7,10', '2,5,8,11']],
               ['5', '1', ['0', '1', '2']],
             ]) {
+              await go(map.lessons.find((lesson) => lesson.id === 'C02').route);
+              await page
+                .getByRole('button', {
+                  name: 'Multiply by 6 modulo 14',
+                  exact: true,
+                })
+                .click();
+              await page
+                .locator('.primary-nav')
+                .getByRole('button', { name: 'Learn', exact: true })
+                .click();
+              await focused(page.locator('.hero-copy h1'));
               await preview
                 .getByRole('button', {
                   name: `Multiply by ${factor}`,
@@ -410,11 +645,44 @@ export async function discovery(suite) {
                   rows.nth(index),
                   `\\(\\{${fibers[index]}\\}\\mapsto ${index * Number(factor)}\\)`,
                 );
+              await preview
+                .getByRole('button', { name: 'Investigate every fiber' })
+                .click();
+              await cancellationLanding(page, factor);
+              await page.goBack({ waitUntil: 'load' });
+              await focused(page.locator('.hero-copy h1'));
+              assert.equal(new URL(page.url()).pathname, '/');
+              await page.goForward({ waitUntil: 'load' });
+              await cancellationLanding(page, factor);
+              await page.reload({ waitUntil: 'load' });
+              await cancellationLanding(page, factor);
+              const lab = page.locator('.cancellation-lab');
+              await lab.getByLabel('Modulus n', { exact: true }).fill('14');
+              await lab.getByLabel('Factor c', { exact: true }).fill('6');
+              const submit = lab.getByRole('button', {
+                name: 'Map the residues',
+                exact: true,
+              });
+              await submit.click();
+              await authoredText(
+                lab.locator('.fiber-summary strong'),
+                '\\(\\gcd(6,14)=2\\)',
+              );
+              await submit
+                .evaluate(
+                  (element) =>
+                    new Promise((resolve) => {
+                      requestAnimationFrame(() =>
+                        requestAnimationFrame(() =>
+                          resolve(element === document.activeElement),
+                        ),
+                      );
+                    }),
+                )
+                .then((retained) =>
+                  assert(retained, 'Same-lab calculation stole form focus'),
+                );
             }
-            await preview
-              .getByRole('button', { name: 'Investigate every fiber' })
-              .click();
-            await visible(page.locator('[data-lesson-id="C02"] #lab'));
           },
         );
         for (const [answers, expected] of [

@@ -7,7 +7,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import { AccountControls } from './AccountControls';
-import { AtlasViews } from './AtlasViews';
+import { AtlasViews, type HomeFiberSelection } from './AtlasViews';
 import { lessons } from './content/lessons';
 import { LessonPage } from './LessonPage';
 import { ProofNotebookSession } from './ProofNotebookSession';
@@ -159,11 +159,20 @@ export function App() {
         ? `${lesson.title} · Number Theory`
         : `${state.view[0].toUpperCase()}${state.view.slice(1)} · Number Theory`;
   }, [lesson, state.view]);
-  function select(id: string, section?: string) {
+  function navigateLesson(commit: () => void, section?: string) {
     restoreMenuFocus.current = false;
     pendingSection.current = section ?? null;
-    studyStore.openLesson(id);
+    commit();
     setDrawer(false);
+  }
+  function select(id: string, section?: string) {
+    navigateLesson(() => studyStore.openLesson(id), section);
+  }
+  function investigateFibers(selection: HomeFiberSelection) {
+    navigateLesson(
+      () => studyStore.setCancellationMap(selection.modulus, selection.factor),
+      'lab',
+    );
   }
   const content = (
     <div className="app-shell">
@@ -239,7 +248,11 @@ export function App() {
             </button>
           </div>
         ) : state.view !== 'lesson' ? (
-          <AtlasViews view={state.view} open={select} />
+          <AtlasViews
+            view={state.view}
+            open={select}
+            investigateFibers={investigateFibers}
+          />
         ) : (
           <LessonPage key={lesson.id} lesson={lesson} onSelect={select} />
         )}

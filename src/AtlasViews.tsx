@@ -60,9 +60,21 @@ function PathSelector({
   );
 }
 
-function HomeFiberPreview({ open }: { open: (id: string) => void }) {
-  const [factor, setFactor] = useState('4');
-  const map = buildCancellationMap('12', factor);
+type HomeFiberFactor = '4' | '5';
+const homeFiberFactors: HomeFiberFactor[] = ['4', '5'];
+export type HomeFiberSelection = Readonly<{
+  modulus: '12';
+  factor: HomeFiberFactor;
+}>;
+
+function HomeFiberPreview({
+  investigate,
+}: {
+  investigate: (selection: HomeFiberSelection) => void;
+}) {
+  const modulus = '12';
+  const [factor, setFactor] = useState<HomeFiberFactor>('4');
+  const map = buildCancellationMap(modulus, factor);
   return (
     <section className="home-fiber" aria-labelledby="home-fiber-title">
       <span className="instrument-kicker">A QUESTION YOU CAN TEST</span>
@@ -74,7 +86,7 @@ function HomeFiberPreview({ open }: { open: (id: string) => void }) {
       </h2>
       <fieldset className="home-fiber-controls">
         <legend>Choose a factor</legend>
-        {['4', '5'].map((value) => (
+        {homeFiberFactors.map((value) => (
           <button
             type="button"
             key={value}
@@ -103,7 +115,7 @@ function HomeFiberPreview({ open }: { open: (id: string) => void }) {
       <button
         type="button"
         className="home-fiber-link"
-        onClick={() => open('C02')}
+        onClick={() => investigate({ modulus, factor })}
       >
         Investigate every fiber →
       </button>
@@ -175,9 +187,11 @@ function OpenButton({
 export function AtlasViews({
   view,
   open,
+  investigateFibers,
 }: {
   view: AtlasView;
   open: (id: string, section?: string) => void;
+  investigateFibers: (selection: HomeFiberSelection) => void;
 }) {
   const [filter, setFilter] = useState('');
   const [chapter, setChapter] = useState('all');
@@ -227,6 +241,12 @@ export function AtlasViews({
     selectLearningPath(id);
     setPath(id);
   }
+  function openCompleteRoute(selection: PathId | 'all') {
+    choosePath(selection);
+    setFilter('');
+    setChapter('all');
+    studyStore.openView('explore');
+  }
   const [shown, setShown] = useState<string[]>([]);
   const toggle = (id: string) =>
     setShown((current) =>
@@ -261,7 +281,7 @@ export function AtlasViews({
               </button>
             </div>
           </div>
-          <HomeFiberPreview open={open} />
+          <HomeFiberPreview investigate={investigateFibers} />
         </section>
         <section className="continue-panel" aria-label="Continue your learning">
           <div>
@@ -324,9 +344,12 @@ export function AtlasViews({
           <button
             type="button"
             className="text-link"
-            onClick={() => studyStore.openView('explore')}
+            onClick={() => openCompleteRoute(path)}
           >
-            See the complete route ({pathLessons.length} lessons) →
+            {path === 'all'
+              ? 'See the complete atlas'
+              : `See the complete ${pathDetails[path].title} route`}{' '}
+            ({pathLessons.length} lessons) →
           </button>
         </section>
         <Diagnostic open={open} />
@@ -356,10 +379,7 @@ export function AtlasViews({
               <span className="eyebrow">A ROUTE THROUGH THE IDEAS</span>
               <h2>Begin with a question.</h2>
             </div>
-            <button
-              type="button"
-              onClick={() => studyStore.openView('explore')}
-            >
+            <button type="button" onClick={() => openCompleteRoute('all')}>
               All lessons →
             </button>
           </div>

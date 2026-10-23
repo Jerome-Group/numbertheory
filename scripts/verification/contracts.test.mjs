@@ -8,8 +8,10 @@ const storage = new Map(),
   events = new Map(),
   registered = new Map();
 globalThis.location = new URL('https://numbertheory.example/');
+let historyPushes = 0;
 globalThis.history = {
   pushState(_state, _unused, url) {
+    historyPushes++;
     globalThis.location = new URL(url, location);
   },
 };
@@ -84,6 +86,54 @@ test('store setter exact certificate, URL reload/popstate and invalid input atom
   assert.equal(studyStore.getRevision(), rev);
   events.get('popstate')();
   assert.equal(studyStore.getSnapshot().result.gcd, '23');
+});
+test('cancellation entry invalidates navigation once; same-lab calculation and invalid input are atomic', () => {
+  for (const enter of [
+    () => studyStore.openView('learn'),
+    () => studyStore.openLesson('D04'),
+  ]) {
+    enter();
+    const navigation = studyStore.getNavigationRevision(),
+      revision = studyStore.getRevision(),
+      pushes = historyPushes;
+    let publications = 0;
+    const unsubscribe = studyStore.subscribe(() => publications++);
+    try {
+      const before = studyStore.getSnapshot(),
+        beforeUrl = location.href;
+      assert.throws(() => studyStore.setCancellationMap('0', '5'));
+      assert.equal(studyStore.getSnapshot(), before);
+      assert.equal(location.href, beforeUrl);
+      assert.equal(studyStore.getNavigationRevision(), navigation);
+      assert.equal(studyStore.getRevision(), revision);
+      assert.equal(historyPushes, pushes);
+      assert.equal(publications, 0);
+      studyStore.setCancellationMap('12', '5');
+      assert.equal(studyStore.getNavigationRevision(), navigation + 1);
+      assert.equal(studyStore.getRevision(), revision + 1);
+      assert.equal(historyPushes, pushes + 1);
+      assert.equal(publications, 1);
+      assert.equal(studyStore.getSnapshot().view, 'lesson');
+      assert.equal(studyStore.getSnapshot().lessonId, 'C02');
+      assert.equal(studyStore.getSnapshot().fiberC, '5');
+      studyStore.setCancellationMap('14', '6');
+      assert.equal(studyStore.getNavigationRevision(), navigation + 1);
+      assert.equal(studyStore.getRevision(), revision + 2);
+      assert.equal(historyPushes, pushes + 2);
+      assert.equal(publications, 2);
+      const state = studyStore.getSnapshot(),
+        url = location.href;
+      assert.throws(() => studyStore.setCancellationMap('0', '5'));
+      assert.equal(studyStore.getSnapshot(), state);
+      assert.equal(location.href, url);
+      assert.equal(studyStore.getNavigationRevision(), navigation + 1);
+      assert.equal(studyStore.getRevision(), revision + 2);
+      assert.equal(historyPushes, pushes + 2);
+      assert.equal(publications, 2);
+    } finally {
+      unsubscribe();
+    }
+  }
 });
 test('36 registered contracts compute without mutation; setter increments; stale/extra input atomic', () => {
   assert.equal(registered.size, 36);
@@ -237,7 +287,6 @@ test('all 15 computation/setter pairs obey route/revision/nonmutation contracts'
     assert.equal(studyStore.getSnapshot(), next);
     assert.equal(location.href, nextUrl);
   }
-  // Independent enumeration oracle at the tool boundary, not reuse of kernel.
   const roots = registered
     .get('compute_local_square_roots')
     .execute({ modulus: '45', target: '4' });
