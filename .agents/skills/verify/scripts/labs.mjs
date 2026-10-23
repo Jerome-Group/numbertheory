@@ -134,9 +134,32 @@ const cases = {
     invalid: [['First modulus', '0']],
   },
   divisor: {
-    fields: [[/^Positive integer n,/, '12']],
+    fields: [[/^Positive integer n,/, '18']],
+    prepare: async (lab, lesson) => {
+      await lab
+        .getByRole('combobox', {
+          name: lesson.id === 'A04' ? 'Source function f' : 'First function f',
+          exact: true,
+        })
+        .selectOption(lesson.id === 'A04' ? 'totient' : 'identity');
+      if (lesson.id !== 'A04')
+        await lab
+          .getByRole('combobox', { name: 'Second function g', exact: true })
+          .selectOption('one');
+    },
     submit: 'Build divisor trace',
     verify: async (lab, lesson) => {
+      await lab
+        .getByRole('button', {
+          name: 'Open terms and proof readout',
+          exact: true,
+        })
+        .click();
+      await math(lab, lesson.id === 'A04' ? '6=f(18)=6' : '(f\\ast g)(18)=39');
+      assert.equal(
+        await lab.getByRole('table').first().locator('tbody tr').count(),
+        6,
+      );
       await lab
         .getByRole('button', {
           name: lesson.id === 'A04' ? 'Recover totient at 12' : '1 * 1 at 12',

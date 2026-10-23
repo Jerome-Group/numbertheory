@@ -37,4 +37,4 @@ Run `node .agents/skills/verify/scripts/drive.mjs --feature discovery --output /
 
 ## Gotchas
 
-The collection and sidebar share visible words. Scope selectors to the corresponding region. Path selection filters Home and Explore and sets next-lesson order. Practice, Studio, Reference, and sidebar filters are independent. Restore **All lessons** before checking all chapters. Diagnostic suggestions guide reading and do not grade understanding. Course labels do not establish current instructor approval.
+The collection and sidebar share visible words. Scope selectors to the corresponding region. The active lesson opens its sidebar chapter. A nonempty sidebar search opens matching chapters regardless of saved disclosure preferences. Check persistence from Explore with an empty search. Path selection filters Home and Explore and sets next-lesson order. Practice, Studio, Reference, and sidebar filters are independent. Restore **All lessons** before checking all chapters. Diagnostic suggestions guide reading and do not grade understanding. Course labels do not establish current instructor approval.
