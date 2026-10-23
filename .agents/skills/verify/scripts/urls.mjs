@@ -6,6 +6,7 @@ import {
   textIncludes,
   visible,
 } from './browser.mjs';
+import { clinicUrls } from './conjecture-clinic.mjs';
 
 const invalidParameter = {
   euclid: 'a',
@@ -55,6 +56,7 @@ async function drawerClosed(page, target) {
 }
 
 export async function urls(suite) {
+  await clinicUrls(suite);
   for (const profile of suite.profiles) {
     await runCase(
       suite,

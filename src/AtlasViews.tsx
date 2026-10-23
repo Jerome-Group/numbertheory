@@ -1,4 +1,5 @@
 import { useState, useSyncExternalStore } from 'react';
+import { ConjectureClinic } from './ConjectureClinic';
 import { chapterCheckpoints } from './content/checkpoints';
 import courseMap from './content/course-map.json';
 import { lessons } from './content/lessons';
@@ -581,6 +582,7 @@ export function AtlasViews({
           title="The studio"
           lead="Change an input, inspect the exact result, then read the proof that explains it. Every instrument links to its full lesson."
         />
+        <ConjectureClinic open={open} />
         {catalogFilter}
         <div className="chapter-grid">
           {!lessons.some((lesson) => lesson.lab && matches(lesson)) && (

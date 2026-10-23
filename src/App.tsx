@@ -57,6 +57,7 @@ export function App() {
       (hash === 'main-content' ||
       (state.view === 'lesson' && sections.includes(hash)) ||
       (state.view === 'practice' && hash === 'proof-notebook') ||
+      (state.view === 'studio' && hash === 'conjecture-clinic') ||
       (state.view === 'explore' && /^atlas-chapter-\d+$/.test(hash))
         ? hash
         : null);

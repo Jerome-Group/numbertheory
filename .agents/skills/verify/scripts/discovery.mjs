@@ -164,7 +164,20 @@ export async function discovery(suite) {
             if (profile !== 'desktop') await page.keyboard.press('Escape');
           },
         );
-        for (const path of ['/practice', '/studio', '/reference']) {
+        for (const [path, emptyMessage] of [
+          [
+            '/practice',
+            'No problems in this selection. Clear the search or choose another chapter.',
+          ],
+          [
+            '/studio',
+            'No experiments in this selection. Clear the search or choose another chapter.',
+          ],
+          [
+            '/reference',
+            'No claims in this selection. Clear the search or choose another chapter.',
+          ],
+        ]) {
           await go(path);
           await step(`Filter ${path} by ID and empty result`, async () => {
             const search = page.getByLabel('Search this collection', {
@@ -184,10 +197,10 @@ export async function discovery(suite) {
               1,
             );
             await search.fill('verification_no_matching_concept');
-            await textIncludes(
-              page.locator('#main-content [role="status"]').first(),
-              'No ',
-            );
+            const emptyState = page
+              .getByRole('status')
+              .filter({ hasText: emptyMessage });
+            await authoredText(emptyState, emptyMessage);
             await search.fill('');
             await page
               .getByRole('combobox', { name: 'Chapter', exact: true })
@@ -227,11 +240,7 @@ export async function discovery(suite) {
               ),
               expected,
             );
-            if (!expected.length)
-              await textIncludes(
-                page.locator('#main-content [role="status"]'),
-                'No experiments',
-              );
+            if (!expected.length) await authoredText(emptyState, emptyMessage);
           });
         }
         await go('/reference');

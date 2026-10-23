@@ -4,6 +4,7 @@ A learner can reopen a shared result, traverse browser history, recover from bad
 
 ## Sub-features
 
+- Conjecture Clinic [shared configurations, kept witnesses and proof handoffs](conjecture-clinic.md) use the existing URL domain.
 - Search opens Euclid, a prerequisite leads back to its experiment, and the resulting shared inputs survive reload.
 - Legacy input links normalize after a real submission and survive reload, Back, and Forward.
 - Section hashes restore argument focus, including same-lesson reload.

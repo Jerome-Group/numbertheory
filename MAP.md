@@ -16,6 +16,7 @@ Start here: `README.md`, then `AGENTS.md`.
 | Progress model checking | Bounded account lifecycle model, actual-store schedule replay, and mutation controls | `.agents/skills/progress-lifecycle/SKILL.md` |
 | Automation | The workflows that run on a pull request or on a new issue, and dependency updates | `.github/` |
 | Application | React reading interface, diagnostic, Studio, labs, and shared study state | `src/App.tsx`, `src/AtlasViews.tsx` |
+| Conjecture Clinic | Curated claims, exact bounded counterexamples, kept-witness admission and Studio controls | `src/math/conjectures.ts`, `src/ConjectureClinic.tsx` |
 | Proof notebook | Tab session, whole arguments, immutable comparison captures, source adapter and Markdown export | `src/proof-notebook.ts`, `src/ProofNotebookSession.tsx`, `src/ProofNotebook.tsx` |
 | Account progress | Acknowledged marks, account fencing, validated transfer and explicit device import | `src/progress.ts`, `src/progress-schema.ts`, `src/AccountControls.tsx`, `src/ProgressControls.tsx` |
 | Private API | Trusted Sites identity, bounded requests and atomic D1 operations | `app/api/progress/route.ts`, `src/server/` |
