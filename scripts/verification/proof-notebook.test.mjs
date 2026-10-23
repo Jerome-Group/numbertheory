@@ -161,3 +161,37 @@ test('exports contain the exact authored source for every lesson and leave noteb
   }
   assert.equal(notebook.text, 'My proof.\n');
 });
+
+test('large backtick inputs export exact draft, reflection and history with collision-free fences', () => {
+  const text = `${'` '.repeat(150_001)}\n${'`'.repeat(12)}\n`;
+  const reflection = `${'` '.repeat(150_001)}\n${'`'.repeat(14)}\n`;
+  const source = sourceFor('D01');
+  const writing = reduceNotebook(undefined, { kind: 'write', text });
+  const textBlock = `${'`'.repeat(13)}text\n${text}${'`'.repeat(13)}`;
+  const reflectionBlock = `${'`'.repeat(15)}text\n${reflection}${'`'.repeat(15)}`;
+  assert(
+    exportNotebook({ source, notebook: writing }).includes(
+      `## Current draft (not compared)\n\n${textBlock}\n\n`,
+    ),
+  );
+  const compared = reduceNotebook(
+    reduceNotebook(writing, { kind: 'compare' }),
+    { kind: 'reflect', text: reflection },
+  );
+  const captureBlock = `## Captured attempt 1\n\n${textBlock}\n\n### Learner reflection\n\n${reflectionBlock}\n\n`;
+  assert(exportNotebook({ source, notebook: compared }).includes(captureBlock));
+  const draft = `${text}Revised argument.`;
+  const revision = reduceNotebook(
+    reduceNotebook(compared, { kind: 'revise' }),
+    { kind: 'write', text: draft },
+  );
+  const markdown = exportNotebook({ source, notebook: revision });
+  assert(markdown.includes(captureBlock));
+  assert(
+    markdown.includes(
+      `## Current draft (not compared)\n\n${'`'.repeat(13)}text\n${draft}\n${'`'.repeat(13)}\n\n`,
+    ),
+  );
+  assert.equal(revision.text, draft);
+  assert.deepEqual(revision.history, [{ text, reflection }]);
+});
