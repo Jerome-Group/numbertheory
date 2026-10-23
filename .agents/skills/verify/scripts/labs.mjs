@@ -49,6 +49,52 @@ const cases = {
     verify: async (lab) => {
       await math(lab, '\\gcd(240,46)=2');
       await math(lab, '2=-9(240)+47(46)');
+      const trace = [
+        ['240', '46', '5', '10'],
+        ['46', '10', '4', '6'],
+        ['10', '6', '1', '4'],
+        ['6', '4', '1', '2'],
+        ['4', '2', '2', '0'],
+      ];
+      const rows = lab
+        .getByRole('table', { name: 'Exact division trace', exact: true })
+        .locator('tbody tr');
+      assert.equal(await rows.count(), trace.length);
+      for (let index = 0; index < trace.length; index++)
+        assert.deepEqual(await renderedMath(rows.nth(index)), trace[index]);
+      const tiling = lab.locator('.euclid-tiling');
+      const previous = tiling.getByRole('button', {
+        name: 'Previous',
+        exact: true,
+      });
+      const next = tiling.getByRole('button', {
+        name: 'Next step',
+        exact: true,
+      });
+      assert(await previous.isDisabled());
+      for (let index = 0; index < trace.length; index++) {
+        if (index) await next.click();
+        const [dividend, divisor, quotient, remainder] = trace[index];
+        await textIncludes(
+          tiling.locator('.tiling-heading strong'),
+          `step ${index + 1} of 5`,
+        );
+        await math(
+          tiling,
+          `${dividend}=${quotient}\\cdot${divisor}+${remainder}`,
+        );
+        await visible(
+          tiling.getByRole('img', {
+            name: `Division tiling for ${dividend} equals ${quotient} times ${divisor} plus ${remainder}`,
+            exact: true,
+          }),
+        );
+      }
+      assert(await next.isDisabled());
+      for (let index = trace.length - 1; index > 0; index--)
+        await previous.click();
+      assert(await previous.isDisabled());
+      await math(tiling, '240=5\\cdot46+10');
     },
     invalid: [
       ['First integer', '0'],
@@ -198,9 +244,37 @@ const cases = {
         })
         .click();
       await math(lab, lesson.id === 'A04' ? '6=f(18)=6' : '(f\\ast g)(18)=39');
-      assert.equal(
-        await lab.getByRole('table').first().locator('tbody tr').count(),
-        6,
+      assert.deepEqual(
+        await lab
+          .getByRole('table', {
+            name: `${lesson.id === 'A04' ? 'Divisor terms for Möbius inversion' : 'Complementary-divisor summands'} at n equals 18`,
+            exact: true,
+          })
+          .locator('tbody tr')
+          .evaluateAll((rows) =>
+            rows.map((row) =>
+              [...row.querySelectorAll('th, td')].map(
+                (cell) => cell.textContent,
+              ),
+            ),
+          ),
+        lesson.id === 'A04'
+          ? [
+              ['1', '18', '1', '18', '18'],
+              ['2', '9', '-1', '9', '-9'],
+              ['3', '6', '-1', '6', '-6'],
+              ['6', '3', '1', '3', '3'],
+              ['9', '2', '0', '2', '0'],
+              ['18', '1', '0', '1', '0'],
+            ]
+          : [
+              ['1', '18', '1', '1', '1'],
+              ['2', '9', '2', '1', '2'],
+              ['3', '6', '3', '1', '3'],
+              ['6', '3', '6', '1', '6'],
+              ['9', '2', '9', '1', '9'],
+              ['18', '1', '18', '1', '18'],
+            ],
       );
       await lab
         .getByRole('button', {
@@ -265,6 +339,22 @@ const cases = {
         lab.locator('.hensel-lab__empty'),
         'no root modulo the first prime',
       );
+      await fill(lab, [
+        [/^Odd prime,/, '7'],
+        ['Constant c', '2'],
+        [/^Levels,/, '2'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Build tree', exact: true })
+        .click();
+      await lab
+        .getByRole('button', { name: 'Reveal lift tree', exact: true })
+        .click();
+      for (const summary of await lab
+        .locator('.hensel-lab__branch summary')
+        .all())
+        await summary.click();
+      assert.equal(await lab.locator('table:visible tbody tr').count(), 14);
     },
     invalid: [[/^Odd prime,/, '9']],
   },
@@ -302,6 +392,13 @@ const cases = {
         .click();
       await math(lab, '\\operatorname{ord}_{7}(2)=3');
       await textIncludes(lab.locator('.group-lab__status'), 'Generator: no');
+      await lab
+        .getByRole('button', {
+          name: 'Open order tables and proof readout',
+          exact: true,
+        })
+        .click();
+      assert((await lab.locator('table:visible tbody tr').count()) > 0);
     },
     invalid: [['Odd prime p, from three to thirty-one', '9']],
   },
@@ -454,7 +551,48 @@ const cases = {
       ['Target a', '0'],
     ],
     submit: 'Find exact roots',
-    verify: async (lab) => math(lab, '0,\\;4,\\;8,\\;12'),
+    verify: async (lab) => {
+      await math(lab.locator('.square-result > p'), '\\{0,\\;4,\\;8,\\;12\\}');
+      await fill(lab, [
+        ['Modulus m', '72'],
+        ['Target a', '1'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Find exact roots', exact: true })
+        .click();
+      const local = lab.locator('.square-local-card');
+      assert.equal(await local.count(), 2);
+      await math(
+        local.filter({
+          has: lab.page().getByRole('heading', {
+            name: 'Local modulus 2 to the power 3',
+            exact: true,
+          }),
+        }),
+        '1,\\;3,\\;5,\\;7',
+      );
+      await math(
+        local.filter({
+          has: lab.page().getByRole('heading', {
+            name: 'Local modulus 3 to the power 2',
+            exact: true,
+          }),
+        }),
+        '1,\\;8',
+      );
+      await math(
+        lab.locator('.square-result > p'),
+        '\\{1,\\;17,\\;19,\\;35,\\;37,\\;53,\\;55,\\;71\\}',
+      );
+      await fill(lab, [
+        ['Modulus m', '16'],
+        ['Target a', '0'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Find exact roots', exact: true })
+        .click();
+      await math(lab.locator('.square-result > p'), '\\{0,\\;4,\\;8,\\;12\\}');
+    },
     negative: [
       ['Modulus m', '32'],
       ['Target a', '12'],
@@ -499,6 +637,39 @@ const cases = {
       if (lesson.id === 'R05') {
         await openDetails(lab, 'Reveal the full periodic expansion');
         await math(lab, '\\sqrt{2}=[1;\\overline{2}]');
+        const slider = lab.getByRole('slider');
+        const rows = lab
+          .getByRole('table', {
+            name: 'Convergents, norm differences, and error certificates',
+            exact: true,
+          })
+          .locator('tbody tr');
+        await slider.focus();
+        await slider.press('Home');
+        assert.equal(await slider.inputValue(), '1');
+        assert.equal(await rows.count(), 1);
+        await math(rows.first(), '1/1');
+        await slider.press('ArrowRight');
+        await slider.press('ArrowRight');
+        assert.equal(await slider.inputValue(), '3');
+        await textIncludes(
+          lab.locator('.cf-lab__depth output'),
+          '3 of 16 entries',
+        );
+        assert.equal(await rows.count(), 3);
+        for (const [index, fraction, determinant, norm, next, bound] of [
+          [0, '1/1', '-1', '1', '2', '<1/2'],
+          [1, '3/2', '1', '-1', '5', '<1/10'],
+          [2, '7/5', '-1', '1', '12', '<1/60'],
+        ]) {
+          const cells = rows.nth(index).locator('td');
+          await math(cells.nth(0), fraction);
+          assert.equal(await cells.nth(1).textContent(), determinant);
+          assert.equal(await cells.nth(2).textContent(), norm);
+          await textIncludes(cells.nth(3), index === 1 ? 'above' : 'below');
+          assert.equal(await cells.nth(4).textContent(), next);
+          await math(cells.nth(5), bound);
+        }
       } else {
         const slider = lab.getByRole('slider');
         await slider.focus();
@@ -634,6 +805,12 @@ export async function labs(suite) {
               const beforeRows = await lab
                 .locator('table:visible tbody')
                 .allTextContents();
+              if (lesson.lab === 'order' || lesson.lab === 'hensel')
+                assert(
+                  beforeRows.length > 0 &&
+                    beforeRows.every((rows) => rows.trim()),
+                  'Row preservation requires a visible populated table',
+                );
               await fixture.prepareInvalid?.(lab);
               await fill(lab, fixture.invalid ?? []);
               await lab

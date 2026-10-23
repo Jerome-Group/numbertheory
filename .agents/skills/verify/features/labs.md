@@ -31,9 +31,14 @@ Run `node .agents/skills/verify/scripts/drive.mjs --feature labs --output /absol
 - Fixtures include Euclid `240,46` with gcd `2` and coefficients `-9,47`; CRT `2 mod 6` and `8 mod 9` with `8 mod 18`; Hensel `x²=2 mod 49` with roots `10,39`; Gaussian `(7+5i)/(3+2i)` with quotient `2` and remainder `1+i`; and Pell `D=2` with pairs `(3,2)`, `(17,12)`, `(99,70)`.
 - In CRT, require the 18-cell grid and the explanation that grids appear only for periods at most 36. Submit `0 mod 11` and `0 mod 12`; require visible clocks, the exact result `0 mod 132`, no grid, and guidance to use the exact result for larger periods. Restore the positive fixture.
 - In reciprocity, require the footer's maximum of 210 points at distinct primes 31 and 29. Submit that pair; require 15 columns, 14 rows, 210 displayed points, and `105+105=210`. Open the parity proof. Require complete `31` and `29` MathML subscript children in the summary, floor sums, and character formulas. Reject `31,31` while retaining the valid count, then restore `3,7` and check its summary and proof subscripts.
+- Require all five Euclid division rows, traverse every tiling step, and check the disabled first and last controls. Return to the first step.
+- For local squares `x²=1 mod 72`, require roots `1,3,5,7` modulo 8, roots `1,8` modulo 9, and the complete global set `1,17,19,35,37,53,55,71`. Scope the global assertion outside the local cards. Restore `16,0` before the obstruction fixture.
+- For both divisor entries at 18, require every divisor, complementary divisor, function value, and signed product in the six term rows. Inversion uses totient and convolution uses identity with the constant one function.
 - Require both convolution and inversion entries, both order entries, both Hensel entries, finite and periodic continued fractions, and both Pell entries. Do not substitute one entry for its sibling.
 - In both order entries, open the order tables and require the six power-order rows for candidate 3 modulo 7. In finite continued fractions, press End and require depth 4 of 4, four convergent rows, and terminal 43/19. Press Home and require depth 1 of 4 and one row; the hidden full expansion must not satisfy the visible prefix check.
+- For periodic square root 2, press Home and require one convergent, then advance twice. Require `1/1`, `3/2`, and `7/5` with alternating determinant, signed norm, side, next denominator, and exact error bound certificates.
 - Submit invalid bounds, composite prime, equal primes, square radicand, or zero divisor as applicable. Require a visible explanation, unchanged URL, visible result formulas, and table rows. Resubmit valid inputs, require the error to disappear, and recheck the fixture.
+- Before invalid Order and Hensel submissions, require populated visible tables. Hensel restores the unique-lift fixture and opens every candidate-digit table after checking singular and absent branches.
 
 ## Gotchas
 

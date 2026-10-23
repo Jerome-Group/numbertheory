@@ -117,6 +117,9 @@ export async function proofNotebook(suite) {
           `First argument for ${first.id}.`,
           '<strong>This is learner text, not HTML.</strong>',
           '\\(n \\ge 0\\)',
+          '```',
+          'These backticks belong to the learner argument.',
+          '```',
           'A deliberately long word follows.',
           'justification'.repeat(50),
           ...Array.from(
@@ -127,7 +130,7 @@ export async function proofNotebook(suite) {
           '',
         ].join('\n');
         const reflection =
-          'Keep the construction. Justify the missing implication.\n';
+          'Keep the construction. Justify the missing implication.\n````\nReflection backticks stay literal.\n';
         const revised = `${original}\nThe missing implication now has a justification.\n`;
         const writes = [];
         page.on('request', (request) => {
@@ -258,6 +261,44 @@ export async function proofNotebook(suite) {
           },
         );
         await step(
+          'Export an un-compared draft without capturing it',
+          async () => {
+            await draft.fill(original);
+            await notebook
+              .getByRole('button', {
+                name: 'Show Markdown export',
+                exact: true,
+              })
+              .click();
+            const markdown = await notebook
+              .getByLabel('Notebook Markdown', {
+                exact: true,
+              })
+              .inputValue();
+            assert(
+              markdown.includes(
+                `## Current draft (not compared)\n\n\`\`\`\`text\n${original}\`\`\`\``,
+              ),
+            );
+            assert.equal(
+              (markdown.match(/^## Captured attempt /gm) ?? []).length,
+              1,
+            );
+            assert.equal(await draft.inputValue(), original);
+            assert.equal(
+              await notebook.locator('.notebook-history article').count(),
+              1,
+            );
+            assert.equal(
+              await notebook.locator('.notebook-capture').count(),
+              0,
+            );
+            await notebook
+              .getByRole('button', { name: 'Hide Markdown', exact: true })
+              .click();
+          },
+        );
+        await step(
           'Capture exact long learner text and reflect without changing it',
           async () => {
             await draft.fill(original);
@@ -375,6 +416,19 @@ export async function proofNotebook(suite) {
             assert.equal(await draft.inputValue(), '');
             await draft.fill('A separate lesson draft.');
             await selectLesson(page, first.id);
+            await page.goBack({ waitUntil: 'load' });
+            await notebookPanels(page, second.id);
+            await closedNotebookControls(notebook);
+            assert.equal(await draft.inputValue(), 'A separate lesson draft.');
+            await page.goForward({ waitUntil: 'load' });
+            await notebookPanels(page, first.id);
+            await closedNotebookControls(notebook);
+            assert.equal(
+              await notebook
+                .getByLabel('Lesson to prove', { exact: true })
+                .inputValue(),
+              first.id,
+            );
             assert.equal(
               await notebook.locator('.notebook-capture pre').textContent(),
               original,
@@ -463,6 +517,49 @@ export async function proofNotebook(suite) {
               await notebook.locator('.notebook-history article').count(),
               3,
             );
+            await notebook
+              .getByRole('button', {
+                name: 'Show Markdown export',
+                exact: true,
+              })
+              .click();
+            const markdown = await notebook
+              .getByLabel('Notebook Markdown', {
+                exact: true,
+              })
+              .inputValue();
+            assert.deepEqual(markdown.match(/^## Captured attempt \d+$/gm), [
+              '## Captured attempt 1',
+              '## Captured attempt 2',
+              '## Captured attempt 3',
+            ]);
+            for (const [heading, exact] of [
+              ['## Captured attempt 1', '```text\n\n```'],
+              ['## Captured attempt 2', `\`\`\`\`text\n${original}\`\`\`\``],
+              [
+                '### Learner reflection',
+                `\`\`\`\`\`text\n${reflection}\`\`\`\`\``,
+              ],
+              ['## Captured attempt 3', `\`\`\`\`text\n${revised}\`\`\`\``],
+              ['## Current draft (not compared)', '```text\n\n```'],
+            ])
+              assert(markdown.includes(`${heading}\n\n${exact}`));
+            const [download] = await Promise.all([
+              page.waitForEvent('download'),
+              notebook
+                .getByRole('button', { name: 'Download Markdown', exact: true })
+                .click(),
+            ]);
+            const downloadPath = join(
+              suite.output,
+              `${profile}-${attemptId}`,
+              `history-${download.suggestedFilename()}`,
+            );
+            await download.saveAs(downloadPath);
+            assert.equal(await readFile(downloadPath, 'utf8'), markdown);
+            await notebook
+              .getByRole('button', { name: 'Hide Markdown', exact: true })
+              .click();
             const reset = notebook.getByRole('button', {
               name: 'Reset this lesson notebook',
               exact: true,
@@ -500,6 +597,10 @@ export async function proofNotebook(suite) {
             );
             await selectLesson(page, second.id);
             assert.equal(await draft.inputValue(), 'A separate lesson draft.');
+            return {
+              downloadPath,
+              utf8Bytes: Buffer.byteLength(markdown, 'utf8'),
+            };
           },
         );
         await step(
@@ -513,6 +614,68 @@ export async function proofNotebook(suite) {
               await notebook.locator('.notebook-history').count(),
               0,
             );
+          },
+        );
+        await step(
+          'Export large backtick-rich writing, reflection and a revised draft without losing the editor',
+          async () => {
+            const text = `${'` '.repeat(150_001)}\n${'`'.repeat(12)}\n`;
+            const reflection = `${'` '.repeat(150_001)}\n${'`'.repeat(14)}\n`;
+            await draft.fill(text);
+            await visible(draft);
+            assert.equal(await draft.inputValue(), text);
+            await notebook
+              .getByRole('button', { name: 'Compare with source', exact: true })
+              .click();
+            assert.equal(
+              await notebook.locator('.notebook-capture pre').textContent(),
+              text,
+            );
+            await notebook
+              .getByLabel('What will you keep or change?', { exact: true })
+              .fill(reflection);
+            await notebook
+              .getByRole('button', {
+                name: 'Revise this argument',
+                exact: true,
+              })
+              .click();
+            const revision = `${text}Revised argument.`;
+            await draft.fill(revision);
+            await visible(draft);
+            assert.equal(await draft.inputValue(), revision);
+            const [download] = await Promise.all([
+              page.waitForEvent('download'),
+              notebook
+                .getByRole('button', { name: 'Download Markdown', exact: true })
+                .click(),
+            ]);
+            const downloadPath = join(
+              suite.output,
+              `${profile}-${attemptId}`,
+              `large-${download.suggestedFilename()}`,
+            );
+            await download.saveAs(downloadPath);
+            const markdown = await readFile(downloadPath, 'utf8');
+            assert(
+              markdown.includes(
+                `## Captured attempt 1\n\n${'`'.repeat(13)}text\n${text}${'`'.repeat(13)}`,
+              ),
+            );
+            assert(
+              markdown.includes(
+                `### Learner reflection\n\n${'`'.repeat(15)}text\n${reflection}${'`'.repeat(15)}`,
+              ),
+            );
+            assert(
+              markdown.includes(
+                `## Current draft (not compared)\n\n${'`'.repeat(13)}text\n${revision}\n${'`'.repeat(13)}`,
+              ),
+            );
+            return {
+              downloadPath,
+              utf8Bytes: Buffer.byteLength(markdown, 'utf8'),
+            };
           },
         );
         await step(

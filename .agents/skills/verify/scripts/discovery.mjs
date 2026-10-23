@@ -320,6 +320,49 @@ export async function discovery(suite) {
             if (!expected.length) await authoredText(emptyState, emptyMessage);
           });
         }
+        await go('/practice');
+        await step(
+          'Retain collection query and chapter through same-tab top navigation',
+          async () => {
+            const chapter = suite.data.lessons.find(
+              (lesson) => lesson.id === 'D04',
+            ).cluster;
+            await page
+              .getByLabel('Search this collection', { exact: true })
+              .fill('D04');
+            await page
+              .getByRole('combobox', { name: 'Chapter', exact: true })
+              .selectOption(chapter);
+            for (const [name, selector] of [
+              ['Studio', '.studio-card > span'],
+              ['Reference', '.reference-list article > span'],
+              ['Practice', '.practice-item-head > span'],
+            ]) {
+              await page
+                .getByRole('navigation', { name: 'Main navigation' })
+                .getByRole('button', { name, exact: true })
+                .click();
+              assert.equal(
+                await page
+                  .getByLabel('Search this collection', { exact: true })
+                  .inputValue(),
+                'D04',
+              );
+              assert.equal(
+                await page
+                  .getByRole('combobox', { name: 'Chapter', exact: true })
+                  .inputValue(),
+                chapter,
+              );
+              assert.deepEqual(
+                (await page.locator(selector).allTextContents()).map(
+                  (text) => text.trim().split(' · ')[0],
+                ),
+                ['D04'],
+              );
+            }
+          },
+        );
         await go('/reference');
         await step('Open an indexed claim in its lesson', async () => {
           const first = page.locator('.reference-list article').first();
