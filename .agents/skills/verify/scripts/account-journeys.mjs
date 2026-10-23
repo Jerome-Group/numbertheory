@@ -329,7 +329,10 @@ export async function accountJourneys(suite) {
       suite,
       profile,
       'practice-explicit-legacy-import',
-      ['feature:legacy-device-import-account-wins'],
+      [
+        'feature:legacy-device-import-account-wins',
+        'feature:legacy-device-storage-denied-corrupt',
+      ],
       async (a) => {
         const [first, second] = a.data.map.lessons;
         const raw = JSON.stringify({
@@ -415,6 +418,77 @@ export async function accountJourneys(suite) {
               legacyBytes: raw,
               document: await documentFor(a, suite.origin),
             };
+          },
+        );
+        await a.step(
+          'Keep corrupt older bytes and account marks unchanged, then recover from denied storage',
+          async () => {
+            const controls = a.page.locator('.progress-management');
+            const check = controls.getByRole('button', {
+              name: 'Check this device for older marks',
+              exact: true,
+            });
+            const before = await documentFor(a, suite.origin);
+            for (const corrupt of ['{', '[]', 'null']) {
+              await a.page.evaluate(
+                (text) =>
+                  localStorage.setItem('numbertheory.progress.v1', text),
+                corrupt,
+              );
+              await check.click();
+              await textIncludes(
+                controls.locator('.legacy-progress'),
+                'Older device data is unreadable. The original data was kept.',
+              );
+              assert.equal(
+                await a.page.evaluate(() =>
+                  localStorage.getItem('numbertheory.progress.v1'),
+                ),
+                corrupt,
+              );
+              assert.deepEqual(await documentFor(a, suite.origin), before);
+            }
+            await a.page.evaluate((text) => {
+              localStorage.setItem('numbertheory.progress.v1', text);
+              const getItem = Storage.prototype.getItem;
+              Storage.prototype.getItem = function (key) {
+                if (key === 'numbertheory.progress.v1')
+                  throw new DOMException(
+                    'Synthetic storage denial',
+                    'SecurityError',
+                  );
+                return getItem.call(this, key);
+              };
+            }, raw);
+            await check.click();
+            await textIncludes(
+              controls.locator('.legacy-progress'),
+              'Browser storage is unavailable. You can restore a JSON backup.',
+            );
+            assert.equal(
+              await controls
+                .getByRole('button', {
+                  name: 'Import older device marks',
+                  exact: true,
+                })
+                .count(),
+              0,
+            );
+            assert.deepEqual(await documentFor(a, suite.origin), before);
+            await a.page.reload({ waitUntil: 'load' });
+            await accountReady(a.page);
+            assert.equal(
+              await a.page.evaluate(() =>
+                localStorage.getItem('numbertheory.progress.v1'),
+              ),
+              raw,
+            );
+            assert.deepEqual(await documentFor(a, suite.origin), before);
+            await check.click();
+            await textIncludes(
+              controls.locator('.legacy-progress'),
+              'Found 2 older device marks.',
+            );
           },
         );
       },
