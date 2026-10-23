@@ -43,7 +43,7 @@ for (const path of publicPaths) {
     problems.push(`${path}: forbidden public file type or name`);
     continue;
   }
-  if (!/\.(?:md|json|js|mjs|ts|tsx|css|html|svg|txt|yml|yaml)$/.test(path))
+  if (!/\.(?:md|json|js|mjs|map|ts|tsx|css|html|svg|txt|yml|yaml)$/.test(path))
     continue;
   const value = readFileSync(path, 'utf8');
   if (forbiddenText.some((rule) => rule.test(value)))
