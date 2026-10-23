@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   copyFileSync,
@@ -62,6 +62,38 @@ function fixture(t, built = true) {
   }
   return root;
 }
+
+for (const [name, content, status] of [
+  ['accepts clean', 'export const publicValue = 1;', 0],
+  ['rejects prohibited', ['gh', 'p_', 'A'.repeat(24)].join(''), 1],
+]) {
+  test(`public-surface CLI ${name} source maps`, (t) => {
+    const root = fixture(t);
+    writeFileSync(
+      join(root, 'dist/index.js.map'),
+      JSON.stringify({
+        version: 3,
+        sources: ['index.ts'],
+        sourcesContent: [content],
+        names: [],
+        mappings: '',
+      }),
+    );
+    const result = spawnSync(
+      process.execPath,
+      [join(source, 'scripts/check-public-surface.mjs')],
+      { cwd: root, encoding: 'utf8' },
+    );
+    assert.equal(result.status, status, result.stdout + result.stderr);
+    if (status === 1)
+      assert.match(
+        result.stderr,
+        /dist\/index\.js\.map: private path, private source link, or secret pattern/,
+      );
+    else assert.match(result.stdout, /Public-surface scan passed/);
+  });
+}
+
 async function releaseFixture(t, root) {
   const bundle = realpathSync(
     mkdtempSync(join(tmpdir(), 'nt-release-fixture-')),
