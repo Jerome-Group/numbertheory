@@ -207,8 +207,8 @@ export function ReciprocityLatticeLab({
         </div>
       )}
       <p className="group-lab__limit">
-        The exact grid is capped at 31; the largest half-rectangle has 225
-        points.
+        For distinct odd primes up to 31, the largest half-rectangle has 210
+        points, at 31 and 29.
       </p>
     </section>
   );
