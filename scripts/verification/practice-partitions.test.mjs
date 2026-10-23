@@ -364,6 +364,18 @@ test('serialized relocated Practice receipts accept independent builds and full 
   }
 });
 
+test('Practice receipts reject notebook payloads omitted from both artifact inventories', (t) => {
+  const f = bundleFixture(t);
+  const actor = f.actors[0];
+  const record = actor.report.cases.find((item) => item.id === flowIds[0]);
+  writeFileSync(
+    join(actor.directory, record.id, 'proof-notebook.md'),
+    'Original learner argument.\n',
+  );
+  f.save();
+  assert.throws(() => f.validate(), /Case artifact inventory differs/);
+});
+
 test('real practice-union CLI reads serialized current-source receipts without a build or browser', (t) => {
   const f = bundleFixture(t);
   const checkout = realpathSync(
