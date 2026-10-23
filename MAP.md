@@ -13,6 +13,7 @@ Start here: `README.md`, then `AGENTS.md`.
 | Decisions | Architecture decision records | `docs/adr/` |
 | Agent skills | The routines an agent follows here, one file per skill | `docs/agents/` |
 | App verification | Launch, doctor, real browser journeys, feature map, retained proof, and owned cleanup | `.agents/skills/verify/SKILL.md` |
+| Progress model checking | Bounded account lifecycle model, actual-store schedule replay, and mutation controls | `.agents/skills/progress-lifecycle/SKILL.md` |
 | Automation | The workflows that run on a pull request or on a new issue, and dependency updates | `.github/` |
 | Application | React reading interface, diagnostic, Studio, labs, and shared study state | `src/App.tsx`, `src/AtlasViews.tsx` |
 | Proof notebook | Tab session, whole arguments, immutable comparison captures, source adapter and Markdown export | `src/proof-notebook.ts`, `src/ProofNotebookSession.tsx`, `src/ProofNotebook.tsx` |
