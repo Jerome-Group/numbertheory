@@ -1,5 +1,11 @@
 import assert from 'node:assert/strict';
-import { focused, runCase, textIncludes, visible } from './browser.mjs';
+import {
+  authoredText,
+  focused,
+  runCase,
+  textIncludes,
+  visible,
+} from './browser.mjs';
 
 const invalidParameter = {
   euclid: 'a',
@@ -120,7 +126,10 @@ export async function urls(suite) {
             const shared = page.url();
             await page.reload();
             assert.equal(page.url(), shared);
-            await textIncludes(page.locator('#lab .answer-strip strong'), '23');
+            await authoredText(
+              page.locator('#lab .answer-strip strong'),
+              '\\(\\gcd(391,299)=23\\)',
+            );
           },
         );
         await go(`${euclid.legacyRoute}&a=240&b=46`);
@@ -134,7 +143,16 @@ export async function urls(suite) {
                 .inputValue(),
               '240',
             );
-            await textIncludes(lab.locator('.answer-strip strong'), '2');
+            assert.equal(
+              await lab
+                .getByLabel('Second integer', { exact: true })
+                .inputValue(),
+              '46',
+            );
+            await authoredText(
+              lab.locator('.answer-strip strong'),
+              '\\(\\gcd(240,46)=2\\)',
+            );
             await lab.getByLabel('First integer', { exact: true }).fill('391');
             await lab.getByLabel('Second integer', { exact: true }).fill('299');
             await lab
@@ -155,7 +173,10 @@ export async function urls(suite) {
                 .inputValue(),
               '299',
             );
-            await textIncludes(lab.locator('.answer-strip strong'), '23');
+            await authoredText(
+              lab.locator('.answer-strip strong'),
+              '\\(\\gcd(391,299)=23\\)',
+            );
             await page
               .getByRole('navigation', { name: 'Main navigation', exact: true })
               .getByRole('button', { name: 'Explore', exact: true })
@@ -174,7 +195,10 @@ export async function urls(suite) {
                 .inputValue(),
               '391',
             );
-            await textIncludes(lab.locator('.answer-strip strong'), '23');
+            await authoredText(
+              lab.locator('.answer-strip strong'),
+              '\\(\\gcd(391,299)=23\\)',
+            );
             assert.equal(new URL(page.url()).pathname, euclid.route);
             await page.goForward({ waitUntil: 'load' });
             await visible(
