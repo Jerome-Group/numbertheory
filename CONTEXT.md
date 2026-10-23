@@ -54,3 +54,15 @@ _Avoid_: automatic migration, account cache
 **Uncertain save**:
 A write whose acknowledgement was lost. The server may have committed it; reload progress before another write.
 _Avoid_: failed save, pending retry
+
+**Investigation**:
+A curated claim in Conjecture Clinic with three hypothesis choices and one complete, stated finite search domain.
+_Avoid_: theorem prover, arbitrary expression evaluator
+
+**Counterexample**:
+An admitted input whose premise is true and conclusion is false. One counterexample refutes the displayed universal claim. No counterexample within bounds is finite evidence.
+_Avoid_: failed attempt, incorrect learner answer
+
+**Kept witness**:
+An explicitly retained exact counterexample for one investigation. A changed hypothesis can exclude its input without changing its arithmetic. It stays in memory in the current tab and clears on reload.
+_Avoid_: saved account result, proof notebook draft

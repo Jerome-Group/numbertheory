@@ -4,7 +4,7 @@ A learner can open each experiment, compute a bounded exact result, inspect its 
 
 ## Sub-features
 
-- Studio opens all 20 source-derived entries across 14 lab types.
+- Studio opens all 20 source-derived entries across 14 lab types. The [Conjecture Clinic recipe](conjecture-clinic.md) covers its five investigations under the same driver domain.
 - Euclid verifies a gcd and Bézout certificate. Residue clocks compute with a negative representative. Cancellation shows a nonunit fiber.
 - Linear and CRT solvers distinguish solutions and incompatibility.
 - Divisor convolution and Möbius inversion expose full term tables.

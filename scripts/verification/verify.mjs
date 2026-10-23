@@ -174,6 +174,10 @@ function frozenBuildStage(root, frozenBuild, stage) {
   }
 }
 export async function scopeMap(root) {
+  const { investigationCatalog } = await loadRepositoryModule(
+    root,
+    'src/math/conjectures.ts',
+  );
   const { lessons } = await loadRepositoryModule(
     root,
     'src/content/lessons.ts',
@@ -228,6 +232,9 @@ export async function scopeMap(root) {
     'chapter-disclosures',
     'checkpoint-answer-reveal',
     'studio-lab-index',
+    'conjecture-clinic-kept-witness',
+    'conjecture-clinic-urls-focus',
+    'conjecture-clinic-proof-notebook',
     'catalog-query-chapter-empty-states',
     'continue-selected-route',
     'section-jump-reload-same-lesson',
@@ -323,6 +330,16 @@ export async function scopeMap(root) {
       ],
     })),
     views: ['/', '/explore', '/practice', '/studio', '/reference', '/course'],
+    investigations: investigationCatalog().map((item) => ({
+      id: item.id,
+      title: item.title,
+      choices: item.choices.map((choice) => ({
+        condition: choice.selection.condition,
+        label: choice.label,
+      })),
+      proofLessonId: item.proofLessonId,
+      notebookLessonId: item.notebookLessonId,
+    })),
     paths: Object.fromEntries(
       Object.entries(paths.pathDetails).map(([id, p]) => [id, p.ids]),
     ),
@@ -378,6 +395,7 @@ export async function scopeMap(root) {
     ...map.figures.map((id) => `figure:${id}`),
     ...Object.keys(map.checkpoints).map((chapter) => `checkpoint:${chapter}`),
     ...map.lessons.filter((l) => l.lab).map((l) => `lab:${l.id}`),
+    ...map.investigations.map((item) => `investigation:${item.id}`),
     ...Object.keys(map.paths).map((p) => `path:${p}`),
     ...tools.map((t) => `tool:${t}`),
     ...features.map((f) => `feature:${f}`),

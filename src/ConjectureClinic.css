@@ -1,0 +1,368 @@
+.conjecture-clinic {
+  margin: 30px 0 44px;
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid #cbd8d4;
+  border-top: 4px solid #246653;
+  border-radius: 12px;
+  background: #fffefa;
+  box-shadow: 0 12px 32px #152c2410;
+  overflow-wrap: anywhere;
+  scroll-margin-top: 24px;
+}
+.clinic-heading h2 {
+  margin: 8px 0 10px;
+  font:
+    600 clamp(28px, 3vw, 36px) Georgia,
+    serif;
+}
+.clinic-heading > p:last-child {
+  margin: 0 0 26px;
+  max-width: 64ch;
+  line-height: 1.6;
+  color: #536374;
+}
+.clinic-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: 24px;
+}
+.clinic-controls,
+.clinic-reading {
+  min-width: 0;
+}
+.clinic-picker,
+.conjecture-clinic legend {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 9px;
+}
+.conjecture-clinic select {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  padding: 12px 32px 12px 12px;
+  border: 1px solid #7c9188;
+  border-radius: 5px;
+  background: #fff;
+  color: #1b2940;
+  font: inherit;
+  text-overflow: ellipsis;
+}
+.conjecture-clinic h3 {
+  font:
+    600 23px / 1.25 Georgia,
+    serif;
+  margin: 24px 0 14px;
+}
+.conjecture-clinic p {
+  line-height: 1.6;
+}
+.clinic-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #466b5d;
+  margin: 18px 0 8px;
+}
+.clinic-claim {
+  font:
+    23px / 1.5 Georgia,
+    serif;
+  margin: 0 0 10px;
+  color: #172f29;
+}
+.clinic-qualifier,
+.clinic-scope,
+.clinic-start,
+.clinic-boundary,
+.clinic-order,
+.clinic-lifetime,
+.clinic-repair-boundary {
+  color: #536374;
+  font-size: 13px;
+}
+.conjecture-clinic fieldset {
+  border: 0;
+  padding: 0;
+  margin: 24px 0 18px;
+  min-width: 0;
+}
+.clinic-choice {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  padding: 11px 10px;
+  margin: 7px 0;
+  border: 1px solid #d8e0da;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.clinic-choice:has(input:checked) {
+  border-color: #246653;
+  background: #edf5f0;
+}
+.clinic-choice input {
+  flex-shrink: 0;
+  margin: 3px 0 0;
+  accent-color: #246653;
+}
+.clinic-choice small {
+  display: block;
+  color: #536374;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.conjecture-clinic button,
+.clinic-proof-links a,
+.clinic-invitation button {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #71877f;
+  border-radius: 5px;
+  color: #174a3b;
+  background: #fffefa;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.conjecture-clinic .clinic-search {
+  width: 100%;
+  background: #205d4a;
+  color: #fff;
+  border-color: #205d4a;
+  font-weight: 700;
+}
+.conjecture-clinic :is(button, select, input, summary, a):focus-visible,
+.clinic-invitation button:focus-visible {
+  outline: 3px solid #bd6d21;
+  outline-offset: 3px;
+}
+.clinic-evidence {
+  border: 1px solid #d8e0da;
+  border-radius: 8px;
+  padding: 22px;
+  background: #fff;
+}
+.clinic-result-label {
+  display: inline-block;
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #f7eddd;
+  color: #75491f;
+  font-size: 11px;
+  font-weight: 700;
+}
+.clinic-evidence h3 {
+  margin-top: 17px;
+  font-size: 26px;
+}
+.clinic-witness-summary {
+  color: #334e43;
+  font-size: 13px;
+  font-weight: 600;
+}
+.clinic-fact {
+  border-left: 2px solid #c8d6cd;
+  padding-left: 13px;
+  margin: 20px 0;
+}
+.clinic-fact h4 {
+  margin: 0 0 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #536374;
+}
+.clinic-equation {
+  margin: 7px 0;
+  font:
+    18px / 1.6 Georgia,
+    serif;
+}
+.clinic-evidence > p,
+.clinic-proof > p {
+  font-size: 13px;
+}
+.clinic-arithmetic {
+  font-size: 13px;
+  margin: 20px 0;
+}
+.clinic-arithmetic summary {
+  cursor: pointer;
+  color: #205d4a;
+  font-weight: 700;
+  padding: 8px 0;
+}
+.clinic-arithmetic .clinic-equation {
+  font-size: 15px;
+}
+.clinic-arithmetic table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 12px;
+}
+.clinic-arithmetic caption {
+  text-align: left;
+  font-weight: 700;
+  padding-bottom: 10px;
+}
+.clinic-arithmetic :is(th, td) {
+  padding: 6px;
+  border-bottom: 1px solid #d8e0da;
+  text-align: left;
+}
+.clinic-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  border-top: 1px solid #d8e0da;
+  margin: 23px 0 10px;
+  padding-top: 17px;
+}
+.clinic-counts div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.clinic-counts dt {
+  font-size: 10px;
+  color: #536374;
+  line-height: 1.4;
+}
+.clinic-counts dd {
+  margin: 0 0 5px;
+  font:
+    24px Georgia,
+    serif;
+}
+.clinic-finite-boundary {
+  padding: 14px;
+  background: #f7eddd;
+  border-radius: 5px;
+}
+.clinic-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 280px;
+}
+.clinic-empty > span {
+  font:
+    40px Georgia,
+    serif;
+  color: #246653;
+}
+.clinic-empty h3 {
+  max-width: 15ch;
+}
+.clinic-empty p {
+  color: #536374;
+  font-size: 14px;
+}
+.clinic-proof {
+  margin-top: 18px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #edf3eb;
+}
+.clinic-proof .clinic-label {
+  margin-top: 0;
+}
+.clinic-proof h3 {
+  margin: 10px 0 12px;
+  font-size: 22px;
+}
+.clinic-proof-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.clinic-proof-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+}
+.clinic-kept {
+  padding: 16px;
+  margin-top: 24px;
+  border: 1px solid #b9cbbf;
+  border-radius: 8px;
+  background: #f0f5ee;
+}
+.clinic-kept .clinic-label {
+  margin: 0;
+}
+.clinic-kept h3 {
+  margin: 9px 0;
+  font-size: 20px;
+}
+.clinic-kept .clinic-equation {
+  font-size: 15px;
+}
+.clinic-kept > p {
+  font-size: 12px;
+}
+.clinic-admission {
+  font-weight: 600;
+}
+.clinic-boundary {
+  margin: 24px 0 0;
+}
+.clinic-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.clinic-invitation {
+  margin-top: 22px;
+  padding: 16px 18px;
+  border-left: 3px solid #246653;
+  background: #edf5f0;
+}
+.clinic-invitation p {
+  margin-top: 0;
+}
+@media (max-width: 1100px) {
+  .clinic-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .clinic-empty {
+    min-height: 180px;
+  }
+}
+@media (max-width: 600px) {
+  .conjecture-clinic {
+    padding: 18px;
+  }
+  .clinic-evidence,
+  .clinic-proof {
+    padding: 17px;
+  }
+  .clinic-claim {
+    font-size: 21px;
+  }
+  .clinic-equation {
+    font-size: 17px;
+  }
+  .clinic-proof-links > * {
+    width: 100%;
+    text-align: left;
+  }
+}
+.clinic-supported {
+  font-weight: 700;
+  color: #174a3b;
+}

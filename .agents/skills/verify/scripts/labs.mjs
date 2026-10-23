@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { renderedMath, runCase, textIncludes, visible } from './browser.mjs';
+import { conjectureClinic } from './conjecture-clinic.mjs';
 
 async function fill(lab, fields) {
   for (const [label, value] of fields)
@@ -428,6 +429,7 @@ const cases = {
 };
 
 export async function labs(suite) {
+  await conjectureClinic(suite);
   const entries = suite.data.map.lessons.filter((lesson) => lesson.lab);
   assert.deepEqual(
     [...new Set(entries.map((lesson) => lesson.lab))].sort(),

@@ -12,8 +12,10 @@ import {
 import { teachingFor } from './content/teaching';
 import type { Lesson } from './content/types';
 import { MathText } from './MathText';
+import { investigationCatalog } from './math/conjectures';
 import { ProofNotebookOpen } from './ProofNotebookSession';
 import { NextLesson, Practice } from './StudyPanels';
+import { studyStore } from './state';
 
 export function LessonCore({
   lesson,
@@ -163,6 +165,19 @@ export function LessonCore({
                 <p>
                   <MathText text={block.text} />
                 </p>
+                {investigationCatalog()
+                  .filter((item) => item.id === lesson.id)
+                  .map((item) => (
+                    <div className="clinic-invitation" key={item.id}>
+                      <p>What changes when you remove a condition?</p>
+                      <button
+                        type="button"
+                        onClick={() => studyStore.openInvestigation(item.id)}
+                      >
+                        Investigate in Conjecture Clinic →
+                      </button>
+                    </div>
+                  ))}
               </section>
             );
           case 'bridge':
