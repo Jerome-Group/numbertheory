@@ -31,6 +31,8 @@ Require lesson selection to keep focus in the picker. Native popup keyboard beha
 
 After direct loading and repeated lesson changes, require exactly one cue panel, workspace, and claim, one of each source cue control, and closed disclosure, export, and reset controls while each lesson retains its writing, captures, and reflections.
 
+Require all three saved Markdown files to appear in the case references and final size/SHA-256 inventory. Validate an intact relocated bundle. On separate copies, change one payload without changing its length, delete it, and omit it from either inventory while retaining its bytes. Each altered bundle must fail. Keep the original receipt unchanged.
+
 ### Bounded CI source inventory
 
 Practice CI uses complete phone and tablet actors plus four desktop partitions. Run each actor in a fresh external directory:

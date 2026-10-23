@@ -16,6 +16,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import test from 'node:test';
 import { runCase } from '../../.agents/skills/verify/scripts/browser.mjs';
+import { discoverCaseArtifacts } from './browser-artifacts.mjs';
 import {
   planPractice,
   selectPracticeCase,
@@ -362,6 +363,100 @@ test('serialized relocated Practice receipts accept independent builds and full 
     assert.equal(result.hostedAuthentication.status, 'not-evaluated');
     assert.equal(result.nativeWebMCP.status, 'not-evaluated');
   }
+});
+
+test('Practice receipts reject notebook payloads omitted from both artifact inventories', (t) => {
+  const f = bundleFixture(t);
+  const actor = f.actors[0];
+  const record = actor.report.cases.find((item) => item.id === flowIds[0]);
+  writeFileSync(
+    join(actor.directory, record.id, 'proof-notebook.md'),
+    'Original learner argument.\n',
+  );
+  f.save();
+  assert.throws(() => f.validate(), /Case artifact inventory differs/);
+});
+
+test('relocated notebook payloads retain exact digests and reject changed or missing bytes', (t) => {
+  const f = bundleFixture(t);
+  const actor = f.actors[0];
+  const record = actor.report.cases.find((item) => item.id === flowIds[0]);
+  const local = `${record.id}/proof-notebook.md`;
+  const bytes = Buffer.from('Original learner argument.\n');
+  record.artifacts.push(actor.retain(local, bytes));
+  f.save();
+  assert.equal(f.validate().status, 'passed');
+  const file = join(actor.directory, local);
+  const changed = Buffer.from(bytes);
+  changed[0] = 'X'.charCodeAt(0);
+  writeFileSync(file, changed);
+  assert.throws(() => f.validate(), /Artifact digest differs/);
+  writeFileSync(file, bytes);
+  assert.equal(f.validate().status, 'passed');
+  unlinkSync(file);
+  assert.throws(() => f.validate(), /ENOENT/);
+});
+
+test('notebook payload membership cannot be dropped from either inventory', (t) => {
+  for (const omit of ['case', 'global', 'both']) {
+    const f = bundleFixture(t);
+    const actor = f.actors[0];
+    const record = actor.report.cases.find((item) => item.id === flowIds[0]);
+    const file = actor.retain(
+      `${record.id}/proof-notebook.md`,
+      Buffer.from('Exact export.\n'),
+    );
+    record.artifacts.push(file);
+    f.save();
+    assert.equal(f.validate().status, 'passed');
+    if (omit !== 'global')
+      record.artifacts = record.artifacts.filter((path) => path !== file);
+    if (omit !== 'case')
+      actor.report.artifacts = actor.report.artifacts.filter(
+        (item) => item.path !== file,
+      );
+    f.save();
+    assert.throws(
+      () => f.validate(),
+      /artifact inventory differs|unknown artifact/,
+    );
+  }
+});
+
+test('case discovery retains every flat payload and refuses unsafe filesystem entries', (t) => {
+  const root = realpathSync(mkdtempSync(join(tmpdir(), 'nt-case-artifacts-')));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const directory = join(root, 'case');
+  mkdirSync(directory);
+  for (const name of ['proof-notebook.md', 'actions.json', 'screen.png'])
+    writeFileSync(join(directory, name), `Retained ${name}`);
+  writeFileSync(join(root, 'runtime.log'), 'Outside the case.');
+  const expected = ['actions.json', 'proof-notebook.md', 'screen.png'].map(
+    (name) => join(directory, name),
+  );
+  assert.deepEqual(discoverCaseArtifacts(directory), expected);
+  assert.deepEqual(discoverCaseArtifacts(directory), expected);
+  symlinkSync(join(root, 'runtime.log'), join(directory, 'linked.md'));
+  assert.throws(() => discoverCaseArtifacts(directory), /Symlink/);
+  unlinkSync(join(directory, 'linked.md'));
+  mkdirSync(join(directory, 'nested'));
+  assert.throws(
+    () => discoverCaseArtifacts(directory),
+    /nonempty regular artifact/,
+  );
+  rmSync(join(directory, 'nested'), { recursive: true });
+  writeFileSync(join(directory, 'empty.md'), '');
+  assert.throws(
+    () => discoverCaseArtifacts(directory),
+    /nonempty regular artifact/,
+  );
+  unlinkSync(join(directory, 'empty.md'));
+  symlinkSync(directory, join(root, 'linked-case'));
+  assert.throws(
+    () => discoverCaseArtifacts(join(root, 'linked-case')),
+    /Symlink/,
+  );
+  assert.deepEqual(discoverCaseArtifacts(directory), expected);
 });
 
 test('real practice-union CLI reads serialized current-source receipts without a build or browser', (t) => {

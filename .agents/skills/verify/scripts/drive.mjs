@@ -10,6 +10,7 @@ import {
 } from 'node:fs/promises';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { regularBytes } from '../../../../scripts/verification/browser-artifacts.mjs';
 import { planPractice } from '../../../../scripts/verification/practice-partitions.mjs';
 import { loadRepositoryModule } from '../../../../scripts/verification/repo-loader.mjs';
 import {
@@ -440,7 +441,7 @@ async function main() {
         .filter((name) => name === 'instance.json' || name.endsWith('.log'))
         .map((name) => join(output, name)),
     ]) {
-      const bytes = await readFile(file);
+      const bytes = regularBytes(file);
       report.artifacts.push({
         path: file,
         bytes: bytes.length,
