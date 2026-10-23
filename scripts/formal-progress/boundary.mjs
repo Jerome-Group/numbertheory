@@ -7,6 +7,7 @@ import { Script } from 'node:vm';
 import { loadRepositoryModule } from '../verification/repo-loader.mjs';
 
 const accounts = Object.freeze(['account-alpha', 'account-beta']);
+const statuses = Object.freeze([200, 401, 409, 400, 403, 413, 415, 500]);
 
 export const bounds = Object.freeze({
   eventsAfterReady: 9,
@@ -15,7 +16,15 @@ export const bounds = Object.freeze({
   accounts: accounts.length,
   lessonIds: ['P00', 'C02'],
   revisions: [1, 2],
-  outcomes: ['success', 'fetch rejection', 'body rejection'],
+  requests: 3,
+  outcomes: [
+    ...statuses,
+    'conflict',
+    'account_changed',
+    'invalid',
+    'fetch rejection',
+    'body rejection',
+  ],
 });
 
 function document(accountId, revision = bounds.revisions[0]) {
@@ -62,7 +71,15 @@ function createBoundary(script, lessons, schema) {
   const observations = [];
   const violations = [];
   const allowed = new Set();
+  const outcomes = {};
+  const reached = (key) => {
+    outcomes[key] = (outcomes[key] ?? 0) + 1;
+  };
   let epoch = 0;
+  function retire() {
+    epoch++;
+    allowed.clear();
+  }
   const exported = {};
   script.runInNewContext({
     exports: exported,
@@ -83,6 +100,7 @@ function createBoundary(script, lessons, schema) {
     fetch(url, init) {
       assert.equal(url, '/api/progress');
       const method = init.method ?? 'GET';
+      if (method === 'GET') retire();
       let resolve;
       let reject;
       const promise = new Promise((yes, no) => {
@@ -123,8 +141,7 @@ function createBoundary(script, lessons, schema) {
 
   async function step(action) {
     if (action.kind === 'reload' || action.kind === 'clear') {
-      epoch++;
-      allowed.clear();
+      retire();
       if (action.kind === 'reload') void store.reload();
       else store.clearSession();
     } else if (action.kind === 'write') {
@@ -140,12 +157,17 @@ function createBoundary(script, lessons, schema) {
       assert.ok(request, `Missing request ${action.request}`);
       if (action.kind === 'headers') {
         assert.equal(request.phase, 'fetch');
+        assert.ok(statuses.includes(action.status));
         request.phase = 'headers';
+        request.status = action.status;
+        reached(`${request.method}:headers:${action.status}`);
+        if (action.status === 401 && request.epoch === epoch) retire();
         request.resolve({
-          status: 200,
-          ok: true,
+          status: action.status,
+          ok: action.status === 200,
           json() {
             request.phase = 'json';
+            reached(`${request.method}:json:${request.status}`);
             return new Promise((resolve, reject) => {
               request.resolveJson = resolve;
               request.rejectJson = reject;
@@ -154,35 +176,62 @@ function createBoundary(script, lessons, schema) {
         });
       } else if (action.kind === 'body') {
         assert.equal(request.phase, 'json');
-        const accountId = request.accountId ?? accounts[action.owner];
-        const value = document(
-          accountId,
-          bounds.revisions[request.method === 'GET' ? 0 : 1],
-        );
-        if (request.epoch === epoch) allowed.add(JSON.stringify(value));
+        let value;
+        if (request.status === 200) {
+          assert.equal(action.body.kind, 'document');
+          const accountId = request.accountId ?? accounts[action.body.owner];
+          value = document(
+            accountId,
+            bounds.revisions[request.method === 'GET' ? 0 : 1],
+          );
+          if (request.epoch === epoch) allowed.add(JSON.stringify(value));
+        } else {
+          assert.equal(request.status, 409);
+          assert.equal(request.method, 'PATCH');
+          assert.ok(
+            ['conflict', 'account_changed', 'invalid'].includes(
+              action.body.kind,
+            ),
+          );
+          value = { code: action.body.kind };
+          if (action.body.kind === 'account_changed' && request.epoch === epoch)
+            retire();
+        }
+        reached(`${request.method}:body:${request.status}:${action.body.kind}`);
         request.phase = 'done';
         request.resolveJson(value);
       } else if (action.kind === 'reject') {
         assert.equal(request.phase, 'fetch');
         request.phase = 'done';
+        reached(`${request.method}:fetch-rejection`);
         request.reject(new Error('Generated fetch rejection.'));
       } else if (action.kind === 'reject-body') {
         assert.equal(request.phase, 'json');
         request.phase = 'done';
+        reached(`${request.method}:body-rejection:${request.status}`);
         request.rejectJson(new Error('Generated body rejection.'));
       } else assert.fail(`Unknown action ${action.kind}`);
     }
     await setImmediate();
+    for (const request of requests) {
+      if (request.phase === 'headers') request.phase = 'done';
+    }
+    assert.ok(requests.length <= bounds.requests, 'Request bound exceeded.');
     observe();
   }
 
   async function bootstrap() {
     void store.reload();
-    await step({ kind: 'headers', request: 0 });
-    await step({ kind: 'body', request: 0, owner: 0 });
+    await step({ kind: 'headers', request: 0, status: 200 });
+    await step({
+      kind: 'body',
+      request: 0,
+      body: { kind: 'document', owner: 0 },
+    });
     assert.equal(store.getStatusSnapshot().kind, 'ready');
     requests.length = 0;
     observations.length = 0;
+    for (const key of Object.keys(outcomes)) delete outcomes[key];
   }
 
   function choices(actions) {
@@ -200,23 +249,35 @@ function createBoundary(script, lessons, schema) {
       result.push({ kind: 'write' });
     for (const [request, value] of requests.entries()) {
       if (value.phase === 'fetch') {
-        result.push({ kind: 'headers', request }, { kind: 'reject', request });
+        for (const status of statuses)
+          result.push({ kind: 'headers', request, status });
+        result.push({ kind: 'reject', request });
       }
       if (value.phase === 'json') {
-        result.push(
-          { kind: 'body', request, owner: 0 },
-          { kind: 'reject-body', request },
-        );
-        if (value.method === 'GET') {
-          for (let owner = 1; owner < accounts.length; owner++)
-            result.push({ kind: 'body', request, owner });
-        }
+        result.push({ kind: 'reject-body', request });
+        const bodies =
+          value.status === 200
+            ? value.method === 'GET'
+              ? accounts.map((_, owner) => ({ kind: 'document', owner }))
+              : [{ kind: 'document', owner: 0 }]
+            : ['conflict', 'account_changed', 'invalid'].map((kind) => ({
+                kind,
+              }));
+        for (const body of bodies) result.push({ kind: 'body', request, body });
       }
     }
     return result;
   }
 
-  return { bootstrap, step, choices, requests, observations, violations };
+  return {
+    bootstrap,
+    step,
+    choices,
+    requests,
+    observations,
+    violations,
+    outcomes,
+  };
 }
 
 export async function replay(createBoundary, actions) {
@@ -234,5 +295,10 @@ export async function replay(createBoundary, actions) {
       };
     }
   }
-  return { passed: true, choices: boundary.choices(actions) };
+  return {
+    passed: true,
+    choices: boundary.choices(actions),
+    outcomes: boundary.outcomes,
+    final: boundary.observations.at(-1),
+  };
 }
