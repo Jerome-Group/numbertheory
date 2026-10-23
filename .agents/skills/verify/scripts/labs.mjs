@@ -349,7 +349,21 @@ const cases = {
       await lab
         .getByRole('button', { name: 'Build lattice count', exact: true })
         .click();
-      await math(lab, 'S_31(29)+S_29(31)=105+105=210');
+      await math(lab, 'S_{31}(29)+S_{29}(31)=105+105=210');
+      assert.deepEqual(
+        await lab
+          .locator('.group-lab__summary--lattice .katex:visible msub')
+          .evaluateAll((scripts) =>
+            scripts.map((script) =>
+              [...script.children].map((child) => child.textContent),
+            ),
+          ),
+        [
+          ['S', '31'],
+          ['S', '29'],
+        ],
+        'Lattice summary must render each complete prime as its subscript',
+      );
       await visible(
         lab.getByRole('img', {
           name: /^Lattice rectangle with 15 columns and 14 rows\./,
@@ -361,6 +375,33 @@ const cases = {
           .count(),
         210,
       );
+      await lab
+        .getByRole('button', {
+          name: 'Open coordinates and parity proof',
+          exact: true,
+        })
+        .click();
+      const proof = lab.locator('.group-lab__proof');
+      await math(proof, 'S_{31}(29)=105');
+      await math(proof, 'S_{29}(31)=105');
+      await math(proof, '\\chi_{31}(29)=(-1)^{105}=−1');
+      await math(proof, '\\chi_{29}(31)=(-1)^{105}=−1');
+      assert.deepEqual(
+        await proof
+          .locator('.katex:visible msub')
+          .evaluateAll((scripts) =>
+            scripts.map((script) =>
+              [...script.children].map((child) => child.textContent),
+            ),
+          ),
+        [
+          ['S', '31'],
+          ['S', '29'],
+          ['χ', '31'],
+          ['χ', '29'],
+        ],
+        'Floor and character proofs must render each complete prime as its subscript',
+      );
       await fill(lab, [
         ['Distinct odd prime q, from three to thirty-one', '31'],
       ]);
@@ -368,7 +409,7 @@ const cases = {
         .getByRole('button', { name: 'Build lattice count', exact: true })
         .click();
       await textIncludes(lab.getByRole('alert'), 'Choose distinct odd primes.');
-      await math(lab, 'S_31(29)+S_29(31)=105+105=210');
+      await math(lab, 'S_{31}(29)+S_{29}(31)=105+105=210');
       await fill(lab, [
         ['Odd prime p, from three to thirty-one', '3'],
         ['Distinct odd prime q, from three to thirty-one', '7'],
@@ -383,7 +424,27 @@ const cases = {
           exact: true,
         })
         .click();
-      await math(lab, 'S_3(7)+S_7(3)=2+1=3');
+      await math(lab, 'S_{3}(7)+S_{7}(3)=2+1=3');
+      assert.deepEqual(
+        await lab
+          .locator(
+            '.group-lab__summary--lattice .katex:visible msub, .group-lab__proof .katex:visible msub',
+          )
+          .evaluateAll((scripts) =>
+            scripts.map((script) =>
+              [...script.children].map((child) => child.textContent),
+            ),
+          ),
+        [
+          ['S', '3'],
+          ['S', '7'],
+          ['S', '3'],
+          ['S', '7'],
+          ['χ', '3'],
+          ['χ', '7'],
+        ],
+        'Single-digit prime subscripts must survive the maximum-pair recovery',
+      );
     },
     invalid: [['Odd prime p, from three to thirty-one', '7']],
   },
