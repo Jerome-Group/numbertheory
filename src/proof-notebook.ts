@@ -123,8 +123,11 @@ export function reduceNotebook(
 }
 
 function literal(text: string): string {
-  const runs = text.match(/`+/g) ?? [];
-  const fence = '`'.repeat(Math.max(3, ...runs.map((run) => run.length + 1)));
+  let fenceLength = 3;
+  for (const [run] of text.matchAll(/`+/g)) {
+    fenceLength = Math.max(fenceLength, run.length + 1);
+  }
+  const fence = '`'.repeat(fenceLength);
   return `${fence}text\n${text}${text.endsWith('\n') ? '' : '\n'}${fence}`;
 }
 
