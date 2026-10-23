@@ -129,6 +129,47 @@ test('shows only acknowledged marks and admits one local write', async () => {
   assert.deepEqual(states, ['saving', 'ready']);
 });
 
+test('refresh during a write clears private state and fences its acknowledgement before the queued read', async () => {
+  const b = boundary();
+  const accountId = await b.load(
+    document('account-alpha', 1, { P00: 'complete' }),
+  );
+  const saving = b.store.set({ accountId, lessonId: 'C02', status: 'review' });
+  await b.store.reload();
+  await b.store.reload();
+  assert.equal(b.store.getStatusSnapshot().kind, 'loading');
+  assert.equal('accountId' in b.store.getStatusSnapshot(), false);
+  assert.equal(Object.keys(b.store.getSnapshot()).length, 0);
+  assert.equal(b.requests.length, 2);
+  const publications: string[] = [];
+  const refreshed = new Promise<void>((resolve) => {
+    const unsubscribe = b.store.subscribe(() => {
+      const status = b.store.getStatusSnapshot();
+      publications.push('accountId' in status ? status.accountId : status.kind);
+      if (status.kind === 'ready') {
+        unsubscribe();
+        resolve();
+      }
+    });
+  });
+  b.requests[1].resolve(
+    Response.json(
+      document('account-alpha', 2, { P00: 'complete', C02: 'review' }),
+    ),
+  );
+  assert.equal(await saving, false);
+  assert.equal(Object.keys(b.store.getSnapshot()).length, 0);
+  assert.equal(b.requests.length, 3);
+  assert.equal(b.requests[2].init.method, undefined);
+  b.requests[2].resolve(
+    Response.json(document('account-beta', 3, { C02: 'complete' })),
+  );
+  await refreshed;
+  assert.deepEqual(publications, ['loading', 'account-beta']);
+  assert.equal(b.store.getSnapshot().C02, 'complete');
+  assert.equal(b.store.getSnapshot().P00, undefined);
+});
+
 test('a restored page refreshes the current account after an outstanding write settles', async () => {
   const b = boundary();
   const accountId = await b.load(
