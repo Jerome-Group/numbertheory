@@ -58,8 +58,9 @@ export function CrtClocks({ crt }: { crt: CrtResult }) {
       <strong>Two residue clocks</strong>
       <p>
         The hands mark <MathText text={`\\(${crt.a}\\pmod{${crt.m}}\\)`} /> and{' '}
-        <MathText text={`\\(${crt.b}\\pmod{${crt.n}}\\)`} />. The grid below
-        scans a period for an integer meeting both marks.
+        <MathText text={`\\(${crt.b}\\pmod{${crt.n}}\\)`} />. The residue grid
+        appears only for periods of at most 36. Use the exact result above for
+        larger periods.
       </p>
       <svg
         viewBox="0 0 560 215"

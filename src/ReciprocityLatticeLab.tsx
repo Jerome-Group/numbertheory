@@ -139,7 +139,7 @@ export function ReciprocityLatticeLab({
         </span>
         <strong>
           <MathText
-            text={`\\(S_${result.p}(${result.q})+S_${result.q}(${result.p})=${result.countBelow}+${result.countAbove}=${result.parityExponent}\\)`}
+            text={`\\(S_{${result.p}}(${result.q})+S_{${result.q}}(${result.p})=${result.countBelow}+${result.countAbove}=${result.parityExponent}\\)`}
           />
         </strong>
       </div>
@@ -164,11 +164,11 @@ export function ReciprocityLatticeLab({
             <p>
               The floor rows give{' '}
               <MathText
-                text={`\\(S_${result.p}(${result.q})=${result.floorSumPq}\\)`}
+                text={`\\(S_{${result.p}}(${result.q})=${result.floorSumPq}\\)`}
               />{' '}
               and{' '}
               <MathText
-                text={`\\(S_${result.q}(${result.p})=${result.floorSumQp}\\)`}
+                text={`\\(S_{${result.q}}(${result.p})=${result.floorSumQp}\\)`}
               />
               . No lattice point lies on <MathText text={'\\(py=qx\\)'} />, so
               the two counts partition the rectangle:{' '}
@@ -180,11 +180,11 @@ export function ReciprocityLatticeLab({
             <p>
               The Gauss floor-parity bridge gives{' '}
               <MathText
-                text={`\\(\\chi_${result.p}(${result.q})=(-1)^{${result.floorSumPq}}=${signed(result.gaussSignPq)}\\)`}
+                text={`\\(\\chi_{${result.p}}(${result.q})=(-1)^{${result.floorSumPq}}=${signed(result.gaussSignPq)}\\)`}
               />{' '}
               and{' '}
               <MathText
-                text={`\\(\\chi_${result.q}(${result.p})=(-1)^{${result.floorSumQp}}=${signed(result.gaussSignQp)}\\)`}
+                text={`\\(\\chi_{${result.q}}(${result.p})=(-1)^{${result.floorSumQp}}=${signed(result.gaussSignQp)}\\)`}
               />
               . Their product is {signed(result.symbolProduct)}, which matches{' '}
               <MathText
@@ -207,8 +207,8 @@ export function ReciprocityLatticeLab({
         </div>
       )}
       <p className="group-lab__limit">
-        The exact grid is capped at 31; the largest half-rectangle has 225
-        points.
+        For distinct odd primes up to 31, the largest half-rectangle has 210
+        points, at 31 and 29.
       </p>
     </section>
   );

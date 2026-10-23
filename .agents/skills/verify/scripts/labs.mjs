@@ -124,7 +124,48 @@ const cases = {
       ['Second modulus', '9'],
     ],
     submit: 'Solve system',
-    verify: async (lab) => math(lab, 'x\\equiv8\\pmod{18}'),
+    verify: async (lab) => {
+      await math(lab, 'x\\equiv8\\pmod{18}');
+      await visible(lab.locator('.residue-visual'));
+      assert.equal(await lab.locator('.residue-cells > span').count(), 18);
+      await textIncludes(
+        lab.locator('.crt-clocks p'),
+        'The residue grid appears only for periods of at most 36.',
+      );
+      await fill(lab, [
+        ['First residue', '0'],
+        ['First modulus', '11'],
+        ['Second residue', '0'],
+        ['Second modulus', '12'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Solve system', exact: true })
+        .click();
+      await math(lab, 'x\\equiv0\\pmod{132}');
+      await visible(
+        lab.getByRole('img', {
+          name: 'Residue clocks modulo 11 and 12, marking 0 and 0',
+          exact: true,
+        }),
+      );
+      assert.equal(await lab.locator('.residue-visual').count(), 0);
+      await textIncludes(
+        lab.locator('.crt-clocks p'),
+        'Use the exact result above for larger periods.',
+      );
+      await fill(lab, [
+        ['First residue', '2'],
+        ['First modulus', '6'],
+        ['Second residue', '8'],
+        ['Second modulus', '9'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Solve system', exact: true })
+        .click();
+      await math(lab, 'x\\equiv8\\pmod{18}');
+      await visible(lab.locator('.residue-visual'));
+      assert.equal(await lab.locator('.residue-cells > span').count(), 18);
+    },
     negative: [
       ['First residue', '1'],
       ['First modulus', '4'],
@@ -297,13 +338,113 @@ const cases = {
     ],
     submit: 'Build lattice count',
     verify: async (lab) => {
+      await textIncludes(
+        lab.locator('.group-lab__limit'),
+        'the largest half-rectangle has 210 points, at 31 and 29.',
+      );
+      await fill(lab, [
+        ['Odd prime p, from three to thirty-one', '31'],
+        ['Distinct odd prime q, from three to thirty-one', '29'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Build lattice count', exact: true })
+        .click();
+      await math(lab, 'S_{31}(29)+S_{29}(31)=105+105=210');
+      assert.deepEqual(
+        await lab
+          .locator('.group-lab__summary--lattice .katex:visible msub')
+          .evaluateAll((scripts) =>
+            scripts.map((script) =>
+              [...script.children].map((child) => child.textContent),
+            ),
+          ),
+        [
+          ['S', '31'],
+          ['S', '29'],
+        ],
+        'Lattice summary must render each complete prime as its subscript',
+      );
+      await visible(
+        lab.getByRole('img', {
+          name: /^Lattice rectangle with 15 columns and 14 rows\./,
+        }),
+      );
+      assert.equal(
+        await lab
+          .locator('.group-lab__lattice-below, .group-lab__lattice-above')
+          .count(),
+        210,
+      );
       await lab
         .getByRole('button', {
           name: 'Open coordinates and parity proof',
           exact: true,
         })
         .click();
-      await math(lab, 'S_3(7)+S_7(3)=2+1=3');
+      const proof = lab.locator('.group-lab__proof');
+      await math(proof, 'S_{31}(29)=105');
+      await math(proof, 'S_{29}(31)=105');
+      await math(proof, '\\chi_{31}(29)=(-1)^{105}=−1');
+      await math(proof, '\\chi_{29}(31)=(-1)^{105}=−1');
+      assert.deepEqual(
+        await proof
+          .locator('.katex:visible msub')
+          .evaluateAll((scripts) =>
+            scripts.map((script) =>
+              [...script.children].map((child) => child.textContent),
+            ),
+          ),
+        [
+          ['S', '31'],
+          ['S', '29'],
+          ['χ', '31'],
+          ['χ', '29'],
+        ],
+        'Floor and character proofs must render each complete prime as its subscript',
+      );
+      await fill(lab, [
+        ['Distinct odd prime q, from three to thirty-one', '31'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Build lattice count', exact: true })
+        .click();
+      await textIncludes(lab.getByRole('alert'), 'Choose distinct odd primes.');
+      await math(lab, 'S_{31}(29)+S_{29}(31)=105+105=210');
+      await fill(lab, [
+        ['Odd prime p, from three to thirty-one', '3'],
+        ['Distinct odd prime q, from three to thirty-one', '7'],
+      ]);
+      await lab
+        .getByRole('button', { name: 'Build lattice count', exact: true })
+        .click();
+      assert.equal(await lab.getByRole('alert').count(), 0);
+      await lab
+        .getByRole('button', {
+          name: 'Open coordinates and parity proof',
+          exact: true,
+        })
+        .click();
+      await math(lab, 'S_{3}(7)+S_{7}(3)=2+1=3');
+      assert.deepEqual(
+        await lab
+          .locator(
+            '.group-lab__summary--lattice .katex:visible msub, .group-lab__proof .katex:visible msub',
+          )
+          .evaluateAll((scripts) =>
+            scripts.map((script) =>
+              [...script.children].map((child) => child.textContent),
+            ),
+          ),
+        [
+          ['S', '3'],
+          ['S', '7'],
+          ['S', '3'],
+          ['S', '7'],
+          ['χ', '3'],
+          ['χ', '7'],
+        ],
+        'Single-digit prime subscripts must survive the maximum-pair recovery',
+      );
     },
     invalid: [['Odd prime p, from three to thirty-one', '7']],
   },
