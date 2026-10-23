@@ -497,6 +497,8 @@ export const studyStore = {
   },
   setCancellationMap(modulus: string, factor: string) {
     const fiberMap = buildCancellationMap(modulus, factor);
+    if (state.view !== 'lesson' || state.lessonId !== 'C02')
+      navigationRevision++;
     state = {
       ...state,
       view: 'lesson',
