@@ -95,14 +95,14 @@ function clearChangedAccount() {
 }
 
 async function reload() {
+  const requestGeneration = ++generation;
+  const previous = confirmedAccount;
+  publish({ kind: 'loading' }, {});
   if (writing) {
     reloadRequested = true;
     return;
   }
   reloadRequested = false;
-  const requestGeneration = ++generation;
-  const previous = confirmedAccount;
-  publish({ kind: 'loading' }, {});
   try {
     const response = await fetch('/api/progress', {
       credentials: 'same-origin',
