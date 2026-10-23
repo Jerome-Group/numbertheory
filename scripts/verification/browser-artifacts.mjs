@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync, realpathSync } from 'node:fs';
+import { lstatSync, readdirSync, readFileSync, realpathSync } from 'node:fs';
 import {
   basename,
   dirname,
@@ -32,6 +32,24 @@ export function regularBytes(path) {
     `Expected nonempty regular artifact ${path}`,
   );
   return readFileSync(path);
+}
+
+export function discoverCaseArtifacts(directory) {
+  assert(isAbsolute(directory), 'Case artifact directory must be absolute');
+  assert.equal(
+    realpathSync(directory),
+    resolve(directory),
+    'Symlink in case artifact directory',
+  );
+  const files = readdirSync(directory)
+    .sort()
+    .map((name) => {
+      const file = join(directory, name);
+      regularBytes(file);
+      return file;
+    });
+  assert(files.length > 0, 'Case artifact directory is empty');
+  return files;
 }
 
 function within(root, path) {
@@ -85,6 +103,7 @@ export function validateArtifacts(report, directory) {
     destinations.add(destination);
   }
   const references = new Set();
+  const caseDirectories = new Set();
   for (const record of report.cases) {
     assert(
       Array.isArray(record.artifacts) && record.artifacts.length > 0,
@@ -102,6 +121,27 @@ export function validateArtifacts(report, directory) {
       );
       references.add(path);
     }
+    const actions = record.artifacts.filter(
+      (path) => basename(path) === 'actions.json',
+    );
+    assert.equal(actions.length, 1, 'Case requires one actions artifact');
+    within(original, dirname(actions[0]));
+    const caseDirectory = dirname(artifacts.get(actions[0]));
+    assert(!caseDirectories.has(caseDirectory), 'Duplicate case directory');
+    caseDirectories.add(caseDirectory);
+    const physical = discoverCaseArtifacts(caseDirectory);
+    assert.deepEqual(
+      record.artifacts.map((path) => artifacts.get(path)).sort(),
+      physical,
+      `Case artifact inventory differs for ${record.id}`,
+    );
+    assert.deepEqual(
+      [...artifacts.values()]
+        .filter((path) => dirname(path) === caseDirectory)
+        .sort(),
+      physical,
+      `Global artifact inventory differs for ${record.id}`,
+    );
   }
   return {
     instance: JSON.parse(regularBytes(artifacts.get(instances[0].path))),

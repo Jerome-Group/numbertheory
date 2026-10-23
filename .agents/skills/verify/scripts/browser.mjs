@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { discoverCaseArtifacts } from '../../../../scripts/verification/browser-artifacts.mjs';
 import { selectPracticeCase } from '../../../../scripts/verification/practice-partitions.mjs';
 import { doctor, hash, save } from './runtime.mjs';
 
@@ -332,7 +333,6 @@ export async function runCase(
     const capture = async (name, callback) => {
       try {
         await callback(join(directory, name));
-        record.artifacts.push(`${directory}/${name}`);
       } catch (error) {
         record.captureErrors ??= [];
         record.captureErrors.push(`${name}: ${error.message}`);
@@ -364,6 +364,13 @@ export async function runCase(
     await capture('actions.json', (file) =>
       save(file, { events, errors, url: page.url() }),
     );
+    try {
+      record.artifacts = discoverCaseArtifacts(directory);
+    } catch (error) {
+      record.captureErrors ??= [];
+      record.captureErrors.push(`Artifact discovery: ${error.message}`);
+      record.status = 'failed';
+    }
   }
   record.finishedAt = new Date().toISOString();
   suite.report.cases.push(record);
