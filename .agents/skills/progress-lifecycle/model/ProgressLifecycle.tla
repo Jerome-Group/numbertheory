@@ -19,6 +19,12 @@ Invalidate(state) ==
   [state EXCEPT !.generation = @ + 1, !.requiredEpoch = @ + 1,
                 !.visibleEpoch = -1, !.visibleOwner = "none", !.kind = "loading"]
 
+SessionInvalidation(state) ==
+  [Invalidate(state) EXCEPT !.queued = FALSE, !.kind = "anonymous"]
+
+AccountInvalidation(state) ==
+  [Invalidate(state) EXCEPT !.kind = "unavailable"]
+
 BeginRead(state) ==
   LET next == Invalidate(state)
   IN [next EXCEPT !.queued = FALSE,
@@ -34,8 +40,7 @@ Reload ==
 
 ClearSession ==
   /\ s.invalidations < MaxInvalidations
-  /\ s' = [Invalidate(s) EXCEPT !.queued = FALSE, !.kind = "anonymous",
-                               !.invalidations = @ + 1]
+  /\ s' = [SessionInvalidation(s) EXCEPT !.invalidations = @ + 1]
 
 BeginWrite ==
   /\ s.writes < MaxWrites
@@ -48,50 +53,78 @@ BeginWrite ==
                     !.requests = Append(@, Request("write", s.generation,
                                                    s.requiredEpoch, s.visibleOwner))]
 
-Complete(state, id, publish, owner, failed) ==
+Complete(state, id, outcome, owner) ==
   LET request == state.requests[id]
-      current == request.generation = state.generation
-      published == IF publish
+      private == outcome \in {"ready", "conflict", "error", "uncertain"}
+      published == IF private
                    THEN [state EXCEPT !.visibleEpoch = request.epoch,
-                                      !.visibleOwner = owner, !.kind = "ready",
+                                      !.visibleOwner = owner, !.kind = outcome,
                                       !.badPublish = @ \/ request.epoch # state.requiredEpoch]
-                   ELSE IF failed /\ current
-                        THEN [state EXCEPT !.kind = IF request.kind = "write"
-                                                   THEN "uncertain" ELSE "unavailable"]
+                   ELSE IF outcome = "unavailable"
+                        THEN [state EXCEPT !.kind = "unavailable"]
                         ELSE state
       finished == [published EXCEPT !.requests[id].phase = "done",
                                     !.writing = IF request.kind = "write" THEN 0 ELSE @]
   IN IF request.kind = "write" /\ state.queued THEN BeginRead(finished) ELSE finished
 
-Headers(id) ==
+Failure(state, id, outcome) ==
+  Complete(state, id, IF state.requests[id].kind = "write" THEN outcome ELSE "unavailable",
+           state.requests[id].owner)
+
+Headers(id, outcome) ==
   /\ s.requests[id].phase = "fetch"
   /\ s' = IF s.requests[id].generation # s.generation
-          THEN Complete(s, id, FALSE, "none", FALSE)
-          ELSE [s EXCEPT !.requests[id].phase = "json"]
+          THEN Complete(s, id, "ignored", "none")
+          ELSE CASE outcome = "success" -> [s EXCEPT !.requests[id].phase = "json"]
+                 [] outcome = "unauthorized" -> Complete(SessionInvalidation(s), id, "ignored", "none")
+                 [] outcome = "conflict" /\ s.requests[id].kind = "write" ->
+                      [s EXCEPT !.requests[id].phase = "conflict-json"]
+                 [] outcome = "rejected" -> Failure(s, id, "error")
+                 [] OTHER -> Failure(s, id, "uncertain")
 
 Body(id, owner) ==
   /\ s.requests[id].phase = "json"
   /\ s.requests[id].kind = "read" \/ owner = s.requests[id].owner
-  /\ s' = Complete(s, id, s.requests[id].generation = s.generation, owner, FALSE)
+  /\ s' = Complete(s, id, IF s.requests[id].generation = s.generation
+                           THEN "ready" ELSE "ignored", owner)
+
+ConflictBody(id, code) ==
+  LET current == s.requests[id].generation = s.generation
+  IN /\ s.requests[id].phase = "conflict-json"
+     /\ s' = IF ~current THEN Complete(s, id, "ignored", "none")
+             ELSE CASE code = "conflict" -> Complete(s, id, "conflict", s.requests[id].owner)
+                    [] code = "account_changed" -> Complete(AccountInvalidation(s), id, "ignored", "none")
+                    [] OTHER -> Failure(s, id, "uncertain")
 
 Reject(id) ==
-  /\ s.requests[id].phase \in {"fetch", "json"}
-  /\ s' = Complete(s, id, FALSE, "none", TRUE)
+  /\ s.requests[id].phase \in {"fetch", "json", "conflict-json"}
+  /\ s' = IF s.requests[id].generation = s.generation
+          THEN Failure(s, id, "uncertain") ELSE Complete(s, id, "ignored", "none")
 
 Next ==
   Reload \/ ClearSession \/ BeginWrite \/
   (\E id \in 1..Len(s.requests):
-    Headers(id) \/ Reject(id) \/ (\E owner \in Accounts: Body(id, owner)))
+    (\E outcome \in {"success", "unauthorized", "conflict", "rejected", "failure"}: Headers(id, outcome)) \/
+    Reject(id) \/ (\E owner \in Accounts: Body(id, owner)) \/
+    (\E code \in {"conflict", "account_changed", "invalid"}: ConflictBody(id, code)))
+
+EpochBound == MaxInvalidations + MaxRequests + MaxWrites
 
 TypeOK ==
-  /\ s.generation \in 0..(MaxInvalidations + MaxWrites)
-  /\ s.requiredEpoch \in 0..(MaxInvalidations + MaxWrites)
-  /\ s.visibleEpoch \in {-1} \cup 0..(MaxInvalidations + MaxWrites)
+  /\ s.generation \in 0..EpochBound
+  /\ s.requiredEpoch \in 0..EpochBound
+  /\ s.visibleEpoch \in {-1} \cup 0..EpochBound
   /\ s.visibleOwner \in Accounts \cup {"none"}
-  /\ s.kind \in {"ready", "saving", "loading", "anonymous", "error", "uncertain", "unavailable"}
+  /\ s.kind \in {"ready", "saving", "loading", "anonymous", "error", "uncertain", "unavailable", "conflict"}
   /\ s.writing \in 0..MaxRequests
   /\ s.queued \in BOOLEAN
   /\ Len(s.requests) <= MaxRequests
+  /\ \A id \in 1..Len(s.requests):
+       /\ s.requests[id].kind \in {"read", "write"}
+       /\ s.requests[id].phase \in {"fetch", "json", "conflict-json", "done"}
+       /\ s.requests[id].generation \in 0..EpochBound
+       /\ s.requests[id].epoch \in 0..EpochBound
+       /\ s.requests[id].owner \in Accounts \cup {"none"}
   /\ s.invalidations \in 0..MaxInvalidations
   /\ s.writes \in 0..MaxWrites
   /\ s.badPublish \in BOOLEAN

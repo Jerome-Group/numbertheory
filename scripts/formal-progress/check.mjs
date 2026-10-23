@@ -44,6 +44,8 @@ mkdirSync(output, { recursive: true });
 const hash = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const digest = (path) => hash(readFileSync(join(root, path)));
 
+const startedAt = new Date().toISOString();
+const start = performance.now();
 try {
   const coverage = JSON.parse(
     readFileSync(join(skill, 'coverage.json'), 'utf8'),
@@ -82,6 +84,17 @@ try {
       modelControl.caught &&
       replay.passed &&
       mutations.passed,
+    startedAt,
+    runtimeMs: performance.now() - start,
+    checkerFiles: Object.fromEntries(
+      [
+        'check.mjs',
+        'explore.mjs',
+        'boundary.mjs',
+        'mutations.mjs',
+        'tlc.mjs',
+      ].map((name) => [name, digest(`scripts/formal-progress/${name}`)]),
+    ),
     property: coverage.property,
     source,
     sourceUnchanged,

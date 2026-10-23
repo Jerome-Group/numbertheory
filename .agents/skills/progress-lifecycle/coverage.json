@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "property": "PrivateStateCurrent",
-  "syncCommit": "9e68db0def0ac4b7d1ceaa6ce9fde5357411e18d",
+  "syncCommit": "f93e7cd7d97e607b8e45a226c1a95d3c9b4d0a53",
   "sourceFiles": {
     "src/progress.ts": "22ad4419d69f1efeb427031cb5fd5d68ba3ca4b0baf5a84b4cc016548ee64443",
     "src/AccountControls.tsx": "09abf611228061e03b209927351fc045aa821cbcf0a63fe2bf5c73eb96922388"

@@ -98,27 +98,47 @@ export function checkModelControl(jar, modelDirectory, output) {
     join(modelDirectory, 'ProgressLifecycle.tla'),
     'utf8',
   );
-  const before =
-    'THEN [Invalidate(s) EXCEPT !.queued = TRUE, !.invalidations = @ + 1]';
-  assert.equal(
-    source.split(before).length,
-    2,
-    'Model regression anchor changed.',
-  );
-  const broken = source.replace(
-    before,
-    'THEN [s EXCEPT !.requiredEpoch = @ + 1, !.queued = TRUE, !.invalidations = @ + 1]',
-  );
-  writeFileSync(join(output, 'ProgressLifecycle.tla'), broken);
-  writeFileSync(
-    join(output, 'ProgressLifecycle.cfg'),
-    readFileSync(join(modelDirectory, 'ProgressLifecycle.cfg')),
-  );
-  const result = modelCheck(jar, output, join(output, 'run'));
-  return {
-    caught:
-      result.exitCode !== 0 &&
-      result.violatedProperty === 'PrivateStateCurrent',
-    result,
-  };
+  const controls = [
+    {
+      name: 'queued-reload-retains-private-state',
+      before:
+        'THEN [Invalidate(s) EXCEPT !.queued = TRUE, !.invalidations = @ + 1]',
+      after:
+        'THEN [s EXCEPT !.requiredEpoch = @ + 1, !.queued = TRUE, !.invalidations = @ + 1]',
+    },
+    {
+      name: 'conflict-body-ignores-generation',
+      before: 'LET current == s.requests[id].generation = s.generation',
+      after: 'LET current == TRUE',
+    },
+  ];
+  const original = modelCheck(jar, modelDirectory, join(output, 'original'));
+  const results = controls.map(({ name, before, after }) => {
+    assert.equal(
+      source.split(before).length,
+      2,
+      `Model regression anchor changed: ${name}`,
+    );
+    const directory = join(output, name);
+    mkdirSync(directory, { recursive: true });
+    writeFileSync(
+      join(directory, 'ProgressLifecycle.tla'),
+      source.replace(before, after),
+    );
+    writeFileSync(
+      join(directory, 'ProgressLifecycle.cfg'),
+      readFileSync(join(modelDirectory, 'ProgressLifecycle.cfg')),
+    );
+    const result = modelCheck(jar, directory, join(directory, 'run'));
+    return {
+      name,
+      original,
+      caught:
+        original.passed &&
+        result.exitCode !== 0 &&
+        result.violatedProperty === 'PrivateStateCurrent',
+      result,
+    };
+  });
+  return { caught: results.every(({ caught }) => caught), results };
 }
