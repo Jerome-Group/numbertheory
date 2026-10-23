@@ -43,6 +43,18 @@ jobs:
         if: always()
         run: node scripts/verification/summary.mjs "$RUNNER_TEMP/numbertheory-verification.json" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Check the private progress lifecycle
+        run: npm run formal:progress -- --output "$RUNNER_TEMP/numbertheory-progress-formal"
+
+      - name: Retain progress model evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: numbertheory-progress-formal-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/numbertheory-progress-formal
+          if-no-files-found: error
+          retention-days: 14
+
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 10

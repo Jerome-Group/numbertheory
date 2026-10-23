@@ -1,0 +1,13 @@
+# Account progress ordering verification
+
+Account progress is the strongest small verification target found in this source audit: a missed refresh fence can expose private marks, and network responses can pause at two different awaits. The D1 write path already uses atomic SQL and focused database checks. The client coordinates visibility refreshes, outstanding writes, sign-out, and queued reloads in module state.
+
+The [upstream pstack formal-verification workflow](https://raw.githubusercontent.com/cursor/plugins/main/pstack/skills/create-formal-verification-skill/SKILL.md) favors TLA+ for ordering questions, explicit source mappings, pinned commands, and real-source failure controls. Those constraints led to a TLC model plus executable schedule exploration of `src/progress.ts`. A model alone would not catch drift in the TypeScript. Generated-input replay alone would not establish every reachable state of an explicit finite specification.
+
+The supplied [first X post](https://x.com/poteto/status/2111926622278521253) and [second X post](https://x.com/poteto/status/2109436202554372476) both returned HTTP 403 on 23 October 2026. Their content remains unverified. No claim here is attributed to either post, and secondary summaries were not treated as primary evidence.
+
+[TLC's documentation](https://docs.tlapl.us/using:tlc:start) describes explicit finite-state checking and the Java command-line runner. The [official 1.7.4 release](https://github.com/tlaplus/tlaplus/releases/tag/v1.7.4) publishes the jar's SHA-1; the downloaded bytes matched it. The runner also pins SHA-256. Version 1.7.4 is the stable release selected here; 1.8.0 was marked prerelease during this audit. The checker uses one worker and checks a safety invariant without liveness claims.
+
+At baseline `e9bfe0e50d508c236bef1c4d8ce42e413119e33f`, replay found this counterexample: load account A, start a write, then call `reload` before acknowledgement. The writing guard returned before clearing marks or advancing the generation. The old name and marks remained visible. Public main first acquired that implementation in `ebadf14` (PR #37); issue [#58](https://github.com/Jerome-Group/numbertheory/issues/58) tracks the finding and the separate product correction.
+
+The retained check requires invalidation before the writing guard. It also separates fetch and JSON completion and checks each subscriber-visible publication. The [project skill](../../.agents/skills/progress-lifecycle/SKILL.md) records source coverage, maintenance rules, and the distinction between bounded model checking, bounded actual-code replay, and unverified browser or authentication behavior.

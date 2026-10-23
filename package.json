@@ -22,7 +22,8 @@
     "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
     "db:generate": "drizzle-kit generate",
     "agent": "node scripts/verification/verify.mjs",
-    "test:progress": "node --test scripts/progress-d1.test.mjs"
+    "test:progress": "node --test scripts/progress-d1.test.mjs",
+    "formal:progress": "node scripts/formal-progress/check.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.4",
